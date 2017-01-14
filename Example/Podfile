@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'BohdiEngine_Example' do
+  pod 'BohdiEngine', :path => '../'
+
+  target 'BohdiEngine_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

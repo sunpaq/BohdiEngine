@@ -21,4 +21,4 @@ Sun YuLi, sunpaq@gmail.com
 
 ## License
 
-BohdiEngine is available under the MIT license. See the LICENSE file for more info.
+BohdiEngine is available under the BSD license. See the LICENSE file for more info.

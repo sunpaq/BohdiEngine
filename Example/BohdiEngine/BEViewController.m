@@ -7,6 +7,8 @@
 //
 
 #import "BEViewController.h"
+#import <BohdiEngine/MCGLEngine.h>
+#import <BohdiEngine/MCDirector.h>
 
 @interface BEViewController ()
 
@@ -17,6 +19,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    MCDirector* director = new(MCDirector);
+    
+    
 	// Do any additional setup after loading the view, typically from a nib.
 }
 

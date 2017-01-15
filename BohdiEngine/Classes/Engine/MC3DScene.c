@@ -85,8 +85,8 @@ method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, uns
     MCFileGetPath(vname, "fsh", path);
     const char* fsource = MCFileCopyContentWithPath(path);
     
-    //debug_log("MC3DScene vsource: %s", vsource);
-    //debug_log("MC3DScene fsource: %s", fsource);
+    debug_log("MC3DScene vsource: %s", vsource);
+    debug_log("MC3DScene fsource: %s", fsource);
     MC3DScene_initWithWidthHeightVSourceFSource(0, obj, width, height, vsource, fsource);
     
     free((void*)vsource);

@@ -74,6 +74,12 @@ method(MCDirector, int, drawAll, voida)
     return fps;
 }
 
+method(MCDirector, void, setupMainScene, unsigned width, unsigned height)
+{
+    MC3DScene* scene = ff(new(MC3DScene), initWithWidthHeightDefaultShader, width, height);
+    MCDirector_pushScene(0, obj, scene);
+}
+
 method(MCDirector, void, pushScene, MC3DScene* scene)
 {
     if (var(lastScene) == null) {
@@ -123,10 +129,19 @@ method(MCDirector, void, addModel, MC3DModel* model)
 {
     if(model && obj->lastScene && obj->lastScene->rootnode) {
         MC3DNode_addChild(0, obj->lastScene->rootnode, (MC3DNode*)model);
+        
     }else{
         error_log("MCDirector add model(%p) failed [lastScene=%p rootnode=%p]\n",
                   model, obj->lastScene, obj->lastScene->rootnode);
     }
+}
+
+method(MCDirector, void, addModelNamed, const char* name)
+{
+    MC3DModel* model = new(MC3DModel);
+    MC3DModel_initWithFileName(0, model, name);
+    MCDirector_cameraFocusOnModel(0, obj, model);
+    MCDirector_addModel(0, obj, model);
 }
 
 method(MCDirector, void, cameraFocusOn, MCVector3 vertex)
@@ -137,6 +152,20 @@ method(MCDirector, void, cameraFocusOn, MCVector3 vertex)
         c->lookat.y = vertex.y;
         c->lookat.z = vertex.z;
     }
+}
+
+method(MCDirector, void, cameraFocusOnModel, MC3DModel* model)
+{
+    MC3DFrame frame = model->lastSavedFrame;
+    double mheight = frame.ymax - frame.ymin;
+    double mwidth  = frame.xmax - frame.xmin;
+    double mdepth  = frame.zmax - frame.zmin;
+    
+    double _max = (mheight > mwidth) ? mheight : mwidth;
+    double max = (mdepth > _max) ? mdepth : _max;
+    
+    cpt(cameraHandler)->lookat.y = mheight / 2.0f;
+    cpt(cameraHandler)->R_value = max * 2.0f;
 }
 
 method(MCDirector, void, printDebugInfo, voida)
@@ -159,11 +188,14 @@ onload(MCDirector)
         binding(MCDirector, void, bye, voida);
         binding(MCDirector, void, updateAll, voida);
         binding(MCDirector, void, drawAll, voida);
+        binding(MCDirector, void, setupMainScene, unsigned width, unsigned height);
         binding(MCDirector, void, pushScene, MC3DScene* scene);
         binding(MCDirector, void, popScene, voida);
         binding(MCDirector, void, resizeAllScene, int width, int height);
         binding(MCDirector, void, addModel, MC3DModel* model);
+        binding(MCDirector, void, addModelNamed, const char* name);
         binding(MCDirector, void, cameraFocusOn, MCVector3 vertex);
+        binding(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
         binding(MCDirector, void, printDebugInfo, voida);
 
         return cla;

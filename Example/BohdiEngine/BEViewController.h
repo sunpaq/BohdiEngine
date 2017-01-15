@@ -7,7 +7,8 @@
 //
 
 @import UIKit;
+@import GLKit;
 
-@interface BEViewController : UIViewController
+@interface BEViewController : GLKViewController <GLKViewDelegate>
 
 @end

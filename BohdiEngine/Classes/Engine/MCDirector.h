@@ -34,13 +34,16 @@ method(MCDirector, void, updateAll, voida);
 //please update your view only when it is not -1
 method(MCDirector, int, drawAll, voida);
 
+method(MCDirector, void, setupMainScene, unsigned width, unsigned height);
 method(MCDirector, void, pushScene, MC3DScene* scene);
 method(MCDirector, void, popScene, voida);
 method(MCDirector, void, resizeAllScene, int width, int height);
 
 method(MCDirector, void, addModel, MC3DModel* model);
+method(MCDirector, void, addModelNamed, const char* name);
 
 method(MCDirector, void, cameraFocusOn, MCVector3 vertex);
+method(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
 method(MCDirector, void, printDebugInfo, voida);
 
 //iOS callbacks

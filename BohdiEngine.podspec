@@ -16,12 +16,13 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files        = 'BohdiEngine/Classes/**/*'
-  s.public_header_files = 'BohdiEngine/Classes/**/*.h'
+  s.source_files         = 'BohdiEngine/**/**/*'
+  s.public_header_files  = 'BohdiEngine/Classes/**/*.h'
+  s.private_header_files = 'BohdiEngine/External/**/*.h'
 
   # s.resource_bundles = {
   #   'BohdiEngine' => ['BohdiEngine/Assets/*.png']
   # }
 
-  s.dependency 'monkc'
+  # s.dependency 'monkc'
 end

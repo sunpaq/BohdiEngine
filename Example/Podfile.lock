@@ -1,7 +1,5 @@
 PODS:
-  - BohdiEngine (1.0.0):
-    - monkc
-  - monkc (1.0.0)
+  - BohdiEngine (1.0.0)
 
 DEPENDENCIES:
   - BohdiEngine (from `../`)
@@ -11,8 +9,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  BohdiEngine: ed28965f7e4ed8e1de4e158a0a041a38e6355121
-  monkc: 7c406037ebffa981892a8df05d12be9586b1b183
+  BohdiEngine: 17662ff624c074d49f33aeac12f77276b4556281
 
 PODFILE CHECKSUM: c4d8ba9f0174600393c955f0aea3df2e183e9e09
 

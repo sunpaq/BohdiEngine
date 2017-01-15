@@ -7,6 +7,7 @@
 //
 
 #import "BEAppDelegate.h"
+#import <BohdiEngine/MC3DScene.h>
 
 @implementation BEAppDelegate
 

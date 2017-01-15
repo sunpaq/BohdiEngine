@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "summary": "A simple 3D engine written by Monk-C",
   "description": "BohdiEngine is a simple 3D model rendering engine. it is cross platform",
-  "homepage": "https://github.com/<GITHUB_USERNAME>/BohdiEngine",
+  "homepage": "https://github.com/sunpaq/BohdiEngine-pod",
   "license": {
     "type": "BSD",
     "file": "LICENSE"
@@ -18,11 +18,7 @@
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "BohdiEngine/Classes/**/*",
+  "source_files": "BohdiEngine/**/**/*",
   "public_header_files": "BohdiEngine/Classes/**/*.h",
-  "dependencies": {
-    "monkc": [
-
-    ]
-  }
+  "private_header_files": "BohdiEngine/External/**/*.h"
 }

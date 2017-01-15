@@ -27,6 +27,6 @@
 #import "MCUnitTest.h"
 #import "monkc.h"
 
-FOUNDATION_EXPORT double monkcVersionNumber;
-FOUNDATION_EXPORT const unsigned char monkcVersionString[];
+extern double monkcVersionNumber;
+extern const unsigned char monkcVersionString[];
 

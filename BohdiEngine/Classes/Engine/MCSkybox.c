@@ -9,7 +9,6 @@
 #include "MCSkybox.h"
 #include "MCGLEngine.h"
 #include "MCGLContext.h"
-#include "MC3DiOSDriver.h"
 #include "MCCamera.h"
 
 //static GLfloat _skyboxVertices[] = {

@@ -14,7 +14,6 @@
 #include "MCGLBase.h"
 #include "MCMesh.h"
 #include "MCTexture.h"
-#include "MCMatrial.h"
 #include "MCIO.h"
 #include "MC3DNode.h"
 #include "MCMath.h"
@@ -29,6 +28,7 @@ class(MC3DModel, MC3DNode,
       
       MC3DFrame lastSavedFrame;
       computing(MC3DFrame, frame);
+      computing(double, maxlength);
 );
 
 method(MC3DModel, void, bye, voida);

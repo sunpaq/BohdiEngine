@@ -39,18 +39,19 @@ class(MCMesh, MCItem,
       
       MC3DFrame  Frame;
       GLenum     useage;
-      GLenum     mode;
       
       GLuint     VAO;  //VAO
       GLuint     VBO;  //VBO
       GLuint     EBO;  //EBO
       
+      MCBool     vertexDataNeedRelease;
       GLfloat*   vertexDataPtr;   //gCubeVertexData
       GLsizeiptr vertexDataSize;  //sizeof(gCubeVertexData)
       GLuint*    vertexIndexes;
       GLsizei    vertexCount;
 
       MCVertexAttribute vertexAttribArray[MCVertexAttribIndexMax];
+      MCDrawMode mode;
 );
 
 method(MCMesh, void, bye, voida);

@@ -16,6 +16,5 @@
 class(MC2DTex, MCTexture);
 
 method(MC2DTex, MC2DTex*, initWithFileName, const char* name);
-method(MC2DTex, void, drawTexture, MCGLContext* ctx);
 
 #endif /* MC2DTex_h */

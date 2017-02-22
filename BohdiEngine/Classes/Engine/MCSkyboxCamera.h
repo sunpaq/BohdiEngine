@@ -18,13 +18,16 @@ class(MCSkyboxCamera, MCCamera,
       //uniforms
       computing(MCGLUniform, viewUniform);
       computing(MCGLUniform, projectionUniform);
+      //attitude
+      MCQuaternion attitudeQ;
 );
 
 //override
 method(MCSkyboxCamera, void, bye, voida);
 method(MCSkyboxCamera, MCSkyboxCamera*, initWithWidthHeightRatio, MCFloat ratio);
-method(MCSkyboxCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
+//method(MCSkyboxCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
 method(MCSkyboxCamera, void, update, MCGLContext* ctx);
-method(MCSkyboxCamera, void, setAttitude, MCFloat fai, MCFloat tht);
+method(MCSkyboxCamera, void, setAttitudeR, MCVector3* rollYawPitch);
+method(MCSkyboxCamera, void, setAttitudeQ, MCQuaternion* q);
 
 #endif /* MCSkyboxCamera_h */

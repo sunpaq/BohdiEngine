@@ -25,6 +25,7 @@ class(MCDirector, MCObject,
       int currentHeight;
       
       computing(MCCamera*, cameraHandler);
+      computing(MCGLContext*, contextHandler);
 );
 
 method(MCDirector, void, bye, voida);

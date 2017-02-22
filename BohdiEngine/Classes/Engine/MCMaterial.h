@@ -13,16 +13,18 @@
 #include "monkc.h"
 #include "MCGLContext.h"
 
-class(MCMatrial, MCObject,
+class(MCMaterial, MCObject,
       MCBool      dataChanged;
       MCVector3   ambientLightColor;
       MCVector3   diffuseLightColor;
       MCVector3   specularLightColor;
       double      specularLightPower;
       double      dissolve;
+      int         hidden;
+      int         illum;
       char        tag[256];
 );
 
-method(MCMatrial, void, prepareMatrial, MCGLContext* ctx);
+method(MCMaterial, void, prepareMatrial, MCGLContext* ctx);
 
 #endif /* MCMatrial_h */

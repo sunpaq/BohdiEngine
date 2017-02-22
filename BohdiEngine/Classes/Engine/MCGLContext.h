@@ -13,6 +13,7 @@
 #include "monkc.h"
 #include "MCMath.h"
 #include "MCGLBase.h"
+#include "MCTexture.h"
 
 #define MAX_VATTR_NUM     100
 #define MAX_UNIFORM_NUM   100
@@ -28,6 +29,10 @@ class(MCGLContext, MCObject,
       MCGLUniform uniforms[MAX_UNIFORM_NUM];
       MCBool uniformsDirty[MAX_UNIFORM_NUM];
       MCUInt uniformCount;
+      
+      MCDrawMode drawMode;
+      MCTexture* diffuseTextureRef;
+      MCTexture* specularTextureRef;
 );
 
 //shader

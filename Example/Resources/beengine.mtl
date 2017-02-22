@@ -30,7 +30,7 @@ newmtl skin
 Kd 0.9700 0.8100 0.8000
 Ks 0.9700 0.8100 0.8000
 Ns 32
-illum 1
+illum 2
 
 newmtl cloth
 Kd 0.1000 0.1000 0.1000

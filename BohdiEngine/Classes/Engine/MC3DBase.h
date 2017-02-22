@@ -130,7 +130,8 @@ static inline MCMatrix4 MCMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
     MCVector3 u = MCVector3Normalize(MCVector3Cross(uv, n));
     MCVector3 v = MCVector3Cross(n, u);
     
-    MCMatrix4 m = { u.v[0], v.v[0], n.v[0], 0.0f,
+    MCMatrix4 m = {
+        u.v[0], v.v[0], n.v[0], 0.0f,
         u.v[1], v.v[1], n.v[1], 0.0f,
         u.v[2], v.v[2], n.v[2], 0.0f,
         MCVector3Dot(MCVector3Reverse(u), ev),
@@ -139,6 +140,35 @@ static inline MCMatrix4 MCMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
         1.0f };
     
     return m;
+}
+
+static inline MCMatrix4 MCMatrix4MakeLookAtByEulerAngle_EyeUp(MCVector3 lookat, double R, double fai, double tht, MCVector3* eyeResult, MCVector3* upResult)
+{
+    //rotate around y-axis first then x-axis
+    MCQuaternion qy = MCQuaternionFromAxisAngle(MCVector3Make(0, 1, 0), fai);
+    MCQuaternion qx = MCQuaternionFromAxisAngle(MCVector3Make(1, 0, 0), tht);
+    MCQuaternion qc = MCQuaternionGProduct(qy, qx);
+    
+    MCVector3 lat = lookat;
+    MCVector3 eye = MCVector3RotateByQuaternion(MCVector3Make(0.0, R, 0.0), qc);
+    MCVector3 up  = MCVector3RotateByQuaternion(MCVector3Make(0.0, 0.0, -1.0), qc);
+    
+    if (eyeResult) {
+        *eyeResult = eye;
+    }
+    
+    if (upResult) {
+        *upResult  = up;
+    }
+    
+    return MCMatrix4MakeLookAt(eye.x, eye.y, eye.z,
+                               lat.x, lat.y, lat.z,
+                               up.x,  up.y,  up.z);
+}
+
+static inline MCMatrix4 MCMatrix4MakeLookAtByEulerAngle(MCVector3 lookat, double R, double fai, double tht)
+{
+    return MCMatrix4MakeLookAtByEulerAngle_EyeUp(lookat, R, fai, tht, null, null);
 }
 
 #endif

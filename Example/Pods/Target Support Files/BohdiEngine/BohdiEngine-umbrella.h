@@ -20,7 +20,7 @@
 #import "MCGLEngine.h"
 #import "MCGLRenderer.h"
 #import "MCLight.h"
-#import "MCMatrial.h"
+#import "MCMaterial.h"
 #import "MCMesh.h"
 #import "MCOrbit.h"
 #import "MCPanel.h"

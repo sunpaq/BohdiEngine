@@ -30,7 +30,7 @@ static MCDirector* director = null;
     view.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     view.drawableStencilFormat = GLKViewDrawableStencilFormat8;
-    view.drawableMultisample = GLKViewDrawableMultisample4X;
+    view.drawableMultisample = GLKViewDrawableMultisampleNone;
     self.preferredFramesPerSecond = 60;
     [EAGLContext setCurrentContext:self.context];
     
@@ -44,7 +44,7 @@ static MCDirector* director = null;
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        ff(director, addModelNamed, "2");
+        ff(director, addModelNamed, "monkey2.obj");
     });
 }
 

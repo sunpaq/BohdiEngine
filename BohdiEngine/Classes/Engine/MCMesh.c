@@ -17,8 +17,9 @@ oninit(MCMesh)
         
         var(Frame) = (MC3DFrame){0,0,0,0,0,0};
         var(useage) = GL_STATIC_DRAW;
-        var(mode) = GL_TRIANGLES;
-        
+        var(mode) = MCTriAngles;
+
+        var(vertexDataNeedRelease) = true;
         var(vertexDataPtr) = null;
         var(vertexDataSize)= 0;
         var(vertexIndexes) = null;
@@ -36,8 +37,20 @@ method(MCMesh, void, bye, voida)
 {
     glDeleteBuffers(1, &obj->VBO);
     glDeleteVertexArrays(1, &obj->VAO);
-    if (obj->vertexDataPtr) {
+    if (obj->vertexDataNeedRelease && obj->vertexDataPtr) {
         free(obj->vertexDataPtr);
+    }
+}
+
+method(MCMesh, void, allocVertexBuffer, GLsizei vertexCount)
+{
+    obj->vertexCount = vertexCount ;
+    obj->vertexDataSize = obj->vertexCount * 11 * sizeof(GLfloat);
+    if (obj->vertexDataSize != 0) {
+        obj->vertexDataPtr = (GLfloat*)malloc(obj->vertexDataSize);
+        memset(obj->vertexDataPtr, 0, obj->vertexDataSize);
+    }else{
+        obj->vertexDataPtr = null;
     }
 }
 
@@ -54,28 +67,10 @@ method(MCMesh, MCMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount)
         MCVertexAttribTexCoord0,2, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(36)};
     
     //alloc vertex buffer
-    obj->vertexCount = vertexCount;
-    obj->vertexDataSize = obj->vertexCount * 11 * sizeof(GLfloat);
-    if (obj->vertexDataSize != 0) {
-        obj->vertexDataPtr = (GLfloat*)malloc(obj->vertexDataSize);
-    }else{
-        obj->vertexDataPtr = null;
-    }
+    MCMesh_allocVertexBuffer(0, obj, vertexCount);
     //obj->vertexIndexes = (GLuint*)malloc(sizeof(GLuint)*obj->vforertexCount);
     
     return obj;
-}
-
-method(MCMesh, void, allocVertexBuffer, GLsizei vertexCount)
-{
-    obj->vertexCount = vertexCount ;
-    obj->vertexDataSize = obj->vertexCount * 11 * sizeof(GLfloat);
-    if (obj->vertexDataSize != 0) {
-        obj->vertexDataPtr = (GLfloat*)malloc(obj->vertexDataSize);
-        memset(obj->vertexDataPtr, 0, obj->vertexDataSize);
-    }else{
-        obj->vertexDataPtr = null;
-    }
 }
 
 method(MCMesh, void, setVertex, GLuint offset, MCMeshVertexData* data)
@@ -144,6 +139,13 @@ method(MCMesh, void, prepareMesh, MCGLContext* ctx)
                 MCVertexAttributeLoad(&obj->vertexAttribArray[i]);
             }
         }
+        //Texture
+        if (ctx->diffuseTextureRef) {
+            MCTexture_loadToGLBuffer(0, ctx->diffuseTextureRef, 0);
+        }
+        if (ctx->specularTextureRef) {
+            MCTexture_loadToGLBuffer(0, ctx->specularTextureRef, 0);
+        }
         //Unbind
         glBindVertexArray(0);
         var(isDataLoaded) = true;
@@ -153,10 +155,25 @@ method(MCMesh, void, prepareMesh, MCGLContext* ctx)
 method(MCMesh, void, drawMesh, MCGLContext* ctx)
 {
     glBindVertexArray(obj->VAO);
-    if (var(vertexIndexes) != null) {
-        glDrawElements(var(mode), 100, GL_UNSIGNED_INT, (GLvoid*)0);
-    }else{
-        glDrawArrays(var(mode), 0, var(vertexCount));
+    //texture
+    if (ctx->diffuseTextureRef) {
+        MCTexture_active(0, ctx->diffuseTextureRef, ctx->pid, "diffuse_sampler");
+    }
+    if (ctx->specularTextureRef) {
+        MCTexture_active(0, ctx->specularTextureRef, ctx->pid, "specular_sampler");
+    }
+    //override draw mode
+    GLenum mode = var(mode);
+    if (ctx->drawMode != MCDrawNone) {
+        mode = ctx->drawMode;
+    }
+    //draw
+    if (mode != MCDrawNone) {
+        if (var(vertexIndexes) != null) {
+            glDrawElements(mode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
+        }else{
+            glDrawArrays(mode, 0, var(vertexCount));
+        }
     }
     //Unbind
     glBindVertexArray(0);

@@ -23,8 +23,8 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		7EF861B9DC59A2875049B3F5 /* Pods_BohdiEngine_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49F087004F0CAC65B7623E3B /* Pods_BohdiEngine_Example.framework */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		F8E688481E5D851300D6E869 /* monkey2.obj in Resources */ = {isa = PBXBuildFile; fileRef = F8E688461E5D851300D6E869 /* monkey2.obj */; };
 		FD7379E01E2B54E6000ED551 /* BohdiEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7379DF1E2B54E6000ED551 /* BohdiEngine.framework */; };
-		FD737A291E2B6C90000ED551 /* 2.obj in Resources */ = {isa = PBXBuildFile; fileRef = FD737A271E2B6C90000ED551 /* 2.obj */; };
 		FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */ = {isa = PBXBuildFile; fileRef = FD737A281E2B6C90000ED551 /* beengine.mtl */; };
 		FD737A2F1E2B6CBE000ED551 /* MCGLRenderer.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FD737A2B1E2B6CBE000ED551 /* MCGLRenderer.fsh */; };
 		FD737A301E2B6CBE000ED551 /* MCGLRenderer.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FD737A2C1E2B6CBE000ED551 /* MCGLRenderer.vsh */; };
@@ -71,9 +71,9 @@
 		B29F3398775A4115559DCFA9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		DE81044E42193FB27E60BC38 /* Pods_BohdiEngine_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BohdiEngine_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44D3773801779395462E915 /* Pods-BohdiEngine_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BohdiEngine_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BohdiEngine_Example/Pods-BohdiEngine_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		F8E688461E5D851300D6E869 /* monkey2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey2.obj; sourceTree = "<group>"; };
 		FCF04D989F31C672C28B0EC4 /* BohdiEngine.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BohdiEngine.podspec; path = ../BohdiEngine.podspec; sourceTree = "<group>"; };
 		FD7379DF1E2B54E6000ED551 /* BohdiEngine.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BohdiEngine.framework; path = "Pods/../build/Debug-iphoneos/BohdiEngine/BohdiEngine.framework"; sourceTree = "<group>"; };
-		FD737A271E2B6C90000ED551 /* 2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2.obj; sourceTree = "<group>"; };
 		FD737A281E2B6C90000ED551 /* beengine.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = beengine.mtl; sourceTree = "<group>"; };
 		FD737A2B1E2B6CBE000ED551 /* MCGLRenderer.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCGLRenderer.fsh; sourceTree = "<group>"; };
 		FD737A2C1E2B6CBE000ED551 /* MCGLRenderer.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCGLRenderer.vsh; sourceTree = "<group>"; };
@@ -213,8 +213,8 @@
 		FD737A261E2B6C6E000ED551 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				FD737A271E2B6C90000ED551 /* 2.obj */,
 				FD737A281E2B6C90000ED551 /* beengine.mtl */,
+				F8E688461E5D851300D6E869 /* monkey2.obj */,
 				FD737A2B1E2B6CBE000ED551 /* MCGLRenderer.fsh */,
 				FD737A2C1E2B6CBE000ED551 /* MCGLRenderer.vsh */,
 				FD737A2D1E2B6CBE000ED551 /* MCSkyboxShader.fsh */,
@@ -277,6 +277,9 @@
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Sun YuLi";
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = R7BTEXA73U;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -307,9 +310,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD737A311E2B6CBE000ED551 /* MCSkyboxShader.fsh in Resources */,
-				FD737A291E2B6C90000ED551 /* 2.obj in Resources */,
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */,
+				F8E688481E5D851300D6E869 /* monkey2.obj in Resources */,
 				FD737A2F1E2B6CBE000ED551 /* MCGLRenderer.fsh in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
@@ -559,6 +562,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = R7BTEXA73U;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos/BohdiEngine",
@@ -579,6 +583,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = R7BTEXA73U;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos/BohdiEngine",

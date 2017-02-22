@@ -105,7 +105,7 @@ method(MCSkybox, void, bye, voida)
 method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex, double widthHeightRatio)
 {
     //Shader
-    MCGLContext_initWithShaderName(0, var(ctx), "MCSkyboxShader", "MCSkyboxShader",
+    MCGLContext_initWithShaderName(0, var(ctx), "MCSkyboxShader.vsh", "MCSkyboxShader.fsh",
                                    (const char* []){
                                        "position"
                                    }, 1,
@@ -163,7 +163,7 @@ method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex, dou
 
 method(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[], double widthHeightRatio)
 {
-    BECubeTextureData* data = BECubeTextureData_newWithFaces(namelist, "jpg");
+    BECubeTextureData* data = BECubeTextureData_newWithFaces(namelist);
     MCSkybox* skybox = MCSkybox_initWithCubeTexture(0, obj, data, widthHeightRatio);
     release(data);
     return skybox;
@@ -171,13 +171,13 @@ method(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[], double wi
 
 method(MCSkybox, MCSkybox*, initWithDefaultFilesRatio, double widthHeightRatio)
 {
-    const char* names[6] = {"right","left","top","bottom","back","front"};
+    const char* names[6] = {"right.jpg","left.jpg","top.jpg","bottom.jpg","back.jpg","front.jpg"};
     return MCSkybox_initWithFileNames(0, obj, names, widthHeightRatio);
 }
 
 method(MCSkybox, MCSkybox*, initWithDefaultFiles, voida)
 {
-    const char* names[6] = {"right","left","top","bottom","back","front"};
+    const char* names[6] = {"right.jpg","left.jpg","top.jpg","bottom.jpg","back.jpg","front.jpg"};
     return MCSkybox_initWithFileNames(0, obj, names, MCRatioHDTV16x9);
 }
 

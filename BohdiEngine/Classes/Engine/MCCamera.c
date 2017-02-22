@@ -10,17 +10,20 @@ compute(MCVector3, currentPosition);
 oninit(MCCamera)
 {
     if (init(MC3DNode)) {
-        var(ratio) = MCRatioOldTV4x3;//MCRatioCameraFilm3x2;
-        var(focal_length) = MCLensStandard50mm;//MCLensWide24mm;
+        var(ratio) = MCRatioHDTV16x9;//MCRatioCameraFilm3x2;
         var(view_angle) = MCLensStandard50mmViewAngle;
-        var(max_distance) = 10000;//100 metres
-        var(lookat) = MCVector3Make(0,0,0);
-        
+        var(depth_of_field) = 10;
+
         //local spherical coordinate
         var(R_value) = 100;
         var(R_percent) = 1.0;
-        var(tht) = 60.0;
-        var(fai) = 45.0;
+        var(tht) = 90;
+        var(fai) = 0;
+        
+        //view
+        var(lookat) = MCVector3Make(0,0,0);
+        var(eye) = MCVector3Make(0.0,obj->R_value,0.0);
+        var(up)  = MCVector3Make(0.0,0.0,-1.0);
         
         var(Radius) = Radius;
         var(normal) = normal;
@@ -29,8 +32,14 @@ oninit(MCCamera)
         var(projectionMatrix) = projectionMatrix;
         var(currentPosition) = currentPosition;
         
-        var(isReverseMovement) = true;
-        var(isLockRotation) = false;        
+        var(isReverseMovement) = false;
+        var(isLockRotation) = false;
+        
+        //transform
+//        MCVector3 pos = {0,10,10};
+//        MC3DNode_rotateX(0, sobj, -45);
+//        MC3DNode_translate(0, sobj, &pos);
+        
         return obj;
     }else{
         return null;
@@ -59,37 +68,29 @@ compute(MCMatrix3, normal)
 compute(MCMatrix4, viewMatrix)
 {
     as(MCCamera);
-    MCVector3 modelpos = var(lookat);
-    MCVector3 eyelocal = MCVertexFromSpherical(obj->Radius(obj), var(tht), var(fai));
-    MCVector3 eye = MCWorldCoorFromLocal(eyelocal, modelpos);
-    
-    MCVector3 up = (MCVector3){0.0, 1.0, 0.0};
-    if (var(tht) > 0.0 && var(tht) < 90.0) {
-        MCVector3 Npole = MCVector3Make(0, cpt(Radius)/MCCosDegrees(var(tht)), 0);
-        up = (MCVector3){Npole.x-eye.x, Npole.y-eye.y, Npole.z-eye.z};
-    }
-    else if (var(tht) > 90.0 && var(tht) < 180.0) {
-        MCVector3 Spole = MCVector3Make(0, -cpt(Radius)/MCCosDegrees(180.0-var(tht)), 0);
-        up = (MCVector3){eye.x-Spole.x, eye.y-Spole.y, eye.z-Spole.z};
-    }
-    return MCMatrix4MakeLookAt(eye.x, eye.y, eye.z,
-                               modelpos.x, modelpos.y, modelpos.z,
-                               up.x, up.y, up.z);
+    return MCMatrix4MakeLookAtByEulerAngle_EyeUp(obj->lookat, cpt(Radius), obj->fai, obj->tht, &obj->eye, &obj->up);
 }
 
 compute(MCMatrix4, projectionMatrix)
 {
     as(MCCamera);
+    double near = cpt(Radius) - var(depth_of_field);
+    double far  = cpt(Radius) + var(depth_of_field);
+    
+    if (near <= 0) {
+        near = MCLensStandard50mm;
+    }
+    
     return MCMatrix4MakePerspective(MCDegreesToRadians(obj->view_angle),
                                     var(ratio),
-                                    var(focal_length),
-                                    var(max_distance));
+                                    near,
+                                    far);
 }
 
 compute(MCVector3, currentPosition)
 {
     as(MCCamera);
-    return MCWorldCoorFromLocal(MCVertexFromSpherical(cpt(Radius), var(tht), var(fai)), var(lookat));
+    return obj->eye;
 }
 
 method(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height)
@@ -120,7 +121,9 @@ method(MCCamera, void, update, MCGLContext* ctx)
     
     data.vec3 = cpt(currentPosition);
     MCGLContext_updateUniform(0, ctx, view_position, data);
-    MCVector3 lightpos = MCVector3Add(cpt(currentPosition), (MCVector3){0, 0, 0});
+    MCVector3 lightpos = (MCVector3){cpt(currentPosition).x * 1,
+                                     cpt(currentPosition).y * 1,
+                                     cpt(currentPosition).z * 1};
     data.vec3 = lightpos;
     MCGLContext_updateUniform(0, ctx, light_position, data);
 }
@@ -130,20 +133,13 @@ method(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)
     if (var(isLockRotation) == true) {
         return;
     }
+    
     if (var(isReverseMovement)) {
-        obj->fai += deltaFai.f;   //Left
-        obj->tht += deltaTht.f;   //Up
-    }else{
         obj->fai -= deltaFai.f;   //Left
         obj->tht -= deltaTht.f;   //Up
-    }
-    
-    //keep the tht -180 ~ 180
-    if (obj->tht < -179.99) {
-        obj->tht = -179.99;
-    }
-    if (obj->tht > 179.99) {
-        obj->tht = 179.99;
+    }else{
+        obj->fai += deltaFai.f;   //Left
+        obj->tht += deltaTht.f;   //Up
     }
 }
 

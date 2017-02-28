@@ -16,7 +16,7 @@ oninit(MC3DNode)
     if (init(MCItem)) {
         var(visible) = true;
         var(center) = MCVector3Make(0, 0, 0);
-        var(transform) = MCMatrix4Identity();
+        var(transform) = MCMatrix4Identity;
         var(material) = null;
         var(diffuseTexture) = null;
         var(specularTexture)= null;

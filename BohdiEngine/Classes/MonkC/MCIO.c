@@ -233,7 +233,7 @@ method(MCStream, MCStream*, initWithPath, MCStreamType type, const char* path)
     //int setvbuf(FILE *restrict fp, char *restrict buf, int mode, size_t size);
     //[NULL _IOFBF/_IOLBF/_IONBF BUFSIZ]
     
-    char decodepath[PATH_MAX] = {};
+    char decodepath[PATH_MAX] = {0};
     obj->fileObject = fopen(MCString_percentDecode(path, decodepath), type.fopenMode);
     if (obj->fileObject) {
         //file size

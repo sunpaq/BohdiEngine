@@ -26,7 +26,6 @@
 #ifndef MCGLRenderer_h
 #define MCGLRenderer_h
 
-#include <stdio.h>
 #include "monkc.h"
 #include "MCGLBase.h"
 #include "MC3DNode.h"

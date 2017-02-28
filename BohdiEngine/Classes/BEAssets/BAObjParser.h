@@ -9,7 +9,6 @@
 #ifndef MC3DFileParser_h
 #define MC3DFileParser_h
 
-#include <stdio.h>
 #include "monkc.h"
 #include "MCMath.h"
 #include "MCGeometry.h"
@@ -142,7 +141,7 @@ MCInline BAObjModel* BAObjAlloc(BAObjMeta* meta)
 {
     BAObjModel* buff = (BAObjModel*)malloc(sizeof(BAObjModel));
     if (buff) {
-        buff->Frame = (BACubeFrame){};
+        buff->Frame = (BACubeFrame){0};
         size_t sizevb = sizeof(MCVector3) * (meta->vertex_count);
         size_t sizetb = sizeof(MCVector2) * (meta->texcoord_count);
         size_t sizenb = sizeof(MCVector4) * (meta->normal_count);

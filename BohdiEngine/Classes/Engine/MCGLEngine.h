@@ -9,7 +9,6 @@
 #ifndef MCGLEngine_h
 #define MCGLEngine_h
 
-#include <stdio.h>
 #include "monkc.h"
 #include "MCGLBase.h"
 #include "MC3DBase.h"

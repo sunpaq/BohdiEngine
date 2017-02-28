@@ -9,7 +9,6 @@
 #ifndef MCMesh_h
 #define MCMesh_h
 
-#include <stdio.h>
 #include "monkc.h"
 #include "MCGLContext.h"
 #include "MCLinkedList.h"

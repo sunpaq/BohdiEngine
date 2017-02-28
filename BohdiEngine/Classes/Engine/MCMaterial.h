@@ -9,7 +9,6 @@
 #ifndef MCMatrial_h
 #define MCMatrial_h
 
-#include <stdio.h>
 #include "monkc.h"
 #include "MCGLContext.h"
 

@@ -11,133 +11,7 @@
 #include <pthread.h>
 #endif
 #include "BEAssetsManager.h"
-#include "SOIL.h"
-
-oninit(BE2DTextureData)
-{
-    if (init(MCObject)) {
-        //const types
-        obj->AUTO = 0;
-        obj->L    = 1;
-        obj->LA   = 2;
-        obj->RGB  = 3;
-        obj->RGBA = 4;
-        
-        //input
-        //obj->type = obj->RGB;
-        obj->path = "";
-        
-        //output
-        obj->raw = null;
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-utility(BE2DTextureData, BE2DTextureData*, newWithPathType, const char* path, unsigned type)
-{
-    BE2DTextureData* data = new(BE2DTextureData);
-    
-    char decodepath[PATH_MAX] = {};
-    MCString_percentDecode(path, decodepath);
-    
-    size_t psize = strlen(decodepath) * sizeof(char);
-    data->path = strcpy(malloc(psize), decodepath);
-
-//    if (type >= data->AUTO && type<= data->RGBA ) {
-//        data->type = type;
-//    }else{
-//        data->type = data->RGB;
-//    }
-    
-    data->raw = SOIL_load_image(data->path, &data->width, &data->height, &data->channels, SOIL_LOAD_AUTO);
-    return data;
-}
-
-utility(BE2DTextureData, BE2DTextureData*, newWithPath, const char* path)
-{
-    return BE2DTextureData_newWithPathType(path, 3);//default RGB
-}
-
-method(BE2DTextureData, void, bye, voida)
-{
-    if (obj->raw != null) {
-        SOIL_free_image_data(obj->raw);
-    }
-    superbye(MCObject);
-}
-
-onload(BE2DTextureData)
-{
-    if (load(MCObject)) {
-        binding(BE2DTextureData, void, bye, voida);
-        return cla;
-    }else{
-        return null;
-    }
-}
-
-//------------------------------
-oninit(BECubeTextureData)
-{
-    if (init(MCObject)) {
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-utility(BECubeTextureData, BECubeTextureData*, newWithFacePaths, const char* facepaths[6])
-{
-    BECubeTextureData* data = new(BECubeTextureData);
-    for (int i=0; i<6; i++) {
-        BE2DTextureData* aface = BE2DTextureData_newWithPath(facepaths[i]);
-        if (aface != null) {
-            data->faces[i] = aface;
-        }else{
-            error_log("BECubeTextureData image %s data is null!\n", facepaths[i]);
-            return null;
-        }
-    }
-    return data;
-}
-
-utility(BECubeTextureData, BECubeTextureData*, newWithFaces, const char* faces[6])
-{
-    BECubeTextureData* data = new(BECubeTextureData);
-    char pathbuff[PATH_MAX] = {};
-    for (int i=0; i<6; i++) {
-        if(MCFileGetPath(faces[i], pathbuff)){
-            return null;
-        }
-        pathbuff[PATH_MAX-1] = NUL;
-        data->faces[i] = BE2DTextureData_newWithPath(pathbuff);
-    }
-    return data;
-}
-
-method(BECubeTextureData, void, bye, voida)
-{
-    for (int i=0; i<6; i++) {
-        BE2DTextureData* face = obj->faces[i];
-        if (face != null) {
-            release(face);
-        }
-    }
-    superbye(MCObject);
-}
-
-onload(BECubeTextureData)
-{
-    if (load(MCObject)) {
-        binding(BECubeTextureData, void, bye, voida);
-        return cla;
-    }else{
-        return null;
-    }
-}
-
+#include "MCString.h"
 #ifdef __ANDROID__
 static AAssetManager* assetManager_ = null;
 static ANativeWindow* window_ = null;
@@ -185,7 +59,7 @@ int MCFileGetPath(const char* filename, char* buffer)
 		AAssetDir* rootdir = AAssetManager_openDir(assetManager_, subpath);
         if (rootdir) {
             const char* name;
-            char fullpath[PATH_MAX] = {};
+            char fullpath[PATH_MAX] = {0};
             while ((name=AAssetDir_getNextFileName(rootdir)) != NULL) {
                 if (strcmp(filename, name) == 0) {
                     sprintf(fullpath, "%s/%s", subpath, name);
@@ -250,7 +124,7 @@ const char* MCFileCopyContentWithPath(const char* filepath)
     error_log("MCFileCopyContent(%s) Android assetManager_ is null\n", filepath);
     return null;
 #else
-    char decodepath[PATH_MAX] = {};
+    char decodepath[PATH_MAX] = {0};
     FILE* f = fopen(MCString_percentDecode(filepath, decodepath), "r");
     if (f) {
         fseek(f, 0, SEEK_END);

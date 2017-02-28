@@ -60,6 +60,7 @@ typedef enum {
     MCPoints = GL_POINTS,
     MCLines  = GL_LINES,
     MCLineLoop = GL_LINE_LOOP,
+    MCLineStrip = GL_LINE_STRIP,
     MCTriAngles = GL_TRIANGLES,
     MCTriAngleFan = GL_TRIANGLE_FAN
 } MCDrawMode;

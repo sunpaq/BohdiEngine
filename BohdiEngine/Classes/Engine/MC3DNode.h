@@ -9,7 +9,6 @@
 #ifndef MC3DNode_h
 #define MC3DNode_h
 
-#include <stdio.h>
 #include "monkc.h"
 #include "MC3DBase.h"
 #include "MCMesh.h"

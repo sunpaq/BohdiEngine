@@ -21,7 +21,7 @@ MCInline void processMtlLine(BAMtlLibrary* lib, const char* linebuff)
     //MCToken token;
     MCToken token;
     
-    char word[256] = {};
+    char word[256] = {0};
     const char* remain = linebuff;
     while (!isNewLine(remain) && *remain != NUL) {
         token = tokenize(nextWord(&remain, word));
@@ -42,7 +42,7 @@ MCInline void processMtlLine(BAMtlLibrary* lib, const char* linebuff)
                     return;//next line
                 }
                 else if (MCStringEqualN(word, "map_Kd", 6)) {
-                    char name[256] = {};
+                    char name[256] = {0};
                     BAMaterial* material = lib->materialsList;
                     if (material && MCString_filenameFromPath(remain, &name)) {
                         MCStringFill(material->diffuseMapName, name);
@@ -53,7 +53,7 @@ MCInline void processMtlLine(BAMtlLibrary* lib, const char* linebuff)
                     return;//next line
                 }
                 else if (MCStringEqualN(word, "map_Ks", 6)) {
-                    char name[256] = {};
+                    char name[256] = {0};
                     BAMaterial* material = lib->materialsList;
                     if (material && MCString_filenameFromPath(remain, &name)) {
                         MCStringFill(material->specularMapName, name);
@@ -137,7 +137,7 @@ MCInline void processMtlLine(BAMtlLibrary* lib, const char* linebuff)
                     //float value next
                     else if (token.type == MCTokenFloat || token.type == MCTokenInteger) {
                         if (light->Ctype != SpectralFile) {
-                            double buff[3] = {};
+                            double buff[3] = {0};
                             size_t n = nextNumbersAsFloat(&remain, buff);
                             if (n >= 3) {
                                 light->data.rgbxyz[0] = buff[0];
@@ -238,7 +238,7 @@ static BAMtlLibrary* BAMtlLibraryAlloc() {
 
 BAMtlLibrary* BAMtlLibraryNew(const char* filename)
 {
-    char path[LINE_MAX] = {};
+    char path[LINE_MAX] = {0};
     if(MCFileGetPath(filename, path)) {
         return null;
     }

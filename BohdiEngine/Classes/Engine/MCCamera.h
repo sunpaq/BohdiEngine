@@ -5,6 +5,12 @@
 #include "MC3DBase.h"
 #include "MC3DNode.h"
 
+typedef enum {
+    MCCameraRotateAroundModelManual,
+    MCCameraRotateAroundModelByGyroscope,
+    MCCameraRotateAR
+} MCCameraRotateMode;
+
 class(MCCamera, MC3DNode,
     double ratio;
     double depth_of_field;
@@ -26,11 +32,15 @@ class(MCCamera, MC3DNode,
     computing(MCMatrix4, viewMatrix);
     computing(MCMatrix4, projectionMatrix);
     computing(MCVector3, currentPosition);
-    
+    computing(MCMatrix3, rotationMat3);
+
     MCBool isReverseMovement;
     MCBool isLockRotation;
+    
+    MCCameraRotateMode rotateMode;
 );
 
+method(MCCamera, void, bye, voida);
 method(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height);
 method(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
 method(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY);
@@ -38,6 +48,7 @@ method(MCCamera, void, pull, MCFloat deltaR);
 method(MCCamera, void, reset, voida);
 method(MCCamera, void, update, MCGLContext* ctx);//override
 method(MCCamera, void, distanceScale, MCFloat scale);
+method(MCCamera, void, setRotationMat3, float mat3[9]);
 method(MCCamera, void, printDebugInfo, voida);
 
 #define MCLensStandard50mm (0.050)

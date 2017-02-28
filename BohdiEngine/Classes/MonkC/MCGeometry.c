@@ -40,7 +40,7 @@ MCPolygon* MCPolygonInit(MCPolygon* poly, MCVector3 vertexes[], size_t count)
     poly->index = 0;
     poly->isConvex = false;
     
-    MCGeneric generic[MCPolygonMaxV] = {};
+    MCGeneric generic[MCPolygonMaxV] = {0};
     for (size_t i=0; i<count; i++) {
         MCVector3 v = vertexes[i];
         poly->vertexData[i] = v;

@@ -173,7 +173,7 @@ utility(MCString, const char*, percentDecode, const char* str, char *buff)
 
 utility(MCString, const char*, baseFromPath, const char* path, char (*buff)[])
 {
-    char reversebuff[PATH_MAX] = {};
+    char reversebuff[PATH_MAX] = {0};
     size_t count = MCString_reverse(path, reversebuff);
     
     char* head = &reversebuff[count-1];
@@ -196,7 +196,7 @@ utility(MCString, const char*, filenameFromPath, const char* path, char (*buff)[
 {
     trimWhiteSpace(&path);
 
-    char reversebuff[PATH_MAX] = {};
+    char reversebuff[PATH_MAX] = {0};
     MCString_reverse(path, reversebuff);
     
     char* head = &reversebuff[0];
@@ -219,7 +219,7 @@ utility(MCString, const char*, filenameFromPath, const char* path, char (*buff)[
 utility(MCString, size_t, filenameTrimExtension, const char* name, char* buff)
 {
     trimWhiteSpace(&name);
-    char reversebuff[PATH_MAX] = {};
+    char reversebuff[PATH_MAX] = {0};
     MCString_reverse(name, reversebuff);
     
     char* head = &reversebuff[0];

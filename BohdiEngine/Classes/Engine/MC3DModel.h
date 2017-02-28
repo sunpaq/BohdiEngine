@@ -9,7 +9,6 @@
 #ifndef MC3DModel_h
 #define MC3DModel_h
 
-#include <stdio.h>
 #include "monkc.h"
 #include "MCGLBase.h"
 #include "MCMesh.h"

@@ -180,11 +180,11 @@ utility(MCGLEngine, GLuint, prepareShader, GLuint Id, const char* vcode, const c
 
 utility(MCGLEngine, int, prepareShaderName, GLuint Id, const char* vname, const char* fname)
 {
-    char vpath[PATH_MAX] = {};
+    char vpath[PATH_MAX] = {0};
     if(MCFileGetPath(vname, vpath)) return -1;
     char* vcode = (char*)MCFileCopyContentWithPath(vpath);
     
-    char fpath[PATH_MAX] = {};
+    char fpath[PATH_MAX] = {0};
     if(MCFileGetPath(fname, fpath)) return -1;
     char* fcode = (char*)MCFileCopyContentWithPath(fpath);
     

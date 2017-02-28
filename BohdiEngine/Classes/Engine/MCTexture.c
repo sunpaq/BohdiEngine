@@ -8,17 +8,23 @@
 
 #include "MCTexture.h"
 #include "MCGLEngine.h"
+#include "BEAssetsManager.h"
 
 static unsigned unitNum = 1;
 
 oninit(MCTexture)
 {
     if (init(MCObject)) {
+        var(Id) = -1;
+        var(width) = 512;
+        var(height)= 512;
         if (unitNum < 32) {
             obj->textureUnit = unitNum++;
         } else {
             unitNum = 1;
         }
+        var(data) = null;
+        var(displayMode) = MCTextureRepeat;
         return obj;
     }else{
         return null;
@@ -29,9 +35,15 @@ function(unsigned char*, loadImageRawdata, const char* path)
 {
     as(MCTexture);
     var(data) = BE2DTextureData_newWithPath(path);
-    obj->width  = obj->data->width;
-    obj->height = obj->data->height;
-    return obj->data->raw;
+    if (var(data)) {
+        obj->width  = obj->data->width;
+        obj->height = obj->data->height;
+        return obj->data->raw;
+    }
+    else {
+        error_log("MCTexture - can not load image: %s\n", path);
+        return null;
+    }
 }
 
 function(void, rawdataToTexbuffer, GLenum textype)
@@ -52,12 +64,17 @@ function(void, rawdataToTexbuffer, GLenum textype)
 //GL_TEXTURE_2D
 function(void, setupTexParameter, GLenum textype)
 {
-    //glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    //glTexParameteri(textype, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(textype, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    //glTexParameteri(textype, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    //glTexParameteri(textype, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    as(MCTexture);
+    if (var(displayMode) == MCTextureRepeat) {
+        glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(textype, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+    else {
+        glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(textype, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    }
+    glTexParameteri(textype, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(textype, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
 function(void, freeRawdata, voida)
@@ -66,15 +83,20 @@ function(void, freeRawdata, voida)
     release(obj->data);
 }
 
-method(MCTexture, MCTexture*, initWithFileName, const char* name)
+method(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode)
 {
-    char pathbuff[PATH_MAX] = {};
+    char pathbuff[PATH_MAX] = {0};
     if (MCFileGetPath(name, pathbuff)) {
         return null;
     }
-    
+    obj->displayMode = mode;
     loadImageRawdata(0, obj, pathbuff);
     return obj;
+}
+
+method(MCTexture, MCTexture*, initWithFileName, const char* name)
+{
+    return MCTexture_initWithFileNameMode(0, obj, name, MCTextureRepeat);
 }
 
 method(MCTexture, void, loadToGLBuffer, voida)
@@ -105,6 +127,7 @@ onload(MCTexture)
         mixing(void, setupTexParameter, GLenum textype);
         mixing(void, freeRawdata, voida);
         
+        binding(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode);
         binding(MCTexture, MCTexture*, initWithFileName, const char* name);
         binding(MCTexture, void, loadToGLBuffer, voida);
         binding(MCTexture, void, active, GLuint pid, const char* uniformName);

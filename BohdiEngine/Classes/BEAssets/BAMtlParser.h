@@ -9,7 +9,6 @@
 #ifndef MC3DMtlParser_h
 #define MC3DMtlParser_h
 
-#include <stdio.h>
 #include "monkc.h"
 #include "MCMath.h"
 #include "MCGeometry.h"

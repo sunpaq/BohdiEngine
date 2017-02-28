@@ -9,6 +9,15 @@
 #include "MCDirector.h"
 #include "MCThread.h"
 
+compute(MCLight*, lightHandler)
+{
+    as(MCDirector);
+    if (var(lastScene) != null && var(lastScene)->light != null) {
+        return var(lastScene)->light;
+    }
+    return null;
+}
+
 compute(MCCamera*, cameraHandler)
 {
     as(MCDirector);
@@ -24,6 +33,17 @@ compute(MCGLContext*, contextHandler)
     return var(lastScene)->renderer->context;
 }
 
+compute(MCSkyboxCamera*, skyboxCameraHandler)
+{
+    as(MCDirector);
+    if (obj->lastScene) {
+        if (obj->lastScene->skyboxShow && obj->lastScene->skyboxRef) {
+            return obj->lastScene->skyboxRef->camera;
+        }
+    }
+    return null;
+}
+
 oninit(MCDirector)
 {
     if (init(MCObject)) {
@@ -31,8 +51,14 @@ oninit(MCDirector)
         var(currentWidth) = 0;
         var(currentHeight) = 0;
         
+        var(lightFollowCamera) = true;
+        var(gyroscopeMode) = true;
+        var(deviceRotationMat3) = MCMatrix3Identity;
+        
+        var(lightHandler) = lightHandler;
         var(cameraHandler) = cameraHandler;
         var(contextHandler) = contextHandler;
+        var(skyboxCameraHandler) = skyboxCameraHandler;
         
         var(skyboxThread) = new(MCThread);
         var(modelThread) = new(MCThread);
@@ -68,6 +94,16 @@ method(MCDirector, void, bye, voida)
 method(MCDirector, void, updateAll, voida)
 {
     if (var(lastScene) != null) {
+        if (var(gyroscopeMode)) {
+            MCCamera_setRotationMat3(0, cpt(cameraHandler), obj->deviceRotationMat3.m);
+            if (computed(var(lastScene), isDrawSky)) {
+                MCSkyboxCamera_setRotationMat3(0, cpt(skyboxCameraHandler), obj->deviceRotationMat3.m);
+            }
+        }
+        if (var(lightFollowCamera) && cpt(lightHandler) && cpt(cameraHandler)) {
+            cpt(lightHandler)->lightPosition = computed(cpt(cameraHandler), currentPosition);
+            cpt(lightHandler)->dataChanged = true;
+        }
         MC3DScene_updateScene(0, var(lastScene), 0);
     }
 }
@@ -132,6 +168,16 @@ method(MCDirector, void, resizeAllScene, int width, int height)
     var(currentHeight) = height;
 }
 
+method(MCDirector, void, addNode, MC3DNode* node)
+{
+    if(node && obj->lastScene && obj->lastScene->rootnode) {
+        MC3DNode_addChild(0, obj->lastScene->rootnode, (MC3DNode*)node);
+    }else{
+        error_log("MCDirector add node(%p) failed [lastScene=%p rootnode=%p]\n",
+                  node, obj->lastScene, obj->lastScene->rootnode);
+    }
+}
+
 method(MCDirector, void, addModel, MC3DModel* model)
 {
     if(model && obj->lastScene && obj->lastScene->rootnode) {
@@ -179,6 +225,22 @@ method(MCDirector, void, cameraFocusOnModel, MC3DModel* model)
     cpt(cameraHandler)->R_value = max * 2.0f;
 }
 
+method(MCDirector, void, setDeviceRotationMat3, float mat3[9])
+{
+    if (mat3) {
+        for (int i=0; i<9; i++) {
+            obj->deviceRotationMat3.m[i] = mat3[i];
+        }
+    }
+}
+
+method(MCDirector, void, setCameraRotateMode, MCCameraRotateMode mode)
+{
+    if (cpt(cameraHandler)) {
+        cpt(cameraHandler)->rotateMode = mode;
+    }
+}
+
 method(MCDirector, void, printDebugInfo, voida)
 {
     debug_log("MCDirector currentWidth=%d currentHeight=%d\n", obj->currentWidth, obj->currentHeight);
@@ -203,10 +265,13 @@ onload(MCDirector)
         binding(MCDirector, void, pushScene, MC3DScene* scene);
         binding(MCDirector, void, popScene, voida);
         binding(MCDirector, void, resizeAllScene, int width, int height);
+        binding(MCDirector, void, addNode, MC3DNode* node);
         binding(MCDirector, void, addModel, MC3DModel* model);
         binding(MCDirector, void, addModelNamed, const char* name);
         binding(MCDirector, void, cameraFocusOn, MCVector3 vertex);
         binding(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
+        binding(MCDirector, void, setDeviceRotationMat3, float mat3[9]);
+        binding(MCDirector, void, setCameraRotateMode, MCCameraRotateMode mode);
         binding(MCDirector, void, printDebugInfo, voida);
 
         return cla;

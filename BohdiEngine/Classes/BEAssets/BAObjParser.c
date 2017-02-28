@@ -82,9 +82,9 @@ void parseObj(BAObjModel* object, const char* file)
         
         BAMesh* current_mesh = null;
 
-        char usemtl_name[LINE_MAX] = {};
-        char object_name[LINE_MAX] = {};
-        char group_name[LINE_MAX]  = {};
+        char usemtl_name[LINE_MAX] = {0};
+        char object_name[LINE_MAX] = {0};
+        char group_name[LINE_MAX]  = {0};
         
         char line[LINE_MAX]; char* c = (char*)file;
         while (*c != NUL && *c != EOF) {

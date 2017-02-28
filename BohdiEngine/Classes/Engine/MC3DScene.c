@@ -39,6 +39,8 @@ oninit(MC3DScene)
         var(cameraLock) = false;
         var(isDrawSky) = isDrawSky;
         
+        //var(worldCoordAxis) = new(MC3DAxis);
+        //ff(var(rootnode), addChild, var(worldCoordAxis));
         return obj;
     }else{
         return null;
@@ -78,12 +80,12 @@ method(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width,
 method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height,
        const char* vname, const char* fname)
 {
-    char vpath[LINE_MAX] = {};
+    char vpath[LINE_MAX] = {0};
     if (MCFileGetPath(vname, vpath))
         return null;
     const char* vsource = MCFileCopyContentWithPath(vpath);
     
-    char fpath[LINE_MAX] = {};
+    char fpath[LINE_MAX] = {0};
     if (MCFileGetPath(fname, fpath))
         return null;
     const char* fsource = MCFileCopyContentWithPath(fpath);
@@ -142,7 +144,6 @@ method(MC3DScene, void, updateScene, voida)
     
     MCCamera_update(0, obj->mainCamera, obj->renderer->context);
     MCLight_update(0, obj->light, obj->renderer->context);
-    
     MCGLRenderer_updateNodes(0, var(renderer), var(rootnode));
 }
 

@@ -44,8 +44,7 @@ static MCDirector* director = null;
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //ff(director, addModelNamed, "monkey2.obj");
-        ff(director, addModelNamed, "arcticcondor.obj");
+        ff(director, addModelNamed, "monkey2.obj");
     });
 }
 

@@ -62,15 +62,26 @@ compute(double, maxlength)
     return max;
 }
 
+compute(MCVector3, center)
+{
+    as(MC3DModel);
+    MC3DFrame f = cpt(frame);
+    return MCVector3Make((f.xmax-f.xmin)/2.0,
+                         (f.ymax-f.ymin)/2.0,
+                         (f.zmax-f.zmin)/2.0);
+}
+
 oninit(MC3DModel)
 {
     if (init(MC3DNode)) {
         obj->defaultColor = (MCColorf){0.9, 0.9, 0.9, 1.0};
         obj->defaultExtension = "obj";
         obj->textureOnOff = false;
-        
+
         obj->frame = frame;
         obj->maxlength = maxlength;
+        obj->center = center;
+        
         obj->lastSavedFrame = (MC3DFrame){0,0,0,0,0,0};
         return obj;
     }else{
@@ -330,6 +341,24 @@ method(MC3DModel, MC3DModel*, initWithFileName, const char* name)
     return MC3DModel_initWithFileNameColor(0, obj, name, obj->defaultColor);
 }
 
+method(MC3DModel, void, translateToOrigin, voida)
+{
+    MCVector3 center = cpt(center);
+    MCVector3 rcenter = MCVector3Reverse(center);
+    MC3DNode_translate(0, sobj, &rcenter);
+}
+
+//override
+method(MC3DModel, void, update, MCGLContext* ctx)
+{
+    MC3DNode_update(0, sobj, ctx);
+}
+
+method(MC3DModel, void, draw, MCGLContext* ctx)
+{
+    MC3DNode_draw(0, sobj, ctx);
+}
+
 onload(MC3DModel)
 {
     if (load(MC3DNode)) {
@@ -338,7 +367,10 @@ onload(MC3DModel)
         binding(MC3DModel, MC3DModel*, initWithFileName, const char* name);
         binding(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf color);
         binding(MC3DModel, MC3DModel*, initWithFileNameColor, const char* name, MCColorf color);
-
+        //override
+        binding(MC3DModel, void, update, MCGLContext* ctx);
+        binding(MC3DModel, void, draw, MCGLContext* ctx);
+        binding(MC3DModel, void, translateToOrigin, voida);
         return cla;
     }else{
         return null;

@@ -156,18 +156,18 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
     
     //draw self texture
     if (obj->diffuseTexture != null) {
-        ctx->diffuseTextureRef = obj->diffuseTexture;
+        //ctx->diffuseTextureRef = obj->diffuseTexture;
         glUniform1i(glGetUniformLocation(ctx->pid, "usetexture"), true);
     } else {
-        ctx->diffuseTextureRef = null;
+        //ctx->diffuseTextureRef = null;
         glUniform1i(glGetUniformLocation(ctx->pid, "usetexture"), false);
     }
     
-    if (obj->specularTexture != null) {
-        ctx->specularTextureRef = obj->specularTexture;
-    } else {
-        ctx->specularTextureRef = null;
-    }
+//    if (obj->specularTexture != null) {
+//        ctx->specularTextureRef = obj->specularTexture;
+//    } else {
+//        ctx->specularTextureRef = null;
+//    }
     
     //batch setup
     MCGLContext_setUniforms(0, ctx, 0);
@@ -176,6 +176,8 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
     MCLinkedListForEach(var(meshes),
                         MCMesh* mesh = (MCMesh*)item;
                         if (mesh != null) {
+                            mesh->diffuseTextureRef  = obj->diffuseTexture;
+                            mesh->specularTextureRef = obj->specularTexture;
                             MCMesh_prepareMesh(0, mesh, ctx);
                             MCMesh_drawMesh(0, mesh, ctx);
                         })

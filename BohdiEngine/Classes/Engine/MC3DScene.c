@@ -39,8 +39,8 @@ oninit(MC3DScene)
         var(cameraLock) = false;
         var(isDrawSky) = isDrawSky;
         
-        //var(worldCoordAxis) = new(MC3DAxis);
-        //ff(var(rootnode), addChild, var(worldCoordAxis));
+        var(worldCoordAxis) = new(MC3DAxis);
+        ff(var(rootnode), addChild, var(worldCoordAxis));
         return obj;
     }else{
         return null;

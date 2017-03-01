@@ -23,6 +23,9 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		7EF861B9DC59A2875049B3F5 /* Pods_BohdiEngine_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49F087004F0CAC65B7623E3B /* Pods_BohdiEngine_Example.framework */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		F8D8BBDC1E6687AE00229AE7 /* arcticcondor.mtl in Resources */ = {isa = PBXBuildFile; fileRef = F8D8BBD91E6687AE00229AE7 /* arcticcondor.mtl */; };
+		F8D8BBDD1E6687AE00229AE7 /* arcticcondor.obj in Resources */ = {isa = PBXBuildFile; fileRef = F8D8BBDA1E6687AE00229AE7 /* arcticcondor.obj */; };
+		F8D8BBDE1E6687AE00229AE7 /* ArcticCondorGold.tga in Resources */ = {isa = PBXBuildFile; fileRef = F8D8BBDB1E6687AE00229AE7 /* ArcticCondorGold.tga */; };
 		F8E688481E5D851300D6E869 /* monkey2.obj in Resources */ = {isa = PBXBuildFile; fileRef = F8E688461E5D851300D6E869 /* monkey2.obj */; };
 		FD7379E01E2B54E6000ED551 /* BohdiEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7379DF1E2B54E6000ED551 /* BohdiEngine.framework */; };
 		FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */ = {isa = PBXBuildFile; fileRef = FD737A281E2B6C90000ED551 /* beengine.mtl */; };
@@ -71,6 +74,9 @@
 		B29F3398775A4115559DCFA9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		DE81044E42193FB27E60BC38 /* Pods_BohdiEngine_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BohdiEngine_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44D3773801779395462E915 /* Pods-BohdiEngine_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BohdiEngine_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BohdiEngine_Example/Pods-BohdiEngine_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		F8D8BBD91E6687AE00229AE7 /* arcticcondor.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arcticcondor.mtl; sourceTree = "<group>"; };
+		F8D8BBDA1E6687AE00229AE7 /* arcticcondor.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arcticcondor.obj; sourceTree = "<group>"; };
+		F8D8BBDB1E6687AE00229AE7 /* ArcticCondorGold.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = ArcticCondorGold.tga; sourceTree = "<group>"; };
 		F8E688461E5D851300D6E869 /* monkey2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey2.obj; sourceTree = "<group>"; };
 		FCF04D989F31C672C28B0EC4 /* BohdiEngine.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BohdiEngine.podspec; path = ../BohdiEngine.podspec; sourceTree = "<group>"; };
 		FD7379DF1E2B54E6000ED551 /* BohdiEngine.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BohdiEngine.framework; path = "Pods/../build/Debug-iphoneos/BohdiEngine/BohdiEngine.framework"; sourceTree = "<group>"; };
@@ -210,9 +216,20 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		F8D8BBD81E6687AE00229AE7 /* ArcticCondorGold */ = {
+			isa = PBXGroup;
+			children = (
+				F8D8BBD91E6687AE00229AE7 /* arcticcondor.mtl */,
+				F8D8BBDA1E6687AE00229AE7 /* arcticcondor.obj */,
+				F8D8BBDB1E6687AE00229AE7 /* ArcticCondorGold.tga */,
+			);
+			path = ArcticCondorGold;
+			sourceTree = "<group>";
+		};
 		FD737A261E2B6C6E000ED551 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F8D8BBD81E6687AE00229AE7 /* ArcticCondorGold */,
 				FD737A281E2B6C90000ED551 /* beengine.mtl */,
 				F8E688461E5D851300D6E869 /* monkey2.obj */,
 				FD737A2B1E2B6CBE000ED551 /* MCGLRenderer.fsh */,
@@ -314,10 +331,13 @@
 				FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */,
 				F8E688481E5D851300D6E869 /* monkey2.obj in Resources */,
 				FD737A2F1E2B6CBE000ED551 /* MCGLRenderer.fsh in Resources */,
+				F8D8BBDD1E6687AE00229AE7 /* arcticcondor.obj in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
 				FD737A321E2B6CBE000ED551 /* MCSkyboxShader.vsh in Resources */,
+				F8D8BBDC1E6687AE00229AE7 /* arcticcondor.mtl in Resources */,
 				FD737A301E2B6CBE000ED551 /* MCGLRenderer.vsh in Resources */,
+				F8D8BBDE1E6687AE00229AE7 /* ArcticCondorGold.tga in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

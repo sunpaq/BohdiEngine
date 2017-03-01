@@ -51,6 +51,9 @@ class(MCMesh, MCItem,
 
       MCVertexAttribute vertexAttribArray[MCVertexAttribIndexMax];
       MCDrawMode mode;
+
+      MCTexture* diffuseTextureRef;
+      MCTexture* specularTextureRef;
 );
 
 method(MCMesh, void, bye, voida);

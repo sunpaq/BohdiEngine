@@ -26,8 +26,6 @@ class(MCGLContext, MCObject,
       MCUInt uniformCount;
       
       MCDrawMode drawMode;
-      MCTexture* diffuseTextureRef;
-      MCTexture* specularTextureRef;
 );
 
 //shader

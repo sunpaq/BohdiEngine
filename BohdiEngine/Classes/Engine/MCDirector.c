@@ -198,6 +198,8 @@ method(MCDirector, void, addModelNamed, const char* name)
     MC3DModel* model = new(MC3DModel);
     MC3DModel_initWithFileName(0, model, name);
     MCDirector_cameraFocusOnModel(0, obj, model);
+    MCDirector_cameraFocusOn(0, obj, (MCVector3){0,0,0});
+    MCDirector_moveModelToOrigin(0, obj, model);
     MCDirector_addModel(0, obj, model);
 }
 
@@ -223,6 +225,11 @@ method(MCDirector, void, cameraFocusOnModel, MC3DModel* model)
     
     cpt(cameraHandler)->lookat.y = mheight / 2.0f;
     cpt(cameraHandler)->R_value = max * 2.0f;
+}
+
+method(MCDirector, void, moveModelToOrigin, MC3DModel* model)
+{
+    MC3DModel_translateToOrigin(0, model, 0);
 }
 
 method(MCDirector, void, setDeviceRotationMat3, float mat3[9])
@@ -270,6 +277,7 @@ onload(MCDirector)
         binding(MCDirector, void, addModelNamed, const char* name);
         binding(MCDirector, void, cameraFocusOn, MCVector3 vertex);
         binding(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
+        binding(MCDirector, void, moveModelToOrigin, MC3DModel* model);
         binding(MCDirector, void, setDeviceRotationMat3, float mat3[9]);
         binding(MCDirector, void, setCameraRotateMode, MCCameraRotateMode mode);
         binding(MCDirector, void, printDebugInfo, voida);

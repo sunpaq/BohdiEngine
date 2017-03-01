@@ -52,6 +52,8 @@ method(MC3DAxis, void, draw, MCGLContext* ctx)
     glBindVertexArray(obj->buffId);
     glDrawArrays(MCLines, 0, 6);
     //glBindVertexArray(0);
+    
+    glLineWidth(1);
 }
 
 onload(MC3DAxis)

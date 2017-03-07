@@ -1,23 +1,22 @@
 //
-//  MCSkyboxCamera.c
+//  MCSkysphereCamera.c
 //  Sapindus
 //
-//  Created by Sun YuLi on 16/5/1.
-//  Copyright © 2016年 oreisoft. All rights reserved.
+//  Created by Sun YuLi on 2017/3/4.
+//  Copyright © 2017年 oreisoft. All rights reserved.
 //
 
-#include "MCSkyboxCamera.h"
+#include "MCSkysphereCamera.h"
 
-compute(MCMatrix4, boxViewMatrix);
-compute(MCMatrix4, boxProjectionMatrix);
+compute(MCMatrix4, sphViewMatrix);
+compute(MCMatrix4, sphProjectionMatrix);
 
-//current positon always 0,0,0
-oninit(MCSkyboxCamera)
+oninit(MCSkysphereCamera)
 {
     if (init(MCCamera)) {
         //super
         sobj->ratio = MCRatioHDTV16x9;
-        sobj->R_value = 1.0;
+        sobj->R_value = 10.0;
         sobj->R_percent = 1.0;
         sobj->tht = 0;
         sobj->fai = 90;
@@ -28,8 +27,8 @@ oninit(MCSkyboxCamera)
         sobj->up     = MCVector3Make(0, 0, 1);
         
         //uniforms
-        obj->viewMatrix        = boxViewMatrix;
-        obj->projectionMatrix  = boxProjectionMatrix;
+        obj->viewMatrix        = sphViewMatrix;
+        obj->projectionMatrix  = sphProjectionMatrix;
         
         return obj;
     }else{
@@ -37,9 +36,9 @@ oninit(MCSkyboxCamera)
     }
 }
 
-compute(MCMatrix4, boxViewMatrix)
+compute(MCMatrix4, sphViewMatrix)
 {
-    as(MCSkyboxCamera);
+    as(MCSkysphereCamera);
     MCMatrix4 m = MCMatrix4MakeLookAt(0, 0,0,
                                       0, 0,-1,
                                       0, 1,0);
@@ -48,10 +47,10 @@ compute(MCMatrix4, boxViewMatrix)
     return MCMatrix4Multiply(m, imat4);
 }
 
-compute(MCMatrix4, boxProjectionMatrix)
+compute(MCMatrix4, sphProjectionMatrix)
 {
-    as(MCSkyboxCamera);
-    return MCMatrix4MakePerspective(M_PI * 1/2,
+    as(MCSkysphereCamera);
+    return MCMatrix4MakePerspective(M_PI * 0.55,
                                     sobj->ratio,
                                     0.001,
                                     200.0);
@@ -59,7 +58,7 @@ compute(MCMatrix4, boxProjectionMatrix)
 
 function(MCGLUniform, viewUniform, voida)
 {
-    as(MCSkyboxCamera);
+    as(MCSkysphereCamera);
     MCGLUniform uniform;
     uniform.type = MCGLUniformMat4;
     uniform.data.mat4 = cpt(viewMatrix);
@@ -68,55 +67,54 @@ function(MCGLUniform, viewUniform, voida)
 
 function(MCGLUniform, projectionUniform, voida)
 {
-    as(MCSkyboxCamera);
+    as(MCSkysphereCamera);
     MCGLUniform uniform;
     uniform.type = MCGLUniformMat4;
     uniform.data.mat4 = cpt(projectionMatrix);
     return uniform;
 }
 
-//override
-method(MCSkyboxCamera, MCSkyboxCamera*, initWithWidthHeightRatio, MCFloat ratio)
+method(MCSkysphereCamera, MCSkysphereCamera*, initWithWidthHeightRatio, MCFloat ratio)
 {
     //setting camera
     sobj->ratio = ratio.f;
     return obj;
 }
 
-method(MCSkyboxCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)
+method(MCSkysphereCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)
 {
     MCCamera_move(0, sobj, deltaFai, deltaTht);
 }
 
-method(MCSkyboxCamera, void, update, MCGLContext* ctx)
+method(MCSkysphereCamera, void, update, MCGLContext* ctx)
 {
     //change value
     MCGLContext_activateShaderProgram(0, ctx, 0);
-
+    
     MCGLUniform uv = viewUniform(0, obj, 0);
     MCGLUniform up = projectionUniform(0, obj, 0);
-
-    MCGLContext_updateUniform(0, ctx, "boxViewMatrix", uv.data);
-    MCGLContext_updateUniform(0, ctx, "boxProjectionMatrix", up.data);
+    
+    MCGLContext_updateUniform(0, ctx, "sphViewMatrix", uv.data);
+    MCGLContext_updateUniform(0, ctx, "sphProjectionMatrix", up.data);
     
     MCGLContext_setUniforms(0, ctx, 0);
 }
 
-method(MCSkyboxCamera, void, setRotationMat3, float mat3[9])
+method(MCSkysphereCamera, void, setRotationMat3, float mat3[9])
 {
     MCCamera_setRotationMat3(0, sobj, mat3);
 }
 
-onload(MCSkyboxCamera)
+onload(MCSkysphereCamera)
 {
     if (load(MCCamera)) {
-        binding(MCSkyboxCamera, MCSkyboxCamera*, initWithWidthHeightRatio, double ratio);
-        binding(MCSkyboxCamera, void, move, double deltaFai, double deltaTht);
-        binding(MCSkyboxCamera, void, update, MCGLContext* ctx);
-        binding(MCSkyboxCamera, void, setRotationMat3, float mat3[9]);
+        binding(MCSkysphereCamera, MCSkysphereCamera*, initWithWidthHeightRatio, MCFloat ratio);
+        binding(MCSkysphereCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
+        binding(MCSkysphereCamera, void, update, MCGLContext* ctx);
+        binding(MCSkysphereCamera, void, setRotationMat3, float mat3[9]);
+        
         return cla;
     }else{
         return null;
     }
 }
-

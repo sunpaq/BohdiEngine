@@ -37,7 +37,7 @@ compute(MCSkyboxCamera*, skyboxCameraHandler)
 {
     as(MCDirector);
     if (obj->lastScene) {
-        if (obj->lastScene->skyboxShow && obj->lastScene->skyboxRef) {
+        if (obj->lastScene->skyboxRef) {
             return obj->lastScene->skyboxRef->camera;
         }
     }
@@ -96,9 +96,7 @@ method(MCDirector, void, updateAll, voida)
     if (var(lastScene) != null) {
         if (var(gyroscopeMode)) {
             MCCamera_setRotationMat3(0, cpt(cameraHandler), obj->deviceRotationMat3.m);
-            if (computed(var(lastScene), isDrawSky)) {
-                MCSkyboxCamera_setRotationMat3(0, cpt(skyboxCameraHandler), obj->deviceRotationMat3.m);
-            }
+            MC3DScene_setRotationMat3(0, var(lastScene), obj->deviceRotationMat3.m);
         }
         if (var(lightFollowCamera) && cpt(lightHandler) && cpt(cameraHandler)) {
             cpt(lightHandler)->lightPosition = computed(cpt(cameraHandler), currentPosition);
@@ -198,8 +196,6 @@ method(MCDirector, void, addModelNamed, const char* name)
     MC3DModel* model = new(MC3DModel);
     MC3DModel_initWithFileName(0, model, name);
     MCDirector_cameraFocusOnModel(0, obj, model);
-    MCDirector_cameraFocusOn(0, obj, (MCVector3){0,0,0});
-    MCDirector_moveModelToOrigin(0, obj, model);
     MCDirector_addModel(0, obj, model);
 }
 

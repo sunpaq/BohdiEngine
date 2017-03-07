@@ -16,6 +16,15 @@
 #include "MCClock.h"
 #include "MCLight.h"
 #include "MCSkybox.h"
+#include "MCSkysphere.h"
+
+typedef enum {
+    MC3DSceneModelOnly,
+    MC3DSceneModelWithSkybox,
+    MC3DSceneModelWithSkysph,
+    MC3DSceneSkyboxOnly,
+    MC3DSceneSkysphOnly
+} MC3DSceneCombineMode;
 
 class(MC3DScene, MCObject,
       struct MC3DSceneStruct* next;
@@ -24,8 +33,9 @@ class(MC3DScene, MCObject,
       unsigned      scenewidth;
       unsigned      sceneheight;
       
-      MCBool        skyboxShow;
+      //MCBool        skyboxShow;
       MCSkybox*     skyboxRef;
+      MCSkysphere*  skysphRef;
       
       MCGLRenderer* renderer;
       MC3DNode*     rootnode;
@@ -35,6 +45,7 @@ class(MC3DScene, MCObject,
       MCClock*      clock;
       
       computing(MCBool, isDrawSky);
+      MC3DSceneCombineMode combineMode;
 );
 
 method(MC3DScene, void, bye, voida);
@@ -51,6 +62,7 @@ method(MC3DScene, void, lockCamera, MCBool lock);
 method(MC3DScene, MCCamera*, getCamera, voida);
 method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht);
 method(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht);
+method(MC3DScene, void, setRotationMat3, float mat3[9]);
 method(MC3DScene, void, printDebugInfo, voida);
 
 #endif /* MC3DScene_h */

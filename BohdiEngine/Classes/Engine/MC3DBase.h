@@ -46,6 +46,23 @@ MCInline MCVector3 MCVertexFromSpherical(double R, double tht, double fai) {
     return (MCVector3){x,y,z};
 }
 
+MCInline MCVector3 MCVertexFromSpherical_radians(double R, double tht, double fai) {
+#if (defined(__APPLE__) || defined(__ANDROID__))
+    double sinT = sin(tht);
+    double sinF = sin(fai);
+    double cosT = cos(tht);
+    double cosF = cos(fai);
+    double x = R * sinT * cosF;
+    double y = R * sinT * sinF;
+    double z = R * cosT;
+#else
+    double x = R * sin(tht) * cos(fai);
+    double y = R * sin(tht) * sin(fai);
+    double z = R * cos(tht);
+#endif
+    return (MCVector3){x,y,z};
+}
+
 MCInline MCMatrix4 MCMatrix4MakePerspective(float fovyRadians, float aspect, float nearZ, float farZ)
 {
     float cotan = 1.0f / tanf(fovyRadians / 2.0f);

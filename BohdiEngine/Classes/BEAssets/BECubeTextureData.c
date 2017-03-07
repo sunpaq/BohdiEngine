@@ -22,7 +22,7 @@ utility(BECubeTextureData, BECubeTextureData*, newWithFacePaths, const char* fac
 {
     BECubeTextureData* data = new(BECubeTextureData);
     for (int i=0; i<6; i++) {
-        BE2DTextureData* aface = BE2DTextureData_newWithPath(facepaths[i]);
+        BE2DTextureData* aface = BE2DTextureData_newWithPathname(facepaths[i]);
         if (aface != null) {
             data->faces[i] = aface;
         }else{
@@ -42,7 +42,7 @@ utility(BECubeTextureData, BECubeTextureData*, newWithFaces, const char* faces[6
             return null;
         }
         pathbuff[PATH_MAX-1] = NUL;
-        data->faces[i] = BE2DTextureData_newWithPath(pathbuff);
+        data->faces[i] = BE2DTextureData_newWithPathname(pathbuff);
     }
     return data;
 }

@@ -13,7 +13,7 @@
 compute(MCBool, isDrawSky)
 {
     as(MC3DScene);
-    if (var(skyboxShow) && var(skyboxRef)!=null) {
+    if (var(combineMode) != MC3DSceneModelOnly) {
         return true;
     }
     return false;
@@ -22,8 +22,9 @@ compute(MCBool, isDrawSky)
 oninit(MC3DScene)
 {
     if (init(MCObject)) {
-        var(skyboxShow) = false;
+        //var(skyboxShow) = false;
         var(skyboxRef)  = null;
+        var(skysphRef)  = null;
         
         var(renderer)   = new(MCGLRenderer);
         var(rootnode)   = new(MC3DNode);
@@ -37,8 +38,9 @@ oninit(MC3DScene)
         var(sceneheight)= 0;
         
         var(cameraLock) = false;
-        var(isDrawSky) = isDrawSky;
-
+        var(isDrawSky)  = isDrawSky;
+        
+        var(combineMode)  = MC3DSceneModelOnly;
         return obj;
     }else{
         return null;
@@ -47,7 +49,6 @@ oninit(MC3DScene)
 
 method(MC3DScene, void, printDebugInfo, voida)
 {
-    debug_log("MC3DScene: skyboxShow=%d\n", obj->skyboxShow);
     ff(obj->light, printDebugInfo, 0);
 }
 
@@ -70,7 +71,7 @@ method(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width,
     MCCamera_initWithWidthHeight(0, var(mainCamera), width, height);
     MCGLRenderer_initWithShaderCodeString(0, var(renderer), vsource, fsource);
     var(skyboxRef) = null;
-    var(skyboxShow) = false;
+    var(skysphRef) = null;
     debug_log("MC3DScene - init end\n");
     return obj;
 }
@@ -134,12 +135,26 @@ method(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht)
 
 method(MC3DScene, void, updateScene, voida)
 {
-    MC3DScene_moveCameraOneStep(0, obj, (MCFloat)0.5, (MCFloat)0.0);
-    
     if(cpt(isDrawSky)) {
-        MCSkybox_update(0, var(skyboxRef), var(renderer)->context);
+        //no model
+        if (var(combineMode) == MC3DSceneSkyboxOnly) {
+            MCSkybox_update(0, var(skyboxRef), var(renderer)->context);
+            return;
+        }
+        else if (var(combineMode) == MC3DSceneSkysphOnly) {
+            MCSkysphere_update(0, var(skysphRef), var(renderer)->context);
+            return;
+        }
+        //with model
+        else if (var(combineMode) == MC3DSceneModelWithSkybox) {
+            MCSkybox_update(0, var(skyboxRef), var(renderer)->context);
+        }
+        else if (var(combineMode) == MC3DSceneModelWithSkysph) {
+            MCSkysphere_update(0, var(skysphRef), var(renderer)->context);
+        }
     }
     
+    MC3DScene_moveCameraOneStep(0, obj, (MCFloat)0.5, (MCFloat)0.0);
     MCCamera_update(0, obj->mainCamera, obj->renderer->context);
     MCLight_update(0, obj->light, obj->renderer->context);
     MCGLRenderer_updateNodes(0, var(renderer), var(rootnode));
@@ -148,15 +163,41 @@ method(MC3DScene, void, updateScene, voida)
 method(MC3DScene, int, drawScene, voida)
 {
     MCGLEngine_clearScreen(0);
-    
     if (cpt(isDrawSky)) {
-        MCSkybox_draw(0, var(skyboxRef), var(renderer)->context);
+        //no model
+        if (var(combineMode) == MC3DSceneSkyboxOnly) {
+            MCSkybox_draw(0, var(skyboxRef), var(renderer)->context);
+            return MCGLEngine_tickFPS(var(clock));
+        }
+        else if (var(combineMode) == MC3DSceneSkysphOnly) {
+            MCSkysphere_draw(0, var(skysphRef), var(renderer)->context);
+            return MCGLEngine_tickFPS(var(clock));
+        }
+        //with model
+        else if (var(combineMode) == MC3DSceneModelWithSkybox) {
+            MCSkybox_draw(0, var(skyboxRef), var(renderer)->context);
+        }
+        else if (var(combineMode) == MC3DSceneModelWithSkysph) {
+            MCSkysphere_draw(0, var(skysphRef), var(renderer)->context);
+        }
     }
-    
+
     MCGLRenderer_drawNodes(0, var(renderer), var(rootnode));
-    
     //calculate FPS
     return MCGLEngine_tickFPS(var(clock));
+}
+
+method(MC3DScene, void, setRotationMat3, float mat3[9])
+{
+    if (cpt(isDrawSky)) {
+        if (var(skyboxRef)) {
+            MCSkyboxCamera_setRotationMat3(0, var(skyboxRef)->camera, mat3);
+        }
+        if (var(skysphRef)) {
+            //MCSkysphereCamera_setRotationMat3(0, var(skysphRef)->camera, mat3);
+            MCSkysphere_setRotationMat3(0, var(skysphRef), mat3);
+        }
+    }
 }
 
 onload(MC3DScene)
@@ -174,6 +215,7 @@ onload(MC3DScene)
         binding(MC3DScene, MCCamera*, getCamera, voida);
         binding(MC3DScene, void, moveCameraOneStep, double deltaFai, double deltaTht);
         binding(MC3DScene, void, moveSkyboxCamera, MCDouble deltaFai, MCDouble deltaTht);
+        binding(MC3DScene, void, setRotationMat3, float mat3[9]);
         binding(MC3DScene, void, printDebugInfo, voida);
 
         return cla;

@@ -14,7 +14,6 @@
 		6003F598195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
 		6003F59A195388D20070C39A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
 		6003F59E195388D20070C39A /* BEAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F59D195388D20070C39A /* BEAppDelegate.m */; };
-		6003F5A7195388D20070C39A /* BEViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5A6195388D20070C39A /* BEViewController.m */; };
 		6003F5A9195388D20070C39A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
 		6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -23,6 +22,17 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		7EF861B9DC59A2875049B3F5 /* Pods_BohdiEngine_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49F087004F0CAC65B7623E3B /* Pods_BohdiEngine_Example.framework */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		F870A5551E6FA1E8009B7175 /* MCSkysphereShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = F870A5531E6FA1E8009B7175 /* MCSkysphereShader.fsh */; };
+		F870A5561E6FA1E8009B7175 /* MCSkysphereShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = F870A5541E6FA1E8009B7175 /* MCSkysphereShader.vsh */; };
+		F870A5581E6FA3B3009B7175 /* LandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F870A5571E6FA3B3009B7175 /* LandingViewController.m */; };
+		F870A5631E6FE247009B7175 /* back.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55B1E6FE247009B7175 /* back.jpg */; };
+		F870A5641E6FE247009B7175 /* bottom.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55C1E6FE247009B7175 /* bottom.jpg */; };
+		F870A5651E6FE247009B7175 /* front.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55D1E6FE247009B7175 /* front.jpg */; };
+		F870A5661E6FE247009B7175 /* left.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55E1E6FE247009B7175 /* left.jpg */; };
+		F870A5671E6FE247009B7175 /* right.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55F1E6FE247009B7175 /* right.jpg */; };
+		F870A5681E6FE247009B7175 /* top.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A5601E6FE247009B7175 /* top.jpg */; };
+		F870A5691E6FE247009B7175 /* panorama360.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A5621E6FE247009B7175 /* panorama360.jpg */; };
+		F870A56B1E6FFF6C009B7175 /* wood.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A56A1E6FFF6C009B7175 /* wood.jpg */; };
 		F8E688481E5D851300D6E869 /* monkey2.obj in Resources */ = {isa = PBXBuildFile; fileRef = F8E688461E5D851300D6E869 /* monkey2.obj */; };
 		FD7379E01E2B54E6000ED551 /* BohdiEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7379DF1E2B54E6000ED551 /* BohdiEngine.framework */; };
 		FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */ = {isa = PBXBuildFile; fileRef = FD737A281E2B6C90000ED551 /* beengine.mtl */; };
@@ -58,8 +68,6 @@
 		6003F59B195388D20070C39A /* BohdiEngine-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BohdiEngine-Prefix.pch"; sourceTree = "<group>"; };
 		6003F59C195388D20070C39A /* BEAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BEAppDelegate.h; sourceTree = "<group>"; };
 		6003F59D195388D20070C39A /* BEAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BEAppDelegate.m; sourceTree = "<group>"; };
-		6003F5A5195388D20070C39A /* BEViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BEViewController.h; sourceTree = "<group>"; };
-		6003F5A6195388D20070C39A /* BEViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BEViewController.m; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6003F5AE195388D20070C39A /* BohdiEngine_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BohdiEngine_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -71,6 +79,18 @@
 		B29F3398775A4115559DCFA9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		DE81044E42193FB27E60BC38 /* Pods_BohdiEngine_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BohdiEngine_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44D3773801779395462E915 /* Pods-BohdiEngine_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BohdiEngine_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BohdiEngine_Example/Pods-BohdiEngine_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		F870A5531E6FA1E8009B7175 /* MCSkysphereShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCSkysphereShader.fsh; sourceTree = "<group>"; };
+		F870A5541E6FA1E8009B7175 /* MCSkysphereShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCSkysphereShader.vsh; sourceTree = "<group>"; };
+		F870A5571E6FA3B3009B7175 /* LandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LandingViewController.m; sourceTree = "<group>"; };
+		F870A5591E6FA3C7009B7175 /* LandingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LandingViewController.h; sourceTree = "<group>"; };
+		F870A55B1E6FE247009B7175 /* back.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = back.jpg; sourceTree = "<group>"; };
+		F870A55C1E6FE247009B7175 /* bottom.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bottom.jpg; sourceTree = "<group>"; };
+		F870A55D1E6FE247009B7175 /* front.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = front.jpg; sourceTree = "<group>"; };
+		F870A55E1E6FE247009B7175 /* left.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = left.jpg; sourceTree = "<group>"; };
+		F870A55F1E6FE247009B7175 /* right.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = right.jpg; sourceTree = "<group>"; };
+		F870A5601E6FE247009B7175 /* top.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = top.jpg; sourceTree = "<group>"; };
+		F870A5621E6FE247009B7175 /* panorama360.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = panorama360.jpg; sourceTree = "<group>"; };
+		F870A56A1E6FFF6C009B7175 /* wood.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wood.jpg; sourceTree = "<group>"; };
 		F8E688461E5D851300D6E869 /* monkey2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey2.obj; sourceTree = "<group>"; };
 		FCF04D989F31C672C28B0EC4 /* BohdiEngine.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BohdiEngine.podspec; path = ../BohdiEngine.podspec; sourceTree = "<group>"; };
 		FD7379DF1E2B54E6000ED551 /* BohdiEngine.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BohdiEngine.framework; path = "Pods/../build/Debug-iphoneos/BohdiEngine/BohdiEngine.framework"; sourceTree = "<group>"; };
@@ -148,9 +168,9 @@
 			children = (
 				6003F59C195388D20070C39A /* BEAppDelegate.h */,
 				6003F59D195388D20070C39A /* BEAppDelegate.m */,
+				F870A5591E6FA3C7009B7175 /* LandingViewController.h */,
+				F870A5571E6FA3B3009B7175 /* LandingViewController.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
-				6003F5A5195388D20070C39A /* BEViewController.h */,
-				6003F5A6195388D20070C39A /* BEViewController.m */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				FD737A261E2B6C6E000ED551 /* Resources */,
 				6003F594195388D20070C39A /* Supporting Files */,
@@ -210,15 +230,41 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		F870A55A1E6FE247009B7175 /* skybox */ = {
+			isa = PBXGroup;
+			children = (
+				F870A55B1E6FE247009B7175 /* back.jpg */,
+				F870A55C1E6FE247009B7175 /* bottom.jpg */,
+				F870A55D1E6FE247009B7175 /* front.jpg */,
+				F870A55E1E6FE247009B7175 /* left.jpg */,
+				F870A55F1E6FE247009B7175 /* right.jpg */,
+				F870A5601E6FE247009B7175 /* top.jpg */,
+			);
+			path = skybox;
+			sourceTree = "<group>";
+		};
+		F870A5611E6FE247009B7175 /* skysphere */ = {
+			isa = PBXGroup;
+			children = (
+				F870A5621E6FE247009B7175 /* panorama360.jpg */,
+				F870A56A1E6FFF6C009B7175 /* wood.jpg */,
+			);
+			path = skysphere;
+			sourceTree = "<group>";
+		};
 		FD737A261E2B6C6E000ED551 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F870A55A1E6FE247009B7175 /* skybox */,
+				F870A5611E6FE247009B7175 /* skysphere */,
 				FD737A281E2B6C90000ED551 /* beengine.mtl */,
 				F8E688461E5D851300D6E869 /* monkey2.obj */,
 				FD737A2B1E2B6CBE000ED551 /* MCGLRenderer.fsh */,
 				FD737A2C1E2B6CBE000ED551 /* MCGLRenderer.vsh */,
 				FD737A2D1E2B6CBE000ED551 /* MCSkyboxShader.fsh */,
 				FD737A2E1E2B6CBE000ED551 /* MCSkyboxShader.vsh */,
+				F870A5531E6FA1E8009B7175 /* MCSkysphereShader.fsh */,
+				F870A5541E6FA1E8009B7175 /* MCSkysphereShader.vsh */,
 			);
 			path = Resources;
 			sourceTree = SOURCE_ROOT;
@@ -309,15 +355,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F870A5561E6FA1E8009B7175 /* MCSkysphereShader.vsh in Resources */,
+				F870A5661E6FE247009B7175 /* left.jpg in Resources */,
 				FD737A311E2B6CBE000ED551 /* MCSkyboxShader.fsh in Resources */,
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */,
+				F870A5631E6FE247009B7175 /* back.jpg in Resources */,
+				F870A5691E6FE247009B7175 /* panorama360.jpg in Resources */,
+				F870A56B1E6FFF6C009B7175 /* wood.jpg in Resources */,
+				F870A5671E6FE247009B7175 /* right.jpg in Resources */,
+				F870A5551E6FA1E8009B7175 /* MCSkysphereShader.fsh in Resources */,
 				F8E688481E5D851300D6E869 /* monkey2.obj in Resources */,
+				F870A5641E6FE247009B7175 /* bottom.jpg in Resources */,
 				FD737A2F1E2B6CBE000ED551 /* MCGLRenderer.fsh in Resources */,
+				F870A5651E6FE247009B7175 /* front.jpg in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
 				FD737A321E2B6CBE000ED551 /* MCSkyboxShader.vsh in Resources */,
 				FD737A301E2B6CBE000ED551 /* MCGLRenderer.vsh in Resources */,
+				F870A5681E6FE247009B7175 /* top.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,7 +486,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F59E195388D20070C39A /* BEAppDelegate.m in Sources */,
-				6003F5A7195388D20070C39A /* BEViewController.m in Sources */,
+				F870A5581E6FA3B3009B7175 /* LandingViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

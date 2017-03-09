@@ -122,6 +122,17 @@ method(MC3DNode, void, scale, MCVector3* factors)
     obj->transform = MCMatrix4Multiply(MCMatrix4MakeScale(factors->x, factors->y, factors->z), obj->transform);
 }
 
+method(MC3DNode, void, setRotationMat3, float mat3[9])
+{
+    if (mat3) {
+        MCMatrix3 m3 = {0};
+        for (int i=0; i<9; i++) {
+            m3.m[i] = mat3[i];
+        }
+        obj->transform = MCMatrix4FromMatrix3(m3);
+    }
+}
+
 method(MC3DNode, void, update, MCGLContext* ctx)
 {
     MCGLUniform f;
@@ -219,6 +230,7 @@ onload(MC3DNode)
         binding(MC3DNode, void, rotateY, double degree);
         binding(MC3DNode, void, rotateZ, double degree);
         binding(MC3DNode, void, scale, MCVector3* factors);
+        binding(MC3DNode, void, setRotationMat3, float mat3[9]);
         binding(MC3DNode, void, update, voida);
         binding(MC3DNode, void, draw, voida);
         binding(MC3DNode, void, hide, voida);

@@ -13,13 +13,19 @@
 oninit(MCSkysphere)
 {
     if (init(MC3DNode)) {
+        //obj->Super.transform =
+        
         var(vaoid) = 0;
         var(vboid) = 0;
         var(eboid) = 0;
         var(texid) = 0;
         
-        var(camera) = new(MCSkysphereCamera);
         var(ctx)    = new(MCGLContext);
+        
+        var(sphViewMatrix) = MCMatrix4Identity;
+        var(sphProjectionMatrix) = MCMatrix4Identity;
+        var(sphCameraAngle) = M_PI * 0.55;
+        var(sphCameraRatio) = 9.0/16.0;
         
         int nr = 72;
         int nc = 144;
@@ -43,7 +49,6 @@ oninit(MCSkysphere)
 
 method(MCSkysphere, void, bye, voida)
 {
-    release(var(camera));
     release(var(ctx));
     release(var(vertices));
     release(var(indices));
@@ -51,7 +56,7 @@ method(MCSkysphere, void, bye, voida)
     MC3DNode_bye(0, sobj, 0);
 }
 
-method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex, double widthHeightRatio)
+method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
 {
     //Shader
     MCGLContext_initWithShaderName(0, var(ctx), "MCSkysphereShader.vsh", "MCSkysphereShader.fsh",
@@ -69,9 +74,6 @@ method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex, dou
                                        "sphProjectionMatrix",
                                        "sampler"
                                    }, 3);
-    //Camera
-    MCSkysphereCamera_initWithWidthHeightRatio(0, var(camera), (MCFloat)widthHeightRatio);
-    
     //Mesh & Texture
     MCUInt buffers[3];
     glGenVertexArrays(1, &var(vaoid));
@@ -106,43 +108,53 @@ method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex, dou
     return obj;
 }
 
-method(MCSkysphere, MCSkysphere*, initWithFileName, const char* name, double widthHeightRatio)
+method(MCSkysphere, MCSkysphere*, initWithFileName, const char* name)
 {
     BE2DTextureData* data = BE2DTextureData_newWithFilename(name);
-    MCSkysphere* sph = MCSkysphere_initWithBE2DTexture(0, obj, data, widthHeightRatio);
-    release(data);
-    return sph;
-}
-
-method(MCSkysphere, MCSkysphere*, initWithDefaultFileRatio, double widthHeightRatio)
-{
-    return MCSkysphere_initWithFileName(0, obj, "skysphtex.jpg", widthHeightRatio);
+    if (data) {
+        MCSkysphere* sph = MCSkysphere_initWithBE2DTexture(0, obj, data);
+        release(data);
+        return sph;
+    }
+    return null;
 }
 
 method(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida)
 {
-    return MCSkysphere_initWithFileName(0, obj, "skysphtex.jpg", MCRatioHDTV16x9);
+    return MCSkysphere_initWithFileName(0, obj, "skysphtex.jpg");
 }
 
-method(MCSkysphere, void, resizeWithWidthHeight, unsigned width, unsigned height)
+function(MCMatrix4, sphViewMatrix, voida)
 {
-    //superof(var(camera))->ratio = MCRatioMake(width, height);
+    as(MCSkysphere);
+    MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, 0,
+                                      0, 0,-1,
+                                      0, 1, 0);
+    MCMatrix4 imat4 = MCMatrix4Invert(obj->Super.transform, null);
+    
+    return MCMatrix4Multiply(m, imat4);
+}
+
+function(MCMatrix4, sphProjectionMatrix, voida)
+{
+    as(MCSkysphere);
+    return MCMatrix4MakePerspective(obj->sphCameraAngle,
+                                    obj->sphCameraRatio,
+                                    0.001,
+                                    200.0);
 }
 
 //override
 method(MCSkysphere, void, update, MCGLContext* ctx)
 {
-    obj->sphViewMatrix = var(camera)->viewMatrix(var(camera));
-    obj->sphProjectionMatrix = var(camera)->projectionMatrix(var(camera));
+    obj->sphViewMatrix = sphViewMatrix(0, obj, 0);
+    obj->sphProjectionMatrix = sphProjectionMatrix(0, obj, 0);
     
-    if (obj->sphCameraRatio != superof(obj->camera)->ratio) {
-        MCGLContext_activateShaderProgram(0, var(ctx), 0);
-        
-        MCGLUniformData data;
-        data.mat4 = obj->sphProjectionMatrix;
-        MCGLContext_updateUniform(0, var(ctx), "sphProjectionMatrix", data);
-        obj->sphCameraRatio = superof(var(camera))->ratio;
-    }
+    MCGLContext_activateShaderProgram(0, var(ctx), 0);
+    
+    MCGLUniformData data;
+    data.mat4 = obj->sphProjectionMatrix;
+    MCGLContext_updateUniform(0, var(ctx), "sphProjectionMatrix", data);
 }
 
 method(MCSkysphere, void, draw, MCGLContext* ctx)
@@ -163,18 +175,16 @@ method(MCSkysphere, void, draw, MCGLContext* ctx)
 
 method(MCSkysphere, void, setRotationMat3, float mat3[9])
 {
-    MCSkysphereCamera_setRotationMat3(0, obj->camera, mat3);
+    MC3DNode_setRotationMat3(0, sobj, mat3);
 }
 
 onload(MCSkysphere)
 {
     if (load(MC3DNode)) {
         binding(MCSkysphere, void, bye, voida);
-        binding(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex, double widthHeightRatio);
-        binding(MCSkysphere, MCSkysphere*, initWithFileName, const char* name, double widthHeightRatio);
-        binding(MCSkysphere, MCSkysphere*, initWithDefaultFileRatio, double widthHeightRatio);
+        binding(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex);
+        binding(MCSkysphere, MCSkysphere*, initWithFileName, const char* name);
         binding(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida);
-        binding(MCSkysphere, void, resizeWithWidthHeight, unsigned width, unsigned height);
         binding(MCSkysphere, void, setRotationMat3, float mat3[9]);
         //override
         binding(MCSkysphere, void, update, MCGLContext* ctx);

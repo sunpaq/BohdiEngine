@@ -33,16 +33,16 @@ compute(MCGLContext*, contextHandler)
     return var(lastScene)->renderer->context;
 }
 
-compute(MCSkyboxCamera*, skyboxCameraHandler)
-{
-    as(MCDirector);
-    if (obj->lastScene) {
-        if (obj->lastScene->skyboxRef) {
-            return obj->lastScene->skyboxRef->camera;
-        }
-    }
-    return null;
-}
+//compute(MCSkyboxCamera*, skyboxCameraHandler)
+//{
+//    as(MCDirector);
+//    if (obj->lastScene) {
+//        if (obj->lastScene->skyboxRef) {
+//            return obj->lastScene->skyboxRef->camera;
+//        }
+//    }
+//    return null;
+//}
 
 oninit(MCDirector)
 {
@@ -51,14 +51,17 @@ oninit(MCDirector)
         var(currentWidth) = 0;
         var(currentHeight) = 0;
         
-        var(lightFollowCamera) = true;
         var(gyroscopeMode) = true;
+        var(lightFollowCamera) = true;
         var(deviceRotationMat3) = MCMatrix3Identity;
         
         var(lightHandler) = lightHandler;
         var(cameraHandler) = cameraHandler;
         var(contextHandler) = contextHandler;
-        var(skyboxCameraHandler) = skyboxCameraHandler;
+        //var(skyboxCameraHandler) = skyboxCameraHandler;
+        
+        var(skybox) = null;
+        var(skysph) = null;
         
         var(skyboxThread) = new(MCThread);
         var(modelThread) = new(MCThread);
@@ -85,6 +88,8 @@ method(MCDirector, void, bye, voida)
     if (obj->lastScene != null) {
         releaseScenes(0, obj, obj->lastScene);
     }
+    release(var(skybox));
+    release(var(skysph));
     release(var(skyboxThread));
     release(var(modelThread));
 
@@ -156,7 +161,7 @@ method(MCDirector, void, resizeAllScene, int width, int height)
     MC3DScene* iter;
     for (iter=var(lastScene); iter!=null; iter=iter->prev) {
         if (iter->skyboxRef != null) {
-            superof(iter->skyboxRef->camera)->ratio = MCRatioMake(width, height);
+            iter->skyboxRef->boxCameraRatio = MCRatioMake(width, height);
         }
         if (iter->mainCamera != null) {
             iter->mainCamera->ratio = MCRatioMake(width, height);
@@ -197,6 +202,40 @@ method(MCDirector, void, addModelNamed, const char* name)
     MC3DModel_initWithFileName(0, model, name);
     MCDirector_cameraFocusOnModel(0, obj, model);
     MCDirector_addModel(0, obj, model);
+}
+
+method(MCDirector, void, addSkyboxNamed, const char* names[6])
+{
+    if (obj->lastScene) {
+        //first release the old one
+        if (var(skybox)) {
+            release(var(skybox));
+        }
+        if (names) {
+            var(skybox) = ff(new(MCSkybox), initWithFileNames, names);
+        } else {
+            var(skybox) = ff(new(MCSkybox), initWithDefaultFiles, 0);
+        }
+        obj->lastScene->skyboxRef = var(skybox);
+        obj->lastScene->combineMode = MC3DSceneModelWithSkybox;
+    }
+}
+
+method(MCDirector, void, addSkysphereNamed, const char* name)
+{
+    if (obj->lastScene) {
+        //first release the old one
+        if (var(skysph)) {
+            release(var(skysph));
+        }
+        if (name) {
+            var(skysph) = ff(new(MCSkysphere), initWithFileName, name);
+        } else {
+            var(skysph) = ff(new(MCSkysphere), initWithDefaultFile, 0);
+        }
+        obj->lastScene->skysphRef = var(skysph);
+        obj->lastScene->combineMode = MC3DSceneModelWithSkysph;
+    }
 }
 
 method(MCDirector, void, cameraFocusOn, MCVector3 vertex)
@@ -271,6 +310,8 @@ onload(MCDirector)
         binding(MCDirector, void, addNode, MC3DNode* node);
         binding(MCDirector, void, addModel, MC3DModel* model);
         binding(MCDirector, void, addModelNamed, const char* name);
+        binding(MCDirector, void, addSkyboxNamed, const char* names[6]);
+        binding(MCDirector, void, addSkysphereNamed, const char* name);
         binding(MCDirector, void, cameraFocusOn, MCVector3 vertex);
         binding(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
         binding(MCDirector, void, moveModelToOrigin, MC3DModel* model);

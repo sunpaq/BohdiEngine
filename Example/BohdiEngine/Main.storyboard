@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="whP-gf-Uak">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ByM-Bs-JUI">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,22 +9,36 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="wQg-tq-qST">
+        <!--Landing View Controller-->
+        <scene sceneID="xCk-Bh-U5Q">
             <objects>
-                <viewController id="whP-gf-Uak" customClass="BEViewController" sceneMemberID="viewController">
+                <viewController id="ByM-Bs-JUI" customClass="LandingViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="hn1-LV-J7g"/>
-                        <viewControllerLayoutGuide type="bottom" id="NVJ-OJ-2Ld"/>
+                        <viewControllerLayoutGuide type="top" id="RD2-5M-yg0"/>
+                        <viewControllerLayoutGuide type="bottom" id="Yof-Iu-ubI"/>
                     </layoutGuides>
-                    <glkView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" enableSetNeedsDisplay="NO" id="tDs-1h-WLS">
+                    <view key="view" contentMode="scaleToFill" id="V87-Ke-SeE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    </glkView>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iSP-Kj-X4Z">
+                                <rect key="frame" x="145" y="318" width="85" height="30"/>
+                                <state key="normal" title="Engine Start"/>
+                                <connections>
+                                    <action selector="onEngineStartBtnClicked:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="rGW-oI-izn"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="iSP-Kj-X4Z" firstAttribute="centerX" secondItem="V87-Ke-SeE" secondAttribute="centerX" id="iJv-8e-1dS"/>
+                            <constraint firstItem="iSP-Kj-X4Z" firstAttribute="centerY" secondItem="V87-Ke-SeE" secondAttribute="centerY" id="uf7-mo-erL"/>
+                        </constraints>
+                    </view>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rqB-4e-CYI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="304.80000000000001" y="432.23388305847078"/>
+            <point key="canvasLocation" x="-439" y="429"/>
         </scene>
     </scenes>
 </document>

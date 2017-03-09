@@ -89,6 +89,10 @@ compute(MCMatrix4, viewMatrix)
                                           0, 0, 0,
                                           0, 1, 0);
         
+//        MCMatrix4 m = MCMatrix4MakeLookAt(0, r, 0,
+//                                          0, 0, 0,
+//                                          0, 0, -1);
+        
         obj->eye = MCGetEyeFromRotationMat4(world, r);
         return MCMatrix4Multiply(m, world);
     }
@@ -202,13 +206,7 @@ method(MCCamera, void, distanceScale, MCFloat scale)
 
 method(MCCamera, void, setRotationMat3, float mat3[9])
 {
-    if (mat3) {
-        MCMatrix3 m3 = {0};
-        for (int i=0; i<9; i++) {
-            m3.m[i] = mat3[i];
-        }
-        sobj->transform = MCMatrix4FromMatrix3(m3);
-    }
+    MC3DNode_setRotationMat3(0, sobj, mat3);
 }
 
 onload(MCCamera)

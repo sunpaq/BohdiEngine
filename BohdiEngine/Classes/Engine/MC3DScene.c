@@ -191,10 +191,9 @@ method(MC3DScene, void, setRotationMat3, float mat3[9])
 {
     if (cpt(isDrawSky)) {
         if (var(skyboxRef)) {
-            MCSkyboxCamera_setRotationMat3(0, var(skyboxRef)->camera, mat3);
+            MCSkybox_setRotationMat3(0, var(skyboxRef), mat3);
         }
         if (var(skysphRef)) {
-            //MCSkysphereCamera_setRotationMat3(0, var(skysphRef)->camera, mat3);
             MCSkysphere_setRotationMat3(0, var(skysphRef), mat3);
         }
     }

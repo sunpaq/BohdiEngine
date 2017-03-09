@@ -47,6 +47,7 @@ method(MC3DNode, void, rotateX, double degree);
 method(MC3DNode, void, rotateY, double degree);
 method(MC3DNode, void, rotateZ, double degree);
 method(MC3DNode, void, scale, MCVector3* factors);
+method(MC3DNode, void, setRotationMat3, float mat3[9]);
 
 //draw
 method(MC3DNode, void, update, MCGLContext* ctx);

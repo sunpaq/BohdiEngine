@@ -153,7 +153,7 @@ function(MCMatrix4, boxProjectionMatrix, voida)
 
 method(MCSkybox, void, setRotationMat3, float mat3[9])
 {
-    MC3DNode_setRotationMat3(0, sobj, mat3);
+    MC3DNode_rotateMat3(0, sobj, mat3, false);
 }
 
 method(MCSkybox, void, update, MCGLContext* ctx)

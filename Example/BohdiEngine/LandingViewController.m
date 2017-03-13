@@ -34,9 +34,10 @@
         //bec.useDeltaRotationData = YES;
         //[bec addSkyboxNamed:nil];
         //[bec addSkysphNamed:@"panorama360.jpg"];
-        [bec addSkysphNamed:@"wood.jpg"];
+        [bec addSkysphNamed:@"chinese2.jpg"];
 
         //[bec addModelNamed:@"monkey2.obj"];
+        //[bec addModelNamed:@"outer.obj"];
     }];
 }
 

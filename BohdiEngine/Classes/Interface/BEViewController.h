@@ -14,10 +14,22 @@
 #import <GLKit/GLKit.h>
 #import <CoreMotion/CoreMotion.h>
 
+typedef enum {
+    BECameraRotateAroundModelManual,
+    BECameraRotateAroundModelByGyroscope,
+    BECameraRotateAR
+} BECameraRotateMode;
+
 @interface BEViewController : GLKViewController <GLKViewDelegate>
 
+@property (atomic, readwrite) BOOL useTransparentBackground;
 @property (atomic, readwrite) BOOL useDeltaRotationData;
+@property (atomic, readwrite) BOOL doesRotateCamera;
+@property (atomic, readwrite) BOOL doesDrawWireFrame;
+
 @property (atomic, readwrite) CMRotationMatrix deviceRotateMat3;
+@property (atomic, readwrite) BECameraRotateMode cameraRotateMode;
+
 @property (nonatomic, strong) UIActivityIndicatorView* indicator;
 
 -(void) addModelNamed:(NSString*)modelName;
@@ -26,13 +38,14 @@
 -(void) addSkyboxNamed:(NSArray*)texnames;
 -(void) addSkysphNamed:(NSString*)texname;
 
--(void) setRotateCamera:(BOOL)doesRotate;
--(void) setDrawWireFrame:(BOOL)doesDrawWF;
+-(void) glviewResize:(CGRect)frame;
 
--(void) setGLViewFrame:(CGRect)frame;
--(void) setTransparentBG;
+-(void) cameraReset;
+-(void) cameraRotate:(GLKMatrix3)mat3 Incremental:(BOOL)inc;
+-(void) cameraTranslate:(GLKVector3)vec3 Incremental:(BOOL)inc;
 
-
+-(void) handlePanGesture:(CGPoint)offset;
+-(void) handlePinchGesture:(float)scale;
 @end
 
 

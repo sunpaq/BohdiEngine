@@ -24,6 +24,7 @@
 
 @implementation BEViewController
 
+@dynamic useTransparentBackground;
 @dynamic deviceRotateMat3;
 
 -(void)viewDidLoad
@@ -36,10 +37,8 @@
     pinch_scale = 10.0;
     
     motionManager = nil;
-    
     _indicator = nil;
-    _useDeltaRotationData = NO;
-
+    
     GLKView* _glView = (GLKView*)self.view;
     _glView.context = [EAGLContext currentContext];
     _glView.delegate = self;
@@ -49,14 +48,118 @@
     _glView.drawableMultisample = GLKViewDrawableMultisampleNone;
     
     self.preferredFramesPerSecond = 60;
-    //[self.view addSubview:_glView];
-    [self setupBE];
+
+    [self glviewSetup:self.view.frame];
+    
+    self.useDeltaRotationData = NO;
+    self.doesRotateCamera = NO;
+    self.doesDrawWireFrame = NO;
+    self.cameraRotateMode = BECameraRotateAR;
+    
     [self startDeviceMotion];
 }
 
 -(void)dealloc
 {
     release(director);
+}
+
+#pragma mark - Properties
+
+-(void) setUseTransparentBackground:(BOOL)useTransparentBackground
+{
+    if (useTransparentBackground) {
+        self.view.opaque = NO;
+        self.view.backgroundColor = [UIColor clearColor];
+        self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        self.navigationController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        
+        //MCGLEngine_enableTransparency(true);
+        MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
+    } else {
+        self.view.opaque = YES;
+
+        //MCGLEngine_enableTransparency(true);
+        MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
+    }
+}
+
+-(void) setDoesRotateCamera:(BOOL)doesRotate
+{
+    computed(director, cameraHandler)->isLockRotation = doesRotate? false : true;
+}
+
+-(void) setDoesDrawWireFrame:(BOOL)doesDrawWF
+{
+    computed(director, contextHandler)->drawMode = doesDrawWF ? MCLineStrip : MCTriAngles;
+}
+
+//-(void) setCameraRotation:(GLKMatrix3)mat3
+//{
+//    MCCamera* cam = computed(director, cameraHandler);
+//    if (cam) {
+//        MC3DNode_rotateMat3(0, &cam->Super, mat3.m, false);
+//    }
+//}
+//
+//-(void) setCameraTranslation:(GLKVector3)vec3
+//{
+//    MCCamera* cam = computed(director, cameraHandler);
+//    if (cam) {
+//        MC3DNode_translateVec3(0, &cam->Super, <#MCVector3 *position#>, <#MCBool incremental#>)
+//    }
+//}
+
+-(void) cameraReset
+{
+    MCCamera* cam = computed(director, cameraHandler);
+    if (cam) {
+        cam->Super.transform = MCMatrix4Identity;
+    }
+}
+
+-(void) cameraRotate:(GLKMatrix3)mat3 Incremental:(BOOL)inc
+{
+    MCCamera* cam = computed(director, cameraHandler);
+    if (cam) {
+        MC3DNode_rotateMat3(0, &cam->Super, mat3.m, inc?true:false);
+    }
+}
+
+-(void) cameraTranslate:(GLKVector3)vec3 Incremental:(BOOL)inc
+{
+    MCCamera* cam = computed(director, cameraHandler);
+    if (cam) {
+        MCVector3 eye = MCVector3Make(vec3.x, vec3.y, vec3.z);
+        cam->R_value = MCVector3Length(eye);
+        cam->eye = eye;
+        MC3DNode_translateVec3(0, &cam->Super, vec3.v, inc?true:false);
+    }
+}
+
+-(void) setDeviceRotateMat3:(CMRotationMatrix)mat3
+{
+    director->deviceRotationMat3.m00 = mat3.m11;
+    director->deviceRotationMat3.m01 = mat3.m12;
+    director->deviceRotationMat3.m02 = mat3.m13;
+    
+    director->deviceRotationMat3.m10 = mat3.m21;
+    director->deviceRotationMat3.m11 = mat3.m22;
+    director->deviceRotationMat3.m12 = mat3.m23;
+    
+    director->deviceRotationMat3.m20 = mat3.m31;
+    director->deviceRotationMat3.m21 = mat3.m32;
+    director->deviceRotationMat3.m22 = mat3.m33;
+}
+
+-(void) setCameraRotateMode:(BECameraRotateMode)cameraRotateMode
+{
+    if (cameraRotateMode == BECameraRotateAroundModelByGyroscope) {
+        director->gyroscopeMode = true;
+    } else {
+        director->gyroscopeMode = false;
+    }
+    computed(director, cameraHandler)->rotateMode = cameraRotateMode;
 }
 
 -(void)startDeviceMotion
@@ -115,47 +218,19 @@
     MCDirector_drawAll(0, director, 0);
 }
 
--(void)setupBE
+-(void) glviewSetup:(CGRect)frame
 {
-    CGRect frame = self.view.frame;
     unsigned width = frame.size.width;
     unsigned height = frame.size.height;
     ff(director, setupMainScene, width, height);
-    ff(director, setCameraRotateMode, MCCameraRotateAroundModelByGyroscope);
 }
 
--(void) setGLViewFrame:(CGRect)frame
+-(void) glviewResize:(CGRect)frame
 {
     self.view.frame = frame;
     unsigned width = frame.size.width;
     unsigned height = frame.size.height;
     ff(director, resizeAllScene, width, height);
-}
-
--(void) setTransparentBG
-{
-    self.view.opaque = NO;
-    self.view.backgroundColor = [UIColor clearColor];
-    self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    self.navigationController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    
-    //MCGLEngine_enableTransparency(true);
-    MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
-}
-
--(void) setDeviceRotateMat3:(CMRotationMatrix)mat3
-{
-    director->deviceRotationMat3.m00 = mat3.m11;
-    director->deviceRotationMat3.m01 = mat3.m12;
-    director->deviceRotationMat3.m02 = mat3.m13;
-    
-    director->deviceRotationMat3.m10 = mat3.m21;
-    director->deviceRotationMat3.m11 = mat3.m22;
-    director->deviceRotationMat3.m12 = mat3.m23;
-    
-    director->deviceRotationMat3.m20 = mat3.m31;
-    director->deviceRotationMat3.m21 = mat3.m32;
-    director->deviceRotationMat3.m22 = mat3.m33;
 }
 
 -(void) startLoadingAnimation
@@ -212,16 +287,6 @@
     } else {
         ff(director, addSkysphereNamed, null);
     }
-}
-
--(void) setRotateCamera:(BOOL)doesRotate
-{
-    computed(director, cameraHandler)->isLockRotation = doesRotate? false : true;
-}
-
--(void) setDrawWireFrame:(BOOL)doesDrawWF
-{
-    computed(director, contextHandler)->drawMode = doesDrawWF ? MCLineStrip : MCTriAngles;
 }
 
 -(void) handlePanGesture:(CGPoint)offset

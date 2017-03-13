@@ -97,39 +97,45 @@ method(MC3DNode, void, changeTexture, MCTexture* texture)
     obj->diffuseTexture = texture;
 }
 
-method(MC3DNode, void, translate, MCVector3* position)
+method(MC3DNode, void, resetTransform, MCMatrix4* transform)
 {
-    obj->transform = MCMatrix4Multiply(MCMatrix4MakeTranslation(position->x, position->y, position->z), obj->transform);
+    if (transform) {
+        obj->transform = *transform;
+    } else {
+        obj->transform = MCMatrix4Identity;
+    }
 }
 
-method(MC3DNode, void, rotateX, double degree)
+method(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental)
 {
-    //obj->transform = MCMatrix4Multiply(MCMatrix4MakeXAxisRotation(degree), obj->transform);
+    if (incremental) {
+        obj->transform = MCMatrix4Multiply(MCMatrix4MakeTranslation(position->x, position->y, position->z), obj->transform);
+    } else {
+        obj->transform = MCMatrix4MakeTranslation(position->x, position->y, position->z);
+    }
 }
 
-method(MC3DNode, void, rotateY, double degree)
+method(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental)
 {
-    //obj->transform = MCMatrix4Multiply(MCMatrix4MakeYAxisRotation(degree), obj->transform);
+    if (incremental) {
+        obj->transform = MCMatrix4Multiply(MCMatrix4MakeScale(factors->x, factors->y, factors->z), obj->transform);
+    } else {
+        obj->transform = MCMatrix4MakeScale(factors->x, factors->y, factors->z);
+    }
 }
 
-method(MC3DNode, void, rotateZ, double degree)
-{
-    //obj->transform = MCMatrix4Multiply(MCMatrix4MakeZAxisRotation(degree), obj->transform);
-}
-
-method(MC3DNode, void, scale, MCVector3* factors)
-{
-    obj->transform = MCMatrix4Multiply(MCMatrix4MakeScale(factors->x, factors->y, factors->z), obj->transform);
-}
-
-method(MC3DNode, void, setRotationMat3, float mat3[9])
+method(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental)
 {
     if (mat3) {
         MCMatrix3 m3 = {0};
         for (int i=0; i<9; i++) {
             m3.m[i] = mat3[i];
         }
-        obj->transform = MCMatrix4FromMatrix3(m3);
+        if (incremental) {
+            obj->transform = MCMatrix4Multiply(MCMatrix4FromMatrix3(m3), obj->transform);
+        } else {
+            obj->transform = MCMatrix4FromMatrix3(m3);
+        }
     }
 }
 
@@ -225,12 +231,10 @@ onload(MC3DNode)
         binding(MC3DNode, void, setAllVisible, MCBool visible);
         binding(MC3DNode, void, changeMatrial, MCMaterial* material);
         binding(MC3DNode, void, changeTexture, MCTexture* texture);
-        binding(MC3DNode, void, translate, MCVector3* position);
-        binding(MC3DNode, void, rotateX, double degree);
-        binding(MC3DNode, void, rotateY, double degree);
-        binding(MC3DNode, void, rotateZ, double degree);
-        binding(MC3DNode, void, scale, MCVector3* factors);
-        binding(MC3DNode, void, setRotationMat3, float mat3[9]);
+        binding(MC3DNode, void, resetTransform, MCMatrix4* transform);
+        binding(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental);
+        binding(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental);
+        binding(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
         binding(MC3DNode, void, update, voida);
         binding(MC3DNode, void, draw, voida);
         binding(MC3DNode, void, hide, voida);

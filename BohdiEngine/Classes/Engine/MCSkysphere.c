@@ -175,7 +175,7 @@ method(MCSkysphere, void, draw, MCGLContext* ctx)
 
 method(MCSkysphere, void, setRotationMat3, float mat3[9])
 {
-    MC3DNode_setRotationMat3(0, sobj, mat3);
+    MC3DNode_rotateMat3(0, sobj, mat3, false);
 }
 
 onload(MCSkysphere)

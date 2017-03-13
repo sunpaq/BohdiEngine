@@ -93,6 +93,21 @@ MCInline MCMatrix4 MCMatrix4MakeScale(float sx, float sy, float sz)
     return m;
 }
 
+MCInline MCMatrix4 MCMatrix4MakeXAxisRotation(double degree)
+{
+    
+}
+
+MCInline MCMatrix4 MCMatrix4MakeYAxisRotation(double degree)
+{
+    
+}
+
+MCInline MCMatrix4 MCMatrix4MakeZAxisRotation(double degree)
+{
+    
+}
+
 MCInline MCMatrix3 MCMatrix4GetMatrix3(MCMatrix4 mat4)
 {
     MCMatrix3 m = {
@@ -243,6 +258,11 @@ MCInline MCMatrix4 MCMatrix4MakeLookAtByEulerAngle(MCVector3 lookat, double R, d
 MCInline MCVector3 MCGetEyeFromRotationMat4(MCMatrix4 mat4, double R)
 {
     return (MCVector3) { mat4.m[2]*R, mat4.m[6]*R, mat4.m[10]*R };
+}
+
+MCInline MCVector3 MCTranslateFromCombinedMat4(MCMatrix4 mat4)
+{
+    return (MCVector3) { -mat4.m[3], -mat4.m[7], -mat4.m[11] };
 }
 
 #endif

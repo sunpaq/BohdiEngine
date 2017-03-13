@@ -84,7 +84,6 @@ compute(MCMatrix4, viewMatrix)
         MCMatrix4 R  = sobj->transform;
         MCMatrix4 Ri = MCMatrix4Invert(R, null);
         MCMatrix4 world = Ri;
-        
         MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, r,
                                           0, 0, 0,
                                           0, 1, 0);
@@ -93,16 +92,28 @@ compute(MCMatrix4, viewMatrix)
         return MCMatrix4Multiply(m, world);
     }
     else if (obj->rotateMode == MCCameraRotateAR) {
-        MCMatrix4 R  = sobj->transform;
+        //MCMatrix4 flipX = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
+        //MCMatrix4 flipX = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
+
+        MCMatrix4 R = sobj->transform;
+        
+        //MCMatrix4 R  = MCMatrix4Multiply(sobj->transform, flipX);
         //MCMatrix4 Ri = MCMatrix4Invert(R, null);
+        //MCMatrix4 Ri = MCMatrix4Transpose(R);
         //MCMatrix4 world = Ri;
+        
+//        MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, r,
+//                                          0, 0, 0,
+//                                          0, 1, 0);
         
         MCMatrix4 m = MCMatrix4MakeLookAt(0, r, 0,
                                           0, 0, 0,
                                           0, 0, -1);
-        //obj->eye = MCVector3Make(0, 0, r);
+
+//        MCMatrix4 m = MCMatrix4MakeLookAt(0, 0,  0,
+//                                          0, -1, 0,
+//                                          0, 0, -1);
         
-        obj->eye = MCGetEyeFromRotationMat4(R, r);
         return MCMatrix4Multiply(m, R);
     }
     //default is MCCameraRotateAroundModelManual

@@ -93,19 +93,37 @@ MCInline MCMatrix4 MCMatrix4MakeScale(float sx, float sy, float sz)
     return m;
 }
 
-MCInline MCMatrix4 MCMatrix4MakeXAxisRotation(double degree)
+MCInline MCMatrix3 MCMatrix3MakeXAxisRotation(double degree)
 {
-    
+    double SIN = sin(degree);
+    double COS = cos(degree);
+    return (MCMatrix3) {
+        1,    0,   0,
+        0,  COS, SIN,
+        0, -SIN, COS
+    };
 }
 
-MCInline MCMatrix4 MCMatrix4MakeYAxisRotation(double degree)
+MCInline MCMatrix3 MCMatrix3MakeYAxisRotation(double degree)
 {
-    
+    double SIN = sin(degree);
+    double COS = cos(degree);
+    return (MCMatrix3) {
+         COS, 0, -SIN,
+           0, 1, 0,
+         SIN, 0, COS
+    };
 }
 
-MCInline MCMatrix4 MCMatrix4MakeZAxisRotation(double degree)
+MCInline MCMatrix3 MCMatrix3MakeZAxisRotation(double degree)
 {
-    
+    double SIN = sin(degree);
+    double COS = cos(degree);
+    return (MCMatrix3) {
+         COS, SIN, 0,
+        -SIN, COS, 0,
+           0,   0, 1
+    };
 }
 
 MCInline MCMatrix3 MCMatrix4GetMatrix3(MCMatrix4 mat4)

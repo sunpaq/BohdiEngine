@@ -40,9 +40,12 @@ typedef enum {
 
 -(void) glviewResize:(CGRect)frame;
 
--(void) cameraReset;
+-(void) cameraReset:(GLKMatrix4*)mat4;
 -(void) cameraRotate:(GLKMatrix3)mat3 Incremental:(BOOL)inc;
 -(void) cameraTranslate:(GLKVector3)vec3 Incremental:(BOOL)inc;
+
+//light pos follow camera if pos is null
+-(void) lightReset:(GLKVector3*)pos;
 
 -(void) handlePanGesture:(CGPoint)offset;
 -(void) handlePinchGesture:(float)scale;

@@ -13,7 +13,7 @@ oninit(MCCamera)
     if (init(MC3DNode)) {
         var(ratio) = MCRatioHDTV16x9;//MCRatioCameraFilm3x2;
         var(view_angle) = MCLensStandard50mmViewAngle;
-        var(depth_of_field) = 10;
+        var(depth_of_field) = 100;
 
         //local spherical coordinate
         var(R_value) = 100;
@@ -92,29 +92,9 @@ compute(MCMatrix4, viewMatrix)
         return MCMatrix4Multiply(m, world);
     }
     else if (obj->rotateMode == MCCameraRotateAR) {
-        //MCMatrix4 flipX = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
-        //MCMatrix4 flipX = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
-
+        MCMatrix4 Zup = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(-M_PI / 2.0));
         MCMatrix4 R = sobj->transform;
-        
-        //MCMatrix4 R  = MCMatrix4Multiply(sobj->transform, flipX);
-        //MCMatrix4 Ri = MCMatrix4Invert(R, null);
-        //MCMatrix4 Ri = MCMatrix4Transpose(R);
-        //MCMatrix4 world = Ri;
-        
-//        MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, r,
-//                                          0, 0, 0,
-//                                          0, 1, 0);
-        
-        MCMatrix4 m = MCMatrix4MakeLookAt(0, r, 0,
-                                          0, 0, 0,
-                                          0, 0, -1);
-
-//        MCMatrix4 m = MCMatrix4MakeLookAt(0, 0,  0,
-//                                          0, -1, 0,
-//                                          0, 0, -1);
-        
-        return MCMatrix4Multiply(m, R);
+        return MCMatrix4Multiply(R, Zup);
     }
     //default is MCCameraRotateAroundModelManual
     else {

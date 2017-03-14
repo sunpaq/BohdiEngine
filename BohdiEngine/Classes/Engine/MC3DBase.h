@@ -278,9 +278,9 @@ MCInline MCVector3 MCGetEyeFromRotationMat4(MCMatrix4 mat4, double R)
     return (MCVector3) { mat4.m[2]*R, mat4.m[6]*R, mat4.m[10]*R };
 }
 
-MCInline MCVector3 MCTranslateFromCombinedMat4(MCMatrix4 mat4)
+MCInline MCVector3 MCGetTranslateFromCombinedMat4(MCMatrix4 mat4)
 {
-    return (MCVector3) { -mat4.m[3], -mat4.m[7], -mat4.m[11] };
+    return (MCVector3) { mat4.m[12], mat4.m[13], mat4.m[14] };
 }
 
 #endif

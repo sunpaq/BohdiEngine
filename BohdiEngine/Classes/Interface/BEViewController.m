@@ -110,11 +110,16 @@
 //    }
 //}
 
--(void) cameraReset
+-(void) cameraReset:(GLKMatrix4*)mat4
 {
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
-        cam->Super.transform = MCMatrix4Identity;
+        if (mat4) {
+            cam->depth_of_field = 100;
+            MCMatrix4Copy(mat4->m, &cam->Super.transform);
+        } else {
+            cam->Super.transform = MCMatrix4Identity;
+        }
     }
 }
 
@@ -134,6 +139,16 @@
         cam->R_value = MCVector3Length(eye);
         cam->eye = eye;
         MC3DNode_translateVec3(0, &cam->Super, vec3.v, inc?true:false);
+    }
+}
+
+-(void) lightReset:(GLKVector3*)pos
+{
+    if (pos) {
+        MCLight* light = computed(director, lightHandler);
+        light->lightPosition = MCVector3Make(pos->x, pos->y, pos->z);
+    } else {
+        director->lightFollowCamera = true;
     }
 }
 

@@ -94,29 +94,13 @@
     computed(director, contextHandler)->drawMode = doesDrawWF ? MCLineStrip : MCTriAngles;
 }
 
-//-(void) setCameraRotation:(GLKMatrix3)mat3
-//{
-//    MCCamera* cam = computed(director, cameraHandler);
-//    if (cam) {
-//        MC3DNode_rotateMat3(0, &cam->Super, mat3.m, false);
-//    }
-//}
-//
-//-(void) setCameraTranslation:(GLKVector3)vec3
-//{
-//    MCCamera* cam = computed(director, cameraHandler);
-//    if (cam) {
-//        MC3DNode_translateVec3(0, &cam->Super, <#MCVector3 *position#>, <#MCBool incremental#>)
-//    }
-//}
-
--(void) cameraReset:(GLKMatrix4*)mat4
+-(void) cameraReset:(float*)mat4
 {
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         if (mat4) {
             cam->depth_of_field = 100;
-            MCMatrix4Copy(mat4->m, &cam->Super.transform);
+            MCMatrix4Copy(mat4, &cam->Super.transform);
         } else {
             cam->Super.transform = MCMatrix4Identity;
         }

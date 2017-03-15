@@ -40,7 +40,8 @@ typedef enum {
 
 -(void) glviewResize:(CGRect)frame;
 
--(void) cameraReset:(GLKMatrix4*)mat4;
+//need 4x4 column major matrix
+-(void) cameraReset:(float*)mat4;
 -(void) cameraRotate:(GLKMatrix3)mat3 Incremental:(BOOL)inc;
 -(void) cameraTranslate:(GLKVector3)vec3 Incremental:(BOOL)inc;
 

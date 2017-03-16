@@ -185,11 +185,12 @@ method(MCDirector, void, addModel, MC3DModel* model)
 {
     if(model && obj->lastScene && obj->lastScene->rootnode) {
         MC3DNode_addChild(0, obj->lastScene->rootnode, (MC3DNode*)model);
-        double df = computed(model, maxlength);
-        if (df < 1) {
-            df = 1;
-        }
-        cpt(cameraHandler)->depth_of_field = df*1.5;
+        double maxl  = computed(model, maxlength);
+        double scale = 10 / maxl;
+        MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
+        MC3DNode_scaleVec3(0, &model->Super, &scaleVec, false);
+        debug_log("MCDirector - model maxlength=%lf scale=%lf\n", maxl, scale);
+        
     }else{
         error_log("MCDirector add model(%p) failed [lastScene=%p rootnode=%p]\n",
                   model, obj->lastScene, obj->lastScene->rootnode);
@@ -200,7 +201,6 @@ method(MCDirector, void, addModelNamed, const char* name)
 {
     MC3DModel* model = new(MC3DModel);
     MC3DModel_initWithFileName(0, model, name);
-    MCDirector_cameraFocusOnModel(0, obj, model);
     MCDirector_addModel(0, obj, model);
 }
 
@@ -238,13 +238,15 @@ method(MCDirector, void, addSkysphereNamed, const char* name)
     }
 }
 
-method(MCDirector, void, cameraFocusOn, MCVector3 vertex)
+method(MCDirector, void, cameraFocusOn, MCVector4 vertex)
 {
     MCCamera* c = computed(obj, cameraHandler);
     if (c != null) {
         c->lookat.x = vertex.x;
         c->lookat.y = vertex.y;
         c->lookat.z = vertex.z;
+        c->R_value  = vertex.w;
+        c->R_percent= 1.0;
     }
 }
 

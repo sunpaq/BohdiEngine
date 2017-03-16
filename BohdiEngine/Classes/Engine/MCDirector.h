@@ -60,7 +60,7 @@ method(MCDirector, void, addModelNamed, const char* name);
 method(MCDirector, void, addSkyboxNamed, const char* names[6]);
 method(MCDirector, void, addSkysphereNamed, const char* name);
 
-method(MCDirector, void, cameraFocusOn, MCVector3 vertex);
+method(MCDirector, void, cameraFocusOn, MCVector4 vertex);
 method(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
 method(MCDirector, void, moveModelToOrigin, MC3DModel* model);
 

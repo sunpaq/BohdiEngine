@@ -99,7 +99,6 @@
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         if (mat4) {
-            cam->depth_of_field = 100;
             MCMatrix4Copy(mat4, &cam->Super.transform);
         } else {
             cam->Super.transform = MCMatrix4Identity;
@@ -258,7 +257,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
         ff(director, addModelNamed, name);
-        
+        ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
         [self stopLoadingAnimation];
     });
 }

@@ -7,7 +7,7 @@
 #import <Foundation/Foundation.h>
 #import <opencv2/videoio/cap_ios.h>
 
-#import "BEViewController.h"
+#import <BohdiEngine/BEViewController.h>
 
 @interface CVViewController : UIViewController <CvVideoCameraDelegate>
 @property (nonatomic, strong) CvVideoCamera* videoSource;

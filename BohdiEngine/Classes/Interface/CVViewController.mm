@@ -5,24 +5,25 @@
 
 @interface CVViewController()
 {
+    BOOL modelLoaded;
     BECVDetector* cvManager;
 }
 @end
 
 @implementation CVViewController
 
--(void)prepareOpenCV
-{
-    if (cvManager) {
-        cvManager->prepare();
-    }
-}
-
 //conform CvVideoCameraDelegate
 - (void)processImage:(cv::Mat&)mat
 {
     if (cvManager) {
-        cvManager->processImage(mat);
+        if (cvManager->processImage(mat)) {
+            if (!modelLoaded) {
+                GLKVector3 lpos = {0,1000,-1000};
+                [_beViewCtl lightReset:&lpos];
+                [_beViewCtl addModelNamed:@"2.obj"];
+                modelLoaded = YES;
+            }
+        }
         [_beViewCtl cameraReset:&cvManager->extrinsicMatColumnMajor[0]];
     }
 }
@@ -30,12 +31,12 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-
+    modelLoaded = NO;
     cvManager = new BECVDetector(5,4,6.0,BECVDetector::CHESSBOARD);
     
     CGRect frame = [[UIScreen mainScreen] bounds];
     _cvView = [[UIView alloc] initWithFrame:frame];
-
+    
     _videoSource = [[CvVideoCamera alloc] initWithParentView:_cvView];
     _videoSource.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
     _videoSource.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack;
@@ -46,30 +47,18 @@
     _videoSource.delegate = self;
     
     [self.view addSubview:_cvView];
-
+    
     _beViewCtl = [[BEViewController alloc] init];
     _beViewCtl.useTransparentBackground = YES;
-    
-    [self prepareOpenCV];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     //start openCV
-    //self.videoSource.grayscaleMode = YES;
     [self.videoSource start];
-    
-    [self presentViewController:_beViewCtl animated:NO completion:^{
-        
-        GLKVector3 lpos = {0,1000,-1000};
-        [_beViewCtl lightReset:&lpos];
-        [_beViewCtl addModelNamed:@"2.obj"];
-        
-    }];
+    [self presentViewController:_beViewCtl animated:NO completion:^{}];
 }
 
 @end
 
 #endif
-
-

@@ -141,14 +141,6 @@ method(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental)
 
 method(MC3DNode, void, update, MCGLContext* ctx)
 {
-    MCGLUniform f;
-    f.data.mat4 = var(transform);
-    MCGLContext_updateUniform(0, ctx, model_model, f.data);
-    
-    MCMatrix3 nor = MCMatrix3InvertAndTranspose(MCMatrix4GetMatrix3(var(transform)), NULL);
-    f.data.mat3 = nor;
-    MCGLContext_updateUniform(0, ctx, model_normal, f.data);
-    
     //update children
     MCLinkedListForEach(var(children),
                         MC3DNode* node = (MC3DNode*)item;
@@ -160,44 +152,50 @@ method(MC3DNode, void, update, MCGLContext* ctx)
 
 method(MC3DNode, void, draw, MCGLContext* ctx)
 {
-    MCGLContext_activateShaderProgram(0, ctx, 0);
-
-    //material
-    if (obj->material != null) {
-        if (obj->material->hidden == 1) {
-            return;
+    //draw self
+    //if (obj->visible) {
+        MCGLContext_activateShaderProgram(0, ctx, 0);
+        MCGLUniform f;
+        
+        //scale translate
+        if (!MCMatrix4Equal(&MCMatrix4Identity, &var(transform))) {
+            f.data.mat4 = var(transform);
+            MCGLContext_updateUniform(0, ctx, model_model, f.data);
         }
-        obj->material->dataChanged = true;
-        MCMaterial_prepareMatrial(0, obj->material, ctx);
-    }
-    
-    //draw self texture
-    if (obj->diffuseTexture != null) {
-        //ctx->diffuseTextureRef = obj->diffuseTexture;
-        glUniform1i(glGetUniformLocation(ctx->pid, "usetexture"), true);
-    } else {
-        //ctx->diffuseTextureRef = null;
-        glUniform1i(glGetUniformLocation(ctx->pid, "usetexture"), false);
-    }
-    
-//    if (obj->specularTexture != null) {
-//        ctx->specularTextureRef = obj->specularTexture;
-//    } else {
-//        ctx->specularTextureRef = null;
-//    }
-    
-    //batch setup
-    MCGLContext_setUniforms(0, ctx, 0);
-    
-    //draw self meshes
-    MCLinkedListForEach(var(meshes),
-                        MCMesh* mesh = (MCMesh*)item;
-                        if (mesh != null) {
-                            mesh->diffuseTextureRef  = obj->diffuseTexture;
-                            mesh->specularTextureRef = obj->specularTexture;
-                            MCMesh_prepareMesh(0, mesh, ctx);
-                            MCMesh_drawMesh(0, mesh, ctx);
-                        })
+        
+        MCMatrix3 nor = MCMatrix3InvertAndTranspose(MCMatrix4GetMatrix3(var(transform)), NULL);
+        f.data.mat3 = nor;
+        MCGLContext_updateUniform(0, ctx, model_normal, f.data);
+        
+        //material
+        if (obj->material != null) {
+            if (obj->material->hidden == 1) {
+                return;
+            }
+            obj->material->dataChanged = true;
+            MCMaterial_prepareMatrial(0, obj->material, ctx);
+        }
+        
+        //draw self texture
+        if (obj->diffuseTexture != null) {
+            glUniform1i(glGetUniformLocation(ctx->pid, "usetexture"), true);
+        } else {
+            glUniform1i(glGetUniformLocation(ctx->pid, "usetexture"), false);
+        }
+        
+        //batch setup
+        MCGLContext_setUniforms(0, ctx, 0);
+        
+        //draw self meshes
+        MCLinkedListForEach(var(meshes),
+                            MCMesh* mesh = (MCMesh*)item;
+                            if (mesh != null) {
+                                mesh->diffuseTextureRef  = obj->diffuseTexture;
+                                mesh->specularTextureRef = obj->specularTexture;
+                                MCMesh_prepareMesh(0, mesh, ctx);
+                                MCMesh_drawMesh(0, mesh, ctx);
+                            })
+    //}
     
     //draw children
     MCLinkedListForEach(var(children),

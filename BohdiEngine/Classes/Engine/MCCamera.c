@@ -13,7 +13,7 @@ oninit(MCCamera)
     if (init(MC3DNode)) {
         var(ratio) = MCRatioHDTV16x9;//MCRatioCameraFilm3x2;
         var(view_angle) = MCLensStandard50mmViewAngle;
-        var(depth_of_field) = 100;
+        var(depth_of_field) = 5000;
 
         //local spherical coordinate
         var(R_value) = 100;
@@ -107,12 +107,12 @@ compute(MCMatrix4, viewMatrix)
 compute(MCMatrix4, projectionMatrix)
 {
     as(MCCamera);
-    double near = cpt(Radius) - var(depth_of_field);
+    //double near = cpt(Radius) - var(depth_of_field);
     double far  = cpt(Radius) + var(depth_of_field);
-    
-    if (near <= 0) {
-        near = MCLensStandard50mm;
-    }
+    double near = MCLensStandard50mm;
+//    if (near <= 0) {
+//        near = MCLensStandard50mm;
+//    }
     
     return MCMatrix4MakePerspective(MCDegreesToRadians(obj->view_angle),
                                     var(ratio),
@@ -153,10 +153,8 @@ method(MCCamera, void, update, MCGLContext* ctx)
     data.mat4 = cpt(viewMatrix);
     MCGLContext_updateUniform(0, ctx, view_view, data);
     
-    if (ctx->cameraRatio != obj->ratio) {
-        data.mat4 = cpt(projectionMatrix);
-        MCGLContext_updateUniform(0, ctx, view_projection, data);
-    }
+    data.mat4 = cpt(projectionMatrix);
+    MCGLContext_updateUniform(0, ctx, view_projection, data);
 }
 
 method(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)

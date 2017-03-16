@@ -2,7 +2,7 @@
 
 #include "BECVDetector.hpp"
 
-BECVDetector::BECVDetector(int width, int height, float unit, Pattern patternType, int flags)
+BECVDetector::BECVDetector(int width, int height, float unit, Pattern patternType, int flags, bool RANSAC)
 {
     boardSize = Size_<int>(width, height);
     unitSize  = unit;
@@ -10,14 +10,13 @@ BECVDetector::BECVDetector(int width, int height, float unit, Pattern patternTyp
     
     intrinsicMatCalculated = false;
     estimateFlags = flags;
+    useRANSAC = RANSAC;
     
     cameraMatrix = Mat::eye(3, 3, CV_64F);
     distCoeffs   = Mat::zeros(8, 1, CV_64F);
     
     R = Mat::zeros(3, 1, CV_64F);
     T = Mat::zeros(3, 1, CV_64F);
-    
-    boardSize = Size_<int>(5, 4);
     
     points2D = vector<Point2f>();
     points3D = vector<Point3f>();
@@ -50,9 +49,7 @@ bool BECVDetector::detect(Mat& image)
     
     if (found) {
         //calculate subpixel
-        Mat viewGray;
-        cvtColor(image, viewGray, COLOR_BGR2GRAY);
-        cornerSubPix(viewGray, points2D, boardSize, Size_<int>(-1,-1), TermCriteria(CV_TERMCRIT_ITER, 30, 0.1));
+        cornerSubPix(image, points2D, boardSize, Size_<int>(-1,-1), TermCriteria(CV_TERMCRIT_ITER, 30, 0.1));
     }
     
     return found;
@@ -71,7 +68,14 @@ double BECVDetector::calibrate(Mat& image)
 
 bool BECVDetector::estimate(int flags)
 {
-    bool OK = solvePnP(points3D, points2D, cameraMatrix, distCoeffs, R, T, false, flags);
+    bool OK;
+    if (useRANSAC) {
+        OK = solvePnPRansac(points3D, points2D, cameraMatrix, distCoeffs, R, T, false, flags);
+    }
+    else {
+        OK = solvePnP(points3D, points2D, cameraMatrix, distCoeffs, R, T, false, flags);
+    }
+    
     if (OK) {
         Mat Rod(3,3,DataType<double>::type);
         Rodrigues(R, Rod);
@@ -114,18 +118,21 @@ bool BECVDetector::estimate(int flags)
 
 bool BECVDetector::processImage(Mat& image) {
     try {
+        Mat gray;
+        cvtColor(image, gray, COLOR_BGR2GRAY);
+        
         if (intrinsicMatCalculated == false) {
-            if (!detect(image)) {
+            if (!detect(gray)) {
                 return false;
             }
-            double RMS = calibrate(image);
+            double RMS = calibrate(gray);
             if(RMS < 0.1 || RMS > 1.0 || !checkRange(cameraMatrix) || !checkRange(distCoeffs)){
                 return false;
             }
             intrinsicMatCalculated = true;
         }
         
-        if (detect(image) && points2D.size() == 20) {
+        if (detect(gray) && points2D.size() == boardSize.width * boardSize.height) {
             drawChessboardCorners(image, boardSize, points2D, false);
             return estimate(estimateFlags);
         }

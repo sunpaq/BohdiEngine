@@ -32,6 +32,7 @@ typedef enum {
 
 @property (nonatomic, strong) UIActivityIndicatorView* indicator;
 
+-(void) removeCurrentModel;
 -(void) addModelNamed:(NSString*)modelName;
 
 //use default if names/name is null

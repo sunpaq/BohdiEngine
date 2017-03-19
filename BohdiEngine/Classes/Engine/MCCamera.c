@@ -92,8 +92,9 @@ compute(MCMatrix4, viewMatrix)
         return MCMatrix4Multiply(m, world);
     }
     else if (obj->rotateMode == MCCameraRotateAR) {
-        MCMatrix4 Zup = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(-M_PI / 2.0));
+        MCMatrix4 Zup = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
         MCMatrix4 R = sobj->transform;
+        //return R;
         return MCMatrix4Multiply(R, Zup);
     }
     //default is MCCameraRotateAroundModelManual

@@ -251,6 +251,12 @@
     });
 }
 
+-(void) removeCurrentModel
+{
+    MC3DNode* rootnode = director->lastScene->rootnode;
+    MCLinkedList_delItem(0, rootnode->children, rootnode->children->headItem);
+}
+
 -(void) addModelNamed:(NSString*)modelName
 {
     [self startLoadingAnimation];

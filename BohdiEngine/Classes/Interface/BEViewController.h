@@ -51,6 +51,11 @@ typedef enum {
 
 -(void) handlePanGesture:(CGPoint)offset;
 -(void) handlePinchGesture:(float)scale;
+
+//motion
+-(void)startDeviceMotion;
+-(void)stopDeviceMotion;
+
 @end
 
 

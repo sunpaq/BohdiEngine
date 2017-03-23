@@ -55,13 +55,12 @@
     self.doesRotateCamera = NO;
     self.doesDrawWireFrame = NO;
     self.cameraRotateMode = BECameraRotateAR;
-    
-    [self startDeviceMotion];
 }
 
 -(void)dealloc
 {
     release(director);
+    director = null;
 }
 
 #pragma mark - Properties

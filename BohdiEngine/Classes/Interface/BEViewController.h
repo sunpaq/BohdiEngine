@@ -20,7 +20,16 @@ typedef enum {
     BECameraRotateAR
 } BECameraRotateMode;
 
-@interface BEViewController : GLKViewController <GLKViewDelegate>
+@protocol BEViewDelegate
+-(void)onBETouched:(id)sender;
+@end
+
+@interface BEViewController : GLKViewController <GLKViewDelegate, UIGestureRecognizerDelegate>
+
+@property (atomic, readwrite) id<BEViewDelegate> touchDelegate;
+
+@property (atomic, readonly) GLKView* glView;
+@property (atomic, readonly) CGRect glFrame;
 
 @property (atomic, readwrite) BOOL useTransparentBackground;
 @property (atomic, readwrite) BOOL useDeltaRotationData;
@@ -38,6 +47,8 @@ typedef enum {
 //use default if names/name is null
 -(void) addSkyboxNamed:(NSArray*)texnames;
 -(void) addSkysphNamed:(NSString*)texname;
+-(void) removeCurrentSkybox;
+-(void) removeCurrentSkysph;
 
 -(void) glviewResize:(CGRect)frame;
 

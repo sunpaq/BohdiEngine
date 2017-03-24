@@ -190,7 +190,6 @@ method(MCDirector, void, addModel, MC3DModel* model)
         MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
         MC3DNode_scaleVec3(0, &model->Super, &scaleVec, false);
         debug_log("MCDirector - model maxlength=%lf scale=%lf\n", maxl, scale);
-        
     }else{
         error_log("MCDirector add model(%p) failed [lastScene=%p rootnode=%p]\n",
                   model, obj->lastScene, obj->lastScene->rootnode);
@@ -202,6 +201,14 @@ method(MCDirector, void, addModelNamed, const char* name)
     MC3DModel* model = new(MC3DModel);
     MC3DModel_initWithFileName(0, model, name);
     MCDirector_addModel(0, obj, model);
+}
+
+method(MCDirector, void, removeCurrentModel, voida)
+{
+    if (obj->lastScene) {
+        MCLinkedList* list = obj->lastScene->rootnode->children;
+        MCLinkedList_popItem(0, list, 0);
+    }
 }
 
 method(MCDirector, void, addSkyboxNamed, const char* names[6])
@@ -235,6 +242,23 @@ method(MCDirector, void, addSkysphereNamed, const char* name)
         }
         obj->lastScene->skysphRef = var(skysph);
         obj->lastScene->combineMode = MC3DSceneModelWithSkysph;
+    }
+}
+
+method(MCDirector, void, removeCurrentSkybox, voida)
+{
+    if (obj->lastScene) {
+        release(obj->lastScene->skyboxRef);
+        obj->lastScene->skyboxRef = null;
+    }
+}
+
+method(MCDirector, void, removeCurrentSkysph, voida)
+{
+    if (obj->lastScene && obj->lastScene->skysphRef) {
+        obj->lastScene->skysphRef->Super.visible = false;
+        release(obj->lastScene->skysphRef);
+        obj->lastScene->skysphRef = null;
     }
 }
 
@@ -312,8 +336,11 @@ onload(MCDirector)
         binding(MCDirector, void, addNode, MC3DNode* node);
         binding(MCDirector, void, addModel, MC3DModel* model);
         binding(MCDirector, void, addModelNamed, const char* name);
+        binding(MCDirector, void, removeCurrentModel, voida);
         binding(MCDirector, void, addSkyboxNamed, const char* names[6]);
         binding(MCDirector, void, addSkysphereNamed, const char* name);
+        binding(MCDirector, void, removeCurrentSkybox, voida);
+        binding(MCDirector, void, removeCurrentSkysph, voida);
         binding(MCDirector, void, cameraFocusOn, MCVector3 vertex);
         binding(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
         binding(MCDirector, void, moveModelToOrigin, MC3DModel* model);

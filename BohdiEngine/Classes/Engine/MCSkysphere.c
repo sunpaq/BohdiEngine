@@ -13,7 +13,7 @@
 oninit(MCSkysphere)
 {
     if (init(MC3DNode)) {
-        //obj->Super.transform =
+        obj->Super.visible = true;
         
         var(vaoid) = 0;
         var(vboid) = 0;
@@ -147,30 +147,34 @@ function(MCMatrix4, sphProjectionMatrix, voida)
 //override
 method(MCSkysphere, void, update, MCGLContext* ctx)
 {
-    obj->sphViewMatrix = sphViewMatrix(0, obj, 0);
-    obj->sphProjectionMatrix = sphProjectionMatrix(0, obj, 0);
-    
-    MCGLContext_activateShaderProgram(0, var(ctx), 0);
-    
-    MCGLUniformData data;
-    data.mat4 = obj->sphProjectionMatrix;
-    MCGLContext_updateUniform(0, var(ctx), "sphProjectionMatrix", data);
+    if (obj->Super.visible) {
+        obj->sphViewMatrix = sphViewMatrix(0, obj, 0);
+        obj->sphProjectionMatrix = sphProjectionMatrix(0, obj, 0);
+        
+        MCGLContext_activateShaderProgram(0, var(ctx), 0);
+        
+        MCGLUniformData data;
+        data.mat4 = obj->sphProjectionMatrix;
+        MCGLContext_updateUniform(0, var(ctx), "sphProjectionMatrix", data);
+    }
 }
 
 method(MCSkysphere, void, draw, MCGLContext* ctx)
 {
-    glDepthMask(GL_FALSE);
-    MCGLContext_activateShaderProgram(0, var(ctx), 0);
-    MCGLUniformData data;
-    data.mat4 = obj->sphViewMatrix;
-    MCGLContext_updateUniform(0, var(ctx), "sphViewMatrix", data);
-    MCGLContext_setUniforms(0, var(ctx), 0);
-    
-    glBindVertexArray(obj->vaoid);
-    MCGLEngine_activeTextureUnit(0);
-    glDrawElements(GL_TRIANGLE_STRIP, var(ic), GL_UNSIGNED_INT, MCBUFFER_OFFSET(0));
-    glBindVertexArray(0);
-    glDepthMask(GL_TRUE);
+    if (obj->Super.visible) {
+        glDepthMask(GL_FALSE);
+        MCGLContext_activateShaderProgram(0, var(ctx), 0);
+        MCGLUniformData data;
+        data.mat4 = obj->sphViewMatrix;
+        MCGLContext_updateUniform(0, var(ctx), "sphViewMatrix", data);
+        MCGLContext_setUniforms(0, var(ctx), 0);
+        
+        glBindVertexArray(obj->vaoid);
+        MCGLEngine_activeTextureUnit(0);
+        glDrawElements(GL_TRIANGLE_STRIP, var(ic), GL_UNSIGNED_INT, MCBUFFER_OFFSET(0));
+        glBindVertexArray(0);
+        glDepthMask(GL_TRUE);
+    }
 }
 
 method(MCSkysphere, void, setRotationMat3, float mat3[9])

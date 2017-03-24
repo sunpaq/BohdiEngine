@@ -19,11 +19,15 @@
     
     CMMotionManager* motionManager;
     CMAttitude* referenceAtt;
+    
+    UITapGestureRecognizer* tap;
 }
 @end
 
 @implementation BEViewController
 
+@dynamic glView;
+@dynamic glFrame;
 @dynamic useTransparentBackground;
 @dynamic deviceRotateMat3;
 
@@ -32,29 +36,33 @@
     [super viewDidLoad];
     [EAGLContext setCurrentContext:[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3]];
 
-    CGRect frame = self.view.frame;
+    self.touchDelegate = nil;
+    
     director = new(MCDirector);
     pinch_scale = 10.0;
     
     motionManager = nil;
     _indicator = nil;
     
-    GLKView* _glView = (GLKView*)self.view;
-    _glView.context = [EAGLContext currentContext];
-    _glView.delegate = self;
-    _glView.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
-    _glView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    _glView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
-    _glView.drawableMultisample = GLKViewDrawableMultisampleNone;
+    self.glView.context = [EAGLContext currentContext];
+    self.glView.delegate = self;
+    self.glView.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
+    self.glView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    self.glView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
+    self.glView.drawableMultisample = GLKViewDrawableMultisampleNone;
     
     self.preferredFramesPerSecond = 60;
 
-    [self glviewSetup:self.view.frame];
+    [self glviewSetup:self.glFrame];
     
     self.useDeltaRotationData = NO;
     self.doesRotateCamera = NO;
     self.doesDrawWireFrame = NO;
     self.cameraRotateMode = BECameraRotateAR;
+    
+    tap = [[UITapGestureRecognizer alloc] init];
+    tap.delegate = self;
+    [self.view addGestureRecognizer:tap];
 }
 
 -(void)dealloc
@@ -63,7 +71,41 @@
     director = null;
 }
 
+-(BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self becomeFirstResponder];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [self resignFirstResponder];
+    [super viewDidDisappear:animated];
+}
+
+-(void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake) {
+        [self onClose:nil];
+    }
+}
+
 #pragma mark - Properties
+
+-(GLKView *)glView
+{
+    return (GLKView*)self.view;
+}
+
+-(CGRect)glFrame
+{
+    return self.view.frame;
+}
 
 -(void) setUseTransparentBackground:(BOOL)useTransparentBackground
 {
@@ -128,7 +170,9 @@
 {
     if (pos) {
         MCLight* light = computed(director, lightHandler);
-        light->lightPosition = MCVector3Make(pos->x, pos->y, pos->z);
+        if (light) {
+            light->lightPosition = MCVector3Make(pos->x, pos->y, pos->z);
+        }
     } else {
         director->lightFollowCamera = true;
     }
@@ -252,8 +296,7 @@
 
 -(void) removeCurrentModel
 {
-    MC3DNode* rootnode = director->lastScene->rootnode;
-    MCLinkedList_delItem(0, rootnode->children, rootnode->children->headItem);
+    ff(director, removeCurrentModel, 0);
 }
 
 -(void) addModelNamed:(NSString*)modelName
@@ -286,10 +329,20 @@
 {
     if (texname) {
         const char* name = [texname cStringUsingEncoding:NSUTF8StringEncoding];
-        ff(director, addSkysphereNamed, name);
+        MCDirector_addSkysphereNamed(0, director, name);
     } else {
-        ff(director, addSkysphereNamed, null);
+        MCDirector_addSkysphereNamed(0, director, null);
     }
+}
+
+-(void) removeCurrentSkybox
+{
+    MCDirector_removeCurrentSkybox(0, director, 0);
+}
+
+-(void) removeCurrentSkysph
+{
+    MCDirector_removeCurrentSkysph(0, director, 0);
 }
 
 -(void) handlePanGesture:(CGPoint)offset
@@ -307,6 +360,22 @@
     
     MCCamera* camera = computed(director, cameraHandler);
     MCCamera_distanceScale(0, camera, MCFloatF(20.0/pinch_scale));
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (self.touchDelegate) {
+        [self.touchDelegate onBETouched:self];
+    }
+
+    return YES;
+}
+
+-(void)onClose:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 
 @end

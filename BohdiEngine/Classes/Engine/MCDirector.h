@@ -56,9 +56,12 @@ method(MCDirector, void, resizeAllScene, int width, int height);
 method(MCDirector, void, addNode, MC3DNode* node);
 method(MCDirector, void, addModel, MC3DModel* model);
 method(MCDirector, void, addModelNamed, const char* name);
+method(MCDirector, void, removeCurrentModel, voida);
 //use default if names/name is null
 method(MCDirector, void, addSkyboxNamed, const char* names[6]);
 method(MCDirector, void, addSkysphereNamed, const char* name);
+method(MCDirector, void, removeCurrentSkybox, voida);
+method(MCDirector, void, removeCurrentSkysph, voida);
 
 method(MCDirector, void, cameraFocusOn, MCVector4 vertex);
 method(MCDirector, void, cameraFocusOnModel, MC3DModel* model);

@@ -34,7 +34,6 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-    [EAGLContext setCurrentContext:[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3]];
 
     self.touchDelegate = nil;
     
@@ -44,15 +43,6 @@
     motionManager = nil;
     _indicator = nil;
     
-    self.glView.context = [EAGLContext currentContext];
-    self.glView.delegate = self;
-    self.glView.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
-    self.glView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    self.glView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
-    self.glView.drawableMultisample = GLKViewDrawableMultisampleNone;
-    
-    self.preferredFramesPerSecond = 60;
-
     [self glviewSetup:self.glFrame];
     
     self.useDeltaRotationData = NO;
@@ -261,6 +251,15 @@
 
 -(void) glviewSetup:(CGRect)frame
 {
+    [EAGLContext setCurrentContext:[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3]];
+    self.glView.context = [EAGLContext currentContext];
+    self.glView.delegate = self;
+    self.glView.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
+    self.glView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    self.glView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
+    self.glView.drawableMultisample = GLKViewDrawableMultisampleNone;
+    self.preferredFramesPerSecond = 60;
+    
     unsigned width = frame.size.width;
     unsigned height = frame.size.height;
     ff(director, setupMainScene, width, height);

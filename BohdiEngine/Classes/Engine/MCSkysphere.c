@@ -53,6 +53,8 @@ method(MCSkysphere, void, bye, voida)
     release(var(vertices));
     release(var(indices));
     
+    glDeleteTextures(1, &obj->texid);
+    
     MC3DNode_bye(0, sobj, 0);
 }
 

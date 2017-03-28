@@ -247,17 +247,16 @@ method(MCDirector, void, addSkysphereNamed, const char* name)
 
 method(MCDirector, void, removeCurrentSkybox, voida)
 {
+    release(var(skybox));
     if (obj->lastScene) {
-        release(obj->lastScene->skyboxRef);
         obj->lastScene->skyboxRef = null;
     }
 }
 
 method(MCDirector, void, removeCurrentSkysph, voida)
 {
-    if (obj->lastScene && obj->lastScene->skysphRef) {
-        obj->lastScene->skysphRef->Super.visible = false;
-        release(obj->lastScene->skysphRef);
+    release(var(skysph));
+    if (obj->lastScene) {
         obj->lastScene->skysphRef = null;
     }
 }

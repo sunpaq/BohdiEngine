@@ -31,34 +31,66 @@
 @dynamic useTransparentBackground;
 @dynamic deviceRotateMat3;
 
+- (void) initialization
+{
+    tap = [[UITapGestureRecognizer alloc] init];
+    
+    director = new(MCDirector);
+    [self glviewSetup:self.glFrame];
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self initialization];
+    }
+    return self;
+}
+
+-(instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initialization];
+    }
+    return self;
+}
+
+-(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        [self initialization];
+    }
+    return self;
+}
+
 -(void)viewDidLoad
 {
     [super viewDidLoad];
 
     self.touchDelegate = nil;
-    
-    director = new(MCDirector);
     pinch_scale = 10.0;
     
     motionManager = nil;
     _indicator = nil;
-    
-    [self glviewSetup:self.glFrame];
     
     self.useDeltaRotationData = NO;
     self.doesRotateCamera = NO;
     self.doesDrawWireFrame = NO;
     self.cameraRotateMode = BECameraRotateAR;
     
-    tap = [[UITapGestureRecognizer alloc] init];
     tap.delegate = self;
     [self.view addGestureRecognizer:tap];
+    [self glviewResize:self.glFrame];
 }
 
 -(void)dealloc
 {
     release(director);
     director = null;
+    tap = null;
 }
 
 -(BOOL)canBecomeFirstResponder

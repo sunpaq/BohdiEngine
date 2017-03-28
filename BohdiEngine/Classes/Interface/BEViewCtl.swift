@@ -6,6 +6,8 @@
 //
 //
 
+/*
+
 import UIKit
 import GLKit
 import CoreMotion
@@ -250,3 +252,5 @@ class BEViewCtl: GLKViewController, UIGestureRecognizerDelegate {
         }
     }
 }
+ 
+*/

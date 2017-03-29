@@ -33,17 +33,6 @@ compute(MCGLContext*, contextHandler)
     return var(lastScene)->renderer->context;
 }
 
-//compute(MCSkyboxCamera*, skyboxCameraHandler)
-//{
-//    as(MCDirector);
-//    if (obj->lastScene) {
-//        if (obj->lastScene->skyboxRef) {
-//            return obj->lastScene->skyboxRef->camera;
-//        }
-//    }
-//    return null;
-//}
-
 oninit(MCDirector)
 {
     if (init(MCObject)) {
@@ -58,10 +47,9 @@ oninit(MCDirector)
         var(lightHandler) = lightHandler;
         var(cameraHandler) = cameraHandler;
         var(contextHandler) = contextHandler;
-        //var(skyboxCameraHandler) = skyboxCameraHandler;
         
-        var(skybox) = null;
-        var(skysph) = null;
+        //var(skybox) = null;
+        //var(skysph) = null;
         
         var(skyboxThread) = new(MCThread);
         var(modelThread) = new(MCThread);
@@ -87,9 +75,10 @@ method(MCDirector, void, bye, voida)
 {
     if (obj->lastScene != null) {
         releaseScenes(0, obj, obj->lastScene);
+        obj->lastScene = null;
     }
-    release(var(skybox));
-    release(var(skysph));
+    //release(var(skybox));
+    //release(var(skysph));
     release(var(skyboxThread));
     release(var(modelThread));
 
@@ -98,7 +87,7 @@ method(MCDirector, void, bye, voida)
 
 method(MCDirector, void, updateAll, voida)
 {
-    if (var(lastScene) != null) {
+    if (obj && var(lastScene) != null) {
         if (var(gyroscopeMode)) {
             MCCamera_setRotationMat3(0, cpt(cameraHandler), obj->deviceRotationMat3.m);
             MC3DScene_setRotationMat3(0, var(lastScene), obj->deviceRotationMat3.m);
@@ -114,7 +103,7 @@ method(MCDirector, void, updateAll, voida)
 method(MCDirector, int, drawAll, voida)
 {
     int fps = -1;
-    if (var(lastScene) != null) {
+    if (obj && var(lastScene) != null) {
         fps = MC3DScene_drawScene(0, var(lastScene), 0);
     }
     return fps;
@@ -123,33 +112,45 @@ method(MCDirector, int, drawAll, voida)
 method(MCDirector, void, setupMainScene, unsigned width, unsigned height)
 {
     MC3DScene* scene = ff(new(MC3DScene), initWithWidthHeightDefaultShader, width, height);
-    MCDirector_pushScene(0, obj, scene);
+    if (scene) {
+        releaseScenes(0, obj, obj->lastScene);
+        MCDirector_pushScene(0, obj, scene);
+        release(scene);
+    }
 }
 
 method(MCDirector, void, pushScene, MC3DScene* scene)
 {
     if (var(lastScene) == null) {
+        scene->next = null;
+        scene->prev = null;
         var(lastScene) = scene;
+        retain(scene);
     }else{
+        scene->next = null;
         scene->prev = var(lastScene);
         var(lastScene)->next = scene;
-        
         var(lastScene) = scene;
+        retain(scene);
     }
 }
 
 method(MCDirector, void, popScene, voida)
 {
-    ff(var(lastScene), lockCamera, true);
-    //first scene
-    if (var(lastScene) != null && var(lastScene)->prev != null) {
-        var(lastScene) = var(lastScene)->prev;
+    if (var(lastScene)) {
+        ff(var(lastScene), lockCamera, true);
+        MC3DScene* current = var(lastScene);
+        //first scene
+        if (current->prev == null) {
+            var(lastScene) = null;
+            release(current);
+        }
+        else {
+            var(lastScene) = current->next;
+            release(current);
+        }
+        ff(var(lastScene), lockCamera, false);
     }
-    //last scene
-    else if (var(lastScene) != null && var(lastScene)->next != null) {
-        var(lastScene) = var(lastScene)->next;
-    }
-    ff(var(lastScene), lockCamera, false);
 }
 
 method(MCDirector, void, resizeAllScene, int width, int height)
@@ -158,14 +159,9 @@ method(MCDirector, void, resizeAllScene, int width, int height)
         //no need to update
         return;
     }
-    MC3DScene* iter;
+    MC3DScene* iter = null;
     for (iter=var(lastScene); iter!=null; iter=iter->prev) {
-        if (iter->skyboxRef != null) {
-            iter->skyboxRef->boxCameraRatio = MCRatioMake(width, height);
-        }
-        if (iter->mainCamera != null) {
-            iter->mainCamera->ratio = MCRatioMake(width, height);
-        }
+        MC3DScene_resizeScene(0, iter, width, height);
     }
     var(currentWidth) = width;
     var(currentHeight) = height;
@@ -214,50 +210,36 @@ method(MCDirector, void, removeCurrentModel, voida)
 method(MCDirector, void, addSkyboxNamed, const char* names[6])
 {
     if (obj->lastScene) {
-        //first release the old one
-        if (var(skybox)) {
-            release(var(skybox));
+        MCSkybox* box = ff(new(MCSkybox), initWithFileNames, names);
+        if (box) {
+            MC3DScene_addSkybox(0, obj->lastScene, box);
+            release(box);
         }
-        if (names) {
-            var(skybox) = ff(new(MCSkybox), initWithFileNames, names);
-        } else {
-            var(skybox) = ff(new(MCSkybox), initWithDefaultFiles, 0);
-        }
-        obj->lastScene->skyboxRef = var(skybox);
-        obj->lastScene->combineMode = MC3DSceneModelWithSkybox;
     }
 }
 
 method(MCDirector, void, addSkysphereNamed, const char* name)
 {
     if (obj->lastScene) {
-        //first release the old one
-        if (var(skysph)) {
-            release(var(skysph));
+        MCSkysphere* sph = ff(new(MCSkysphere), initWithFileName, name);
+        if (sph) {
+            MC3DScene_addSkysph(0, obj->lastScene, sph);
+            release(sph);
         }
-        if (name) {
-            var(skysph) = ff(new(MCSkysphere), initWithFileName, name);
-        } else {
-            var(skysph) = ff(new(MCSkysphere), initWithDefaultFile, 0);
-        }
-        obj->lastScene->skysphRef = var(skysph);
-        obj->lastScene->combineMode = MC3DSceneModelWithSkysph;
     }
 }
 
 method(MCDirector, void, removeCurrentSkybox, voida)
 {
-    release(var(skybox));
     if (obj->lastScene) {
-        obj->lastScene->skyboxRef = null;
+        MC3DScene_removeSkybox(0, obj->lastScene, 0);
     }
 }
 
 method(MCDirector, void, removeCurrentSkysph, voida)
 {
-    release(var(skysph));
     if (obj->lastScene) {
-        obj->lastScene->skysphRef = null;
+        MC3DScene_removeSkysph(0, obj->lastScene, 0);
     }
 }
 

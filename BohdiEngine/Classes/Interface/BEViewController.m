@@ -31,15 +31,12 @@
 @dynamic useTransparentBackground;
 @dynamic deviceRotateMat3;
 
-- (void) initialization
+-(void)initialization
 {
     tap = [[UITapGestureRecognizer alloc] init];
-    
-    director = new(MCDirector);
-    [self glviewSetup:self.glFrame];
 }
 
-- (instancetype)init
+-(instancetype)init
 {
     self = [super init];
     if (self) {
@@ -69,21 +66,26 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-
-    self.touchDelegate = nil;
+    [self glviewSetup:self.glFrame];
+    
+    director = new(MCDirector);
+    unsigned width = self.glFrame.size.width;
+    unsigned height = self.glFrame.size.height;
+    ff(director, setupMainScene, width, height);
+    
+    _touchDelegate = nil;
     pinch_scale = 10.0;
     
     motionManager = nil;
     _indicator = nil;
     
-    self.useDeltaRotationData = NO;
-    self.doesRotateCamera = NO;
-    self.doesDrawWireFrame = NO;
-    self.cameraRotateMode = BECameraRotateAR;
+    _useDeltaRotationData = NO;
+    _doesRotateCamera = NO;
+    _doesDrawWireFrame = NO;
+    _cameraRotateMode = BECameraRotateAR;
     
     tap.delegate = self;
     [self.view addGestureRecognizer:tap];
-    [self glviewResize:self.glFrame];
 }
 
 -(void)dealloc
@@ -104,10 +106,22 @@
     [self becomeFirstResponder];
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self stopDeviceMotion];
+    //[self removeCurrentSkysph];
+    release(director);
+    director = null;
+}
+
 -(void)viewDidDisappear:(BOOL)animated
 {
+    [self stopDeviceMotion];
     [self resignFirstResponder];
     [super viewDidDisappear:animated];
+    //[self removeCurrentSkysph];
+    release(director);
+    director = null;
 }
 
 -(void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
@@ -149,16 +163,27 @@
 
 -(void) setDoesRotateCamera:(BOOL)doesRotate
 {
-    computed(director, cameraHandler)->isLockRotation = doesRotate? false : true;
+    if (director) {
+        MCCamera* cam = computed(director, cameraHandler);
+        if (cam) {
+            cam->isLockRotation = doesRotate? false : true;
+        }
+    }
 }
 
 -(void) setDoesDrawWireFrame:(BOOL)doesDrawWF
 {
-    computed(director, contextHandler)->drawMode = doesDrawWF ? MCLineStrip : MCTriAngles;
+    if (director) {
+        MCGLContext* ctx = computed(director, contextHandler);
+        if (ctx) {
+            ctx->drawMode = doesDrawWF ? MCLineStrip : MCTriAngles;
+        }
+    }
 }
 
 -(void) cameraReset:(float*)mat4
 {
+    if (!director) return;
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         if (mat4) {
@@ -171,6 +196,7 @@
 
 -(void) cameraRotate:(GLKMatrix3)mat3 Incremental:(BOOL)inc
 {
+    if (!director) return;
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         MC3DNode_rotateMat3(0, &cam->Super, mat3.m, inc?true:false);
@@ -179,6 +205,7 @@
 
 -(void) cameraTranslate:(GLKVector3)vec3 Incremental:(BOOL)inc
 {
+    if (!director) return;
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         MCVector3 eye = MCVector3Make(vec3.x, vec3.y, vec3.z);
@@ -190,6 +217,7 @@
 
 -(void) lightReset:(GLKVector3*)pos
 {
+    if (!director) return;
     if (pos) {
         MCLight* light = computed(director, lightHandler);
         if (light) {
@@ -202,17 +230,19 @@
 
 -(void) setDeviceRotateMat3:(CMRotationMatrix)mat3
 {
-    director->deviceRotationMat3.m00 = mat3.m11;
-    director->deviceRotationMat3.m01 = mat3.m12;
-    director->deviceRotationMat3.m02 = mat3.m13;
-    
-    director->deviceRotationMat3.m10 = mat3.m21;
-    director->deviceRotationMat3.m11 = mat3.m22;
-    director->deviceRotationMat3.m12 = mat3.m23;
-    
-    director->deviceRotationMat3.m20 = mat3.m31;
-    director->deviceRotationMat3.m21 = mat3.m32;
-    director->deviceRotationMat3.m22 = mat3.m33;
+    if (director) {
+        director->deviceRotationMat3.m00 = mat3.m11;
+        director->deviceRotationMat3.m01 = mat3.m12;
+        director->deviceRotationMat3.m02 = mat3.m13;
+        
+        director->deviceRotationMat3.m10 = mat3.m21;
+        director->deviceRotationMat3.m11 = mat3.m22;
+        director->deviceRotationMat3.m12 = mat3.m23;
+        
+        director->deviceRotationMat3.m20 = mat3.m31;
+        director->deviceRotationMat3.m21 = mat3.m32;
+        director->deviceRotationMat3.m22 = mat3.m33;
+    }
 }
 
 -(void) setCameraRotateMode:(BECameraRotateMode)cameraRotateMode
@@ -222,7 +252,10 @@
     } else {
         director->gyroscopeMode = false;
     }
-    computed(director, cameraHandler)->rotateMode = cameraRotateMode;
+    MCCamera* cam = computed(director, cameraHandler);
+    if (cam) {
+        cam->rotateMode = cameraRotateMode;
+    }
 }
 
 -(void)startDeviceMotion
@@ -291,10 +324,6 @@
     self.glView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
     self.glView.drawableMultisample = GLKViewDrawableMultisampleNone;
     self.preferredFramesPerSecond = 60;
-    
-    unsigned width = frame.size.width;
-    unsigned height = frame.size.height;
-    ff(director, setupMainScene, width, height);
 }
 
 -(void) glviewResize:(CGRect)frame

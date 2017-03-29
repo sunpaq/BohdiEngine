@@ -20,7 +20,8 @@ oninit(MCSkysphere)
         var(eboid) = 0;
         var(texid) = 0;
         
-        var(ctx)    = new(MCGLContext);
+        var(tex) = null;
+        var(ctx) = new(MCGLContext);
         
         var(sphViewMatrix) = MCMatrix4Identity;
         var(sphProjectionMatrix) = MCMatrix4Identity;
@@ -49,17 +50,27 @@ oninit(MCSkysphere)
 
 method(MCSkysphere, void, bye, voida)
 {
-    release(var(ctx));
-    release(var(vertices));
-    release(var(indices));
     
-    glDeleteTextures(1, &obj->texid);
+    free(var(vertices));
+    free(var(indices));
+    
+    GLuint texids[1] = {obj->texid};
+    glDeleteTextures(1, texids);
+    
+    GLuint buffs[3] = {obj->vaoid, obj->vboid, obj->eboid};
+    glDeleteBuffers(3, buffs);
+    
+    release(var(ctx));
+    release(var(tex));
     
     MC3DNode_bye(0, sobj, 0);
 }
 
 method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
 {
+    retain(tex);
+    var(tex) = tex;
+    
     //Shader
     MCGLContext_initWithShaderName(0, var(ctx), "MCSkysphereShader.vsh", "MCSkysphereShader.fsh",
                                    (const char* []){
@@ -149,7 +160,7 @@ function(MCMatrix4, sphProjectionMatrix, voida)
 //override
 method(MCSkysphere, void, update, MCGLContext* ctx)
 {
-    if (obj->Super.visible) {
+    if (obj && obj->Super.visible) {
         obj->sphViewMatrix = sphViewMatrix(0, obj, 0);
         obj->sphProjectionMatrix = sphProjectionMatrix(0, obj, 0);
         
@@ -163,7 +174,7 @@ method(MCSkysphere, void, update, MCGLContext* ctx)
 
 method(MCSkysphere, void, draw, MCGLContext* ctx)
 {
-    if (obj->Super.visible) {
+    if (obj && obj->Super.visible) {
         glDepthMask(GL_FALSE);
         MCGLContext_activateShaderProgram(0, var(ctx), 0);
         MCGLUniformData data;

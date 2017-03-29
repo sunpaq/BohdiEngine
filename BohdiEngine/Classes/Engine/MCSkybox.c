@@ -57,7 +57,7 @@ oninit(MCSkybox)
 
 method(MCSkybox, void, bye, voida)
 {
-    //release(var(camera));
+    release(var(ctx));
     MC3DNode_bye(0, sobj, 0);
 }
 

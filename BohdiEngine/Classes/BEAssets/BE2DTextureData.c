@@ -75,8 +75,13 @@ utility(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file)
 
 method(BE2DTextureData, void, bye, voida)
 {
-    if (obj->raw != null) {
+    if (obj->path) {
+        free(obj->path);
+        obj->path = null;
+    }
+    if (obj->raw) {
         SOIL_free_image_data(obj->raw);
+        obj->raw = null;
     }
     superbye(MCObject);
 }

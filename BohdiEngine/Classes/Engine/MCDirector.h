@@ -32,8 +32,8 @@ class(MCDirector, MCObject,
       MCMatrix3 deviceRotationMat3;
       
       //common skybox for many scenes
-      MCSkybox* skybox;
-      MCSkysphere* skysph;
+      //MCSkybox* skybox;
+      //MCSkysphere* skysph;
       
       computing(MCLight*, lightHandler);
       computing(MCCamera*, cameraHandler);

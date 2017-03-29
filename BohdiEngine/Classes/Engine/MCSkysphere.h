@@ -13,6 +13,7 @@
 #include "BE2DTextureData.h"
 
 class(MCSkysphere, MC3DNode,
+      BE2DTextureData* tex;
       MCGLContext* ctx;
       
       MCMatrix4 sphViewMatrix;

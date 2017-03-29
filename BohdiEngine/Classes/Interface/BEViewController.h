@@ -41,6 +41,10 @@ typedef enum {
 
 @property (nonatomic, strong) UIActivityIndicatorView* indicator;
 
+-(instancetype)init;
+-(instancetype)initWithCoder:(NSCoder *)aDecoder;
+-(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
+
 -(void) removeCurrentModel;
 -(void) addModelNamed:(NSString*)modelName;
 

@@ -161,6 +161,17 @@
     }
 }
 
+-(void)setUseMultisampleAntiAlias:(BOOL)useMultisampleAntiAlias
+{
+    if (self.glView) {
+        if (useMultisampleAntiAlias) {
+            self.glView.drawableMultisample = GLKViewDrawableMultisample4X;
+        } else {
+            self.glView.drawableMultisample = GLKViewDrawableMultisampleNone;
+        }
+    }
+}
+
 -(void) setDoesRotateCamera:(BOOL)doesRotate
 {
     if (director) {
@@ -322,7 +333,6 @@
     self.glView.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
     self.glView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     self.glView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
-    self.glView.drawableMultisample = GLKViewDrawableMultisampleNone;
     self.preferredFramesPerSecond = 60;
 }
 

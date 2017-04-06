@@ -32,6 +32,7 @@ typedef enum {
 @property (atomic, readonly) CGRect glFrame;
 
 @property (atomic, readwrite) BOOL useTransparentBackground;
+@property (atomic, readwrite) BOOL useMultisampleAntiAlias;
 @property (atomic, readwrite) BOOL useDeltaRotationData;
 @property (atomic, readwrite) BOOL doesRotateCamera;
 @property (atomic, readwrite) BOOL doesDrawWireFrame;

@@ -66,6 +66,7 @@ method(MC3DScene, MCCamera*, getCamera, voida);
 method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht);
 method(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht);
 method(MC3DScene, void, setRotationMat3, float mat3[9]);
+method(MC3DScene, void, setRotationMat4, float mat4[16]);
 method(MC3DScene, void, printDebugInfo, voida);
 
 #endif /* MC3DScene_h */

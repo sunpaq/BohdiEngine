@@ -46,6 +46,7 @@ method(MC3DNode, void, changeTexture, MCTexture* texture);
 method(MC3DNode, void, resetTransform, MCMatrix4* transform);
 method(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental);
 method(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental);
+method(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental);
 method(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
 
 //draw

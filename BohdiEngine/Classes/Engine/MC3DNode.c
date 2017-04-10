@@ -139,6 +139,21 @@ method(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental)
     }
 }
 
+method(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental)
+{
+    if (mat4) {
+        MCMatrix4 m4 = {0};
+        for (int i=0; i<16; i++) {
+            m4.m[i] = mat4[i];
+        }
+        if (incremental) {
+            obj->transform = MCMatrix4Multiply(m4, obj->transform);
+        } else {
+            obj->transform = m4;
+        }
+    }
+}
+
 method(MC3DNode, void, update, MCGLContext* ctx)
 {
     //update children
@@ -232,6 +247,7 @@ onload(MC3DNode)
         binding(MC3DNode, void, resetTransform, MCMatrix4* transform);
         binding(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental);
         binding(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental);
+        binding(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental);
         binding(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
         binding(MC3DNode, void, update, voida);
         binding(MC3DNode, void, draw, voida);

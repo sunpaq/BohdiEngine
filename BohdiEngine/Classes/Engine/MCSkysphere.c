@@ -195,6 +195,11 @@ method(MCSkysphere, void, setRotationMat3, float mat3[9])
     MC3DNode_rotateMat3(0, sobj, mat3, false);
 }
 
+method(MCSkysphere, void, setRotationMat4, float mat4[16])
+{
+    MC3DNode_rotateMat4(0, sobj, mat4, false);
+}
+
 onload(MCSkysphere)
 {
     if (load(MC3DNode)) {
@@ -203,6 +208,7 @@ onload(MCSkysphere)
         binding(MCSkysphere, MCSkysphere*, initWithFileName, const char* name);
         binding(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida);
         binding(MCSkysphere, void, setRotationMat3, float mat3[9]);
+        binding(MCSkysphere, void, setRotationMat4, float mat4[16]);
         //override
         binding(MCSkysphere, void, update, MCGLContext* ctx);
         binding(MCSkysphere, void, draw, MCGLContext* ctx);

@@ -255,6 +255,18 @@ method(MC3DScene, void, setRotationMat3, float mat3[9])
     }
 }
 
+method(MC3DScene, void, setRotationMat4, float mat4[16])
+{
+    if (cpt(isDrawSky)) {
+        if (var(skybox)) {
+            MCSkybox_setRotationMat4(0, var(skybox), mat4);
+        }
+        if (var(skysph)) {
+            MCSkysphere_setRotationMat4(0, var(skysph), mat4);
+        }
+    }
+}
+
 onload(MC3DScene)
 {
     if (load(MCObject)) {
@@ -274,6 +286,7 @@ onload(MC3DScene)
         binding(MC3DScene, void, moveCameraOneStep, double deltaFai, double deltaTht);
         binding(MC3DScene, void, moveSkyboxCamera, MCDouble deltaFai, MCDouble deltaTht);
         binding(MC3DScene, void, setRotationMat3, float mat3[9]);
+        binding(MC3DScene, void, setRotationMat4, float mat4[16]);
         binding(MC3DScene, void, printDebugInfo, voida);
 
         return cla;

@@ -156,6 +156,11 @@ method(MCSkybox, void, setRotationMat3, float mat3[9])
     MC3DNode_rotateMat3(0, sobj, mat3, false);
 }
 
+method(MCSkybox, void, setRotationMat4, float mat4[16])
+{
+    MC3DNode_rotateMat4(0, sobj, mat4, false);
+}
+
 method(MCSkybox, void, update, MCGLContext* ctx)
 {
     obj->boxViewMatrix = boxViewMatrix(0, obj, 0);
@@ -196,6 +201,7 @@ onload(MCSkybox)
         //binding(MCSkybox, void, resizeWithWidthHeight, unsigned width, unsigned height);
         //binding(MCSkybox, void, setWidthHeightRatio, double widthHeightRatio);
         binding(MCSkybox, void, setRotationMat3, float mat3[9]);
+        binding(MCSkybox, void, setRotationMat4, float mat4[16]);
         binding(MCSkybox, void, update, MCGLContext* ctx);
         binding(MCSkybox, void, draw, MCGLContext* ctx);
         return cla;

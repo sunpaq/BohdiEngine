@@ -32,6 +32,7 @@ method(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[]);
 method(MCSkybox, MCSkybox*, initWithDefaultFiles, voida);
 //override
 method(MCSkybox, void, setRotationMat3, float mat3[9]);
+method(MCSkybox, void, setRotationMat4, float mat4[16]);
 method(MCSkybox, void, update, MCGLContext* ctx);
 method(MCSkybox, void, draw, MCGLContext* ctx);
 

@@ -38,6 +38,7 @@ method(MCSkysphere, MCSkysphere*, initWithFileName, const char* name);
 method(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida);
 
 method(MCSkysphere, void, setRotationMat3, float mat3[9]);
+method(MCSkysphere, void, setRotationMat4, float mat4[16]);
 //override
 method(MCSkysphere, void, update, MCGLContext* ctx);
 method(MCSkysphere, void, draw, MCGLContext* ctx);

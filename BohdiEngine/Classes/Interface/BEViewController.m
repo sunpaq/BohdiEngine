@@ -83,6 +83,7 @@
     _doesRotateCamera = NO;
     _doesDrawWireFrame = NO;
     _cameraRotateMode = BECameraRotateAR;
+    [self setCameraRotateMode:BECameraRotateAR];
     
     tap.delegate = self;
     [self.view addGestureRecognizer:tap];
@@ -172,6 +173,19 @@
     }
 }
 
+-(void) setCameraRotateMode:(BECameraRotateMode)cameraRotateMode
+{
+    if (cameraRotateMode == BECameraRotateAroundModelByGyroscope) {
+        director->gyroscopeMode = true;
+    } else {
+        director->gyroscopeMode = false;
+    }
+    MCCamera* cam = computed(director, cameraHandler);
+    if (cam) {
+        cam->rotateMode = cameraRotateMode;
+    }
+}
+
 -(void) setDoesRotateCamera:(BOOL)doesRotate
 {
     if (director) {
@@ -256,18 +270,7 @@
     }
 }
 
--(void) setCameraRotateMode:(BECameraRotateMode)cameraRotateMode
-{
-    if (cameraRotateMode == BECameraRotateAroundModelByGyroscope) {
-        director->gyroscopeMode = true;
-    } else {
-        director->gyroscopeMode = false;
-    }
-    MCCamera* cam = computed(director, cameraHandler);
-    if (cam) {
-        cam->rotateMode = cameraRotateMode;
-    }
-}
+
 
 -(void)startDeviceMotion
 {
@@ -371,12 +374,12 @@
 
 -(void) addModelNamed:(NSString*)modelName
 {
-    [self startLoadingAnimation];
+    //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
         ff(director, addModelNamed, name);
         ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
-        [self stopLoadingAnimation];
+        //[self stopLoadingAnimation];
     });
 }
 

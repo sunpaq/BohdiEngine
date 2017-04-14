@@ -358,6 +358,7 @@ MCInline MCMatrix3* MCMatrix3Copy(float* src, MCMatrix3* dst)
         for (int i=0; i<9; i++) {
             dst->m[i] = src[i];
         }
+        return dst;
     }
     return null;
 }
@@ -368,6 +369,7 @@ MCInline MCMatrix4* MCMatrix4Copy(float* src, MCMatrix4* dst)
         for (int i=0; i<16; i++) {
             dst->m[i] = src[i];
         }
+        return dst;
     }
     return null;
 }

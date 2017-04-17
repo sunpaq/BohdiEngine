@@ -252,9 +252,16 @@ MCInline MCMatrix4 MCMatrix4MakeLookAtByEulerAngle_EyeUp(MCVector3 lookat, doubl
         *upResult  = up;
     }
     
-    return MCMatrix4MakeLookAt(eye.x, eye.y, eye.z,
-                               lat.x, lat.y, lat.z,
-                               up.x,  up.y,  up.z);
+//    return MCMatrix4MakeLookAt(eye.x, eye.y, eye.z,
+//                               lat.x, lat.y, lat.z,
+//                               up.x,  up.y,  up.z);
+    
+    MCMatrix4 rotation = MCMatrix4MakeLookAt(eye.x, eye.y, eye.z,
+                                             0, 0, 0,
+                                             up.x,  up.y,  up.z);
+    
+    //first translate then rotate
+    return MCMatrix4Multiply(rotation, MCMatrix4MakeTranslation(lat.x, lat.y, lat.z));
 }
 
 //column major

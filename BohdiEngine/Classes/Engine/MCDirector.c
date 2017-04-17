@@ -257,16 +257,12 @@ method(MCDirector, void, cameraFocusOn, MCVector4 vertex)
 
 method(MCDirector, void, cameraFocusOnModel, MC3DModel* model)
 {
-    MC3DFrame frame = model->lastSavedFrame;
-    double mheight = frame.ymax - frame.ymin;
-    double mwidth  = frame.xmax - frame.xmin;
-    double mdepth  = frame.zmax - frame.zmin;
-    
-    double _max = (mheight > mwidth) ? mheight : mwidth;
-    double max = (mdepth > _max) ? mdepth : _max;
-    
-    cpt(cameraHandler)->lookat.y = mheight / 2.0f;
-    cpt(cameraHandler)->R_value = max * 2.0f;
+    cpt(cameraHandler)->lookat  = computed(model, center);
+}
+
+method(MCDirector, void, cameraZoomToFitModel, MC3DModel* model)
+{
+    cpt(cameraHandler)->R_value = computed(model, maxlength) * 2.0f;
 }
 
 method(MCDirector, void, moveModelToOrigin, MC3DModel* model)
@@ -324,6 +320,7 @@ onload(MCDirector)
         binding(MCDirector, void, removeCurrentSkysph, voida);
         binding(MCDirector, void, cameraFocusOn, MCVector3 vertex);
         binding(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
+        binding(MCDirector, void, cameraZoomToFitModel, MC3DModel* model);
         binding(MCDirector, void, moveModelToOrigin, MC3DModel* model);
         binding(MCDirector, void, setDeviceRotationMat3, float mat3[9]);
         binding(MCDirector, void, setCameraRotateMode, MCCameraRotateMode mode);

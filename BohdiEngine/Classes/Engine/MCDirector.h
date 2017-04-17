@@ -65,6 +65,7 @@ method(MCDirector, void, removeCurrentSkysph, voida);
 
 method(MCDirector, void, cameraFocusOn, MCVector4 vertex);
 method(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
+method(MCDirector, void, cameraZoomToFitModel, MC3DModel* model);
 method(MCDirector, void, moveModelToOrigin, MC3DModel* model);
 
 method(MCDirector, void, setDeviceRotationMat3, float mat3[9]);

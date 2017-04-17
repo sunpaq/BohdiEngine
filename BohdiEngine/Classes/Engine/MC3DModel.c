@@ -345,7 +345,7 @@ method(MC3DModel, void, translateToOrigin, voida)
 {
     MCVector3 center = cpt(center);
     MCVector3 rcenter = MCVector3Reverse(center);
-    MC3DNode_translateVec3(0, sobj, &rcenter, true);
+    MC3DNode_translateVec3(0, sobj, &rcenter, false);
 }
 
 //override

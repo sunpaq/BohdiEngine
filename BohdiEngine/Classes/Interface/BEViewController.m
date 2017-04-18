@@ -332,9 +332,10 @@
 {
     [EAGLContext setCurrentContext:[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3]];
     self.glView.context = [EAGLContext currentContext];
+    self.glView.context.multiThreaded = NO;
     self.glView.delegate = self;
     self.glView.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
-    self.glView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    self.glView.drawableDepthFormat = GLKViewDrawableDepthFormat16;
     self.glView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
     self.preferredFramesPerSecond = 60;
 }
@@ -377,7 +378,7 @@
     //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        ff(director, addModelNamed, name);
+        ff(director, addModelNamed, name, 20);
         ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
         //[self stopLoadingAnimation];
     });

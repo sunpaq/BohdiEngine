@@ -177,12 +177,12 @@ method(MCDirector, void, addNode, MC3DNode* node)
     }
 }
 
-method(MCDirector, void, addModel, MC3DModel* model)
+method(MCDirector, void, addModel, MC3DModel* model, int maxsize)
 {
     if(model && obj->lastScene && obj->lastScene->rootnode) {
         MC3DNode_addChild(0, obj->lastScene->rootnode, (MC3DNode*)model);
         double maxl  = computed(model, maxlength);
-        double scale = 10 / maxl;
+        double scale = maxsize / maxl;
         MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
         MC3DNode_scaleVec3(0, &model->Super, &scaleVec, false);
         debug_log("MCDirector - model maxlength=%lf scale=%lf\n", maxl, scale);
@@ -192,11 +192,11 @@ method(MCDirector, void, addModel, MC3DModel* model)
     }
 }
 
-method(MCDirector, void, addModelNamed, const char* name)
+method(MCDirector, void, addModelNamed, const char* name, int maxsize)
 {
     MC3DModel* model = new(MC3DModel);
     MC3DModel_initWithFileName(0, model, name);
-    MCDirector_addModel(0, obj, model);
+    MCDirector_addModel(0, obj, model, maxsize);
 }
 
 method(MCDirector, void, removeCurrentModel, voida)
@@ -311,8 +311,8 @@ onload(MCDirector)
         binding(MCDirector, void, popScene, voida);
         binding(MCDirector, void, resizeAllScene, int width, int height);
         binding(MCDirector, void, addNode, MC3DNode* node);
-        binding(MCDirector, void, addModel, MC3DModel* model);
-        binding(MCDirector, void, addModelNamed, const char* name);
+        binding(MCDirector, void, addModel, MC3DModel* model, int maxsize);
+        binding(MCDirector, void, addModelNamed, const char* name, int maxsize);
         binding(MCDirector, void, removeCurrentModel, voida);
         binding(MCDirector, void, addSkyboxNamed, const char* names[6]);
         binding(MCDirector, void, addSkysphereNamed, const char* name);

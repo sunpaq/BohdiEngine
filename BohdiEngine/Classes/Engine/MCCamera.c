@@ -12,8 +12,8 @@ oninit(MCCamera)
 {
     if (init(MC3DNode)) {
         var(ratio) = MCRatioHDTV16x9;//MCRatioCameraFilm3x2;
-        var(view_angle) = MCLensStandard50mmViewAngle;
-        var(depth_of_field) = 5000;
+        var(view_angle) = MCLensIphone29mmViewAngle;
+        var(depth_of_field) = 100;
 
         //local spherical coordinate
         var(R_value) = 100;
@@ -88,14 +88,25 @@ compute(MCMatrix4, viewMatrix)
                                           0, 0, 0,
                                           0, 1, 0);
         
+        //update
         obj->eye = MCGetEyeFromRotationMat4(world, r);
+        obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(R));
+        obj->R_percent = 1.0;
+        
         return MCMatrix4Multiply(m, world);
     }
     else if (obj->rotateMode == MCCameraRotateAR) {
         MCMatrix4 Zup = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
         MCMatrix4 R = sobj->transform;
-        //return R;
-        return MCMatrix4Multiply(R, Zup);
+
+        //right multiply means apply on model
+        MCMatrix4 mat4 = MCMatrix4Multiply(R, Zup);
+        
+        obj->eye = MCGetTranslateFromCombinedMat4(R);
+        obj->R_value = MCVector3Length(obj->eye);
+        obj->R_percent = 1.0;
+
+        return mat4;
     }
     //default is MCCameraRotateAroundModelManual
     else {
@@ -108,13 +119,12 @@ compute(MCMatrix4, viewMatrix)
 compute(MCMatrix4, projectionMatrix)
 {
     as(MCCamera);
-    //double near = cpt(Radius) - var(depth_of_field);
     double far  = cpt(Radius) + var(depth_of_field);
-    double near = MCLensStandard50mm;
+//    double near = cpt(Radius) - var(depth_of_field);
 //    if (near <= 0) {
-//        near = MCLensStandard50mm;
+//        near = 0.1;
 //    }
-    
+    double near = MCLensIphone29mm;
     return MCMatrix4MakePerspective(MCDegreesToRadians(obj->view_angle),
                                     var(ratio),
                                     near,

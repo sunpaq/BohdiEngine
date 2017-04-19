@@ -36,6 +36,7 @@ utility(MCGLEngine, void, featureSwith, MCGLFeature feature, MCBool onOrOff);
 utility(MCGLEngine, void, flushCommandAsync, voida);
 utility(MCGLEngine, void, flushCommandBlock, voida);
 utility(MCGLEngine, void, clearScreen, voida);
+utility(MCGLEngine, void, clearScreenWithColor, MCColorf color);
 utility(MCGLEngine, void, clearDepthBuffer, voida);
 utility(MCGLEngine, void, clearStencilBuffer, voida);
 utility(MCGLEngine, void, setClearScreenColor, MCColorf color);

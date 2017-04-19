@@ -7,6 +7,7 @@
 //
 
 #include "MCDirector.h"
+#include "MCGLEngine.h"
 #include "MCThread.h"
 
 compute(MCLight*, lightHandler)
@@ -116,6 +117,13 @@ method(MCDirector, void, setupMainScene, unsigned width, unsigned height)
         releaseScenes(0, obj, obj->lastScene);
         MCDirector_pushScene(0, obj, scene);
         release(scene);
+    }
+}
+
+method(MCDirector, void, setBackgroudColor, float R, float G, float B, float A)
+{
+    if (var(lastScene)) {
+        var(lastScene)->bgcolor = (MCColorf){R,G,B,A};
     }
 }
 
@@ -307,6 +315,7 @@ onload(MCDirector)
         binding(MCDirector, void, updateAll, voida);
         binding(MCDirector, void, drawAll, voida);
         binding(MCDirector, void, setupMainScene, unsigned width, unsigned height);
+        binding(MCDirector, void, setBackgroudColor, float R, float G, float B, float A);
         binding(MCDirector, void, pushScene, MC3DScene* scene);
         binding(MCDirector, void, popScene, voida);
         binding(MCDirector, void, resizeAllScene, int width, int height);

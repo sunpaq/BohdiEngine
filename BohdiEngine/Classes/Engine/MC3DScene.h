@@ -30,6 +30,7 @@ class(MC3DScene, MCObject,
       struct MC3DSceneStruct* next;
       struct MC3DSceneStruct* prev;
       
+      MCColorf      bgcolor;
       unsigned      scenewidth;
       unsigned      sceneheight;
       

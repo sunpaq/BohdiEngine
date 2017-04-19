@@ -49,6 +49,8 @@ method(MCDirector, void, updateAll, voida);
 method(MCDirector, int, drawAll, voida);
 
 method(MCDirector, void, setupMainScene, unsigned width, unsigned height);
+method(MCDirector, void, setBackgroudColor, float R, float G, float B, float A);
+
 method(MCDirector, void, pushScene, MC3DScene* scene);
 method(MCDirector, void, popScene, voida);
 method(MCDirector, void, resizeAllScene, int width, int height);

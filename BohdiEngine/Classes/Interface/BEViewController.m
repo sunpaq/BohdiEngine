@@ -68,11 +68,6 @@
     [super viewDidLoad];
     [self glviewSetup:self.glFrame];
     
-    director = new(MCDirector);
-    unsigned width = self.glFrame.size.width;
-    unsigned height = self.glFrame.size.height;
-    ff(director, setupMainScene, width, height);
-    
     _touchDelegate = nil;
     pinch_scale = 10.0;
     
@@ -83,7 +78,6 @@
     _doesRotateCamera = NO;
     _doesDrawWireFrame = NO;
     _cameraRotateMode = BECameraRotateAR;
-    [self setCameraRotateMode:BECameraRotateAR];
     
     tap.delegate = self;
     [self.view addGestureRecognizer:tap];
@@ -105,12 +99,21 @@
 {
     [super viewDidAppear:animated];
     [self becomeFirstResponder];
+    
+    director = new(MCDirector);
+    unsigned width = self.glFrame.size.width;
+    unsigned height = self.glFrame.size.height;
+    ff(director, setupMainScene, width, height);
+    [self setCameraRotateMode:BECameraRotateAR];
+    
+    MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [self stopDeviceMotion];
     //[self removeCurrentSkysph];
+    self.glView.delegate = null;
     release(director);
     director = null;
 }
@@ -121,6 +124,7 @@
     [self resignFirstResponder];
     [super viewDidDisappear:animated];
     //[self removeCurrentSkysph];
+    self.glView.delegate = null;
     release(director);
     director = null;
 }
@@ -269,8 +273,6 @@
         director->deviceRotationMat3.m22 = mat3.m33;
     }
 }
-
-
 
 -(void)startDeviceMotion
 {
@@ -450,6 +452,16 @@
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
+}
+
+-(void)attachGLLayerTo:(CALayer*)superlayer
+{
+    [superlayer addSublayer:self.glView.layer];
+}
+
+-(void)detachGLLayer
+{
+    [self.glView.layer removeFromSuperlayer];
 }
 
 @end

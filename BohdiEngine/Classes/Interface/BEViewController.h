@@ -47,6 +47,8 @@ typedef enum {
 -(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 -(instancetype)initWithCALayer:(CALayer*)layer;
 
+-(void) glviewResize:(CGRect)frame;
+
 -(void) removeCurrentModel;
 -(void) addModelNamed:(NSString*)modelName;
 
@@ -55,8 +57,6 @@ typedef enum {
 -(void) addSkysphNamed:(NSString*)texname;
 -(void) removeCurrentSkybox;
 -(void) removeCurrentSkysph;
-
--(void) glviewResize:(CGRect)frame;
 
 //need 4x4 column major matrix
 -(void) cameraReset:(float*)mat4;
@@ -73,6 +73,10 @@ typedef enum {
 -(void)startDeviceMotion;
 -(void)stopDeviceMotion;
 
+//Add 'layer' to the end of the receiver's sublayers array. If 'layer'
+//already has a superlayer, it will be removed before being added.
+-(void)attachGLLayerTo:(CALayer*)superlayer;
+-(void)detachGLLayer;
 @end
 
 

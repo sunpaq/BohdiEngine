@@ -22,6 +22,8 @@ compute(MCBool, isDrawSky)
 oninit(MC3DScene)
 {
     if (init(MCObject)) {
+        var(bgcolor) = (MCColorf){0.05, 0.25, 0.35, 1.0};
+
         //var(skyboxShow) = false;
         var(skybox)  = null;
         var(skysph)  = null;
@@ -218,7 +220,7 @@ method(MC3DScene, void, updateScene, voida)
 
 method(MC3DScene, int, drawScene, voida)
 {
-    MCGLEngine_clearScreen(0);
+    MCGLEngine_clearScreenWithColor(var(bgcolor));
     if (cpt(isDrawSky)) {
         //no model
         if (var(combineMode) == MC3DSceneSkyboxOnly) {

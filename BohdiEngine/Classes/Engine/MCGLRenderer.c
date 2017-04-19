@@ -29,7 +29,6 @@ oninit(MCGLRenderer)
 
         MCGLEngine_cullFace(MCGLBack);
         MCGLEngine_setFrontCounterClockWise(true);//CCW
-        MCGLEngine_setClearScreenColor((MCColorf){0.05, 0.25, 0.35, 1.0});
 
         //glDepthFunc(GL_LESS);
         

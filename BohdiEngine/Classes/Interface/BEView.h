@@ -8,9 +8,9 @@
 
 #import <GLKit/GLKit.h>
 
-@interface BEView : GLKView
+@interface BEView : UIView
 
-@property (atomic, readwrite) BOOL useTransparentBackground;
+//@property (atomic, readwrite) BOOL useTransparentBackground;
 
 -(void) setDefaultGLContext;
 
@@ -19,7 +19,7 @@
 
 -(void) cameraReset:(float*)mat4;
 
-//override
--(void) drawRect:(CGRect)rect;
+//please call this manually
+-(void) drawFrame;
 
 @end

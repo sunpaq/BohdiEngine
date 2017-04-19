@@ -12,32 +12,73 @@
 
 @interface BEView()
 {
+    EAGLContext* context;
+    CAEAGLLayer* calayer;
+    
     MCDirector* mcdirector;
+    unsigned width;
+    unsigned height;
 }
 @end
 
 @implementation BEView
 
--(void) setUseTransparentBackground:(BOOL)useTransparentBackground
++(Class)layerClass
 {
-    if (useTransparentBackground) {
-        self.opaque = NO;
-        self.backgroundColor = [UIColor clearColor];
-        
-        //MCGLEngine_enableTransparency(true);
-        MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
-    } else {
-        self.opaque = YES;
-        
-        //MCGLEngine_enableTransparency(true);
-        MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
+    return [CAEAGLLayer class];
+}
+
+-(CALayer *)layer
+{
+    return calayer;
+}
+
+-(void) createFramebuffersWithContext:(EAGLContext*)ctx AndLayer:(CAEAGLLayer*)lyr
+{
+    GLuint framebuffer;
+    glGenFramebuffers(1, &framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    
+    GLuint colorRenderbuffer;
+    glGenRenderbuffers(1, &colorRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, &colorRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
+    [ctx renderbufferStorage:GL_RENDERBUFFER fromDrawable:lyr];
+    glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
+    
+    GLuint depthRenderbuffer;
+    glGenRenderbuffers(1, &depthRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+    glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
+    
+    GLenum status = glCheckFramebufferStatus(GL_RENDERBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        NSLog(@"BEView - failed to make complete framebuffer");
+        exit(-1);
     }
 }
+
+//-(void) setUseTransparentBackground:(BOOL)useTransparentBackground
+//{
+//    if (useTransparentBackground) {
+//        self.opaque = NO;
+//        self.backgroundColor = [UIColor clearColor];
+//        
+//        //MCGLEngine_enableTransparency(true);
+//        MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
+//    } else {
+//        self.opaque = YES;
+//        
+//        //MCGLEngine_enableTransparency(true);
+//        MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
+//    }
+//}
 
 -(instancetype)init
 {
     if (self = [super init]) {
-        [self setupBohdiEngine];
+        [self setup];
         return self;
     }
     return null;
@@ -46,7 +87,7 @@
 -(instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     if (self = [super initWithCoder:aDecoder]) {
-        [self setupBohdiEngine];
+        [self setup];
         return self;
     }
     return null;
@@ -55,48 +96,37 @@
 -(instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        [self setDefaultGLContext];
-        [self setupBohdiEngine];
+        [self setup];
         return self;
     }
     return null;
 }
 
--(instancetype)initWithFrame:(CGRect)frame context:(EAGLContext *)context
+-(void)setup
 {
-    if (self = [super initWithFrame:frame context:context]) {
-        [self setupBohdiEngine];
-        return self;
-    }
-    return null;
-}
-
--(void) setDefaultGLContext
-{
-    EAGLContext* ctx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-    if (ctx) {
-        self.context = ctx;
-        self.context.multiThreaded = NO;
-        self.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
-        self.drawableDepthFormat = GLKViewDrawableDepthFormat16;
-        self.drawableStencilFormat = GLKViewDrawableStencilFormat8;
-        [EAGLContext setCurrentContext:ctx];
-        [self bindDrawable];
-    }
-}
-
--(void)setupBohdiEngine
-{
-    //assume the frame have valid size now
-    unsigned width  = self.frame.size.width;
-    unsigned height = self.frame.size.height;
+    width  = self.frame.size.width;
+    height = self.frame.size.height;
     
-    if (self.context) {
-        mcdirector = new(MCDirector);
-        MCDirector_setupMainScene(0, mcdirector, width, height);
-    } else {
-        NSLog(@"BEView no GL context found when setup BohdiEngine");
-    }
+    context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+    calayer = [[CAEAGLLayer alloc] init];
+    //calayer.opaque = NO;
+    //calayer.opacity= 0.0;
+    
+    [EAGLContext setCurrentContext:context];
+    [self createFramebuffersWithContext:context AndLayer:calayer];
+    
+    mcdirector = new(MCDirector);
+    MCDirector_setupMainScene(0, mcdirector, width, height);
+    
+    [self addModelNamed:@"2.obj"];
+    [self setupRunloop];
+}
+
+-(void)setupRunloop
+{
+    CADisplayLink* link = [self.window.screen displayLinkWithTarget:self selector:@selector(drawFrame)];
+    [link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    link.paused = NO;
 }
 
 -(void)dealloc
@@ -134,9 +164,7 @@
     }
 }
 
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+-(void) drawFrame
 {
     MCDirector_updateAll(0, mcdirector, 0);
     MCDirector_drawAll(0, mcdirector, 0);

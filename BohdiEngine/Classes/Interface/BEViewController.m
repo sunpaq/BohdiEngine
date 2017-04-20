@@ -104,6 +104,7 @@
     unsigned width = self.glFrame.size.width;
     unsigned height = self.glFrame.size.height;
     ff(director, setupMainScene, width, height);
+    ff(director, setBackgroudColor, 0, 0, 0, 0);
     [self setCameraRotateMode:BECameraRotateAR];
     
     MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
@@ -155,14 +156,8 @@
         self.view.backgroundColor = [UIColor clearColor];
         self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         self.navigationController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-        
-        //MCGLEngine_enableTransparency(true);
-        MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
     } else {
         self.view.opaque = YES;
-
-        //MCGLEngine_enableTransparency(true);
-        MCGLEngine_setClearScreenColor((MCColorf){0.0,0.0,0.0,0.0});
     }
 }
 
@@ -216,7 +211,7 @@
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         if (mat4) {
-            MCMatrix4Copy(mat4, &cam->Super.transform);
+            MCMatrix4Copy(mat4, &cam->Super.transform, 0.01);
         } else {
             cam->Super.transform = MCMatrix4Identity;
         }
@@ -380,7 +375,7 @@
     //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        ff(director, addModelNamed, name, 20);
+        ff(director, addModelNamed, name, 50);
         ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
         //[self stopLoadingAnimation];
     });

@@ -18,6 +18,23 @@
 
 @implementation BERenderer
 
++(GLKView*) createDefaultGLView:(CGRect)frame
+{
+    EAGLContext* ctx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+    [EAGLContext setCurrentContext:ctx];
+    
+    GLKView* glview = [[GLKView alloc] initWithFrame:frame context:[EAGLContext currentContext]];
+    
+    glview.enableSetNeedsDisplay = YES;
+    glview.opaque = NO;
+    
+    glview.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
+    glview.drawableDepthFormat = GLKViewDrawableDepthFormat16;
+    glview.drawableStencilFormat = GLKViewDrawableStencilFormat8;
+    
+    return glview;
+}
+
 -(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque
 {
     return [self initWithFrame:frame doesOpaque:opaque cameraRotateMode:BECameraRotateAroundModelManual];
@@ -113,7 +130,7 @@
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         if (mat4) {
-            MCMatrix4Copy(mat4, &cam->Super.transform);
+            MCMatrix4Copy(mat4, &cam->Super.transform, 0.0);
         } else {
             cam->Super.transform = MCMatrix4Identity;
         }

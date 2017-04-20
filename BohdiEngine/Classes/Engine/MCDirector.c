@@ -125,8 +125,8 @@ method(MCDirector, void, setupMainScene, unsigned width, unsigned height)
 
 method(MCDirector, void, setBackgroudColor, float R, float G, float B, float A)
 {
-    if (var(lastScene)) {
-        var(lastScene)->bgcolor = (MCColorf){R,G,B,A};
+    if (obj->lastScene) {
+        obj->lastScene->bgcolor = (MCColorf){R,G,B,A};
     }
 }
 

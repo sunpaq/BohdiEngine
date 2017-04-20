@@ -157,7 +157,7 @@
     MCCamera* cam = computed(mcdirector, cameraHandler);
     if (cam) {
         if (mat4) {
-            MCMatrix4Copy(mat4, &cam->Super.transform);
+            MCMatrix4Copy(mat4, &cam->Super.transform, 0.01);
         } else {
             cam->Super.transform = MCMatrix4Identity;
         }

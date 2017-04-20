@@ -13,6 +13,8 @@
 
 @interface BERenderer : NSObject
 
++(GLKView*) createDefaultGLView:(CGRect)frame;
+
 -(instancetype) init __unavailable;
 -(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque;
 -(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque cameraRotateMode:(BECameraRotateMode)rmode;

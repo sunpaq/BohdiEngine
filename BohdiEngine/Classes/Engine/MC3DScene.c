@@ -221,6 +221,7 @@ method(MC3DScene, void, updateScene, voida)
 method(MC3DScene, int, drawScene, voida)
 {
     MCGLEngine_clearScreenWithColor(var(bgcolor));
+    //MCGLEngine_clearScreen(0);
     if (cpt(isDrawSky)) {
         //no model
         if (var(combineMode) == MC3DSceneSkyboxOnly) {

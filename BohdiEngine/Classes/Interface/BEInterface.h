@@ -9,6 +9,12 @@
 #ifndef BEMainLoop_h
 #define BEMainLoop_h
 
+typedef enum {
+    BECameraRotateAroundModelManual,
+    BECameraRotateAroundModelByGyroscope,
+    BECameraRotateAR
+} BECameraRotateMode;
+
 void BETeardownGL();
 void BESetupGL(unsigned width, unsigned height);
 void BEResizeGL(unsigned width, unsigned height);

@@ -20,13 +20,29 @@
 
 -(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque
 {
+    return [self initWithFrame:frame doesOpaque:opaque cameraRotateMode:BECameraRotateAroundModelManual];
+}
+
+-(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque cameraRotateMode:(BECameraRotateMode)rmode
+{
     if (self = [super init]) {
         pinch_scale = 10.0;
         director = new(MCDirector);
         MCDirector_setupMainScene(0, director, frame.size.width, frame.size.height);
+        
+        computed(director, cameraHandler)->rotateMode = rmode;
+        if (rmode == BECameraRotateAroundModelByGyroscope) {
+            director->gyroscopeMode = true;
+        } else {
+            director->gyroscopeMode = false;
+        }
+        
         if (!opaque) {
             MCDirector_setBackgroudColor(0, director, 0, 0, 0, 0);
+        } else {
+            MCDirector_setBackgroudColor(0, director, 0.05, 0.25, 0.35, 1.0);
         }
+        
         return self;
     }
     return nil;

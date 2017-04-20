@@ -9,6 +9,7 @@
 #include "MCDirector.h"
 #include "MCGLEngine.h"
 #include "MCThread.h"
+#include "MCCube.h"
 
 compute(MCLight*, lightHandler)
 {
@@ -117,6 +118,8 @@ method(MCDirector, void, setupMainScene, unsigned width, unsigned height)
         releaseScenes(0, obj, obj->lastScene);
         MCDirector_pushScene(0, obj, scene);
         release(scene);
+        //test
+        //MCDirector_addNode(0, obj, new(MCCube));
     }
 }
 

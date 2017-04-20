@@ -13,12 +13,7 @@
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 #import <CoreMotion/CoreMotion.h>
-
-typedef enum {
-    BECameraRotateAroundModelManual,
-    BECameraRotateAroundModelByGyroscope,
-    BECameraRotateAR
-} BECameraRotateMode;
+#import "BEInterface.h"
 
 @protocol BEViewDelegate
 -(void)onBETouched:(id)sender;

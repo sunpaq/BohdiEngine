@@ -9,11 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
+#import "BEInterface.h"
 
 @interface BERenderer : NSObject
 
 -(instancetype) init __unavailable;
 -(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque;
+-(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque cameraRotateMode:(BECameraRotateMode)rmode;
 
 -(void) removeCurrentModel;
 -(void) addModelNamed:(NSString*)modelName;

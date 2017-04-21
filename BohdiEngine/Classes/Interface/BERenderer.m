@@ -21,8 +21,8 @@
 +(GLKView*) createDefaultGLView:(CGRect)frame
 {
     EAGLContext* ctx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+    ctx.multiThreaded = NO;
     [EAGLContext setCurrentContext:ctx];
-    
     GLKView* glview = [[GLKView alloc] initWithFrame:frame context:[EAGLContext currentContext]];
     
     glview.enableSetNeedsDisplay = YES;
@@ -83,7 +83,7 @@
     //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        ff(director, addModelNamed, name, 20);
+        ff(director, addModelNamed, name, 50);
         ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
         //[self stopLoadingAnimation];
     });
@@ -130,7 +130,13 @@
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         if (mat4) {
-            MCMatrix4Copy(mat4, &cam->Super.transform, 0.0);
+            cam->Super.transform = (MCMatrix4){
+                mat4[0], mat4[1], mat4[2], mat4[3],
+                mat4[4], mat4[5], mat4[6], mat4[7],
+                mat4[8], mat4[9], mat4[10], mat4[11],
+                mat4[12], mat4[13], mat4[14], mat4[15]
+            };
+            //MCMatrix4Copy(mat4, &cam->Super.transform, 0.00);
         } else {
             cam->Super.transform = MCMatrix4Identity;
         }

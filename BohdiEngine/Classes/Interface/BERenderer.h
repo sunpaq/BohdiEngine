@@ -40,5 +40,7 @@
 -(void) handlePinchGesture:(float)scale;
 
 -(void) drawFrame;
+-(void) drawFrameOnCALayer:(CALayer*)calayer WithCameraMat:(float*)mat4;
+-(void) drawFrameOnGLView:(GLKView*)glview WithCameraMat:(float*)mat4;
 
 @end

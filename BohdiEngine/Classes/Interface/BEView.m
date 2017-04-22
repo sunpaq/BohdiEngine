@@ -166,6 +166,7 @@
 
 -(void) drawFrame
 {
+    [self displayLayer:calayer];
     MCDirector_updateAll(0, mcdirector, 0);
     MCDirector_drawAll(0, mcdirector, 0);
 }

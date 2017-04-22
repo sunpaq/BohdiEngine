@@ -203,4 +203,30 @@
     }
 }
 
+-(void) drawFrameOnCALayer:(CALayer*)calayer WithCameraMat:(float*)mat4
+{
+    if (director) {
+        if (calayer) {
+            [calayer display];
+        }
+        if (mat4) {
+            [self cameraReset:mat4];
+        }
+        [self drawFrame];
+    }
+}
+
+-(void) drawFrameOnGLView:(GLKView*)glview WithCameraMat:(float*)mat4
+{
+    if (director) {
+        if (glview) {
+            [glview display];
+        }
+        if (mat4) {
+            [self cameraReset:mat4];
+        }
+        [self drawFrame];
+    }
+}
+
 @end

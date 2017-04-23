@@ -11,8 +11,8 @@ compute(MCMatrix3, rotationMat3);
 oninit(MCCamera)
 {
     if (init(MC3DNode)) {
-        var(ratio) = MCRatioHDTV16x9;//MCRatioCameraFilm3x2;
-        var(view_angle) = MCLensIphone29mmViewAngle;
+        var(ratio) = MCRatioHDTV16x9;
+        var(field_of_view) = MCLensIphoneVideoViewAngle;
         var(depth_of_field) = 100;
 
         //local spherical coordinate
@@ -120,12 +120,12 @@ compute(MCMatrix4, projectionMatrix)
 {
     as(MCCamera);
     double far  = cpt(Radius) + var(depth_of_field);
-//    double near = cpt(Radius) - var(depth_of_field);
-//    if (near <= 0) {
-//        near = 0.1;
-//    }
-    double near = MCLensIphone29mm;
-    return MCMatrix4MakePerspective(MCDegreesToRadians(obj->view_angle),
+    double near = cpt(Radius) - var(depth_of_field);
+    if (near <= 0) {
+        near = MCLensIphone29mm;
+    }
+    //double near = MCLensIphone29mm;
+    return MCMatrix4MakePerspective(MCDegreesToRadians(obj->field_of_view),
                                     var(ratio),
                                     near,
                                     far);

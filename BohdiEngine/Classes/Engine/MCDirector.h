@@ -29,6 +29,8 @@ class(MCDirector, MCObject,
       
       MCBool lightFollowCamera;
       MCBool gyroscopeMode;
+      MCBool pause;
+      
       MCMatrix3 deviceRotationMat3;
       
       //common skybox for many scenes

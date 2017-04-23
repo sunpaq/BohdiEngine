@@ -42,6 +42,7 @@ oninit(MCDirector)
         var(currentWidth) = 0;
         var(currentHeight) = 0;
         
+        var(pause) = false;
         var(gyroscopeMode) = true;
         var(lightFollowCamera) = true;
         var(deviceRotationMat3) = MCMatrix3Identity;
@@ -75,6 +76,7 @@ function(void, releaseScenes, MC3DScene* scene)
 
 method(MCDirector, void, bye, voida)
 {
+    obj->pause = true;
     if (obj->lastScene != null) {
         releaseScenes(0, obj, obj->lastScene);
         obj->lastScene = null;
@@ -89,7 +91,7 @@ method(MCDirector, void, bye, voida)
 
 method(MCDirector, void, updateAll, voida)
 {
-    if (obj && var(lastScene) != null) {
+    if (obj && var(lastScene) != null && var(pause) == false) {
         if (var(gyroscopeMode)) {
             MCCamera_setRotationMat3(0, cpt(cameraHandler), obj->deviceRotationMat3.m);
             MC3DScene_setRotationMat3(0, var(lastScene), obj->deviceRotationMat3.m);
@@ -105,7 +107,7 @@ method(MCDirector, void, updateAll, voida)
 method(MCDirector, int, drawAll, voida)
 {
     int fps = -1;
-    if (obj && var(lastScene) != null) {
+    if (obj && var(lastScene) != null && var(pause) == false) {
         fps = MC3DScene_drawScene(0, var(lastScene), 0);
     }
     return fps;
@@ -213,8 +215,10 @@ method(MCDirector, void, addModelNamed, const char* name, int maxsize)
 method(MCDirector, void, removeCurrentModel, voida)
 {
     if (obj->lastScene) {
+        obj->pause = true;
         MCLinkedList* list = obj->lastScene->rootnode->children;
         MCLinkedList_popItem(0, list, 0);
+        obj->pause = false;
     }
 }
 

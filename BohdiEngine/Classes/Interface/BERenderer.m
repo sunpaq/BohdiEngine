@@ -45,7 +45,9 @@
     if (self = [super init]) {
         pinch_scale = 10.0;
         director = new(MCDirector);
-        MCDirector_setupMainScene(0, director, frame.size.width, frame.size.height);
+        CGFloat scale = [UIScreen mainScreen].scale;
+        MCDirector_setupMainScene(0, director, frame.size.width * scale,
+                                  frame.size.height * scale);
         
         computed(director, cameraHandler)->rotateMode = rmode;
         if (rmode == BECameraRotateAroundModelByGyroscope) {
@@ -83,7 +85,7 @@
     //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        ff(director, addModelNamed, name, 50);
+        ff(director, addModelNamed, name, 30);
         ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
         //[self stopLoadingAnimation];
     });
@@ -165,6 +167,15 @@
     }
 }
 
+-(void) cameraFOVReset:(float)fov
+{
+    if (!director) return;
+    MCCamera* cam = computed(director, cameraHandler);
+    if (cam) {
+        cam->field_of_view = fov;
+    }
+}
+
 -(void) lightReset:(GLKVector3*)pos
 {
     if (!director) return;
@@ -226,6 +237,13 @@
             [self cameraReset:mat4];
         }
         [self drawFrame];
+    }
+}
+
+-(void) pauseDraw:(BOOL)pause
+{
+    if (director) {
+        director->pause = pause ? true : false;
     }
 }
 

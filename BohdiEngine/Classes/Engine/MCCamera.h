@@ -14,7 +14,7 @@ typedef enum {
 class(MCCamera, MC3DNode,
     double ratio;
     double depth_of_field;
-    double view_angle;
+    double field_of_view;
     //double max_distance;
     MCVector3 lookat;
     MCVector3 eye;
@@ -68,4 +68,5 @@ method(MCCamera, void, printDebugInfo, voida);
 #define MCLensStandard50mmViewAngle (45.0)
 #define MCLensIphone29mmViewAngle (73.44)
 #define MCLensIphone28mmViewAngle (75.38)
+#define MCLensIphoneVideoViewAngle (58.632149)
 #endif

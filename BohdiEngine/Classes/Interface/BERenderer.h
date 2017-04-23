@@ -32,6 +32,7 @@
 -(void) cameraReset:(float*)mat4;
 -(void) cameraRotate:(GLKMatrix3)mat3 Incremental:(BOOL)inc;
 -(void) cameraTranslate:(GLKVector3)vec3 Incremental:(BOOL)inc;
+-(void) cameraFOVReset:(float)fov;
 
 //light pos follow camera if pos is null
 -(void) lightReset:(GLKVector3*)pos;
@@ -42,5 +43,7 @@
 -(void) drawFrame;
 -(void) drawFrameOnCALayer:(CALayer*)calayer WithCameraMat:(float*)mat4;
 -(void) drawFrameOnGLView:(GLKView*)glview WithCameraMat:(float*)mat4;
+
+-(void) pauseDraw:(BOOL)pause;
 
 @end

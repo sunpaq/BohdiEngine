@@ -90,7 +90,7 @@
 
 -(void) addModelNamed:(NSString*)modelName
 {
-    [self addModelNamed:modelName Scale:30];
+    [self addModelNamed:modelName Scale:5];
 }
 
 -(void) addModelNamed:(NSString*)modelName Scale:(unsigned)scale
@@ -141,16 +141,30 @@
 
 -(void) cameraReset:(float*)mat4
 {
+    [self cameraReset:mat4 isRowMajor:NO];
+}
+
+-(void) cameraReset:(float*)mat4 isRowMajor:(BOOL)rowm
+{
     if (!director) return;
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         if (mat4) {
-            cam->Super.transform = (MCMatrix4){
-                mat4[0], mat4[1], mat4[2], mat4[3],
-                mat4[4], mat4[5], mat4[6], mat4[7],
-                mat4[8], mat4[9], mat4[10], mat4[11],
-                mat4[12], mat4[13], mat4[14], mat4[15]
-            };
+            if (rowm) {
+                cam->Super.transform = (MCMatrix4){
+                    mat4[0], mat4[4], mat4[8], mat4[12],
+                    mat4[1], mat4[5], mat4[9], mat4[13],
+                    mat4[2], mat4[6], mat4[10], mat4[14],
+                    mat4[3], mat4[7], mat4[11], mat4[15]
+                };
+            } else {
+                cam->Super.transform = (MCMatrix4){
+                    mat4[0], mat4[1], mat4[2], mat4[3],
+                    mat4[4], mat4[5], mat4[6], mat4[7],
+                    mat4[8], mat4[9], mat4[10], mat4[11],
+                    mat4[12], mat4[13], mat4[14], mat4[15]
+                };
+            }
             //MCMatrix4Copy(mat4, &cam->Super.transform, 0.00);
         } else {
             cam->Super.transform = MCMatrix4Identity;

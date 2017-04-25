@@ -19,8 +19,11 @@
 -(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque;
 -(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque cameraRotateMode:(BECameraRotateMode)rmode;
 
+-(void) resizeAllScene:(CGSize)frameSize;
+
 -(void) removeCurrentModel;
 -(void) addModelNamed:(NSString*)modelName;
+-(void) addModelNamed:(NSString*)modelName Scale:(unsigned)scale;
 
 //use default if names/name is null
 -(void) addSkyboxNamed:(NSArray*)texnames;
@@ -32,6 +35,7 @@
 -(void) cameraReset:(float*)mat4;
 -(void) cameraRotate:(GLKMatrix3)mat3 Incremental:(BOOL)inc;
 -(void) cameraTranslate:(GLKVector3)vec3 Incremental:(BOOL)inc;
+-(void) cameraAspectRatioReset:(float)aspectRatio;
 -(void) cameraFOVReset:(float)fov;
 
 //light pos follow camera if pos is null

@@ -108,6 +108,15 @@ compute(MCMatrix4, viewMatrix)
 
         return mat4;
     }
+    else if (obj->rotateMode == MCCameraRotateARWall) {
+        MCMatrix4 R = sobj->transform;
+        
+        obj->eye = MCGetTranslateFromCombinedMat4(R);
+        obj->R_value = MCVector3Length(obj->eye);
+        obj->R_percent = 1.0;
+        
+        return R;
+    }
     //default is MCCameraRotateAroundModelManual
     else {
         return MCMatrix4MakeLookAtByEulerAngle_EyeUp(obj->lookat, cpt(Radius),
@@ -124,7 +133,6 @@ compute(MCMatrix4, projectionMatrix)
     if (near <= 0) {
         near = MCLensIphone29mm;
     }
-    //double near = MCLensIphone29mm;
     return MCMatrix4MakePerspective(MCDegreesToRadians(obj->field_of_view),
                                     var(ratio),
                                     near,

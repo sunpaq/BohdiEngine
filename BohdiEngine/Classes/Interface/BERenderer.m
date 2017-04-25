@@ -75,6 +75,14 @@
     }
 }
 
+-(void) resizeAllScene:(CGSize)frameSize
+{
+    if (director) {
+        CGFloat scale = [UIScreen mainScreen].scale;
+        MCDirector_resizeAllScene(0, director, (int)frameSize.width * scale, (int)frameSize.height * scale);
+    }
+}
+
 -(void) removeCurrentModel
 {
     ff(director, removeCurrentModel, 0);
@@ -82,10 +90,15 @@
 
 -(void) addModelNamed:(NSString*)modelName
 {
+    [self addModelNamed:modelName Scale:30];
+}
+
+-(void) addModelNamed:(NSString*)modelName Scale:(unsigned)scale
+{
     //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        ff(director, addModelNamed, name, 30);
+        ff(director, addModelNamed, name, scale);
         ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
         //[self stopLoadingAnimation];
     });
@@ -164,6 +177,15 @@
         cam->eye = eye;
         MCVector3 v3 = {vec3.x, vec3.y, vec3.z};
         MC3DNode_translateVec3(0, &cam->Super, &v3, inc?true:false);
+    }
+}
+
+-(void) cameraAspectRatioReset:(float)aspectRatio
+{
+    if (!director) return;
+    MCCamera* cam = computed(director, cameraHandler);
+    if (cam) {
+        cam->ratio = (double)aspectRatio;
     }
 }
 

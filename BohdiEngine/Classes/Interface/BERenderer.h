@@ -23,7 +23,7 @@
 
 -(void) removeCurrentModel;
 -(void) addModelNamed:(NSString*)modelName;
--(void) addModelNamed:(NSString*)modelName Scale:(unsigned)scale;
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale;
 
 //use default if names/name is null
 -(void) addSkyboxNamed:(NSArray*)texnames;

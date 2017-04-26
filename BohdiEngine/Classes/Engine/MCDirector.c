@@ -190,12 +190,12 @@ method(MCDirector, void, addNode, MC3DNode* node)
     }
 }
 
-method(MCDirector, void, addModel, MC3DModel* model, int maxsize)
+method(MCDirector, void, addModel, MC3DModel* model, MCFloat maxsize)
 {
     if(model && obj->lastScene && obj->lastScene->rootnode) {
         MC3DNode_addChild(0, obj->lastScene->rootnode, (MC3DNode*)model);
         double maxl  = computed(model, maxlength);
-        double scale = maxsize / maxl;
+        double scale = maxsize.f / maxl;
         MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
         MC3DNode_scaleVec3(0, &model->Super, &scaleVec, false);
         debug_log("MCDirector - model maxlength=%lf scale=%lf\n", maxl, scale);
@@ -205,7 +205,7 @@ method(MCDirector, void, addModel, MC3DModel* model, int maxsize)
     }
 }
 
-method(MCDirector, void, addModelNamed, const char* name, int maxsize)
+method(MCDirector, void, addModelNamed, const char* name, MCFloat maxsize)
 {
     MC3DModel* model = new(MC3DModel);
     MC3DModel_initWithFileName(0, model, name);

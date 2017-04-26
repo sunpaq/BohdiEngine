@@ -90,10 +90,10 @@
 
 -(void) addModelNamed:(NSString*)modelName
 {
-    [self addModelNamed:modelName Scale:5];
+    [self addModelNamed:modelName Scale:5.0];//5cm
 }
 
--(void) addModelNamed:(NSString*)modelName Scale:(unsigned)scale
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale
 {
     //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{

@@ -363,7 +363,7 @@ MCInline MCMatrix3* MCMatrix3Copy(float* src, MCMatrix3* dst)
     return null;
 }
 
-MCInline MCMatrix4* MCMatrix4Copy(float* src, MCMatrix4* dst, float delta)
+MCInline MCMatrix4* MCMatrix4CopyDiff(float* src, MCMatrix4* dst, float delta)
 {
     if (src && dst) {
         for (int i=0; i<16; i++) {
@@ -374,6 +374,37 @@ MCInline MCMatrix4* MCMatrix4Copy(float* src, MCMatrix4* dst, float delta)
         return dst;
     }
     return null;
+}
+
+MCInline MCMatrix4* MCMatrix4Copy(float* src, MCMatrix4* dst)
+{
+    if (src && dst) {
+        for (int i=0; i<16; i++) {
+            dst->m[i] = src[i];
+        }
+        return dst;
+    }
+    return null;
+}
+
+MCInline MCMatrix4 MCMatrix4Make(float* data)
+{
+    return (MCMatrix4) {
+        data[0],  data[1],  data[2],  data[3],
+        data[4],  data[5],  data[6],  data[7],
+        data[8],  data[9],  data[10], data[11],
+        data[12], data[13], data[14], data[15]
+    };
+}
+
+MCInline MCMatrix4 MCMatrix4MakeDouble(double* data)
+{
+    return (MCMatrix4) {
+        data[0],  data[1],  data[2],  data[3],
+        data[4],  data[5],  data[6],  data[7],
+        data[8],  data[9],  data[10], data[11],
+        data[12], data[13], data[14], data[15]
+    };
 }
 
 //OpenGL use column-order save matrix

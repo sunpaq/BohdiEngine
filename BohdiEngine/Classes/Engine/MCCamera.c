@@ -96,17 +96,32 @@ compute(MCMatrix4, viewMatrix)
         return MCMatrix4Multiply(m, world);
     }
     else if (obj->rotateMode == MCCameraRotateAR) {
-        MCMatrix4 Zup = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
+        MCMatrix4 X90 = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
+        MCMatrix4 Y90 = MCMatrix4FromMatrix3(MCMatrix3MakeYAxisRotation(M_PI / 2.0));
+
         MCMatrix4 R = sobj->transform;
 
         //right multiply means apply on model
-        MCMatrix4 mat4 = MCMatrix4Multiply(R, Zup);
+        //MCMatrix4 mat4 = MCMatrix4Multiply(R, Zup);
         
         obj->eye = MCGetTranslateFromCombinedMat4(R);
         obj->R_value = MCVector3Length(obj->eye);
         obj->R_percent = 1.0;
 
-        return mat4;
+        MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, 1,
+                                          0, 0, 0,
+                                          0, -1, 0);
+        
+        MCMatrix4 flipZ = (MCMatrix4) {
+            1, 0, 0, 0,
+            0,-1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        };
+        
+        return flipZ;
+        //return MCMatrix4Multiply(flipZ, MCMatrix4Multiply(Y90, X90));
+        //return MCMatrix4Identity;
     }
     else if (obj->rotateMode == MCCameraRotateARWall) {
         MCMatrix4 R = sobj->transform;

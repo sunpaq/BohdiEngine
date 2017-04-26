@@ -217,6 +217,20 @@ method(MCLinkedList, void, forEach, mc_message callback, void* userdata)
     }
 }
 
+method(MCLinkedList, MCItem*, itemAtIndex, int index)
+{
+    MCItem* item = obj->headItem;
+    int i = 0;
+    while (item != null) {
+        if (index == i) {
+            return item;
+        }
+        item = item->nextItem;
+        i++;
+    }
+    return null;
+}
+
 onload(MCLinkedList)
 {
     if (load(MCObject)) {
@@ -229,6 +243,7 @@ onload(MCLinkedList)
         binding(MCLinkedList, void, insertBeforeItem, MCItem* anchor, MCItem* item);
         binding(MCLinkedList, MCLinkedList*, connectList, MCLinkedList* otherlist);
         binding(MCLinkedList, void, forEach, mc_message callback, void* userdata);
+        binding(MCLinkedList, MCItem*, itemAtIndex, int index);
         return cla;
     }else{
         return null;

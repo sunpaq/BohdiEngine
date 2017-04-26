@@ -98,8 +98,10 @@
     //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        ff(director, addModelNamed, name, scale);
-        ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
+        //ff(director, addModelNamed, name, scale);
+        //ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
+        MCDirector_addModelNamed(0, director, name, MCFloatF(scale));
+        MCDirector_cameraFocusOn(0, director, MCVector4Make(0, 0, 0, 50));
         //[self stopLoadingAnimation];
     });
 }
@@ -242,6 +244,32 @@
     MCCamera_distanceScale(0, camera, MCFloatF(20.0/pinch_scale));
 }
 
+-(void) updateModelAt:(int)index PoseMat4D:(double*)mat4
+{
+    if (director) {
+        MC3DScene* scene = director->lastScene;
+        if (scene) {
+            MCItem* item = MCLinkedList_itemAtIndex(0, scene->rootnode->children, index);
+            if (item) {
+                cast(MC3DModel*, item)->Super.transform = MCMatrix4MakeDouble(mat4);
+            }
+        }
+    }
+}
+
+-(void) updateModelAt:(int)index PoseMat4F:(float*)mat4
+{
+    if (director) {
+        MC3DScene* scene = director->lastScene;
+        if (scene) {
+            MCItem* item = MCLinkedList_itemAtIndex(0, scene->rootnode->children, index);
+            if (item) {
+                cast(MC3DModel*, item)->Super.transform = MCMatrix4Make(mat4);
+            }
+        }
+    }
+}
+
 -(void) drawFrame
 {
     if (director) {
@@ -250,27 +278,21 @@
     }
 }
 
--(void) drawFrameOnCALayer:(CALayer*)calayer WithCameraMat:(float*)mat4
+-(void) drawFrameOnCALayer:(CALayer*)calayer
 {
     if (director) {
         if (calayer) {
             [calayer display];
         }
-        if (mat4) {
-            [self cameraReset:mat4];
-        }
         [self drawFrame];
     }
 }
 
--(void) drawFrameOnGLView:(GLKView*)glview WithCameraMat:(float*)mat4
+-(void) drawFrameOnGLView:(GLKView*)glview
 {
     if (director) {
         if (glview) {
             [glview display];
-        }
-        if (mat4) {
-            [self cameraReset:mat4];
         }
         [self drawFrame];
     }

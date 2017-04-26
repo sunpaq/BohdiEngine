@@ -46,9 +46,12 @@
 -(void) handlePanGesture:(CGPoint)offset;
 -(void) handlePinchGesture:(float)scale;
 
+-(void) updateModelAt:(int)index PoseMat4D:(double*)mat4;
+-(void) updateModelAt:(int)index PoseMat4F:(float*)mat4;
+
 -(void) drawFrame;
--(void) drawFrameOnCALayer:(CALayer*)calayer WithCameraMat:(float*)mat4;
--(void) drawFrameOnGLView:(GLKView*)glview WithCameraMat:(float*)mat4;
+-(void) drawFrameOnCALayer:(CALayer*)calayer;
+-(void) drawFrameOnGLView:(GLKView*)glview;
 
 -(void) pauseDraw:(BOOL)pause;
 

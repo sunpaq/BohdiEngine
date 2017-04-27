@@ -348,6 +348,24 @@ method(MC3DModel, void, translateToOrigin, voida)
     MC3DNode_translateVec3(0, sobj, &rcenter, false);
 }
 
+method(MC3DModel, void, rotateAroundSelfAxisX, double ccwRadian)
+{
+    MCMatrix4 RX = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(ccwRadian));
+    sobj->transform = MCMatrix4Multiply(sobj->transform, RX);
+}
+
+method(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian)
+{
+    MCMatrix4 RY = MCMatrix4FromMatrix3(MCMatrix3MakeYAxisRotation(ccwRadian));
+    sobj->transform = MCMatrix4Multiply(sobj->transform, RY);
+}
+
+method(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian)
+{
+    MCMatrix4 RZ = MCMatrix4FromMatrix3(MCMatrix3MakeZAxisRotation(ccwRadian));
+    sobj->transform = MCMatrix4Multiply(sobj->transform, RZ);
+}
+
 //override
 method(MC3DModel, void, update, MCGLContext* ctx)
 {
@@ -367,6 +385,9 @@ onload(MC3DModel)
         binding(MC3DModel, MC3DModel*, initWithFileName, const char* name);
         binding(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf color);
         binding(MC3DModel, MC3DModel*, initWithFileNameColor, const char* name, MCColorf color);
+        binding(MC3DModel, void, rotateAroundSelfAxisX, double ccwRadian);
+        binding(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian);
+        binding(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian);
         //override
         binding(MC3DModel, void, update, MCGLContext* ctx);
         binding(MC3DModel, void, draw, MCGLContext* ctx);

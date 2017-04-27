@@ -192,8 +192,13 @@ method(MCDirector, void, addNode, MC3DNode* node)
 
 method(MCDirector, void, addModel, MC3DModel* model, MCFloat maxsize)
 {
+    MCDirector_addModelAtIndex(0, obj, model, maxsize, -1);
+}
+
+method(MCDirector, void, addModelAtIndex, MC3DModel* model, MCFloat maxsize, int index)
+{
     if(model && obj->lastScene && obj->lastScene->rootnode) {
-        MC3DNode_addChild(0, obj->lastScene->rootnode, (MC3DNode*)model);
+        MC3DNode_addChildAtIndex(0, obj->lastScene->rootnode, (MC3DNode*)model, index);
         double maxl  = computed(model, maxlength);
         double scale = maxsize.f / maxl;
         MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
@@ -205,11 +210,17 @@ method(MCDirector, void, addModel, MC3DModel* model, MCFloat maxsize)
     }
 }
 
-method(MCDirector, void, addModelNamed, const char* name, MCFloat maxsize)
+method(MCDirector, MC3DModel*, addModelNamed, const char* name, MCFloat maxsize)
+{
+    return MCDirector_addModelNamedAtIndex(0, obj, name, maxsize, -1);
+}
+
+method(MCDirector, MC3DModel*, addModelNamedAtIndex, const char* name, MCFloat maxsize, int index)
 {
     MC3DModel* model = new(MC3DModel);
     MC3DModel_initWithFileName(0, model, name);
-    MCDirector_addModel(0, obj, model, maxsize);
+    MCDirector_addModelAtIndex(0, obj, model, maxsize, index);
+    return model;
 }
 
 method(MCDirector, void, removeCurrentModel, voida)
@@ -328,7 +339,9 @@ onload(MCDirector)
         binding(MCDirector, void, resizeAllScene, int width, int height);
         binding(MCDirector, void, addNode, MC3DNode* node);
         binding(MCDirector, void, addModel, MC3DModel* model, int maxsize);
-        binding(MCDirector, void, addModelNamed, const char* name, int maxsize);
+        binding(MCDirector, void, addModelAtIndex, MC3DModel* model, MCFloat maxsize, int index);
+        binding(MCDirector, MC3DModel*, addModelNamed, const char* name, MCFloat maxsize);
+        binding(MCDirector, MC3DModel*, addModelNamedAtIndex, const char* name, MCFloat maxsize, int index);
         binding(MCDirector, void, removeCurrentModel, voida);
         binding(MCDirector, void, addSkyboxNamed, const char* names[6]);
         binding(MCDirector, void, addSkysphereNamed, const char* name);

@@ -59,7 +59,11 @@ method(MCDirector, void, resizeAllScene, int width, int height);
 
 method(MCDirector, void, addNode, MC3DNode* node);
 method(MCDirector, void, addModel, MC3DModel* model, MCFloat maxsize);
-method(MCDirector, void, addModelNamed, const char* name, MCFloat maxsize);
+method(MCDirector, void, addModelAtIndex, MC3DModel* model, MCFloat maxsize, int index);
+
+method(MCDirector, MC3DModel*, addModelNamed, const char* name, MCFloat maxsize);
+method(MCDirector, MC3DModel*, addModelNamedAtIndex, const char* name, MCFloat maxsize, int index);
+
 method(MCDirector, void, removeCurrentModel, voida);
 //use default if names/name is null
 method(MCDirector, void, addSkyboxNamed, const char* names[6]);

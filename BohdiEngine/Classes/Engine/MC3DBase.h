@@ -290,4 +290,23 @@ MCInline MCVector3 MCGetTranslateFromCombinedMat4(MCMatrix4 mat4)
     return (MCVector3) { mat4.m[12], mat4.m[13], mat4.m[14] };
 }
 
+MCInline MCMatrix3 MCGetRotateFromCombinedMat4(MCMatrix4 mat4)
+{
+    return (MCMatrix3) {
+        mat4.m[0], mat4.m[1], mat4.m[2],
+        mat4.m[4], mat4.m[5], mat4.m[6],
+        mat4.m[8], mat4.m[9], mat4.m[10]
+    };
+}
+
+MCInline MCMatrix4 MCMatrix4CombineRT(MCMatrix3 R, MCVector3 T)
+{
+    return (MCMatrix4) {
+        R.m[0], R.m[1], R.m[2], 0,
+        R.m[3], R.m[4], R.m[5], 0,
+        R.m[6], R.m[7], R.m[8], 0,
+        T.v[0], T.v[1], T.v[2], 1,
+    };
+}
+
 #endif

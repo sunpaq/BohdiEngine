@@ -95,12 +95,23 @@
 
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale
 {
+    [self addModelNamed:modelName Scale:scale RotateX:M_PI_2];
+}
+
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian
+{
+    [self addModelNamed:modelName Scale:scale RotateX:ccwRadian Index:-1];
+}
+
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Index:(int)index
+{
     //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
         //ff(director, addModelNamed, name, scale);
         //ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
-        MCDirector_addModelNamed(0, director, name, MCFloatF(scale));
+        MC3DModel* m = MCDirector_addModelNamedAtIndex(0, director, name, MCFloatF(scale), index);
+        MC3DModel_rotateAroundSelfAxisX(0, m, ccwRadian);
         MCDirector_cameraFocusOn(0, director, MCVector4Make(0, 0, 0, 50));
         //[self stopLoadingAnimation];
     });
@@ -251,7 +262,8 @@
         if (scene) {
             MCItem* item = MCLinkedList_itemAtIndex(0, scene->rootnode->children, index);
             if (item) {
-                cast(MC3DModel*, item)->Super.transform = MCMatrix4MakeDouble(mat4);
+                MC3DModel* model = cast(MC3DModel*, item);
+                model->Super.viewtrans = MCMatrix4MakeDouble(mat4);
             }
         }
     }
@@ -264,7 +276,8 @@
         if (scene) {
             MCItem* item = MCLinkedList_itemAtIndex(0, scene->rootnode->children, index);
             if (item) {
-                cast(MC3DModel*, item)->Super.transform = MCMatrix4Make(mat4);
+                MC3DModel* model = cast(MC3DModel*, item);
+                model->Super.viewtrans = MCMatrix4Make(mat4);
             }
         }
     }

@@ -24,6 +24,8 @@
 -(void) removeCurrentModel;
 -(void) addModelNamed:(NSString*)modelName;
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale;
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian;
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Index:(int)index;
 
 //use default if names/name is null
 -(void) addSkyboxNamed:(NSArray*)texnames;

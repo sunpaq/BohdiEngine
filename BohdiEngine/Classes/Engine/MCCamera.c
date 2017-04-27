@@ -80,7 +80,12 @@ compute(MCMatrix4, viewMatrix)
     as(MCCamera);
     double r = cpt(Radius);
     
-    if (obj->rotateMode == MCCameraRotateAroundModelByGyroscope) {
+    if (obj->rotateMode == MCCameraFixedAtOrigin) {
+        obj->eye = MCVector3Make(0, 0, 0);
+        sobj->transform = MCMatrix4Identity;
+        return sobj->transform;
+    }
+    else if (obj->rotateMode == MCCameraRotateAroundModelByGyroscope) {
         MCMatrix4 R  = sobj->transform;
         MCMatrix4 Ri = MCMatrix4Invert(R, null);
         MCMatrix4 world = Ri;
@@ -96,32 +101,17 @@ compute(MCMatrix4, viewMatrix)
         return MCMatrix4Multiply(m, world);
     }
     else if (obj->rotateMode == MCCameraRotateAR) {
-        MCMatrix4 X90 = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
-        MCMatrix4 Y90 = MCMatrix4FromMatrix3(MCMatrix3MakeYAxisRotation(M_PI / 2.0));
-
+        MCMatrix4 Zup = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(M_PI / 2.0));
         MCMatrix4 R = sobj->transform;
 
         //right multiply means apply on model
-        //MCMatrix4 mat4 = MCMatrix4Multiply(R, Zup);
+        MCMatrix4 mat4 = MCMatrix4Multiply(R, Zup);
         
         obj->eye = MCGetTranslateFromCombinedMat4(R);
         obj->R_value = MCVector3Length(obj->eye);
         obj->R_percent = 1.0;
 
-        MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, 1,
-                                          0, 0, 0,
-                                          0, -1, 0);
-        
-        MCMatrix4 flipZ = (MCMatrix4) {
-            1, 0, 0, 0,
-            0,-1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        };
-        
-        return flipZ;
-        //return MCMatrix4Multiply(flipZ, MCMatrix4Multiply(Y90, X90));
-        //return MCMatrix4Identity;
+        return mat4;
     }
     else if (obj->rotateMode == MCCameraRotateARWall) {
         MCMatrix4 R = sobj->transform;

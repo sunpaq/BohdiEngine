@@ -20,6 +20,8 @@ void MCFileSetAssetManager(AAssetManager* assetManager);
 AAssetManager* MCFileGetAssetManager();
 #endif
 
+static const char* MCDefaultShaderBundleId = "org.cocoapods.BohdiEngine";
+
 //return 0 if success
 int MCFileGetPath(const char* filename, char* buffer);
 int MCFileGetPathFromBundle(const char* bundlename, const char* filename, char* buffer);

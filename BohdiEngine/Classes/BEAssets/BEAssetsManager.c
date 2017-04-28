@@ -84,7 +84,7 @@ int MCFileGetPathFromBundle(const char* bundlename, const char* filename, char* 
     
     CFBundleRef bundle = NULL;
     if (bundlename) {
-        CFStringRef bid = CFStringCreateWithCString(NULL, bundlename, kCFStringEncodingUTF8);
+        CFStringRef bid = CFStringCreateWithCString(kCFAllocatorDefault, bundlename, kCFStringEncodingUTF8);
         bundle = CFBundleGetBundleWithIdentifier(bid);
         CFRelease(bid);
     } else {
@@ -96,8 +96,8 @@ int MCFileGetPathFromBundle(const char* bundlename, const char* filename, char* 
         return -1;
     }
     
-    CFStringRef fname = CFStringCreateWithCString(NULL, basename, kCFStringEncodingUTF8);
-    CFStringRef  fext = CFStringCreateWithCString(NULL, extension, kCFStringEncodingUTF8);
+    CFStringRef fname = CFStringCreateWithCString(kCFAllocatorDefault, basename, kCFStringEncodingUTF8);
+    CFStringRef  fext = CFStringCreateWithCString(kCFAllocatorDefault, extension, kCFStringEncodingUTF8);
     CFURLRef url = CFBundleCopyResourceURL(bundle, fname, fext, NULL);
     if (url) {
         CFStringRef  path = CFURLCopyPath(url);

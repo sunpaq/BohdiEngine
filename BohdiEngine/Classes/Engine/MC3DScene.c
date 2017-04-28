@@ -81,16 +81,20 @@ method(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width,
     return obj;
 }
 
-method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height,
-       const char* vname, const char* fname)
+method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname)
+{
+    return MC3DScene_initWithWidthHeightVNameFNameInBundle(0, obj, width, height, NULL, vname, fname);
+}
+
+method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname)
 {
     char vpath[LINE_MAX] = {0};
-    if (MCFileGetPathFromBundle("BohdiEngine", vname, vpath))
+    if (MCFileGetPathFromBundle(bundleId, vname, vpath))
         return null;
     const char* vsource = MCFileCopyContentWithPath(vpath);
     
     char fpath[LINE_MAX] = {0};
-    if (MCFileGetPathFromBundle("BohdiEngine", fname, fpath))
+    if (MCFileGetPathFromBundle(bundleId, fname, fpath))
         return null;
     const char* fsource = MCFileCopyContentWithPath(fpath);
     
@@ -107,7 +111,7 @@ method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, uns
 method(MC3DScene, MC3DScene*, initWithWidthHeightDefaultShader, unsigned width, unsigned height)
 {
     debug_log("MC3DScene initWithWidthHeightDefaultShader %dx%d %s\n", width, height, "MCGLRenderer");
-	return MC3DScene_initWithWidthHeightVNameFName(0, obj, width, height, "MCGLRenderer.vsh", "MCGLRenderer.fsh");
+	return MC3DScene_initWithWidthHeightVNameFNameInBundle(0, obj, width, height, MCDefaultShaderBundleId, "MCGLRenderer.vsh", "MCGLRenderer.fsh");
 }
 
 method(MC3DScene, void, resizeScene, unsigned width, unsigned height)
@@ -276,6 +280,7 @@ onload(MC3DScene)
         binding(MC3DScene, void, bye, voida);
         binding(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width, unsigned height, const char* vsource, const char* fsource);
         binding(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname);
+        binding(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname);
         binding(MC3DScene, MC3DScene*, initWithWidthHeightDefaultShader, unsigned width, unsigned height);
         binding(MC3DScene, void, resizeScene, unsigned width, unsigned height);
         binding(MC3DScene, void, addSkybox, MCSkybox* box);

@@ -1,6 +1,5 @@
 //version is specified in MCGLContext
-
-precision highp sampler2D;
+precision highp sampler3D;
 precision highp float;
 precision lowp int;
 const float Epsilon = 0.0000001;
@@ -28,6 +27,7 @@ uniform float material_dissolve;
 uniform float material_shininess;
 
 //texture sampling must in fragment shader
+uniform sampler3D diffuse_sampler3d;
 uniform sampler2D diffuse_sampler;
 uniform sampler2D specular_sampler;
 

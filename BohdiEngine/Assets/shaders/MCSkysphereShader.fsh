@@ -1,5 +1,4 @@
 //version is specified in MCGLContext
-
 precision highp sampler2D;
 precision highp float;
 precision lowp int;

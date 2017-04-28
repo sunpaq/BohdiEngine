@@ -66,12 +66,12 @@ method(MCGLContext, MCGLContext*, initWithShaderName, const char* vname, const c
        const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount)
 {
     char vpath[LINE_MAX] = {0};
-    if(MCFileGetPath(vname, vpath))
+    if(MCFileGetPathFromBundle("BohdiEngine", vname, vpath))
         return null;
     const char* vcode = MCFileCopyContentWithPath(vpath);
     
     char fpath[LINE_MAX] = {0};
-    if(MCFileGetPath(fname, fpath))
+    if(MCFileGetPathFromBundle("BohdiEngine", fname, fpath))
         return null;
     const char* fcode = MCFileCopyContentWithPath(fpath);
     

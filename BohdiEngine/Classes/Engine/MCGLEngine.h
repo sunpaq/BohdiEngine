@@ -53,7 +53,8 @@ utility(MCGLEngine, void, bind2DTexture, MCUInt tid);
 //Shader
 utility(MCGLEngine, GLuint, createShader, voida);
 utility(MCGLEngine, GLuint, prepareShader, GLuint Id, const char* vcode, const char* fcode, const char* version);
-utility(MCGLEngine, int, prepareShaderName, GLuint Id, const char* vname, const char* fname, const char* version);
+//pass bundlename = null to get main bundle
+utility(MCGLEngine, int, prepareShaderName, GLuint Id, const char* bundlename, const char* vname, const char* fname, const char* version);
 utility(MCGLEngine, void, tryUseShaderProgram, GLuint Id);
 //Alpha Blend
 utility(MCGLEngine, void, enableTransparency, MCBool enable);

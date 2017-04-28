@@ -85,12 +85,12 @@ method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, uns
        const char* vname, const char* fname)
 {
     char vpath[LINE_MAX] = {0};
-    if (MCFileGetPath(vname, vpath))
+    if (MCFileGetPathFromBundle("BohdiEngine", vname, vpath))
         return null;
     const char* vsource = MCFileCopyContentWithPath(vpath);
     
     char fpath[LINE_MAX] = {0};
-    if (MCFileGetPath(fname, fpath))
+    if (MCFileGetPathFromBundle("BohdiEngine", fname, fpath))
         return null;
     const char* fsource = MCFileCopyContentWithPath(fpath);
     

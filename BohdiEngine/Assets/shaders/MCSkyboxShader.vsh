@@ -1,5 +1,4 @@
 //version is specified in MCGLContext
-
 precision highp float;
 precision mediump int;
 

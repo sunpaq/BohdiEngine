@@ -48,7 +48,7 @@ method(MCGLContext, MCGLContext*, initWithShaderCode, const char* vcode, const c
         glBindAttribLocation(obj->pid, i, attribs[i]);
     }
     
-    MCGLEngine_prepareShader(obj->pid, vcode, fcode, "#version 300 es");
+    MCGLEngine_prepareShader(obj->pid, vcode, fcode, "#version 300 es\n");
 
     //uniforms
     for (int i=0; i<ucount; i++) {
@@ -66,12 +66,12 @@ method(MCGLContext, MCGLContext*, initWithShaderName, const char* vname, const c
        const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount)
 {
     char vpath[LINE_MAX] = {0};
-    if(MCFileGetPathFromBundle(MCDefaultShaderBundleId, vname, vpath))
+    if(MCFileGetPath(vname, vpath))
         return null;
     const char* vcode = MCFileCopyContentWithPath(vpath);
     
     char fpath[LINE_MAX] = {0};
-    if(MCFileGetPathFromBundle(MCDefaultShaderBundleId, fname, fpath))
+    if(MCFileGetPath(fname, fpath))
         return null;
     const char* fcode = MCFileCopyContentWithPath(fpath);
     

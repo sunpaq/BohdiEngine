@@ -10,6 +10,51 @@
 #include "MCGLEngine.h"
 #include "MC3DShapeBase.h"
 
+static const char* vsource = S(
+//version is specified in MCGLContext
+precision highp float;
+precision mediump int;
+
+//vertex attributes
+layout (location=0) in vec3 position;
+layout (location=1) in vec2 texcoord;
+
+//uniforms
+uniform mat4 sphViewMatrix;
+uniform mat4 sphProjectionMatrix;
+
+//output
+out vec2 TexCoords;
+
+void main()
+{
+   gl_Position = sphProjectionMatrix * sphViewMatrix * vec4(position, 1.0);
+   TexCoords = texcoord;
+}
+);//vsource end
+
+static const char* fsource = S(
+//version is specified in MCGLContext
+precision highp sampler2D;
+precision highp float;
+precision lowp int;
+const float Epsilon = 0.0000001;
+
+//input
+in vec2 TexCoords;
+
+//uniforms
+uniform sampler2D sampler;
+
+//output
+out vec4 color;
+
+void main()
+{
+    color = texture(sampler, TexCoords);
+}
+);//fsource end
+
 oninit(MCSkysphere)
 {
     if (init(MC3DNode)) {
@@ -72,7 +117,7 @@ method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
     var(tex) = tex;
     
     //Shader
-    MCGLContext_initWithShaderName(0, var(ctx), "MCSkysphereShader.vsh", "MCSkysphereShader.fsh",
+    MCGLContext_initWithShaderCode(0, var(ctx), vsource, fsource,
                                    (const char* []){
                                        "position",
                                        "texcoord"

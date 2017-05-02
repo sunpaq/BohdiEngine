@@ -74,9 +74,11 @@ method(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width,
     var(scenewidth)  = width;
     var(sceneheight) = height;
     MCCamera_initWithWidthHeight(0, var(mainCamera), width, height);
-    
-    
-    MCGLRenderer_initWithShaderCodeString(0, var(renderer), vsource, fsource);
+    if (vsource && fsource) {
+        MCGLRenderer_initWithShaderCodeString(0, var(renderer), vsource, fsource);
+    } else {
+        MCGLRenderer_initWithDefaultShader(0, var(renderer), 0);
+    }
     debug_log("MC3DScene - init end\n");
     return obj;
 }
@@ -111,7 +113,7 @@ method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned wi
 method(MC3DScene, MC3DScene*, initWithWidthHeightDefaultShader, unsigned width, unsigned height)
 {
     debug_log("MC3DScene initWithWidthHeightDefaultShader %dx%d %s\n", width, height, "MCGLRenderer");
-	return MC3DScene_initWithWidthHeightVNameFNameInBundle(0, obj, width, height, MCDefaultShaderBundleId, "MCGLRenderer.vsh", "MCGLRenderer.fsh");
+	return MC3DScene_initWithWidthHeightVSourceFSource(0, obj, width, height, NULL, NULL);
 }
 
 method(MC3DScene, void, resizeScene, unsigned width, unsigned height)

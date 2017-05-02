@@ -20,9 +20,4 @@ Pod::Spec.new do |s|
   s.public_header_files  = 'BohdiEngine/Classes/**/*.h'
   s.private_header_files = 'BohdiEngine/External/**/*.h'
 
-  s.resource_bundles = {
-    'BohdiEngine' => ['BohdiEngine/Assets/**/*.{fsh,vsh}']
-  }
-
-  # s.dependency 'monkc'
 end

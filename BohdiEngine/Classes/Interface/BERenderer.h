@@ -13,6 +13,9 @@
 
 @interface BERenderer : NSObject
 
+@property (atomic, readwrite) BOOL doesAutoRotateCamera;
+@property (atomic, readwrite) BOOL doesDrawWireFrame;
+
 +(GLKView*) createDefaultGLView:(CGRect)frame;
 
 -(instancetype) init __unavailable;

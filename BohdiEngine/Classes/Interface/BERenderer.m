@@ -18,6 +18,16 @@
 
 @implementation BERenderer
 
+-(void)setDoesAutoRotateCamera:(BOOL)doesAutoRotateCamera
+{
+    computed(director, cameraHandler)->isLockRotation = doesAutoRotateCamera? false : true;
+}
+
+-(void)setDoesDrawWireFrame:(BOOL)doesDrawWireFrame
+{
+    computed(director, contextHandler)->drawMode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
+}
+
 +(GLKView*) createDefaultGLView:(CGRect)frame
 {
     EAGLContext* ctx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
@@ -49,7 +59,7 @@
         MCDirector_setupMainScene(0, director, frame.size.width * scale,
                                   frame.size.height * scale);
         
-        computed(director, cameraHandler)->rotateMode = rmode;
+        computed(director, cameraHandler)->rotateMode = (BECameraRotateMode)rmode;
         if (rmode == BECameraRotateAroundModelByGyroscope) {
             director->gyroscopeMode = true;
         } else {
@@ -90,12 +100,12 @@
 
 -(void) addModelNamed:(NSString*)modelName
 {
-    [self addModelNamed:modelName Scale:5.0];//5cm
+    [self addModelNamed:modelName Scale:10.0];//max size
 }
 
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale
 {
-    [self addModelNamed:modelName Scale:scale RotateX:M_PI_2];
+    [self addModelNamed:modelName Scale:scale RotateX:0];
 }
 
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian
@@ -105,15 +115,11 @@
 
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Index:(int)index
 {
-    //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        //ff(director, addModelNamed, name, scale);
-        //ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
         MC3DModel* m = MCDirector_addModelNamedAtIndex(0, director, name, MCFloatF(scale), index);
         MC3DModel_rotateAroundSelfAxisX(0, m, ccwRadian);
-        MCDirector_cameraFocusOn(0, director, MCVector4Make(0, 0, 0, 50));
-        //[self stopLoadingAnimation];
+        MCDirector_cameraFocusOn(0, director, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
     });
 }
 

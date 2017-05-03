@@ -28,7 +28,7 @@
 -(void) addModelNamed:(NSString*)modelName;
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale;
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian;
--(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Index:(int)index;
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Tag:(int)tag;
 
 //use default if names/name is null
 -(void) addSkyboxNamed:(NSArray*)texnames;
@@ -51,8 +51,8 @@
 -(void) handlePanGesture:(CGPoint)offset;
 -(void) handlePinchGesture:(float)scale;
 
--(void) updateModelAt:(int)index PoseMat4D:(double*)mat4;
--(void) updateModelAt:(int)index PoseMat4F:(float*)mat4;
+-(void) updateModelTag:(int)tag PoseMat4D:(double*)mat4;
+-(void) updateModelTag:(int)tag PoseMat4F:(float*)mat4;
 
 -(void) drawFrame;
 -(void) drawFrameOnCALayer:(CALayer*)calayer;

@@ -110,14 +110,15 @@
 
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian
 {
-    [self addModelNamed:modelName Scale:scale RotateX:ccwRadian Index:-1];
+    [self addModelNamed:modelName Scale:scale RotateX:ccwRadian Tag:-1];
 }
 
--(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Index:(int)index
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Tag:(int)tag
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        MC3DModel* m = MCDirector_addModelNamedAtIndex(0, director, name, MCFloatF(scale), index);
+        MC3DModel* m = MCDirector_addModelNamed(0, director, name, MCFloatF(scale));
+        m->tag = tag;
         MC3DModel_rotateAroundSelfAxisX(0, m, ccwRadian);
         MCDirector_cameraFocusOn(0, director, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
     });
@@ -261,29 +262,35 @@
     MCCamera_distanceScale(0, camera, MCFloatF(20.0/pinch_scale));
 }
 
--(void) updateModelAt:(int)index PoseMat4D:(double*)mat4
+-(void) updateModelTag:(int)tag PoseMat4D:(double*)mat4
 {
     if (director) {
         MC3DScene* scene = director->lastScene;
         if (scene) {
-            MCItem* item = MCLinkedList_itemAtIndex(0, scene->rootnode->children, index);
-            if (item) {
-                MC3DModel* model = cast(MC3DModel*, item);
-                model->Super.viewtrans = MCMatrix4MakeDouble(mat4);
+            MCItem* iter = scene->rootnode->children->headItem;
+            while (iter) {
+                MC3DModel* model = cast(MC3DModel*, iter);
+                if (model->tag == tag) {
+                    model->Super.viewtrans = MCMatrix4MakeDouble(mat4);
+                }
+                iter = iter->nextItem;
             }
         }
     }
 }
 
--(void) updateModelAt:(int)index PoseMat4F:(float*)mat4
+-(void) updateModelTag:(int)tag PoseMat4F:(float*)mat4
 {
     if (director) {
         MC3DScene* scene = director->lastScene;
         if (scene) {
-            MCItem* item = MCLinkedList_itemAtIndex(0, scene->rootnode->children, index);
-            if (item) {
-                MC3DModel* model = cast(MC3DModel*, item);
-                model->Super.viewtrans = MCMatrix4Make(mat4);
+            MCItem* iter = scene->rootnode->children->headItem;
+            while (iter) {
+                MC3DModel* model = cast(MC3DModel*, iter);
+                if (model->tag == tag) {
+                    model->Super.viewtrans = MCMatrix4Make(mat4);
+                }
+                iter = iter->nextItem;
             }
         }
     }

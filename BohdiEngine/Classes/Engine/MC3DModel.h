@@ -18,6 +18,7 @@
 #include "MCMath.h"
 
 class(MC3DModel, MC3DNode,
+      int tag;
       char name[256];
       //char mtl[256];
 

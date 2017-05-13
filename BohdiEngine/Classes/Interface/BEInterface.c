@@ -223,7 +223,8 @@ void BECameraTranslate(float x, float y, float z, _Bool incremental)
         MCVector3 eye = MCVector3Make(x, y, z);
         cam->R_value = MCVector3Length(eye);
         cam->eye = eye;
-        MC3DNode_translateVec3(0, &cam->Super, eye.v, incremental?true:false);
+
+        MC3DNode_translateVec3(0, &cam->Super, &eye, incremental?true:false);
     }
 }
 

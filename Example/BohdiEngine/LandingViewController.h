@@ -14,8 +14,6 @@
 
 @interface LandingViewController : UIViewController
 
--(IBAction)onEngineStartBtnClicked:(id)sender;
-
 @end
 
 #endif /* LandingViewController_h */

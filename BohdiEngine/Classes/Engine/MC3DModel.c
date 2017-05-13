@@ -75,7 +75,7 @@ oninit(MC3DModel)
 {
     if (init(MC3DNode)) {
         obj->tag = -1;
-        obj->name[0] = null;
+        obj->name[0] = NUL;
         
         obj->defaultColor = (MCColorf){0.9, 0.9, 0.9, 1.0};
         obj->defaultExtension = "obj";

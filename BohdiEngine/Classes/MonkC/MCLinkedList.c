@@ -204,7 +204,9 @@ method(MCLinkedList, MCItem*, popItem, voida)
 {
     if (cpt(count) > 0 && var(headItem)) {
         MCLinkedList_delItem(0, obj, var(headItem));
+        return var(headItem);
     }
+    return null;
 }
 
 method(MCLinkedList, void, insertAfterItem, MCItem* anchor, MCItem* item)

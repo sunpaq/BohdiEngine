@@ -30,6 +30,8 @@
 @dynamic glFrame;
 @dynamic useTransparentBackground;
 @dynamic deviceRotateMat3;
+@synthesize doesRotateCamera;
+@synthesize doesDrawWireFrame;
 
 -(void)initialization
 {
@@ -75,9 +77,6 @@
     _indicator = nil;
     
     _useDeltaRotationData = NO;
-    _doesRotateCamera = NO;
-    _doesDrawWireFrame = NO;
-    _cameraRotateMode = BECameraRotateAR;
     
     tap.delegate = self;
     [self.view addGestureRecognizer:tap];
@@ -161,6 +160,11 @@
     }
 }
 
+-(BOOL)useMultisampleAntiAlias
+{
+    return self.glView.drawableMultisample;
+}
+
 -(void)setUseMultisampleAntiAlias:(BOOL)useMultisampleAntiAlias
 {
     if (self.glView) {
@@ -172,6 +176,11 @@
     }
 }
 
+-(BECameraRotateMode)cameraRotateMode
+{
+    return (BECameraRotateMode)computed(director, cameraHandler)->rotateMode;
+}
+
 -(void) setCameraRotateMode:(BECameraRotateMode)cameraRotateMode
 {
     if (cameraRotateMode == BECameraRotateAroundModelByGyroscope) {
@@ -181,8 +190,14 @@
     }
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
-        cam->rotateMode = cameraRotateMode;
+        cam->rotateMode = (MCCameraRotateMode)cameraRotateMode;
     }
+}
+
+-(BOOL)doesRotateCamera
+{
+    //assuming ObjC YES/NO equal to true/false
+    return computed(director, cameraHandler)->isLockRotation;
 }
 
 -(void) setDoesRotateCamera:(BOOL)doesRotate
@@ -193,6 +208,11 @@
             cam->isLockRotation = doesRotate? false : true;
         }
     }
+}
+
+-(BOOL)doesDrawWireFrame
+{
+    return computed(director, contextHandler)->drawMode == MCLineStrip ? YES:NO;
 }
 
 -(void) setDoesDrawWireFrame:(BOOL)doesDrawWF
@@ -235,7 +255,9 @@
         MCVector3 eye = MCVector3Make(vec3.x, vec3.y, vec3.z);
         cam->R_value = MCVector3Length(eye);
         cam->eye = eye;
-        MC3DNode_translateVec3(0, &cam->Super, vec3.v, inc?true:false);
+        
+        MCVector3 mcv3 = {vec3.x, vec3.y, vec3.z};
+        MC3DNode_translateVec3(0, &cam->Super, &mcv3, inc?true:false);
     }
 }
 
@@ -375,7 +397,7 @@
     //[self startLoadingAnimation];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        ff(director, addModelNamed, name, 50);
+        ff(director, addModelNamed, name, MCFloatF(50.0));
         ff(director, cameraFocusOn, MCVector4Make(0, 0, 0, 50));
         //[self stopLoadingAnimation];
     });

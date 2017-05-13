@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ByM-Bs-JUI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ByM-Bs-JUI">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,18 +21,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iSP-Kj-X4Z">
-                                <rect key="frame" x="145" y="318" width="85" height="30"/>
-                                <state key="normal" title="Engine Start"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kLC-q0-MCF">
+                                <rect key="frame" x="115" y="379" width="144" height="30"/>
+                                <state key="normal" title="show panorama view"/>
                                 <connections>
-                                    <action selector="onEngineStartBtnClicked:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="rGW-oI-izn"/>
+                                    <action selector="showPanoramaAction:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="15N-37-L9N"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iSP-Kj-X4Z">
+                                <rect key="frame" x="146" y="225" width="83" height="30"/>
+                                <state key="normal" title="show model"/>
+                                <connections>
+                                    <action selector="showModelAction:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="Hmd-yM-XBk"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="iSP-Kj-X4Z" firstAttribute="top" secondItem="RD2-5M-yg0" secondAttribute="bottom" constant="205" id="Kww-LC-OnP"/>
+                            <constraint firstItem="Yof-Iu-ubI" firstAttribute="top" secondItem="kLC-q0-MCF" secondAttribute="bottom" constant="258" id="VdC-jB-1oY"/>
+                            <constraint firstItem="kLC-q0-MCF" firstAttribute="centerX" secondItem="V87-Ke-SeE" secondAttribute="centerX" id="dtf-a9-A0k"/>
                             <constraint firstItem="iSP-Kj-X4Z" firstAttribute="centerX" secondItem="V87-Ke-SeE" secondAttribute="centerX" id="iJv-8e-1dS"/>
-                            <constraint firstItem="iSP-Kj-X4Z" firstAttribute="centerY" secondItem="V87-Ke-SeE" secondAttribute="centerY" id="uf7-mo-erL"/>
                         </constraints>
                     </view>
                 </viewController>

@@ -18,6 +18,16 @@
 
 @implementation BERenderer
 
+-(BOOL)doesAutoRotateCamera
+{
+    return computed(director, cameraHandler)->isLockRotation;
+}
+
+-(BOOL)doesDrawWireFrame
+{
+    return computed(director, contextHandler)->drawMode == MCLineStrip? YES : NO;
+}
+
 -(void)setDoesAutoRotateCamera:(BOOL)doesAutoRotateCamera
 {
     computed(director, cameraHandler)->isLockRotation = doesAutoRotateCamera? false : true;
@@ -26,6 +36,35 @@
 -(void)setDoesDrawWireFrame:(BOOL)doesDrawWireFrame
 {
     computed(director, contextHandler)->drawMode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
+}
+
++(void) createFramebuffersWithContext:(EAGLContext*)ctx AndLayer:(CAEAGLLayer*)lyr
+{
+    GLsizei width  = lyr.bounds.size.width;
+    GLsizei height = lyr.bounds.size.height;
+    
+    GLuint framebuffer;
+    glGenFramebuffers(1, &framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    
+    GLuint colorRenderbuffer;
+    glGenRenderbuffers(1, &colorRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
+    [ctx renderbufferStorage:GL_RENDERBUFFER fromDrawable:lyr];
+    glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
+    
+    GLuint depthRenderbuffer;
+    glGenRenderbuffers(1, &depthRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+    glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
+    
+    GLenum status = glCheckFramebufferStatus(GL_RENDERBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        NSLog(@"BEView - failed to make complete framebuffer");
+        exit(-1);
+    }
 }
 
 +(GLKView*) createDefaultGLView:(CGRect)frame
@@ -59,7 +98,7 @@
         MCDirector_setupMainScene(0, director, frame.size.width * scale,
                                   frame.size.height * scale);
         
-        computed(director, cameraHandler)->rotateMode = (BECameraRotateMode)rmode;
+        computed(director, cameraHandler)->rotateMode = (MCCameraRotateMode)rmode;
         if (rmode == BECameraRotateAroundModelByGyroscope) {
             director->gyroscopeMode = true;
         } else {

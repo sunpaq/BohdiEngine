@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		36CD114E1E1F3D5CD4041EFC /* Pods_BohdiEngine_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE81044E42193FB27E60BC38 /* Pods_BohdiEngine_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -15,18 +14,13 @@
 		6003F59A195388D20070C39A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
 		6003F59E195388D20070C39A /* BEAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F59D195388D20070C39A /* BEAppDelegate.m */; };
 		6003F5A9195388D20070C39A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
-		6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
-		7EF861B9DC59A2875049B3F5 /* Pods_BohdiEngine_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49F087004F0CAC65B7623E3B /* Pods_BohdiEngine_Example.framework */; };
+		7C4420D4B4A923ABC449CBDA /* Pods_BohdiEngine_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4416715513C856A37ED2678 /* Pods_BohdiEngine_Tests.framework */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
-		F83B12131E70FC4C003F13F1 /* outer.mtl in Resources */ = {isa = PBXBuildFile; fileRef = F83B12111E70FC4C003F13F1 /* outer.mtl */; };
-		F83B12141E70FC4C003F13F1 /* outer.obj in Resources */ = {isa = PBXBuildFile; fileRef = F83B12121E70FC4C003F13F1 /* outer.obj */; };
-		F83B12161E727BA9003F13F1 /* chinese2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F83B12151E727BA9003F13F1 /* chinese2.jpg */; };
-		F870A5551E6FA1E8009B7175 /* MCSkysphereShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = F870A5531E6FA1E8009B7175 /* MCSkysphereShader.fsh */; };
-		F870A5561E6FA1E8009B7175 /* MCSkysphereShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = F870A5541E6FA1E8009B7175 /* MCSkysphereShader.vsh */; };
+		90D4A051FC6EB62425584AF3 /* Pods_BohdiEngine_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99CB28099C8C68ECB6210E0E /* Pods_BohdiEngine_Example.framework */; };
 		F870A5581E6FA3B3009B7175 /* LandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F870A5571E6FA3B3009B7175 /* LandingViewController.m */; };
 		F870A5631E6FE247009B7175 /* back.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55B1E6FE247009B7175 /* back.jpg */; };
 		F870A5641E6FE247009B7175 /* bottom.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55C1E6FE247009B7175 /* bottom.jpg */; };
@@ -36,12 +30,7 @@
 		F870A5681E6FE247009B7175 /* top.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A5601E6FE247009B7175 /* top.jpg */; };
 		F870A5691E6FE247009B7175 /* panorama360.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A5621E6FE247009B7175 /* panorama360.jpg */; };
 		F8E688481E5D851300D6E869 /* monkey2.obj in Resources */ = {isa = PBXBuildFile; fileRef = F8E688461E5D851300D6E869 /* monkey2.obj */; };
-		FD7379E01E2B54E6000ED551 /* BohdiEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7379DF1E2B54E6000ED551 /* BohdiEngine.framework */; };
 		FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */ = {isa = PBXBuildFile; fileRef = FD737A281E2B6C90000ED551 /* beengine.mtl */; };
-		FD737A2F1E2B6CBE000ED551 /* MCGLRenderer.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FD737A2B1E2B6CBE000ED551 /* MCGLRenderer.fsh */; };
-		FD737A301E2B6CBE000ED551 /* MCGLRenderer.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FD737A2C1E2B6CBE000ED551 /* MCGLRenderer.vsh */; };
-		FD737A311E2B6CBE000ED551 /* MCSkyboxShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = FD737A2D1E2B6CBE000ED551 /* MCSkyboxShader.fsh */; };
-		FD737A321E2B6CBE000ED551 /* MCSkyboxShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = FD737A2E1E2B6CBE000ED551 /* MCSkyboxShader.vsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +47,6 @@
 		006E5D12A1884F68472C7A1A /* Pods-BohdiEngine_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BohdiEngine_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BohdiEngine_Tests/Pods-BohdiEngine_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		0939384BC5D1FA76FE1688C8 /* Pods-BohdiEngine_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BohdiEngine_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BohdiEngine_Tests/Pods-BohdiEngine_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		403816A00EE52F31C8B2B84D /* Pods-BohdiEngine_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BohdiEngine_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-BohdiEngine_Example/Pods-BohdiEngine_Example.release.xcconfig"; sourceTree = "<group>"; };
-		49F087004F0CAC65B7623E3B /* Pods_BohdiEngine_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BohdiEngine_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5946268BE31531CBDC0B9A02 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* BohdiEngine_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BohdiEngine_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -72,20 +60,15 @@
 		6003F59D195388D20070C39A /* BEAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BEAppDelegate.m; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6003F5AE195388D20070C39A /* BohdiEngine_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BohdiEngine_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6003F5B7195388D20070C39A /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		99CB28099C8C68ECB6210E0E /* Pods_BohdiEngine_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BohdiEngine_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B29F3398775A4115559DCFA9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		DE81044E42193FB27E60BC38 /* Pods_BohdiEngine_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BohdiEngine_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4416715513C856A37ED2678 /* Pods_BohdiEngine_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BohdiEngine_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44D3773801779395462E915 /* Pods-BohdiEngine_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BohdiEngine_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BohdiEngine_Example/Pods-BohdiEngine_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		F83B12111E70FC4C003F13F1 /* outer.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = outer.mtl; sourceTree = "<group>"; };
-		F83B12121E70FC4C003F13F1 /* outer.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = outer.obj; sourceTree = "<group>"; };
-		F83B12151E727BA9003F13F1 /* chinese2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = chinese2.jpg; sourceTree = "<group>"; };
-		F870A5531E6FA1E8009B7175 /* MCSkysphereShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCSkysphereShader.fsh; sourceTree = "<group>"; };
-		F870A5541E6FA1E8009B7175 /* MCSkysphereShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCSkysphereShader.vsh; sourceTree = "<group>"; };
 		F870A5571E6FA3B3009B7175 /* LandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LandingViewController.m; sourceTree = "<group>"; };
 		F870A5591E6FA3C7009B7175 /* LandingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LandingViewController.h; sourceTree = "<group>"; };
 		F870A55B1E6FE247009B7175 /* back.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = back.jpg; sourceTree = "<group>"; };
@@ -97,12 +80,7 @@
 		F870A5621E6FE247009B7175 /* panorama360.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = panorama360.jpg; sourceTree = "<group>"; };
 		F8E688461E5D851300D6E869 /* monkey2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey2.obj; sourceTree = "<group>"; };
 		FCF04D989F31C672C28B0EC4 /* BohdiEngine.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BohdiEngine.podspec; path = ../BohdiEngine.podspec; sourceTree = "<group>"; };
-		FD7379DF1E2B54E6000ED551 /* BohdiEngine.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BohdiEngine.framework; path = "Pods/../build/Debug-iphoneos/BohdiEngine/BohdiEngine.framework"; sourceTree = "<group>"; };
 		FD737A281E2B6C90000ED551 /* beengine.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = beengine.mtl; sourceTree = "<group>"; };
-		FD737A2B1E2B6CBE000ED551 /* MCGLRenderer.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCGLRenderer.fsh; sourceTree = "<group>"; };
-		FD737A2C1E2B6CBE000ED551 /* MCGLRenderer.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCGLRenderer.vsh; sourceTree = "<group>"; };
-		FD737A2D1E2B6CBE000ED551 /* MCSkyboxShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCSkyboxShader.fsh; sourceTree = "<group>"; };
-		FD737A2E1E2B6CBE000ED551 /* MCSkyboxShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MCSkyboxShader.vsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,8 +91,7 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
-				FD7379E01E2B54E6000ED551 /* BohdiEngine.framework in Frameworks */,
-				7EF861B9DC59A2875049B3F5 /* Pods_BohdiEngine_Example.framework in Frameworks */,
+				90D4A051FC6EB62425584AF3 /* Pods_BohdiEngine_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,10 +99,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */,
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
-				36CD114E1E1F3D5CD4041EFC /* Pods_BohdiEngine_Tests.framework in Frameworks */,
+				7C4420D4B4A923ABC449CBDA /* Pods_BohdiEngine_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,13 +132,11 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FD7379DF1E2B54E6000ED551 /* BohdiEngine.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
-				6003F5AF195388D20070C39A /* XCTest.framework */,
-				49F087004F0CAC65B7623E3B /* Pods_BohdiEngine_Example.framework */,
-				DE81044E42193FB27E60BC38 /* Pods_BohdiEngine_Tests.framework */,
+				99CB28099C8C68ECB6210E0E /* Pods_BohdiEngine_Example.framework */,
+				F4416715513C856A37ED2678 /* Pods_BohdiEngine_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -251,7 +225,6 @@
 			isa = PBXGroup;
 			children = (
 				F870A5621E6FE247009B7175 /* panorama360.jpg */,
-				F83B12151E727BA9003F13F1 /* chinese2.jpg */,
 			);
 			path = skysphere;
 			sourceTree = "<group>";
@@ -263,14 +236,6 @@
 				F870A5611E6FE247009B7175 /* skysphere */,
 				FD737A281E2B6C90000ED551 /* beengine.mtl */,
 				F8E688461E5D851300D6E869 /* monkey2.obj */,
-				F83B12111E70FC4C003F13F1 /* outer.mtl */,
-				F83B12121E70FC4C003F13F1 /* outer.obj */,
-				FD737A2B1E2B6CBE000ED551 /* MCGLRenderer.fsh */,
-				FD737A2C1E2B6CBE000ED551 /* MCGLRenderer.vsh */,
-				FD737A2D1E2B6CBE000ED551 /* MCSkyboxShader.fsh */,
-				FD737A2E1E2B6CBE000ED551 /* MCSkyboxShader.vsh */,
-				F870A5531E6FA1E8009B7175 /* MCSkysphereShader.fsh */,
-				F870A5541E6FA1E8009B7175 /* MCSkysphereShader.vsh */,
 			);
 			path = Resources;
 			sourceTree = SOURCE_ROOT;
@@ -361,27 +326,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F870A5561E6FA1E8009B7175 /* MCSkysphereShader.vsh in Resources */,
 				F870A5661E6FE247009B7175 /* left.jpg in Resources */,
-				FD737A311E2B6CBE000ED551 /* MCSkyboxShader.fsh in Resources */,
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
-				F83B12141E70FC4C003F13F1 /* outer.obj in Resources */,
 				FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */,
 				F870A5631E6FE247009B7175 /* back.jpg in Resources */,
 				F870A5691E6FE247009B7175 /* panorama360.jpg in Resources */,
 				F870A5671E6FE247009B7175 /* right.jpg in Resources */,
-				F870A5551E6FA1E8009B7175 /* MCSkysphereShader.fsh in Resources */,
 				F8E688481E5D851300D6E869 /* monkey2.obj in Resources */,
 				F870A5641E6FE247009B7175 /* bottom.jpg in Resources */,
-				FD737A2F1E2B6CBE000ED551 /* MCGLRenderer.fsh in Resources */,
-				F83B12161E727BA9003F13F1 /* chinese2.jpg in Resources */,
 				F870A5651E6FE247009B7175 /* front.jpg in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
-				FD737A321E2B6CBE000ED551 /* MCSkyboxShader.vsh in Resources */,
-				FD737A301E2B6CBE000ED551 /* MCGLRenderer.vsh in Resources */,
 				F870A5681E6FE247009B7175 /* top.jpg in Resources */,
-				F83B12131E70FC4C003F13F1 /* outer.mtl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,7 +379,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		90852FDA577D3E2C2687C690 /* [CP] Embed Pods Frameworks */ = {
@@ -468,7 +424,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		F42457D0DB702DA297CD0219 /* [CP] Embed Pods Frameworks */ = {
@@ -627,10 +583,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = R7BTEXA73U;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/BohdiEngine",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BohdiEngine/BohdiEngine-Prefix.pch";
 				INFOPLIST_FILE = "BohdiEngine/BohdiEngine-Info.plist";
@@ -648,10 +601,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = R7BTEXA73U;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/BohdiEngine",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BohdiEngine/BohdiEngine-Prefix.pch";
 				INFOPLIST_FILE = "BohdiEngine/BohdiEngine-Info.plist";
@@ -667,11 +617,6 @@
 			baseConfigurationReference = 006E5D12A1884F68472C7A1A /* Pods-BohdiEngine_Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -691,11 +636,6 @@
 			baseConfigurationReference = 0939384BC5D1FA76FE1688C8 /* Pods-BohdiEngine_Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";

@@ -20,10 +20,5 @@
   },
   "source_files": "BohdiEngine/**/**/*",
   "public_header_files": "BohdiEngine/Classes/**/*.h",
-  "private_header_files": "BohdiEngine/External/**/*.h",
-  "resource_bundles": {
-    "BohdiEngine": [
-      "BohdiEngine/Assets/**/*.{fsh,vsh}"
-    ]
-  }
+  "private_header_files": "BohdiEngine/External/**/*.h"
 }

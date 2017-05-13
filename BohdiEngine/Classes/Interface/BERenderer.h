@@ -17,6 +17,7 @@
 @property (atomic, readwrite) BOOL doesDrawWireFrame;
 
 +(GLKView*) createDefaultGLView:(CGRect)frame;
++(void) createFramebuffersWithContext:(EAGLContext*)ctx AndLayer:(CAEAGLLayer*)lyr;
 
 -(instancetype) init __unavailable;
 -(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque;

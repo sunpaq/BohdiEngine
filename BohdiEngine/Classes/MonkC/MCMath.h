@@ -334,7 +334,7 @@ MCInline MCVector3 MCNormalOfTriangle(MCVector3 v1, MCVector3 v2, MCVector3 v3) 
     return MCVector3Cross(MCVector3Sub(v2, v1), MCVector3Sub(v3, v1));
 }
 
-MCInline MCBool MCMatrix3Equal(MCMatrix3* l, MCMatrix3* r)
+MCInline MCBool MCMatrix3Equal(const MCMatrix3* l, const MCMatrix3* r)
 {
     for (int i=0; i<9; i++) {
         if(!MCSamefloat(l->m[i], r->m[i]))
@@ -343,7 +343,7 @@ MCInline MCBool MCMatrix3Equal(MCMatrix3* l, MCMatrix3* r)
     return true;
 }
 
-MCInline MCBool MCMatrix4Equal(MCMatrix4* l, MCMatrix4* r)
+MCInline MCBool MCMatrix4Equal(const MCMatrix4* l, const MCMatrix4* r)
 {
     for (int i=0; i<16; i++) {
         if(!MCSamefloat(l->m[i], r->m[i]))

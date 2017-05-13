@@ -40,7 +40,6 @@
 -(instancetype)init;
 -(instancetype)initWithCoder:(NSCoder *)aDecoder;
 -(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
--(instancetype)initWithCALayer:(CALayer*)layer;
 
 -(void) glviewResize:(CGRect)frame;
 

@@ -15,7 +15,6 @@
 }
 @end
 
-
 @implementation LandingViewController
 
 -(void)viewDidLoad
@@ -25,19 +24,20 @@
     [bec glviewResize:self.view.frame];
 }
 
--(IBAction)onEngineStartBtnClicked:(id)sender
+-(IBAction)showModelAction:(id)sender
 {
-    
+    [self presentViewController:bec animated:YES completion:^{
+        bec.useTransparentBackground = NO;
+        bec.cameraRotateMode = BECameraRotateAroundModelManual;
+        [bec addModelNamed:@"monkey2.obj" ];
+    }];
+}
+
+-(IBAction)showPanoramaAction:(id)sender
+{
     [self presentViewController:bec animated:YES completion:^{
         bec.cameraRotateMode = BECameraRotateAroundModelByGyroscope;
-
-        //bec.useDeltaRotationData = YES;
-        //[bec addSkyboxNamed:nil];
         [bec addSkysphNamed:@"panorama360.jpg"];
-        //[bec addSkysphNamed:@"chinese2.jpg"];
-
-        //[bec addModelNamed:@"monkey2.obj"];
-        //[bec addModelNamed:@"outer.obj"];
     }];
 }
 

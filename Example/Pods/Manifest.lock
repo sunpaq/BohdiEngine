@@ -1,16 +1,16 @@
 PODS:
-  - BohdiEngine (1.0.8)
+  - BohdiEngine (1.0.9)
 
 DEPENDENCIES:
   - BohdiEngine (from `../`)
 
 EXTERNAL SOURCES:
   BohdiEngine:
-    :path: "../"
+    :path: ../
 
 SPEC CHECKSUMS:
-  BohdiEngine: 7c1382443e978a85e4241b95c4ebb9c5296b577f
+  BohdiEngine: d21c6227f51f9e0de51fe686465a57e5c4164853
 
 PODFILE CHECKSUM: c4d8ba9f0174600393c955f0aea3df2e183e9e09
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.1

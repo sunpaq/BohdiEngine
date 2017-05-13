@@ -195,22 +195,22 @@ function(TrieNode*, retrievalNodeByKey, const char* word)
     return node;
 }
 
-function(MCArray*, keysWithPrefixFromIndex, const char* prefix, TrieNode* index)
-{
-    as(MCTrie);
-    MCArray* array = new(MCArray);
-    TrieNode* node = retrievalNodeByKey(0, obj, prefix);
-    for (int i=0; i<MCTrieWidth; i++) {
-        TrieNode* child = node->childs[i];
-        if (child->isLeaf) {
-            
-        } else {
-            
-        }
-    }
-    
-    return array;
-}
+//function(MCArray*, keysWithPrefixFromIndex, const char* prefix, TrieNode* index)
+//{
+//    as(MCTrie);
+//    MCArray* array = new(MCArray);
+//    TrieNode* node = retrievalNodeByKey(0, obj, prefix);
+//    for (int i=0; i<MCTrieWidth; i++) {
+//        TrieNode* child = node->childs[i];
+//        if (child->isLeaf) {
+//            
+//        } else {
+//            
+//        }
+//    }
+//    
+//    return array;
+//}
 
 method(MCTrie, void, insertValueByKey, MCGeneric newval, const char* word)
 {

@@ -1,5 +1,13 @@
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#else
+#ifndef FOUNDATION_EXPORT
+#if defined(__cplusplus)
+#define FOUNDATION_EXPORT extern "C"
+#else
+#define FOUNDATION_EXPORT extern
+#endif
+#endif
 #endif
 
 #import "BAMtlParser.h"
@@ -28,10 +36,15 @@
 #import "MCOrbit.h"
 #import "MCPanel.h"
 #import "MCSkybox.h"
-#import "MCSkyboxCamera.h"
+#import "MCSkysphere.h"
 #import "MCTexture.h"
 #import "MCUIBase.h"
 #import "MCWorld.h"
+#import "BEInterface.h"
+#import "BEPanoramaViewController.h"
+#import "BERenderer.h"
+#import "BERunLoop.h"
+#import "BEViewController.h"
 #import "MCArray.h"
 #import "MCArrayLinkedList.h"
 #import "MCBits.h"

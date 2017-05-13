@@ -475,7 +475,7 @@ static MCBool override_samekeyitem(mc_hashitem* item, mc_hashitem* newitem, cons
         item->key   = newitem->key;
         item->hash  = newitem->hash;
         //free the new item!
-        error_log("[%s]:override-item[%d/%s]\n", classname, item->hash, item->key);
+        runtime_log("[%s]:override-item[%d/%s]\n", classname, item->hash, item->key);
         free(newitem);
         return true;
     }

@@ -133,7 +133,7 @@ utility(MCGLEngine, GLuint, createShader, voida)
 
 utility(MCGLEngine, GLuint, prepareShader, GLuint Id, const char* vcode, const char* fcode, const char* version)
 {
-    GLuint vertShader, fragShader;
+    GLuint vertShader=0, fragShader=0;
     MCGLEngine_compileShader(&vertShader, GL_VERTEX_SHADER, vcode, version);
     glAttachShader(Id, vertShader);
 

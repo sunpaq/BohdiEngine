@@ -50,6 +50,7 @@
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
     if (bec) {
         [bec dismissViewControllerAnimated:NO completion:nil];
         bec = nil;

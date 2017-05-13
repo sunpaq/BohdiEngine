@@ -185,8 +185,8 @@ method(MCDirector, void, addNode, MC3DNode* node)
     if(node && obj->lastScene && obj->lastScene->rootnode) {
         MC3DNode_addChild(0, obj->lastScene->rootnode, (MC3DNode*)node);
     }else{
-        error_log("MCDirector add node(%p) failed [lastScene=%p rootnode=%p]\n",
-                  node, obj->lastScene, obj->lastScene->rootnode);
+        error_log("MCDirector add node(%p) failed [lastScene=%p]\n",
+                  node, obj->lastScene);
     }
 }
 
@@ -205,8 +205,8 @@ method(MCDirector, void, addModelAtIndex, MC3DModel* model, MCFloat maxsize, int
         MC3DNode_scaleVec3(0, &model->Super, &scaleVec, false);
         debug_log("MCDirector - model maxlength=%lf scale=%lf\n", maxl, scale);
     }else{
-        error_log("MCDirector add model(%p) failed [lastScene=%p rootnode=%p]\n",
-                  model, obj->lastScene, obj->lastScene->rootnode);
+        error_log("MCDirector add model(%p) failed [lastScene=%p]\n",
+                  model, obj->lastScene);
     }
 }
 

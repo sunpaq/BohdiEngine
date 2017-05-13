@@ -121,7 +121,7 @@ compute(unsigned, getCount)
 compute(MCItem*, cycleStart)
 {
     as(MCLinkedList);
-    MCItem* start;
+    MCItem* start = null;
     detectCycle(obj->headItem, &start);
     if (start) {
         return start;
@@ -275,11 +275,13 @@ method(MCLinkedList, void, addItemAtIndex, int index, MCItem* item)
     //build list until reach index
     int i = 0;
     while (i < index) {
-        if (!iter->nextItem) {
-            MCItem* item = new(MCItem);
-            MCLinkedList_pushItem(0, obj, item);
+        if (iter) {
+            if (iter->nextItem == null) {
+                MCItem* item = new(MCItem);
+                MCLinkedList_pushItem(0, obj, item);
+            }
+            iter = iter->nextItem;
         }
-        iter = iter->nextItem;
         i++;
     }
     //replace the item at index

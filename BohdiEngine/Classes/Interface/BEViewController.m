@@ -111,6 +111,7 @@
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
     [self stopDeviceMotion];
     //[self removeCurrentSkysph];
     self.glView.delegate = null;

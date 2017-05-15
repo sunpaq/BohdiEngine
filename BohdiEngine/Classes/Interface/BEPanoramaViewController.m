@@ -22,7 +22,6 @@
     [super viewDidLoad];
     bec = [[BEViewController alloc] init];
     bec.useMultisampleAntiAlias  = YES;
-    [bec glviewResize:self.view.frame];
 }
 
 -(void)viewDidAppear:(BOOL)animated

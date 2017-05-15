@@ -20,23 +20,23 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-    bec = [BEViewController new];
-    [bec glviewResize:self.view.frame];
+
 }
 
--(IBAction)showModelAction:(id)sender
-{
-    [self presentViewController:bec animated:YES completion:^{
-        [bec.renderer setCameraRotateMode:BECameraRotateAroundModelManual];
-        [bec.renderer addModelNamed:@"monkey2.obj"];
-    }];
-}
+//-(IBAction)showModelAction:(id)sender
+//{
+//    [self presentViewController:bec animated:YES completion:^{
+//        [bec.renderer addModelNamed:@"monkey2.obj"];
+//    }];
+//}
 
 -(IBAction)showPanoramaAction:(id)sender
 {
+    bec = [[BEViewController alloc] init];
+    [bec.renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
     [self presentViewController:bec animated:YES completion:^{
-        [bec.renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
         [bec.renderer addSkysphNamed:@"panorama360.jpg"];
+        [bec startDeviceMotion];
     }];
 }
 

@@ -30,6 +30,7 @@
 		F870A5681E6FE247009B7175 /* top.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A5601E6FE247009B7175 /* top.jpg */; };
 		F870A5691E6FE247009B7175 /* panorama360.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A5621E6FE247009B7175 /* panorama360.jpg */; };
 		F8E688481E5D851300D6E869 /* monkey2.obj in Resources */ = {isa = PBXBuildFile; fileRef = F8E688461E5D851300D6E869 /* monkey2.obj */; };
+		FD59A2A61ECA0BA1002495A2 /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD59A2A51ECA0BA1002495A2 /* GLViewController.m */; };
 		FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */ = {isa = PBXBuildFile; fileRef = FD737A281E2B6C90000ED551 /* beengine.mtl */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +81,8 @@
 		F870A5621E6FE247009B7175 /* panorama360.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = panorama360.jpg; sourceTree = "<group>"; };
 		F8E688461E5D851300D6E869 /* monkey2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey2.obj; sourceTree = "<group>"; };
 		FCF04D989F31C672C28B0EC4 /* BohdiEngine.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BohdiEngine.podspec; path = ../BohdiEngine.podspec; sourceTree = "<group>"; };
+		FD59A2A41ECA0BA1002495A2 /* GLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLViewController.h; sourceTree = "<group>"; };
+		FD59A2A51ECA0BA1002495A2 /* GLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLViewController.m; sourceTree = "<group>"; };
 		FD737A281E2B6C90000ED551 /* beengine.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = beengine.mtl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -148,6 +151,8 @@
 				6003F59D195388D20070C39A /* BEAppDelegate.m */,
 				F870A5591E6FA3C7009B7175 /* LandingViewController.h */,
 				F870A5571E6FA3B3009B7175 /* LandingViewController.m */,
+				FD59A2A41ECA0BA1002495A2 /* GLViewController.h */,
+				FD59A2A51ECA0BA1002495A2 /* GLViewController.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				FD737A261E2B6C6E000ED551 /* Resources */,
@@ -452,6 +457,7 @@
 				6003F59E195388D20070C39A /* BEAppDelegate.m in Sources */,
 				F870A5581E6FA3B3009B7175 /* LandingViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				FD59A2A61ECA0BA1002495A2 /* GLViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

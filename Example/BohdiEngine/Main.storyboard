@@ -32,7 +32,7 @@
                                 <rect key="frame" x="146" y="225" width="83" height="30"/>
                                 <state key="normal" title="show model"/>
                                 <connections>
-                                    <action selector="showModelAction:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="2j4-kC-gFX"/>
+                                    <segue destination="ZFh-l5-i1w" kind="presentation" id="RtV-XC-bDq"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -48,6 +48,43 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rqB-4e-CYI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-439" y="429"/>
+        </scene>
+        <!--GLKit View Controller-->
+        <scene sceneID="XCL-tl-ypj">
+            <objects>
+                <glkViewController preferredFramesPerSecond="30" id="ZFh-l5-i1w" customClass="GLViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4zV-T7-Y7h"/>
+                        <viewControllerLayoutGuide type="bottom" id="Uwc-UE-IYh"/>
+                    </layoutGuides>
+                    <glkView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" enableSetNeedsDisplay="NO" id="eBV-az-RBT">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="UI Overlay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yav-hT-89y">
+                                <rect key="frame" x="148" y="74" width="79" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZVF-fb-GjC">
+                                <rect key="frame" x="21" y="28" width="37" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="close"/>
+                                <connections>
+                                    <action selector="onClose:" destination="ZFh-l5-i1w" eventType="touchUpInside" id="XyT-hc-GYE"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <connections>
+                            <outlet property="delegate" destination="ZFh-l5-i1w" id="Oze-M6-BoT"/>
+                        </connections>
+                    </glkView>
+                </glkViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tDp-jg-hOC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="391" y="426"/>
         </scene>
     </scenes>
 </document>

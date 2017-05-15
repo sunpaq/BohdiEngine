@@ -23,16 +23,16 @@
 @property (atomic, readonly) BERenderer* renderer;
 @property (atomic, strong) UIActivityIndicatorView* indicator;
 
--(void) glviewResize:(CGRect)frame;
-
+//-(void) glviewResize:(CGRect)frame;
++(void)willOpenModelNamed:(NSString*)name;
 //motion
 -(void)startDeviceMotion;
 -(void)stopDeviceMotion;
 
 //Add 'layer' to the end of the receiver's sublayers array. If 'layer'
 //already has a superlayer, it will be removed before being added.
--(void)attachGLLayerTo:(CALayer*)superlayer;
--(void)detachGLLayer;
+//-(void)attachGLLayerTo:(CALayer*)superlayer;
+//-(void)detachGLLayer;
 @end
 
 

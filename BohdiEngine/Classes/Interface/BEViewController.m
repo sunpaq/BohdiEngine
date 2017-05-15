@@ -26,16 +26,17 @@
 @synthesize useDeltaRotationData;
 @synthesize renderer;
 
+static NSString* filename = nil;
++(void)willOpenModelNamed:(NSString*)name
+{
+    filename = name;
+}
+
 -(void)viewDidLoad
 {
     [super viewDidLoad];
     
-    renderer = [[BERenderer alloc] initWithFrame:self.view.frame];
-    [renderer setCameraRotateMode:BECameraFixedAtOrigin];
-    //[renderer setBackgroundColor:[UIColor blueColor]];
-    [renderer setDoesAutoRotateCamera:NO];
-    
-    //set up GLKView
+    //must set up GLKView first
     [EAGLContext setCurrentContext:[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3]];
     self.glView.context = [EAGLContext currentContext];
     self.glView.context.multiThreaded = NO;
@@ -45,8 +46,27 @@
     self.preferredFramesPerSecond = 60;
     self.glView.delegate = self;
 
+    CGRect frame = self.view.frame;
+    renderer = [[BERenderer alloc] initWithFrame:frame];
+    [renderer setDoesAutoRotateCamera:YES];
+    
     pinch_scale = 10.0;
     referenceAtt = nil;
+    motionManager = nil;
+}
+
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [renderer resizeAllScene:self.view.frame.size];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (filename) {
+        [renderer addModelNamed:filename];
+    }
 }
 
 -(void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
@@ -150,10 +170,10 @@
     [renderer drawFrame];
 }
 
--(void) glviewResize:(CGRect)frame
-{
-    [renderer resizeAllScene:self.view.frame.size];
-}
+//-(void) glviewResize:(CGRect)frame
+//{
+//    [renderer resizeAllScene:self.view.frame.size];
+//}
 
 -(void) startLoadingAnimation
 {
@@ -182,14 +202,14 @@
     }];
 }
 
--(void)attachGLLayerTo:(CALayer*)superlayer
-{
-    [superlayer addSublayer:self.glView.layer];
-}
-
--(void)detachGLLayer
-{
-    [self.glView.layer removeFromSuperlayer];
-}
+//-(void)attachGLLayerTo:(CALayer*)superlayer
+//{
+//    [superlayer addSublayer:self.glView.layer];
+//}
+//
+//-(void)detachGLLayer
+//{
+//    [self.glView.layer removeFromSuperlayer];
+//}
 
 @end

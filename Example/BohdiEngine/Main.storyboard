@@ -25,14 +25,14 @@
                                 <rect key="frame" x="115" y="379" width="144" height="30"/>
                                 <state key="normal" title="show panorama view"/>
                                 <connections>
-                                    <action selector="showPanoramaAction:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="15N-37-L9N"/>
+                                    <action selector="showPanoramaAction:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="010-pi-L7o"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iSP-Kj-X4Z">
                                 <rect key="frame" x="146" y="225" width="83" height="30"/>
                                 <state key="normal" title="show model"/>
                                 <connections>
-                                    <action selector="showModelAction:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="Hmd-yM-XBk"/>
+                                    <action selector="showModelAction:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="2j4-kC-gFX"/>
                                 </connections>
                             </button>
                         </subviews>

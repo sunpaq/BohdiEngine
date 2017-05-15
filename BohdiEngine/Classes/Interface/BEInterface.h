@@ -10,7 +10,7 @@
 #define BEMainLoop_h
 
 typedef enum {
-    BECameraFixedAtOrigin,
+    BECameraFixedAtOrigin = 0,
     BECameraRotateAroundModelManual,
     BECameraRotateAroundModelByGyroscope,
     BECameraRotateAR,

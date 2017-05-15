@@ -6,7 +6,7 @@
 #include "MC3DNode.h"
 
 typedef enum {
-    MCCameraFixedAtOrigin,
+    MCCameraFixedAtOrigin = 0,
     MCCameraRotateAroundModelManual,
     MCCameraRotateAroundModelByGyroscope,
     MCCameraRotateAR,

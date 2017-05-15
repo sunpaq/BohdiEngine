@@ -28,7 +28,7 @@ class(MCDirector, MCObject,
       int currentHeight;
       
       MCBool lightFollowCamera;
-      MCBool gyroscopeMode;
+      //MCBool gyroscopeOnOff;
       MCBool pause;
       
       MCMatrix3 deviceRotationMat3;

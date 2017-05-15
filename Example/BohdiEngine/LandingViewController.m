@@ -27,17 +27,16 @@
 -(IBAction)showModelAction:(id)sender
 {
     [self presentViewController:bec animated:YES completion:^{
-        bec.useTransparentBackground = NO;
-        bec.cameraRotateMode = BECameraRotateAroundModelManual;
-        [bec addModelNamed:@"monkey2.obj" ];
+        [bec.renderer setCameraRotateMode:BECameraRotateAroundModelManual];
+        [bec.renderer addModelNamed:@"monkey2.obj"];
     }];
 }
 
 -(IBAction)showPanoramaAction:(id)sender
 {
     [self presentViewController:bec animated:YES completion:^{
-        bec.cameraRotateMode = BECameraRotateAroundModelByGyroscope;
-        [bec addSkysphNamed:@"panorama360.jpg"];
+        [bec.renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
+        [bec.renderer addSkysphNamed:@"panorama360.jpg"];
     }];
 }
 

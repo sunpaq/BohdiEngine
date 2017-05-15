@@ -43,7 +43,6 @@ oninit(MCDirector)
         var(currentHeight) = 0;
         
         var(pause) = false;
-        var(gyroscopeMode) = true;
         var(lightFollowCamera) = true;
         var(deviceRotationMat3) = MCMatrix3Identity;
         
@@ -92,7 +91,7 @@ method(MCDirector, void, bye, voida)
 method(MCDirector, void, updateAll, voida)
 {
     if (obj && var(lastScene) != null && var(pause) == false) {
-        if (var(gyroscopeMode)) {
+        if (cpt(cameraHandler)->rotateMode == MCCameraRotateAroundModelByGyroscope) {
             MCCamera_setRotationMat3(0, cpt(cameraHandler), obj->deviceRotationMat3.m);
             MC3DScene_setRotationMat3(0, var(lastScene), obj->deviceRotationMat3.m);
         }

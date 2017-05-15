@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <BohdiEngine/BEViewController.h>
 
-@interface BEPanoramaViewController : UIViewController <BEViewDelegate>
+@interface BEPanoramaViewController : UIViewController
 
 @property (atomic, readwrite) NSString* textureFileName;
 

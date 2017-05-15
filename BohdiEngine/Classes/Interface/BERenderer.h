@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreMotion/CoreMotion.h>
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 #import "BEInterface.h"
@@ -15,15 +16,17 @@
 
 @property (atomic, readwrite) BOOL doesAutoRotateCamera;
 @property (atomic, readwrite) BOOL doesDrawWireFrame;
+@property (atomic, readwrite) CMRotationMatrix deviceRotateMat3;
 
 +(GLKView*) createDefaultGLView:(CGRect)frame;
 +(void) createFramebuffersWithContext:(EAGLContext*)ctx AndLayer:(CAEAGLLayer*)lyr;
 
 -(instancetype) init __unavailable;
--(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque;
--(instancetype) initWithFrame:(CGRect)frame doesOpaque:(BOOL)opaque cameraRotateMode:(BECameraRotateMode)rmode;
+-(instancetype) initWithFrame:(CGRect)frame;
 
--(void) resizeAllScene:(CGSize)frameSize;
+-(instancetype) setCameraRotateMode:(BECameraRotateMode)rmode;
+-(instancetype) setBackgroundColor:(UIColor*)color;
+-(instancetype) resizeAllScene:(CGSize)frameSize;
 
 -(void) removeCurrentModel;
 -(void) addModelNamed:(NSString*)modelName;

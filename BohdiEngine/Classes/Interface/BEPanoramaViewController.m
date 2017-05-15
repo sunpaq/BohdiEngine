@@ -21,9 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     bec = [[BEViewController alloc] init];
-    bec.useTransparentBackground = YES;
     bec.useMultisampleAntiAlias  = YES;
-    bec.touchDelegate = self;
     [bec glviewResize:self.view.frame];
 }
 
@@ -35,10 +33,12 @@
     if (textureFileName && textureFileName.length > 0) {
         //have valid sky sphere texture name
         [self presentViewController:bec animated:YES completion:^{
-            bec.cameraRotateMode = BECameraRotateAroundModelByGyroscope;
+            [bec.renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
+            
+            //bec.cameraRotateMode = BECameraRotateAroundModelByGyroscope;
             [bec startDeviceMotion];
-            //bec.useDeltaRotationData = YES;
-            [bec addSkysphNamed:textureFileName];
+            bec.useDeltaRotationData = YES;
+            [bec.renderer addSkysphNamed:textureFileName];
         }];
     }
 }

@@ -33,10 +33,10 @@
 -(IBAction)showPanoramaAction:(id)sender
 {
     bec = [[BEViewController alloc] init];
+    bec.useGyroscope = YES;
     [bec.renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
     [self presentViewController:bec animated:YES completion:^{
         [bec.renderer addSkysphNamed:@"panorama360.jpg"];
-        [bec startDeviceMotion];
     }];
 }
 

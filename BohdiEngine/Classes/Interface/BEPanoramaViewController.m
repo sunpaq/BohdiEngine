@@ -7,86 +7,49 @@
 //
 
 #import "BEPanoramaViewController.h"
+#import <GLKit/GLKit.h>
 
 @interface BEPanoramaViewController ()
 {
-    BEViewController* bec;
+    GLKView* glview;
 }
 @end
 
 @implementation BEPanoramaViewController
 
 @synthesize textureFileName;
+@synthesize renderer;
+@synthesize runloop;
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    bec = [[BEViewController alloc] init];
-    bec.useMultisampleAntiAlias  = YES;
+    
+    glview = [BERenderer createDefaultGLView:self.view.frame];
+    glview.drawableMultisample = GLKViewDrawableMultisample4X;
+    [self.view addSubview:glview];
+    
+    renderer = [[BERenderer alloc] initWithFrame:self.view.frame];
+    [renderer addSkysphNamed:textureFileName];
+
+    runloop = [[BERunLoop alloc] initWithTarget:self Selector:@selector(drawFrame)];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self becomeFirstResponder];
-    
-    if (textureFileName && textureFileName.length > 0) {
-        //have valid sky sphere texture name
-        [self presentViewController:bec animated:YES completion:^{
-            [bec.renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
-            
-            //bec.cameraRotateMode = BECameraRotateAroundModelByGyroscope;
-            [bec startDeviceMotion];
-            bec.useDeltaRotationData = YES;
-            [bec.renderer addSkysphNamed:textureFileName];
-        }];
-    }
-}
-
--(BOOL)canBecomeFirstResponder
-{
-    return YES;
+    [runloop startRunloop];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    if (bec) {
-        [bec dismissViewControllerAnimated:NO completion:nil];
-        bec = nil;
-    }
+    [runloop stopRunloop];
 }
 
--(void)viewDidDisappear:(BOOL)animated
+-(void)drawFrame
 {
-    [self resignFirstResponder];
-    [super viewDidDisappear:animated];
-    if (bec) {
-        [bec dismissViewControllerAnimated:NO completion:nil];
-        bec = nil;
-    }
-}
-
--(void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
-    if (motion == UIEventSubtypeMotionShake) {
-        [self onClose:nil];
-    }
-}
-
--(IBAction)onClose:(id)sender
-{
-    [self viewWillDisappear:NO];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
--(void)onBETouched:(id)sender
-{
-    [self onClose:sender];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [renderer drawFrameOnGLView:glview];
 }
 
 @end

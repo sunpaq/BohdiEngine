@@ -8,12 +8,13 @@
 
 
 #import <UIKit/UIKit.h>
-#import <BohdiEngine/BEViewController.h>
+#import "BERenderer.h"
+#import "BERunLoop.h"
 
 @interface BEPanoramaViewController : UIViewController
 
 @property (atomic, readwrite) NSString* textureFileName;
-
--(IBAction)onClose:(id)sender;
+@property (atomic, readonly) BERenderer* renderer;
+@property (atomic, readonly) BERunLoop* runloop;
 
 @end

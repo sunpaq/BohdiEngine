@@ -14,26 +14,19 @@
 #import <GLKit/GLKit.h>
 #import "BEInterface.h"
 #import "BERenderer.h"
+#import "BEMotionManager.h"
 
 @interface BEViewController : GLKViewController <GLKViewDelegate, UIGestureRecognizerDelegate>
 
 @property (atomic, readwrite) BOOL useMultisampleAntiAlias;
-@property (atomic, readwrite) BOOL useDeltaRotationData;
+@property (atomic, readwrite) BOOL useGyroscope;
 
 @property (atomic, readonly) BERenderer* renderer;
-@property (atomic, strong) UIActivityIndicatorView* indicator;
+@property (atomic, readonly) BEMotionManager* motionManager;
 
-//-(void) glviewResize:(CGRect)frame;
 +(void)willOpenModelNamed:(NSString*)name;
-//motion
--(void)startDeviceMotion;
--(void)stopDeviceMotion;
 
-//Add 'layer' to the end of the receiver's sublayers array. If 'layer'
-//already has a superlayer, it will be removed before being added.
-//-(void)attachGLLayerTo:(CALayer*)superlayer;
-//-(void)detachGLLayer;
+
 @end
-
 
 #endif /* BEViewController_h */

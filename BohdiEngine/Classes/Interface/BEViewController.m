@@ -15,16 +15,16 @@
 @interface BEViewController()
 {
     float pinch_scale;
-    CMAttitude* referenceAtt;
-    CMMotionManager* motionManager;
+    UIActivityIndicatorView* _indicator;
 }
 @end
 
 @implementation BEViewController
 
 @synthesize useMultisampleAntiAlias;
-@synthesize useDeltaRotationData;
+@synthesize useGyroscope;
 @synthesize renderer;
+@synthesize motionManager;
 
 static NSString* filename = nil;
 +(void)willOpenModelNamed:(NSString*)name
@@ -45,14 +45,14 @@ static NSString* filename = nil;
     self.glView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
     self.preferredFramesPerSecond = 60;
     self.glView.delegate = self;
-
-    CGRect frame = self.view.frame;
-    renderer = [[BERenderer alloc] initWithFrame:frame];
-    [renderer setDoesAutoRotateCamera:YES];
     
+    renderer = [[BERenderer alloc] initWithFrame:self.view.frame];
+    [renderer setDoesAutoRotateCamera:NO];
+    [renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
+    self.useGyroscope = YES;
+
+    motionManager = [BEMotionManager shared];
     pinch_scale = 10.0;
-    referenceAtt = nil;
-    motionManager = nil;
 }
 
 -(void)viewDidLayoutSubviews
@@ -68,15 +68,6 @@ static NSString* filename = nil;
         [renderer addModelNamed:filename];
     }
 }
-
--(void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
-    if (motion == UIEventSubtypeMotionShake) {
-        [self onClose:nil];
-    }
-}
-
-#pragma mark - Properties
 
 -(GLKView *)glView
 {
@@ -116,64 +107,16 @@ static NSString* filename = nil;
     }
 }
 
--(void)startDeviceMotion
-{
-    if (!motionManager) {
-        motionManager = [[CMMotionManager alloc] init];
-    }
-    if (!motionManager.isDeviceMotionActive) {
-        motionManager.deviceMotionUpdateInterval = 1.0/60.0;
-        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical];
-    }
-}
-
--(void)stopDeviceMotion
-{
-    [motionManager stopDeviceMotionUpdates];
-}
-
--(void)saveReferenceAtt
-{
-    CMDeviceMotion* m;
-    if ((m=motionManager.deviceMotion)) {
-        referenceAtt = m.attitude;
-    }
-    else {
-        referenceAtt = nil;
-    }
-}
-
--(CMAttitude*)getDeltaAttitude
-{
-    if (!referenceAtt) {
-        [self saveReferenceAtt];
-    }
-    
-    CMDeviceMotion* m;
-    if ((m=motionManager.deviceMotion)) {
-        if (m.attitude && referenceAtt) {
-            if (self.useDeltaRotationData) {
-                [m.attitude multiplyByInverseOfAttitude:referenceAtt];
-            }
-            return m.attitude;
-        }
-    }
-    return nil;
-}
-
 -(void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    CMAttitude* att;
-    if ((att=[self getDeltaAttitude])) {
-        renderer.deviceRotateMat3 = att.rotationMatrix;
+    if (useGyroscope) {
+        CMAttitude* att = nil;
+        if ((att=[motionManager getDeltaAttitude]) != nil) {
+            renderer.deviceRotateMat3 = att.rotationMatrix;
+        }
     }
     [renderer drawFrame];
 }
-
-//-(void) glviewResize:(CGRect)frame
-//{
-//    [renderer resizeAllScene:self.view.frame.size];
-//}
 
 -(void) startLoadingAnimation
 {
@@ -194,22 +137,5 @@ static NSString* filename = nil;
         }
     });
 }
-
--(void)onClose:(id)sender
-{
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
-}
-
-//-(void)attachGLLayerTo:(CALayer*)superlayer
-//{
-//    [superlayer addSublayer:self.glView.layer];
-//}
-//
-//-(void)detachGLLayer
-//{
-//    [self.glView.layer removeFromSuperlayer];
-//}
 
 @end

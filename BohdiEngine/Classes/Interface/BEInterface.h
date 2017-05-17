@@ -12,9 +12,7 @@
 typedef enum {
     BECameraFixedAtOrigin = 0,
     BECameraRotateAroundModelManual,
-    BECameraRotateAroundModelByGyroscope,
-    BECameraRotateAR,
-    BECameraRotateARWall
+    BECameraRotateAroundModelByGyroscope
 } BECameraRotateMode;
 
 void BETeardownGL();

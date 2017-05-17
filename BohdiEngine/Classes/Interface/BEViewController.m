@@ -47,9 +47,9 @@ static NSString* filename = nil;
     self.glView.delegate = self;
     
     renderer = [[BERenderer alloc] initWithFrame:self.view.frame];
-    [renderer setDoesAutoRotateCamera:NO];
-    [renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
-    self.useGyroscope = YES;
+    [renderer setDoesAutoRotateCamera:YES];
+    //[renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
+    //self.useGyroscope = YES;
 
     motionManager = [BEMotionManager shared];
     pinch_scale = 10.0;

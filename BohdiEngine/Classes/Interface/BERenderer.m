@@ -310,6 +310,36 @@
     }
 }
 
+-(void) cameraTransformWorld:(float*)mat4
+{
+    if (!director) return;
+    MCCamera* cam = computed(director, cameraHandler);
+    if (cam) {
+        MCMatrix4 m4 = (MCMatrix4) {
+            mat4[0], mat4[1], mat4[2], mat4[3],
+            mat4[4], mat4[5], mat4[6], mat4[7],
+            mat4[8], mat4[9], mat4[10], mat4[11],
+            mat4[12], mat4[13], mat4[14], mat4[15]
+        };
+        MCCamera_transformWorld(0, cam, &m4);
+    }
+}
+
+-(void) cameraTransformSelf:(float*)mat4
+{
+    if (!director) return;
+    MCCamera* cam = computed(director, cameraHandler);
+    if (cam) {
+        MCMatrix4 m4 = (MCMatrix4) {
+            mat4[0], mat4[1], mat4[2], mat4[3],
+            mat4[4], mat4[5], mat4[6], mat4[7],
+            mat4[8], mat4[9], mat4[10], mat4[11],
+            mat4[12], mat4[13], mat4[14], mat4[15]
+        };
+        MCCamera_transformSelf(0, cam, &m4);
+    }
+}
+
 -(void) lightReset:(GLKVector3*)pos
 {
     if (!director) return;

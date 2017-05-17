@@ -17,6 +17,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [BEViewController willOpenModelNamed:@"monkey2.obj"];
+    
+    [self.renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];
+    [self.motionManager startDeviceMotion];
 }
 
 - (IBAction)onClose:(id)sender {

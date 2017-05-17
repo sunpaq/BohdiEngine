@@ -32,6 +32,8 @@
 
 -(IBAction)showPanoramaAction:(id)sender
 {
+    [BEViewController willOpenModelNamed:nil];
+    
     bec = [[BEViewController alloc] init];
     bec.useGyroscope = YES;
     [bec.renderer setCameraRotateMode:BECameraRotateAroundModelByGyroscope];

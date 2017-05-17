@@ -49,6 +49,15 @@
 -(void) cameraAspectRatioReset:(float)aspectRatio;
 -(void) cameraFOVReset:(float)fov;
 
+-(void) cameraTransformWorld:(float*)mat4;
+-(void) cameraTransformSelf:(float*)mat4;
+
+/*
+method(MCCamera, void, transformWorld, MCMatrix3* rotation, MCVector3* translation);
+method(MCCamera, void, transformSelf, MCMatrix3* rotation, MCVector3* translation);
+method(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht);
+*/
+
 //light pos follow camera if pos is null
 -(void) lightReset:(GLKVector3*)pos;
 

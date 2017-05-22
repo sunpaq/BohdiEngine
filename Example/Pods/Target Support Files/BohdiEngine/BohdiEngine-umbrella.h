@@ -45,6 +45,7 @@
 #import "BEPanoramaViewController.h"
 #import "BERenderer.h"
 #import "BERunLoop.h"
+#import "BEView.h"
 #import "BEViewController.h"
 #import "MCArray.h"
 #import "MCArrayLinkedList.h"

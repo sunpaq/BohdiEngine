@@ -10,7 +10,13 @@
 #import <CoreMotion/CoreMotion.h>
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
-#import "BEInterface.h"
+
+typedef enum {
+    BECameraFixedAtOrigin = 0,
+    BECameraRotateAroundModelManual,
+    BECameraRotateAroundModelByGyroscope,
+    BECameraRotateAroundModelByGyroscopeReverse
+} BECameraRotateMode;
 
 @interface BERenderer : NSObject
 
@@ -52,12 +58,6 @@
 
 -(void) cameraTransformWorld:(float*)mat4;
 -(void) cameraTransformSelf:(float*)mat4;
-
-/*
-method(MCCamera, void, transformWorld, MCMatrix3* rotation, MCVector3* translation);
-method(MCCamera, void, transformSelf, MCMatrix3* rotation, MCVector3* translation);
-method(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht);
-*/
 
 //light pos follow camera if pos is null
 -(void) lightReset:(GLKVector3*)pos;

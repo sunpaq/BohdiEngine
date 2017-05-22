@@ -9,13 +9,6 @@
 #ifndef BEMainLoop_h
 #define BEMainLoop_h
 
-typedef enum {
-    BECameraFixedAtOrigin = 0,
-    BECameraRotateAroundModelManual,
-    BECameraRotateAroundModelByGyroscope,
-    BECameraRotateAroundModelByGyroscopeReverse
-} BECameraRotateMode;
-
 void BETeardownGL();
 void BESetupGL(unsigned width, unsigned height);
 void BEResizeGL(unsigned width, unsigned height);

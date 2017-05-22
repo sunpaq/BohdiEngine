@@ -10,19 +10,19 @@
 #import <GLKit/GLKit.h>
 #import "BERenderer.h"
 #import "BERunLoop.h"
+#import "BEMotionManager.h"
 
 @interface BEView : UIView
 
+@property (atomic, readonly) BEMotionManager* motion;
 @property (atomic, readonly) BERenderer* renderer;
 @property (atomic, readonly) BERunLoop* runloop;
 @property (atomic, readonly) GLKView* glview;
 
-- (instancetype)initWithFrame:(CGRect)frame;
-
 - (void) loadModelNamed:(NSString*)name;
 - (void) loadSkysphNamed:(NSString*)texname;
 
-- (void) startDraw3DContent;
+- (void) startDraw3DContent:(BECameraRotateMode)rmode;
 - (void) stopDraw3DContent;
 
 @end

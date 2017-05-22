@@ -10,6 +10,7 @@
 
 @implementation BEView
 
+@synthesize motion;
 @synthesize renderer;
 @synthesize runloop;
 @synthesize glview;
@@ -36,16 +37,30 @@
 {
     //view
     glview = [BERenderer createDefaultGLView:frame];
-    [self addSubview:glview];
+    if ([self.subviews count] <= 0) {
+        [self addSubview:glview];
+    } else {
+        UIView* view = [self.subviews objectAtIndex:0];
+        if (view) {
+            [self insertSubview:glview belowSubview:view];
+        }
+    }
     //renderer
     renderer = [[BERenderer alloc] initWithFrame:frame];
     //runloop
     runloop = [[BERunLoop alloc] initWithTarget:self Selector:@selector(drawFrame)];
-    
+    //device motion
+    motion = nil;
 }
 
 - (void)drawFrame
 {
+    if (motion) {
+        CMAttitude* att = nil;
+        if ((att=[motion getDeltaAttitude]) != nil) {
+            renderer.deviceRotateMat3 = att.rotationMatrix;
+        }
+    }
     [renderer drawFrameOnGLView:glview];
 }
 
@@ -59,8 +74,14 @@
     [renderer addSkysphNamed:texname];
 }
 
-- (void) startDraw3DContent
+- (void) startDraw3DContent:(BECameraRotateMode)rmode
 {
+    if (rmode == BECameraRotateAroundModelByGyroscope
+        || rmode == BECameraRotateAroundModelByGyroscopeReverse) {
+        motion = [BEMotionManager shared];
+        [motion startDeviceMotion];
+    }
+    [renderer setCameraRotateMode:rmode];
     [runloop startRunloop];
 }
 

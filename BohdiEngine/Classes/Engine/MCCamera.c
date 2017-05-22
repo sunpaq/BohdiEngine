@@ -78,8 +78,29 @@ compute(MCMatrix3, normal)
 compute(MCMatrix4, viewMatrix)
 {
     as(MCCamera);
+    double r = cpt(Radius);
     if (obj->rotateMode == MCCameraRotateAroundModelManual) {
         MCCamera_transformSelfByEularAngle(0, obj, obj->lookat, cpt(Radius), obj->fai, obj->tht);
+    }
+    else if (obj->rotateMode == MCCameraRotateAroundModelByGyroscope) {
+        sobj->transform = MCMatrix4MakeLookAt(0, 0, r, 0, 0, 0, 0, 1, 0);
+        //update
+        obj->eye = MCGetEyeFromRotationMat4(sobj->viewtrans, r);
+        obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(sobj->transform));
+        obj->R_percent = 1.0;
+    }
+    else if (obj->rotateMode == MCCameraRotateAroundModelByGyroscopeReverse) {
+        sobj->transform = MCMatrix4MakeLookAt(0, 0, r, 0, 0, 0, 0, 1, 0);
+        sobj->viewtrans = MCMatrix4Invert(sobj->viewtrans, null);
+        //update
+        obj->eye = MCGetEyeFromRotationMat4(sobj->viewtrans, r);
+        obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(sobj->transform));
+        obj->R_percent = 1.0;
+    }
+    //default is MCCameraFixedAtOrigin
+    else {
+        sobj->transform = MCMatrix4Identity;
+        sobj->viewtrans = MCMatrix4Identity;
     }
     return MCMatrix4Multiply(sobj->transform, sobj->viewtrans);
     
@@ -222,14 +243,13 @@ method(MCCamera, void, distanceScale, MCFloat scale)
 
 method(MCCamera, void, setRotationMat3, float mat3[9])
 {
-    MC3DNode_rotateMat3(0, sobj, mat3, false);
     MCMatrix4 m4 = (MCMatrix4) {
         mat3[0], mat3[1], mat3[2], 0,
         mat3[3], mat3[4], mat3[5], 0,
         mat3[6], mat3[7], mat3[8], 0,
         0, 0, 0, 1
     };
-    MCCamera_transformWorld(0, obj, &m4);
+    sobj->viewtrans = m4;
 }
 
 onload(MCCamera)

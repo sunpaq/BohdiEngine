@@ -91,7 +91,8 @@ method(MCDirector, void, bye, voida)
 method(MCDirector, void, updateAll, voida)
 {
     if (obj && var(lastScene) != null && var(pause) == false) {
-        if (cpt(cameraHandler)->rotateMode == MCCameraRotateAroundModelByGyroscope) {
+        if (cpt(cameraHandler)->rotateMode == MCCameraRotateAroundModelByGyroscope
+            || cpt(cameraHandler)->rotateMode == MCCameraRotateAroundModelByGyroscopeReverse) {
             MC3DScene_setRotationMat3(0, var(lastScene), obj->deviceRotationMat3.m);
         }
         if (var(lightFollowCamera) && cpt(lightHandler) && cpt(cameraHandler)) {

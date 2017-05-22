@@ -8,7 +8,8 @@
 typedef enum {
     MCCameraFixedAtOrigin = 0,
     MCCameraRotateAroundModelManual,
-    MCCameraRotateAroundModelByGyroscope
+    MCCameraRotateAroundModelByGyroscope,
+    MCCameraRotateAroundModelByGyroscopeReverse
 } MCCameraRotateMode;
 
 class(MCCamera, MC3DNode,

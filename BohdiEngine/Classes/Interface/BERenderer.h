@@ -27,6 +27,7 @@
 -(instancetype) setCameraRotateMode:(BECameraRotateMode)rmode;
 -(instancetype) setBackgroundColor:(UIColor*)color;
 -(instancetype) resizeAllScene:(CGSize)frameSize;
+-(instancetype) scissorAllScene:(CGRect)frame;
 
 -(void) removeCurrentModel;
 -(void) addModelNamed:(NSString*)modelName;

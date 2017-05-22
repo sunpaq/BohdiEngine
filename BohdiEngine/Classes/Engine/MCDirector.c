@@ -179,6 +179,14 @@ method(MCDirector, void, resizeAllScene, int width, int height)
     var(currentHeight) = height;
 }
 
+method(MCDirector, void, scissorAllScene, int x, int y, int width, int height)
+{
+    MCGLEngine_setViewport(x, y, width, height);
+    MCGLEngine_setScissor(x, y, width, height);
+    //call resize scene
+    MCDirector_resizeAllScene(0, obj, width, height);
+}
+
 method(MCDirector, void, addNode, MC3DNode* node)
 {
     if(node && obj->lastScene && obj->lastScene->rootnode) {
@@ -336,6 +344,7 @@ onload(MCDirector)
         binding(MCDirector, void, pushScene, MC3DScene* scene);
         binding(MCDirector, void, popScene, voida);
         binding(MCDirector, void, resizeAllScene, int width, int height);
+        binding(MCDirector, void, scissorAllScene, int x, int y, int width, int height);
         binding(MCDirector, void, addNode, MC3DNode* node);
         binding(MCDirector, void, addModel, MC3DModel* model, int maxsize);
         binding(MCDirector, void, addModelAtIndex, MC3DModel* model, MCFloat maxsize, int index);

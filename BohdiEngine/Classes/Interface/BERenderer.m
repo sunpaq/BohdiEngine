@@ -171,6 +171,15 @@
     return self;
 }
 
+-(instancetype) scissorAllScene:(CGRect)frame
+{
+    if (director) {
+        MCDirector_scissorAllScene(0, director, (int)frame.origin.x, (int)frame.origin.y,
+                                   (int)frame.size.width, (int)frame.size.height);
+    }
+    return self;
+}
+
 -(void) removeCurrentModel
 {
     ff(director, removeCurrentModel, 0);

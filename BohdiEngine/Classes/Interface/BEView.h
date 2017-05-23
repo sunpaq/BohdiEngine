@@ -25,4 +25,6 @@
 - (void) startDraw3DContent:(BECameraRotateMode)rmode;
 - (void) stopDraw3DContent;
 
+- (void) scaleToFullscreen;
+
 @end

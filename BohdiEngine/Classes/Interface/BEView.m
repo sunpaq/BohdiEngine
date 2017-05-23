@@ -90,4 +90,12 @@
     [runloop stopRunloop];
 }
 
+- (void) scaleToFullscreen
+{
+    CGRect screenFrame = [[UIScreen mainScreen] bounds];
+    self.frame = screenFrame;
+    self.glview.frame = screenFrame;
+    [renderer resizeAllScene:screenFrame.size];
+}
+
 @end

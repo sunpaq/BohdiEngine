@@ -11,7 +11,6 @@
 @interface BEPanoramaView : BEView
 
 - (void) loadPanoramaTexture:(NSString*)texname;
-
 - (void) startDraw;
 - (void) stopDraw;
 

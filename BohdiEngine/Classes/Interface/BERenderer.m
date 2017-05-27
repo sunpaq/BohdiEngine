@@ -113,8 +113,8 @@
     glview.enableSetNeedsDisplay = YES;
     glview.opaque = NO;
     
-    glview.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
-    glview.drawableDepthFormat = GLKViewDrawableDepthFormat16;
+    glview.drawableColorFormat   = GLKViewDrawableColorFormatRGBA8888;
+    glview.drawableDepthFormat   = GLKViewDrawableDepthFormat16;
     glview.drawableStencilFormat = GLKViewDrawableStencilFormat8;
     
     return glview;
@@ -126,7 +126,8 @@
         pinch_scale = 10.0;
         director = new(MCDirector);
         CGFloat scale = [UIScreen mainScreen].scale;
-        MCDirector_setupMainScene(0, director, frame.size.width * scale,
+        MCDirector_setupMainScene(0, director,
+                                  frame.size.width * scale,
                                   frame.size.height * scale);
         
         computed(director, cameraHandler)->rotateMode = MCCameraRotateAroundModelManual;
@@ -319,32 +320,22 @@
     }
 }
 
--(void) cameraTransformWorld:(float*)mat4
+-(void) cameraTransformWorld:(GLKMatrix4)mat4
 {
     if (!director) return;
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
-        MCMatrix4 m4 = (MCMatrix4) {
-            mat4[0], mat4[1], mat4[2], mat4[3],
-            mat4[4], mat4[5], mat4[6], mat4[7],
-            mat4[8], mat4[9], mat4[10], mat4[11],
-            mat4[12], mat4[13], mat4[14], mat4[15]
-        };
+        MCMatrix4 m4 = MCMatrix4Make(mat4.m);
         MCCamera_transformWorld(0, cam, &m4);
     }
 }
 
--(void) cameraTransformSelf:(float*)mat4
+-(void) cameraTransformSelf:(GLKMatrix4)mat4
 {
     if (!director) return;
     MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
-        MCMatrix4 m4 = (MCMatrix4) {
-            mat4[0], mat4[1], mat4[2], mat4[3],
-            mat4[4], mat4[5], mat4[6], mat4[7],
-            mat4[8], mat4[9], mat4[10], mat4[11],
-            mat4[12], mat4[13], mat4[14], mat4[15]
-        };
+        MCMatrix4 m4 = MCMatrix4Make(mat4.m);
         MCCamera_transformSelf(0, cam, &m4);
     }
 }
@@ -362,7 +353,7 @@
     }
 }
 
--(void) handlePanGesture:(CGPoint)offset
+-(void) rotateModelByPanGesture:(CGPoint)offset
 {
     float x = offset.x;
     float y = offset.y;
@@ -370,7 +361,12 @@
     computed(director, cameraHandler)->fai += -(x/9.0);
 }
 
--(void) handlePinchGesture:(float)scale
+-(void) rotateSkysphByPanGesture:(CGPoint)offset
+{
+    
+}
+
+-(void) zoomModelByPinchGesture:(float)scale
 {
     pinch_scale *= scale;
     pinch_scale = MAX(10.0, MIN(pinch_scale, 100.0));

@@ -19,7 +19,7 @@
 
 -(void)stopDeviceMotion;
 
--(void)saveReferenceAtt;
+-(void)resetAttitude;
 
 -(CMAttitude*)getDeltaAttitude;
 

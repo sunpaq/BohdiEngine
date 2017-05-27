@@ -56,14 +56,15 @@ typedef enum {
 -(void) cameraAspectRatioReset:(float)aspectRatio;
 -(void) cameraFOVReset:(float)fov;
 
--(void) cameraTransformWorld:(float*)mat4;
--(void) cameraTransformSelf:(float*)mat4;
+-(void) cameraTransformWorld:(GLKMatrix4)mat4;
+-(void) cameraTransformSelf:(GLKMatrix4)mat4;
 
 //light pos follow camera if pos is null
 -(void) lightReset:(GLKVector3*)pos;
 
--(void) handlePanGesture:(CGPoint)offset;
--(void) handlePinchGesture:(float)scale;
+-(void) rotateModelByPanGesture:(CGPoint)offset;
+-(void) rotateSkysphByPanGesture:(CGPoint)offset;
+-(void) zoomModelByPinchGesture:(float)scale;
 
 -(void) updateModelTag:(int)tag PoseMat4D:(double*)mat4;
 -(void) updateModelTag:(int)tag PoseMat4F:(float*)mat4;

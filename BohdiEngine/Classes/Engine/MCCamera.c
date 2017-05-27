@@ -97,10 +97,13 @@ compute(MCMatrix4, viewMatrix)
         obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(sobj->transform));
         obj->R_percent = 1.0;
     }
-    //default is MCCameraFixedAtOrigin
-    else {
+    else if (obj->rotateMode == MCCameraFixedAtOrigin) {
         sobj->transform = MCMatrix4Identity;
         sobj->viewtrans = MCMatrix4Identity;
+    }
+    //default
+    else {
+        //do nothing
     }
     return MCMatrix4Multiply(sobj->transform, sobj->viewtrans);
     

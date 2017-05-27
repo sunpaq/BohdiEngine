@@ -48,7 +48,7 @@ static BEMotionManager* _instance = nil;
     [motionManager stopDeviceMotionUpdates];
 }
 
--(void)saveReferenceAtt
+-(void)resetAttitude
 {
     CMDeviceMotion* m;
     if ((m=motionManager.deviceMotion)) {
@@ -62,7 +62,7 @@ static BEMotionManager* _instance = nil;
 -(CMAttitude*)getDeltaAttitude
 {
     if (!referenceAtt) {
-        [self saveReferenceAtt];
+        [self resetAttitude];
     }
     
     CMDeviceMotion* m;

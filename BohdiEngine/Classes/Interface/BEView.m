@@ -90,12 +90,16 @@
     [runloop stopRunloop];
 }
 
-- (void) scaleToFullscreen
+- (void) resetAttitude
 {
-    CGRect screenFrame = [[UIScreen mainScreen] bounds];
-    self.frame = screenFrame;
-    self.glview.frame = screenFrame;
-    [renderer resizeAllScene:screenFrame.size];
+    [self.motion resetAttitude];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    glview.frame = self.bounds;
+    [renderer resizeAllScene:self.bounds.size];
 }
 
 @end

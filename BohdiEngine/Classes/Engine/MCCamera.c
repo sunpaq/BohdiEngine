@@ -117,10 +117,12 @@ compute(MCMatrix4, projectionMatrix)
 compute(MCVector3, currentPosition)
 {
     as(MCCamera);
-    double r = cpt(Radius);
-    obj->eye = MCGetEyeFromRotationMat4(sobj->viewtrans, r);
-    obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(sobj->transform));
-    obj->R_percent = 1.0;
+    if (obj->rotateMode != MCCameraRotateAroundModelManual) {
+        double r = cpt(Radius);
+        obj->eye = MCGetEyeFromRotationMat4(sobj->viewtrans, r);
+        obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(sobj->transform));
+        obj->R_percent = 1.0;
+    }
     return obj->eye;
 }
 

@@ -21,7 +21,7 @@
 		7C4420D4B4A923ABC449CBDA /* Pods_BohdiEngine_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4416715513C856A37ED2678 /* Pods_BohdiEngine_Tests.framework */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		90D4A051FC6EB62425584AF3 /* Pods_BohdiEngine_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99CB28099C8C68ECB6210E0E /* Pods_BohdiEngine_Example.framework */; };
-		F870A5581E6FA3B3009B7175 /* LandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F870A5571E6FA3B3009B7175 /* LandingViewController.m */; };
+		F82D42351EDE8EF4000A4592 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D42341EDE8EF4000A4592 /* MainViewController.swift */; };
 		F870A5631E6FE247009B7175 /* back.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55B1E6FE247009B7175 /* back.jpg */; };
 		F870A5641E6FE247009B7175 /* bottom.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55C1E6FE247009B7175 /* bottom.jpg */; };
 		F870A5651E6FE247009B7175 /* front.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A55D1E6FE247009B7175 /* front.jpg */; };
@@ -30,7 +30,6 @@
 		F870A5681E6FE247009B7175 /* top.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A5601E6FE247009B7175 /* top.jpg */; };
 		F870A5691E6FE247009B7175 /* panorama360.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F870A5621E6FE247009B7175 /* panorama360.jpg */; };
 		F8E688481E5D851300D6E869 /* monkey2.obj in Resources */ = {isa = PBXBuildFile; fileRef = F8E688461E5D851300D6E869 /* monkey2.obj */; };
-		FD59A2A61ECA0BA1002495A2 /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD59A2A51ECA0BA1002495A2 /* GLViewController.m */; };
 		FD737A2A1E2B6C90000ED551 /* beengine.mtl in Resources */ = {isa = PBXBuildFile; fileRef = FD737A281E2B6C90000ED551 /* beengine.mtl */; };
 /* End PBXBuildFile section */
 
@@ -70,8 +69,8 @@
 		B29F3398775A4115559DCFA9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		F4416715513C856A37ED2678 /* Pods_BohdiEngine_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BohdiEngine_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44D3773801779395462E915 /* Pods-BohdiEngine_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BohdiEngine_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BohdiEngine_Example/Pods-BohdiEngine_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		F870A5571E6FA3B3009B7175 /* LandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LandingViewController.m; sourceTree = "<group>"; };
-		F870A5591E6FA3C7009B7175 /* LandingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LandingViewController.h; sourceTree = "<group>"; };
+		F82D42331EDE8EF4000A4592 /* BohdiEngine_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BohdiEngine_Example-Bridging-Header.h"; sourceTree = "<group>"; };
+		F82D42341EDE8EF4000A4592 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		F870A55B1E6FE247009B7175 /* back.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = back.jpg; sourceTree = "<group>"; };
 		F870A55C1E6FE247009B7175 /* bottom.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bottom.jpg; sourceTree = "<group>"; };
 		F870A55D1E6FE247009B7175 /* front.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = front.jpg; sourceTree = "<group>"; };
@@ -81,8 +80,6 @@
 		F870A5621E6FE247009B7175 /* panorama360.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = panorama360.jpg; sourceTree = "<group>"; };
 		F8E688461E5D851300D6E869 /* monkey2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey2.obj; sourceTree = "<group>"; };
 		FCF04D989F31C672C28B0EC4 /* BohdiEngine.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BohdiEngine.podspec; path = ../BohdiEngine.podspec; sourceTree = "<group>"; };
-		FD59A2A41ECA0BA1002495A2 /* GLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLViewController.h; sourceTree = "<group>"; };
-		FD59A2A51ECA0BA1002495A2 /* GLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLViewController.m; sourceTree = "<group>"; };
 		FD737A281E2B6C90000ED551 /* beengine.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = beengine.mtl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -147,12 +144,9 @@
 		6003F593195388D20070C39A /* Example for BohdiEngine */ = {
 			isa = PBXGroup;
 			children = (
+				F82D42341EDE8EF4000A4592 /* MainViewController.swift */,
 				6003F59C195388D20070C39A /* BEAppDelegate.h */,
 				6003F59D195388D20070C39A /* BEAppDelegate.m */,
-				F870A5591E6FA3C7009B7175 /* LandingViewController.h */,
-				F870A5571E6FA3B3009B7175 /* LandingViewController.m */,
-				FD59A2A41ECA0BA1002495A2 /* GLViewController.h */,
-				FD59A2A51ECA0BA1002495A2 /* GLViewController.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				FD737A261E2B6C6E000ED551 /* Resources */,
@@ -165,6 +159,7 @@
 		6003F594195388D20070C39A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F82D42331EDE8EF4000A4592 /* BohdiEngine_Example-Bridging-Header.h */,
 				6003F595195388D20070C39A /* BohdiEngine-Info.plist */,
 				6003F596195388D20070C39A /* InfoPlist.strings */,
 				6003F599195388D20070C39A /* main.m */,
@@ -301,6 +296,7 @@
 				TargetAttributes = {
 					6003F589195388D20070C39A = {
 						DevelopmentTeam = R7BTEXA73U;
+						LastSwiftMigration = 0830;
 					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
@@ -454,10 +450,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F82D42351EDE8EF4000A4592 /* MainViewController.swift in Sources */,
 				6003F59E195388D20070C39A /* BEAppDelegate.m in Sources */,
-				F870A5581E6FA3B3009B7175 /* LandingViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
-				FD59A2A61ECA0BA1002495A2 /* GLViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,14 +583,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = R7BTEXA73U;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BohdiEngine/BohdiEngine-Prefix.pch";
 				INFOPLIST_FILE = "BohdiEngine/BohdiEngine-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "BohdiEngine/BohdiEngine_Example-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -606,14 +606,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = R7BTEXA73U;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BohdiEngine/BohdiEngine-Prefix.pch";
 				INFOPLIST_FILE = "BohdiEngine/BohdiEngine-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "BohdiEngine/BohdiEngine_Example-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -622,6 +626,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 006E5D12A1884F68472C7A1A /* Pods-BohdiEngine_Tests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";
@@ -641,6 +646,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0939384BC5D1FA76FE1688C8 /* Pods-BohdiEngine_Tests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";

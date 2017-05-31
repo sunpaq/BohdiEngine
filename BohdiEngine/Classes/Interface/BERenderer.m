@@ -366,7 +366,7 @@
     
 }
 
--(void) zoomModelByPinchGesture:(float)scale
+-(void) zoomModelByPinchGesture:(CGFloat)scale
 {
     pinch_scale *= scale;
     pinch_scale = MAX(10.0, MIN(pinch_scale, 100.0));

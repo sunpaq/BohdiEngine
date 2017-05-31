@@ -64,7 +64,7 @@ typedef enum {
 
 -(void) rotateModelByPanGesture:(CGPoint)offset;
 -(void) rotateSkysphByPanGesture:(CGPoint)offset;
--(void) zoomModelByPinchGesture:(float)scale;
+-(void) zoomModelByPinchGesture:(CGFloat)scale;
 
 -(void) updateModelTag:(int)tag PoseMat4D:(double*)mat4;
 -(void) updateModelTag:(int)tag PoseMat4F:(float*)mat4;

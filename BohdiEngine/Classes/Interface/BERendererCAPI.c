@@ -6,7 +6,7 @@
 //  Copyright © 2017 SODEC. All rights reserved.
 //
 
-#import "BEInterface.h"
+#import "BERendererCAPI.h"
 #import "MCDirector.h"
 #import "MCGLEngine.h"
 

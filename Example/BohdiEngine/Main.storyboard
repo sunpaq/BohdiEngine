@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ByM-Bs-JUI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="a6C-bk-eUg">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,45 +9,54 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Landing View Controller-->
-        <scene sceneID="xCk-Bh-U5Q">
+        <!--Main View Controller-->
+        <scene sceneID="5J8-uA-jFP">
             <objects>
-                <viewController id="ByM-Bs-JUI" customClass="LandingViewController" sceneMemberID="viewController">
+                <viewController id="a6C-bk-eUg" customClass="MainViewController" customModule="BohdiEngine_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="RD2-5M-yg0"/>
-                        <viewControllerLayoutGuide type="bottom" id="Yof-Iu-ubI"/>
+                        <viewControllerLayoutGuide type="top" id="f4S-im-Pbw"/>
+                        <viewControllerLayoutGuide type="bottom" id="CZL-z4-HXy"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="V87-Ke-SeE">
+                    <view key="view" contentMode="scaleToFill" id="zlV-xi-CkU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kLC-q0-MCF">
-                                <rect key="frame" x="115" y="379" width="144" height="30"/>
-                                <state key="normal" title="show panorama view"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5zl-Lz-xnN" customClass="BEView">
+                                <rect key="frame" x="16" y="52" width="343" height="247"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                                 <connections>
-                                    <action selector="showPanoramaAction:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="15N-37-L9N"/>
+                                    <outletCollection property="gestureRecognizers" destination="2R7-qX-IdK" appends="YES" id="m8u-DO-WlU"/>
+                                    <outletCollection property="gestureRecognizers" destination="pj5-oi-1Af" appends="YES" id="Q2D-Yk-4kZ"/>
                                 </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iSP-Kj-X4Z">
-                                <rect key="frame" x="146" y="225" width="83" height="30"/>
-                                <state key="normal" title="show model"/>
-                                <connections>
-                                    <action selector="showModelAction:" destination="ByM-Bs-JUI" eventType="touchUpInside" id="Hmd-yM-XBk"/>
-                                </connections>
-                            </button>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BP2-o6-X9g" customClass="BEPanoramaView">
+                                <rect key="frame" x="16" y="384" width="347" height="263"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="iSP-Kj-X4Z" firstAttribute="top" secondItem="RD2-5M-yg0" secondAttribute="bottom" constant="205" id="Kww-LC-OnP"/>
-                            <constraint firstItem="Yof-Iu-ubI" firstAttribute="top" secondItem="kLC-q0-MCF" secondAttribute="bottom" constant="258" id="VdC-jB-1oY"/>
-                            <constraint firstItem="kLC-q0-MCF" firstAttribute="centerX" secondItem="V87-Ke-SeE" secondAttribute="centerX" id="dtf-a9-A0k"/>
-                            <constraint firstItem="iSP-Kj-X4Z" firstAttribute="centerX" secondItem="V87-Ke-SeE" secondAttribute="centerX" id="iJv-8e-1dS"/>
-                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="beview" destination="5zl-Lz-xnN" id="1x5-cU-Jhf"/>
+                        <outlet property="panoview" destination="BP2-o6-X9g" id="n6N-Ue-0Cu"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="rqB-4e-CYI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MqJ-Ru-B5o" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="2R7-qX-IdK">
+                    <connections>
+                        <action selector="panAction:" destination="a6C-bk-eUg" id="E5O-O8-43g"/>
+                    </connections>
+                </panGestureRecognizer>
+                <pinchGestureRecognizer id="pj5-oi-1Af">
+                    <connections>
+                        <action selector="pinchAction:" destination="a6C-bk-eUg" id="Mtn-x8-Nce"/>
+                    </connections>
+                </pinchGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-439" y="429"/>
+            <point key="canvasLocation" x="-1111.2" y="439.43028485757122"/>
         </scene>
     </scenes>
 </document>

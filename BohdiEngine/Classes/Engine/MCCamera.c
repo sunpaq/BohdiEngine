@@ -27,7 +27,6 @@ oninit(MCCamera)
         
         var(Radius) = Radius;
         var(normal) = normal;
-        //var(modelViewMatrix) = modelViewMatrix;
         var(viewMatrix) = viewMatrix;
         var(projectionMatrix) = projectionMatrix;
         var(currentPosition) = currentPosition;
@@ -84,18 +83,10 @@ compute(MCMatrix4, viewMatrix)
     }
     else if (obj->rotateMode == MCCameraRotateAroundModelByGyroscope) {
         sobj->transform = MCMatrix4MakeLookAt(0, 0, r, 0, 0, 0, 0, 1, 0);
-        //update
-        obj->eye = MCGetEyeFromRotationMat4(sobj->viewtrans, r);
-        obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(sobj->transform));
-        obj->R_percent = 1.0;
     }
     else if (obj->rotateMode == MCCameraRotateAroundModelByGyroscopeReverse) {
         sobj->transform = MCMatrix4MakeLookAt(0, 0, r, 0, 0, 0, 0, 1, 0);
         sobj->viewtrans = MCMatrix4Invert(sobj->viewtrans, null);
-        //update
-        obj->eye = MCGetEyeFromRotationMat4(sobj->viewtrans, r);
-        obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(sobj->transform));
-        obj->R_percent = 1.0;
     }
     else if (obj->rotateMode == MCCameraFixedAtOrigin) {
         sobj->transform = MCMatrix4Identity;
@@ -105,38 +96,8 @@ compute(MCMatrix4, viewMatrix)
     else {
         //do nothing
     }
-    return MCMatrix4Multiply(sobj->transform, sobj->viewtrans);
-    
-    /*
-    double r = cpt(Radius);
-    
-    if (obj->rotateMode == MCCameraFixedAtOrigin) {
-        obj->eye = MCVector3Make(0, 0, 0);
-        sobj->transform = MCMatrix4Identity;
-        return sobj->transform;
-    }
-    else if (obj->rotateMode == MCCameraRotateAroundModelByGyroscope) {
-        MCMatrix4 R  = sobj->transform;
-        MCMatrix4 Ri = MCMatrix4Invert(R, null);
-        MCMatrix4 world = Ri;
-        MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, r,
-                                          0, 0, 0,
-                                          0, 1, 0);
-        
-        //update
-        obj->eye = MCGetEyeFromRotationMat4(world, r);
-        obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(R));
-        obj->R_percent = 1.0;
-        
-        return MCMatrix4Multiply(m, world);
-    }
-    //default is MCCameraRotateAroundModelManual
-    else {
-        return MCMatrix4MakeLookAtByEulerAngle_EyeUp(obj->lookat, cpt(Radius),
-                                                     obj->fai, obj->tht,
-                                                     &obj->eye, &obj->up);
-    }
-    */
+    MCMatrix4 view = MCMatrix4Multiply(sobj->transform, sobj->viewtrans);
+    return view;
 }
 
 compute(MCMatrix4, projectionMatrix)
@@ -156,6 +117,10 @@ compute(MCMatrix4, projectionMatrix)
 compute(MCVector3, currentPosition)
 {
     as(MCCamera);
+    double r = cpt(Radius);
+    obj->eye = MCGetEyeFromRotationMat4(sobj->viewtrans, r);
+    obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(sobj->transform));
+    obj->R_percent = 1.0;
     return obj->eye;
 }
 

@@ -25,7 +25,7 @@ static BEMotionManager* _instance = nil;
 {
     if (_instance == nil) {
         _instance = [[BEMotionManager alloc] init];
-        _instance.useDeltaRotationData = YES;
+        _instance.useDeltaRotationData = NO;
         _instance->referenceAtt = nil;
         _instance->motionManager = nil;
     }

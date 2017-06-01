@@ -8,10 +8,11 @@
 
 #import "BEModelCache.h"
 #import "MC3DModel.h"
+#import "MC3DModelCache.h"
 
 @interface BEModelCache ()
 {
-    NSMutableDictionary* models;
+    MC3DModelCache* cache;
 }
 @end
 
@@ -23,14 +24,17 @@ static BEModelCache* _instance = NULL;
 {
     if (!_instance) {
         _instance = [[BEModelCache alloc] init];
-        _instance->models = [[NSMutableDictionary alloc] init];
+        _instance->cache = MC3DModelCache_shared(0);
     }
     return _instance;
 }
 
 -(void) loadModelNamed:(NSString*)name
 {
-    
+    const char* cname = [name cStringUsingEncoding:NSUTF8StringEncoding];
+    if (cname) {
+        MC3DModelCache_loadModelNamed(0, cache, cname);
+    }
 }
 
 @end

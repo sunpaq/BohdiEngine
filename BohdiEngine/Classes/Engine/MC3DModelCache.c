@@ -13,7 +13,7 @@ static MC3DModelCache* instance = null;
 oninit(MC3DModelCache)
 {
     if (init(MCObject)) {
-        instance->map = new(MCMap);
+        obj->map = new(MCMap);
         return obj;
     } else {
         return null;
@@ -46,7 +46,7 @@ method(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name)
     return null;
 }
 
-onload(MyClass)
+onload(MC3DModelCache)
 {
     if (load(MCObject)) {
         binding(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name);

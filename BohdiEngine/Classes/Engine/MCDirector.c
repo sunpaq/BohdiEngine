@@ -10,6 +10,7 @@
 #include "MCGLEngine.h"
 #include "MCThread.h"
 #include "MCCube.h"
+#include "MC3DModelCache.h"
 
 compute(MCLight*, lightHandler)
 {
@@ -219,6 +220,11 @@ method(MCDirector, void, addModelAtIndex, MC3DModel* model, MCFloat maxsize, int
 
 method(MCDirector, MC3DModel*, addModelNamed, const char* name, MCFloat maxsize)
 {
+    MC3DModel* model = MC3DModelCache_fetchModelNamed(0, MC3DModelCache_shared(0), name);
+    if (model) {
+        MCDirector_addModelAtIndex(0, obj, model, maxsize, -1);
+        return model;
+    }
     return MCDirector_addModelNamedAtIndex(0, obj, name, maxsize, -1);
 }
 

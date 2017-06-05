@@ -426,6 +426,9 @@ mc_hashtable* new_table(const MCHashTableLevel initlevel)
     //set all the slot to nil
     for (int i = 0; i < get_tablesize(initlevel); i++)
         atable->items[i] = null;
+    //set all the cache slot to nil
+    for (int j = 0; j < MAX_ITEM_CACHE; j++)
+        atable->cache[j] = null;
     return atable;
 }
 

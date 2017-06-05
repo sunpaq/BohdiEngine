@@ -1,3 +1,4 @@
+
 //
 //  MCMap.c
 //  Pods
@@ -8,7 +9,6 @@
 
 #include "MCMap.h"
 
-//class(MCMap, MCObject);
 oninit(MCMap)
 {
     if (init(MCObject)) {
@@ -19,26 +19,25 @@ oninit(MCMap)
     }
 }
 
-method(MCMap, void, setValueForKey, void* value, const char* key)
+method(MCMap, void, setValueForKey, MCGeneric value, const char* key)
 {
-    mc_hashitem* item = new_item(key, MCGenericVp(value), hash_content(key));
-    MCHashTableIndex index = set_item(&obj->table, item, false, key);
+    mc_hashitem* item = new_item(key, value, hash(key));
+    MCHashTableIndex index = set_item(&obj->table, item, false, "MCMap");
 }
 
-method(MCMap, void*, getValueForKey, const char* key)
+method(MCMap, void, getValueForKey, MCGeneric* result, const char* key)
 {
     mc_hashitem* item = get_item_bykey(obj->table, key);
     if (item) {
-        return item->value.mcvoidptr;
+        *result = item->value;
     }
-    return null;
 }
 
 onload(MCMap)
 {
     if (load(MCObject)) {
-        binding(MCMap, void, setValueForKey, void* value, const char* key);
-        binding(MCMap, void*, getValueForKey, const char* key);
+        binding(MCMap, void, setValueForKey, MCGeneric value, const char* key);
+        binding(MCMap, void, getValueForKey, MCGeneric* result, const char* key);
         return cla;
     } else {
         return null;

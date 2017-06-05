@@ -14,7 +14,7 @@
 class(MCMap, MCObject,
       mc_hashtable* table);
 
-method(MCMap, void, setValueForKey, void* value, const char* key);
-method(MCMap, void*, getValueForKey, const char* key);
+method(MCMap, void, setValueForKey, MCGeneric value, const char* key);
+method(MCMap, void, getValueForKey, MCGeneric* result, const char* key);
 
 #endif /* MCMap_h */

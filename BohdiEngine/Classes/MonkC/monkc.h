@@ -257,13 +257,14 @@ typedef struct mc_hashitem_struct
     struct mc_hashitem_struct* next;
     MCHash hash;
     MCGeneric value;
-    const char* key;
-    //char key[MAX_KEY_CHARS+1];
+    char key[MAX_KEY_CHARS];
 }mc_hashitem;
 
+#define MAX_ITEM_CACHE 10
 typedef struct
 {
-    mc_hashitem* cache;
+    mc_hashitem* cache[MAX_ITEM_CACHE];
+    MCInt cache_count;
     MCInt lock;
     MCHashTableLevel level;
     mc_hashitem* items[];

@@ -456,9 +456,9 @@ mc_hashitem* new_item(const char* key, MCGeneric value, MCHash hashval)
     if (aitem != null) {
         aitem->next = null;
         aitem->hash = hashval;
-        //strcpy(aitem->key, key);
-        //aitem->key[MAX_KEY_CHARS] = NUL;
-        aitem->key = (char*)key;
+        strncpy(aitem->key, key, strlen(key));
+        aitem->key[MAX_KEY_CHARS] = NUL;
+        //aitem->key = key;
         aitem->value = value;
         return aitem;
     }else{
@@ -470,10 +470,10 @@ mc_hashitem* new_item(const char* key, MCGeneric value, MCHash hashval)
 static MCBool override_samekeyitem(mc_hashitem* item, mc_hashitem* newitem, const char* classname)
 {
     if (strcmp(item->key, newitem->key) == 0) {
-        //only replace value!
+        //replace
         item->value = newitem->value;
-        item->key   = newitem->key;
         item->hash  = newitem->hash;
+        strncpy(item->key, classname, strlen(classname));
         //free the new item!
         runtime_log("[%s]:override-item[%d/%s]\n", classname, item->hash, item->key);
         free(newitem);
@@ -541,7 +541,22 @@ mc_hashitem* get_item_byhash(mc_hashtable* const table_p, const MCHash hashval, 
         error_log("get_item_byhash(table_p) table_p is nil return nil\n");
         return null;
     }
-    
+    //look up in cache
+    if (table_p->cache_count > 0) {
+        for (int i=0; i<MAX_ITEM_CACHE; i++) {
+            mc_hashitem* item = table_p->cache[i];
+            if (item && item->hash == hashval) {
+                //have collision
+                if (item->next) {
+                    if(strncmp(refkey, item->key, strlen(refkey)) != 0){
+                        continue;
+                    }
+                }
+                //debug_log("key hit a cached item [%s]\n", refkey);
+                return item;
+            }
+        }
+    }
     //level<MCHashTableLevelMax
     MCHashTableSize tsize = get_tablesize(table_p->level);
     MCHashTableIndex firsti = firstHashIndex(hashval, tsize);
@@ -554,23 +569,34 @@ mc_hashitem* get_item_byhash(mc_hashtable* const table_p, const MCHash hashval, 
     if (res == null) {
         return null;
     }
-    //found but have chain
-    if (res && res->next) {
+    //found but have chain (only need to compare key when chain detected)
+    if (res->next) {
         for(; res!=null; res=res->next) {
-            if(strcmp(refkey, res->key) == 0){
-                runtime_log("key hit a item [%s] in chain\n", res->key);
-                table_p->cache = res;
-                return res;
+            if (hashval == res->hash) {
+                if(strncmp(refkey, res->key, strlen(refkey)) != 0){
+                    continue;
+                } else {
+                    runtime_log("key hit a item [%s] in chain\n", res->key);
+                }
             }
         }
     }
-    //compare key
-    if (res && res->key) {
-        if (strcmp(refkey, res->key) != 0)
-            return null;
+    //res may become null when walking through the chain
+    if (res) {
+        //compare hash
+        if (res->hash == hashval) {
+            //cache
+            if (table_p->cache_count < MAX_ITEM_CACHE) {
+                table_p->cache[table_p->cache_count++] = res;
+            } else {
+                table_p->cache_count = 0;
+                table_p->cache[table_p->cache_count++] = res;
+            }
+        } else {
+            res = null;
+        }
     }
     //pass all the check
-    table_p->cache = res;
     return res;
 }
 

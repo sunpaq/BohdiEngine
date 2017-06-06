@@ -30,14 +30,18 @@ utility(MC3DModelCache, MC3DModelCache*, shared, voida)
 
 method(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name)
 {
-    MC3DModel* model = MC3DModelCache_fetchModelNamed(0, obj, name);
-    if (model) {
-        return model;
+    //MC3DModel* model = MC3DModelCache_fetchModelNamed(0, obj, name);
+    MCGeneric result;
+    MCMap_getValueForKey(0, var(map), &result, name);
+    
+    if (result.mcobject) {
+        
+        return result.mcobject;
     } else {
-        MC3DModel* model = MC3DModel_initWithFileName(0, new(MC3DModel), name);
-        MCMap_setValueForKey(0, obj->map, MCGenericO(cast(MCObject*, model)), name);
+        MCObject* mobj = ff(new(MC3DModel), initWithFileName, name);
+        MCMap_setValueForKey(0, obj->map, MCGenericO(mobj), name);
+        return mobj;
     }
-    return model;
 }
 
 method(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name)

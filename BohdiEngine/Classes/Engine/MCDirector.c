@@ -206,12 +206,8 @@ method(MCDirector, void, addModel, MC3DModel* model, MCFloat maxsize)
 method(MCDirector, void, addModelAtIndex, MC3DModel* model, MCFloat maxsize, int index)
 {
     if(model && obj->lastScene && obj->lastScene->rootnode) {
+        MC3DModel_resizeToFit(0, model, maxsize.f);
         MC3DNode_addChildAtIndex(0, obj->lastScene->rootnode, (MC3DNode*)model, index);
-        double maxl  = computed(model, maxlength);
-        double scale = maxsize.f / maxl;
-        MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
-        MC3DNode_scaleVec3(0, &model->Super, &scaleVec, false);
-        debug_log("MCDirector - model maxlength=%lf scale=%lf\n", maxl, scale);
     }else{
         error_log("MCDirector add model(%p) failed [lastScene=%p]\n",
                   model, obj->lastScene);

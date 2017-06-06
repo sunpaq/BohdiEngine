@@ -80,7 +80,8 @@ oninit(MC3DModel)
         obj->defaultColor = (MCColorf){0.9, 0.9, 0.9, 1.0};
         obj->defaultExtension = "obj";
         obj->textureOnOff = false;
-
+        obj->fitted = false;
+        
         obj->frame = frame;
         obj->maxlength = maxlength;
         obj->center = center;
@@ -369,6 +370,18 @@ method(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian)
     sobj->transform = MCMatrix4Multiply(sobj->transform, RZ);
 }
 
+method(MC3DModel, void, resizeToFit, double maxsize)
+{
+    if (var(fitted) == false) {
+        double maxl  = cpt(maxlength);
+        double scale = maxsize / maxl;
+        MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
+        MC3DNode_scaleVec3(0, sobj, &scaleVec, false);
+        var(fitted) = true;
+        debug_log("MC3DModel - model maxlength=%lf scale=%lf\n", maxl, scale);
+    }
+}
+
 //override
 method(MC3DModel, void, update, MCGLContext* ctx)
 {
@@ -391,6 +404,7 @@ onload(MC3DModel)
         binding(MC3DModel, void, rotateAroundSelfAxisX, double ccwRadian);
         binding(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian);
         binding(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian);
+        binding(MC3DModel, void, resizeToFit, double maxsize);
         //override
         binding(MC3DModel, void, update, MCGLContext* ctx);
         binding(MC3DModel, void, draw, MCGLContext* ctx);

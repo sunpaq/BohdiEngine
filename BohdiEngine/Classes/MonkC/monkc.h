@@ -466,9 +466,9 @@ MCInline const char* mc_nameofc(const mc_class* aclass) {
         return "unknown";
     if(aclass->item==null)
         return "unknown";
-    if(aclass->item->key==null)
+    if(aclass->item->key[0]==NUL)
         return "unknown";
-    return aclass->item->key;
+    return &aclass->item->key[0];
 }
 
 MCInline const char* mc_nameof(const MCObject* aobject) {
@@ -615,7 +615,7 @@ static inline void      MCObject_printDebugInfo(mc_message_arg(MCObject), mc_cla
     MCHashTableSize size = get_tablesize(mcclass->table->level);
     for (int i=0; i<size; i++) {
         mc_hashitem* item = mcclass->table->items[i];
-        if (item && item->key) {
+        if (item && item->key[0]) {
             debug_log("%s - %d/%s\n", mcclass->item->key, item->hash, item->key);
         }
     }

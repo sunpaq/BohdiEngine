@@ -75,8 +75,8 @@ oninit(MCSkysphere)
         
         var(R_value) = 200.0;
         var(R_percent) = 1.0;
-        var(tht);
-        var(fai);
+        var(tht) = 0.0;
+        var(fai) = 0.0;
         
         int nr = 72;
         int nc = 144;

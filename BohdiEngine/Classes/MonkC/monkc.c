@@ -423,6 +423,7 @@ mc_hashtable* new_table(const MCHashTableLevel initlevel)
     //init
     atable->lock = 0;
     atable->level = initlevel;
+    atable->cache_count = 0;
     //set all the slot to nil
     for (int i = 0; i < get_tablesize(initlevel); i++)
         atable->items[i] = null;
@@ -460,7 +461,7 @@ mc_hashitem* new_item(const char* key, MCGeneric value, MCHash hashval)
         aitem->next = null;
         aitem->hash = hashval;
         strncpy(aitem->key, key, strlen(key));
-        aitem->key[MAX_KEY_CHARS] = NUL;
+        aitem->key[MAX_KEY_CHARS-1] = NUL;
         //aitem->key = key;
         aitem->value = value;
         return aitem;

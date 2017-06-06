@@ -22,15 +22,19 @@ oninit(MCMap)
 method(MCMap, void, setValueForKey, MCGeneric value, const char* key)
 {
     mc_hashitem* item = new_item(key, value, hash(key));
-    MCHashTableIndex index = set_item(&obj->table, item, false, "MCMap");
+    if (item) {
+        set_item(&obj->table, item, false, "MCMap");
+    }
 }
 
 method(MCMap, void, getValueForKey, MCGeneric* result, const char* key)
 {
     mc_hashitem* item = get_item_bykey(obj->table, key);
     if (item) {
-        *result = item->value;
+        (*result) = item->value;
+        return;
     }
+    (*result).mcvoidptr = null;
 }
 
 onload(MCMap)

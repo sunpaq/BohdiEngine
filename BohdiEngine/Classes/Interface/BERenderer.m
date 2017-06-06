@@ -106,9 +106,10 @@
 +(GLKView*) createDefaultGLView:(CGRect)frame
 {
     EAGLContext* ctx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-    ctx.multiThreaded = NO;
+    ctx.multiThreaded = YES;
+    
     [EAGLContext setCurrentContext:ctx];
-    GLKView* glview = [[GLKView alloc] initWithFrame:frame context:[EAGLContext currentContext]];
+    GLKView* glview = [[GLKView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height) context:ctx];
     
     glview.enableSetNeedsDisplay = YES;
     glview.opaque = NO;

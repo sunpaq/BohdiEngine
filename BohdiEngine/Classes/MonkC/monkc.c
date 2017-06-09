@@ -433,11 +433,19 @@ mc_hashtable* new_table(const MCHashTableLevel initlevel)
     return atable;
 }
 
-static inline void expand_table(mc_hashtable** const table_p, MCHashTableLevel tolevel, const char* classname)
+void release_table(const mc_hashtable* table)
+{
+    //release all items
+    for (int i = 0; i < get_tablesize(table->level); i++) {
+        free((void*)table->items[i]);
+    }
+    free((void*)table);
+}
+
+static inline mc_hashtable* expand_table(const mc_hashtable* oldtable, MCHashTableLevel tolevel, const char* classname)
 {
     //realloc
     mc_hashtable* newtable = new_table(tolevel);
-    mc_hashtable* oldtable = (*table_p);
     MCHashTableSize osize = get_tablesize(oldtable->level);
     
     mc_hashitem* item;
@@ -450,8 +458,8 @@ static inline void expand_table(mc_hashtable** const table_p, MCHashTableLevel t
     }
     
     debug_log("[%s] expand table: %d->%d\n", classname, oldtable->level, newtable->level);
-    free(*table_p);
-    (*table_p) = newtable;
+    free((void*)oldtable);
+    return newtable;
 }
 
 mc_hashitem* new_item(const char* key, MCGeneric value, MCHash hashval)
@@ -524,7 +532,7 @@ MCHashTableIndex set_item(mc_hashtable** table_p, mc_hashitem* item, MCBool isAl
             
             //solve the collision by expand table
             if((*table_p)->level < MCHashTableLevelCount){//Max=5 Count=6
-                expand_table(table_p, (*table_p)->level+1, classname);
+                (*table_p) = expand_table(*table_p, (*table_p)->level+1, classname);
                 set_item(table_p, item, isAllowOverride, null);//recursive
                 return index;
             }else{

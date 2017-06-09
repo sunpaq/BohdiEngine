@@ -290,7 +290,6 @@ static MCHashTableSize mc_hashtable_sizes[MCHashTableLevelCount] = {
 MCInline MCHashTableSize get_tablesize(const MCHashTableLevel level)
 {
     if(level > MCHashTableLevelMax){
-        error_log("get_tablesize(level) level>max return use level=max\n");
         return mc_hashtable_sizes[MCHashTableLevelMax];
     }
     return mc_hashtable_sizes[level];

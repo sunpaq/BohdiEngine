@@ -434,8 +434,8 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 #define ffindex(obj, idx, ...)		     _push_jump(_response_to_i((MCObject*)obj, idx), __VA_ARGS__)//send index
 
 //lock
-void trylock_global_classtable();
-void unlock_global_classtable();
+void trylock_global_classtable(void);
+void unlock_global_classtable(void);
 
 //binding method api
 MCHashTableIndex _binding(mc_class* const aclass, const char* methodname, MCFuncPtr value);
@@ -457,8 +457,8 @@ MCObject* _retain(MCObject* const obj);
 #define retain(obj)  _retain((MCObject*)obj)
 
 //tool for class
-extern void _init_class_list();
-extern void _clear_class_list();
+extern void _init_class_list(void);
+extern void _clear_class_list(void);
 
 MCInline const char* mc_nameofc(const mc_class* aclass) {
     if(aclass==null)

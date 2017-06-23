@@ -35,12 +35,11 @@ method(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name)
     MCMap_getValueForKey(0, var(map), &result, name);
     
     if (result.mcobject) {
-        
-        return result.mcobject;
+        return (MC3DModel*)result.mcobject;
     } else {
         MCObject* mobj = ff(new(MC3DModel), initWithFileName, name);
         MCMap_setValueForKey(0, obj->map, MCGenericO(mobj), name);
-        return mobj;
+        return (MC3DModel*)mobj;
     }
 }
 

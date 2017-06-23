@@ -98,7 +98,7 @@ method(MC3DModel, void, bye, voida)
     MC3DNode_bye(0, sobj, 0);
 }
 
-function(void, meshLoadFaceElement, MCMesh* mesh, BAObjModel* buff, BAFaceElement e, size_t offset, MCColorf color)
+function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, size_t offset, MCColorf color)
 {
     MCVector3 v, n;
     MCVector2 t;
@@ -149,7 +149,7 @@ function(void, meshLoadFaceElement, MCMesh* mesh, BAObjModel* buff, BAFaceElemen
     });
 }
 
-function(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjModel* buff, MCColorf color)
+function(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
 {
     MCMesh* mesh = MCMesh_initWithDefaultVertexAttributes(0, new(MCMesh), (GLsizei)tricount*3);
     
@@ -209,7 +209,7 @@ function(void, setMaterialForNode, MC3DNode* node, BAMaterial* mtl)
     }
 }
 
-function(void, setTextureForNode, MC3DNode* node, BAObjModel* buff, BAMesh* mesh)
+function(void, setTextureForNode, MC3DNode* node, BAObjData* buff, BAMesh* mesh)
 {
     //object texture
     if (mesh->object[0]) {
@@ -243,7 +243,7 @@ function(void, setTextureForNode, MC3DNode* node, BAObjModel* buff, BAMesh* mesh
 }
 
 //size_t fcursor, BAMaterial* mtl, size_t facecount,
-function(MC3DModel*, initModel, BAObjModel* buff, BAMesh* bamesh, MCColorf color)
+function(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
 {
     MC3DModel* model = (MC3DModel*)any;
     if (model && bamesh) {
@@ -285,7 +285,7 @@ method(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf 
     debug_log("MC3DModel - initWithFilePathColor: %s\n", path);
     
     BAObjMeta Meta;
-    BAObjModel* buff = BAObjModelNewWithFilepath(path, &Meta);
+    BAObjData* buff = BAObjDataNewWithFilepath(path, &Meta);
     if (!buff) {
         error_log("MC3DModel initWithFilePathColor BAObjNew() failed exit\n");
         exit(-1);

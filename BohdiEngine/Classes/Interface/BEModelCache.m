@@ -33,7 +33,7 @@ static BEModelCache* _instance = NULL;
 {
     const char* cname = [name cStringUsingEncoding:NSUTF8StringEncoding];
     if (cname) {
-        MC3DModelCache_loadModelNamed(0, cache, cname);
+        MC3DModelCache_loadModelNamed(cache, cname);
     }
 }
 

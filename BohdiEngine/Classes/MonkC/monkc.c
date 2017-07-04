@@ -273,7 +273,7 @@ mc_class* _load(const char* name, size_t objsize, MCLoaderPointer loader)
     if(aclass == null){
         //new a item
         aclass = alloc_mc_class(objsize);
-        mc_hashitem* item = new_item(name, (MCGeneric){.mcvoidptr=null}, hash(name));//nil first
+        mc_hashitem* item = new_item(name, MCGenericVp(null), hash(name));//nil first
         package_by_item(item, aclass);
         (*loader)(aclass);
         //set item
@@ -868,9 +868,11 @@ MCObject* response_to(MCObject* obj, const char* methodname)
     }
     //fast hash
     MCHash hashval = hash(methodname);
-    obj->address = null;
     mc_hashitem* res = null;
     if((res=get_item_byhash(obj->isa->table, hashval, methodname)) != null){
+        while (obj->address) {
+            //wait
+        }
         obj->address = res->value.mcfuncptr;
         //runtime_log("return a message[%s/%s]\n", nameof(obj), methodname);
         return obj;
@@ -885,7 +887,6 @@ MCObject* response_to(MCObject* obj, const char* methodname)
             }
         }
     }
-    obj->address = null;
     return null;
 }
 
@@ -907,7 +908,6 @@ MCObject* response_to_i(MCObject* obj, MCHashTableIndex index)
         obj->address = item->value.mcfuncptr;
         return obj;
     }
-    obj->address = null;
     return null;
 }
 
@@ -997,10 +997,11 @@ asm(".globl _push_jump");
 asm(".p2align 4, 0x00");
 asm("_push_jump:");
 #endif
-asm("mov (%rdi), %r10");
-asm("cmpq $0, %r10");
+asm("movq (%rdi), %r15");
+asm("movq $0, (%rdi)");
+asm("cmpq $0, %r15");
 asm("je 0f");
-asm("jmp *%r10");
+asm("jmp *%r15");
 asm("0:");
 asm("ret");
 #endif
@@ -1035,12 +1036,15 @@ asm(".p2align 4, 0x00");
 asm("_push_jump:");
 #endif
 asm("ldr x16, [x0]");
-asm("cmp x0, #0");
+asm("mov x17, #0");
+asm("str x17, [x0]");
+asm("cmp x16, #0");
 asm("beq 0f");
 #if defined(__MACH__)
 asm("ldp x1, x2, [sp]");
 asm("ldp x3, x4, [sp, #16]");
 asm("ldp x5, x6, [sp, #32]");
+asm("ldr x7, [sp, #48]");
 asm("br x16");
 #else
 asm("br x16");
@@ -1086,4 +1090,5 @@ asm("blr");
 #endif
 
 #endif
+
 

@@ -167,22 +167,22 @@ typedef union {
     MCBool      mcbool;
 } MCGeneric;
 
-MCInline MCGeneric MCGenericF(double value)            { return (MCGeneric){.mcfloat=value}; }
-MCInline MCGeneric MCGenericSz(MCSizeT value)          { return (MCGeneric){.mcsizet=value}; }
-MCInline MCGeneric MCGenericUll(MCULongLong value)     { return (MCGeneric){.mculonglong=value}; }
-MCInline MCGeneric MCGenericLl(MCLongLong value)       { return (MCGeneric){.mclonglong=value}; }
-MCInline MCGeneric MCGenericUl(MCULong value)          { return (MCGeneric){.mculong=value}; }
-MCInline MCGeneric MCGenericL(MCLong value)            { return (MCGeneric){.mclong=value}; }
+MCInline MCGeneric MCGenericF(double value)            { MCGeneric g; g.mcfloat=value; return g; }
+MCInline MCGeneric MCGenericSz(MCSizeT value)          { MCGeneric g; g.mcsizet=value; return g; }
+MCInline MCGeneric MCGenericUll(MCULongLong value)     { MCGeneric g; g.mculonglong=value; return g; }
+MCInline MCGeneric MCGenericLl(MCLongLong value)       { MCGeneric g; g.mclonglong=value; return g; }
+MCInline MCGeneric MCGenericUl(MCULong value)          { MCGeneric g; g.mculong=value; return g; }
+MCInline MCGeneric MCGenericL(MCLong value)            { MCGeneric g; g.mclong=value; return g; }
 
-MCInline MCGeneric MCGenericO(struct _MCObject* value) { return (MCGeneric){.mcobject=value}; }
-MCInline MCGeneric MCGenericVp(MCVoidPtr value)        { return (MCGeneric){.mcvoidptr=value}; }
-MCInline MCGeneric MCGenericFp(MCFuncPtr value)        { return (MCGeneric){.mcfuncptr=value}; }
+MCInline MCGeneric MCGenericO(struct _MCObject* value) { MCGeneric g; g.mcobject=value; return g; }
+MCInline MCGeneric MCGenericVp(MCVoidPtr value)        { MCGeneric g; g.mcvoidptr=value; return g; }
+MCInline MCGeneric MCGenericFp(MCFuncPtr value)        { MCGeneric g; g.mcfuncptr=value; return g; }
 
-MCInline MCGeneric MCGenericUi(MCUInt value)           { return (MCGeneric){.mcuint=value}; }
-MCInline MCGeneric MCGenericI(MCInt value)             { return (MCGeneric){.mcint=value}; }
-MCInline MCGeneric MCGenericH(MCHash value)            { return (MCGeneric){.mchash=value}; }
+MCInline MCGeneric MCGenericUi(MCUInt value)           { MCGeneric g; g.mcuint=value; return g; }
+MCInline MCGeneric MCGenericI(MCInt value)             { MCGeneric g; g.mcint=value; return g; }
+MCInline MCGeneric MCGenericH(MCHash value)            { MCGeneric g; g.mchash=value; return g; }
 
-MCInline MCGeneric MCGenericB(MCBool value)            { return (MCGeneric){.mcbool=value}; }
+MCInline MCGeneric MCGenericB(MCBool value)            { MCGeneric g; g.mcbool=value; return g; }
 
 MCInline int MCGenericCompare(MCGeneric A, MCGeneric B) {
     if (A.mcfloat > B.mcfloat) {

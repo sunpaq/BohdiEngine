@@ -337,6 +337,9 @@ typedef struct
 //for type cast, every object have the 3 var members
 typedef struct _MCObject
 {
+    //address is for dynamic method calling.
+    MCFuncPtr address;
+    //data
     struct _MCObject* nextResponder;
     mc_block* block;
     mc_class* isa;
@@ -401,14 +404,16 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 #define init(supercls)                        supercls##_init((supercls*)obj)
 #define extend(cls, tag)                      cls##_##tag(_load(#cls, sizeof(cls), cls##_##load))
 #define preload(cls)                          _load(#cls, sizeof(cls), cls##_##load)
-#define superbye(cls)                         cls##_bye(0, &obj->Super, 0)
+#define superbye(cls)                         cls##_bye(&obj->Super, 0)
 
 //method binding
 #define mixing(type, met, ...)                _binding(cla, S(met), (MCFuncPtr)met)
 #define binding(cls, type, met, ...)  		  _binding(cla, S(met), (MCFuncPtr)A_B(cls, met))
 #define utility(cls, type, name, ...) 	      type cls##_##name(__VA_ARGS__)
-#define method(cls, type, name, ...) 	      type cls##_##name(MCFuncPtr volatile address, cls* volatile obj, __VA_ARGS__)
-#define function(type, name, ...)             static type name(MCFuncPtr volatile address, void* volatile any, __VA_ARGS__)
+#define method(cls, type, name, ...)          type cls##_##name(cls* volatile obj, __VA_ARGS__)
+#define function(type, name, ...)             static type name(void* volatile any, __VA_ARGS__)
+//#define method(cls, type, name, ...) 	      type cls##_##name(MCFuncPtr volatile address, cls* volatile obj, __VA_ARGS__)
+//#define function(type, name, ...)             static type name(MCFuncPtr volatile address, void* volatile any, __VA_ARGS__)
 
 //property
 #define computing(type, name)                 type (*name)(void*)
@@ -430,10 +435,8 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 #define info(cls)                  		mc_info(S(cls))
 
 //for call method
-#define response_test(obj, met) 	     _response_test((MCObject*)obj, S(met))
-#define response_to(obj, met) 			 _response_to((MCObject*)obj, S(met))
-#define ff(obj, met, ...)				 _push_jump(_response_to((MCObject*)obj, S(met)), __VA_ARGS__)//send message
-#define ffindex(obj, idx, ...)		     _push_jump(_response_to_i((MCObject*)obj, idx), __VA_ARGS__)//send index
+#define ff(obj, met, ...)				 _push_jump(response_to((MCObject*)obj, S(met)), __VA_ARGS__)//send message
+#define ffindex(obj, idx, ...)		     _push_jump(response_to_i((MCObject*)obj, idx), __VA_ARGS__)//send index
 
 //lock
 void trylock_global_classtable(void);
@@ -569,19 +572,24 @@ MCInline mc_hashitem* get_item_byindex(mc_hashtable* const table_p, const MCHash
  Messaging.h
  */
 typedef struct {
-    MCFuncPtr address;
     MCObject* object;
+    char message[MAX_KEY_CHARS];
 } mc_message;
-#define mc_message_arg(Class) register void* address, register Class* obj
-MCInline mc_message make_msg(void* obj, void* addr) { return (mc_message){(MCFuncPtr)addr, (MCObject*)obj}; };
+
+MCInline mc_message make_msg(MCObject* obj, const char* msg) {
+    mc_message message;
+    message.object = obj;
+    strncpy(message.message, msg, strlen(msg));
+    return message;
+}
 
 //write by asm
-void* _push_jump(register mc_message msg, ...);
+void* _push_jump(register MCObject* msg, ...);
 
 //write by c
-MCBool _response_test(MCObject* obj, const char* methodname);
-mc_message _response_to(MCObject* obj, const char* methodname);
-mc_message _response_to_i(MCObject* obj, MCHashTableIndex index);
+MCBool response_test(MCObject* obj, const char* methodname);
+MCObject* response_to(MCObject* obj, const char* methodname);
+MCObject* response_to_i(MCObject* obj, MCHashTableIndex index);
 
 /*
  ObjectManage.h
@@ -606,10 +614,10 @@ MCInt cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result);
  Root Class MCObject
  */
 
-static inline MCObject* MCObject_init(MCObject* const obj) {obj->nextResponder=null; return obj;}
-static inline void      MCObject_responseChainConnect(mc_message_arg(MCObject), MCObject* upperObj) {obj->nextResponder=upperObj;}
-static inline void      MCObject_responseChainDisconnect(mc_message_arg(MCObject), voida) {obj->nextResponder=null;}
-static inline void      MCObject_printDebugInfo(mc_message_arg(MCObject), mc_class* cobj) {
+MCObject* MCObject_init(MCObject* const obj);
+static inline void      MCObject_responseChainConnect(MCObject* const obj, MCObject* upperObj) {obj->nextResponder=upperObj;}
+static inline void      MCObject_responseChainDisconnect(MCObject* const obj, voida) {obj->nextResponder=null;}
+static inline void      MCObject_printDebugInfo(MCObject* const obj, mc_class* cobj) {
     mc_class* mcclass = cobj;
     if (!mcclass)
         mcclass = obj->isa;
@@ -621,7 +629,7 @@ static inline void      MCObject_printDebugInfo(mc_message_arg(MCObject), mc_cla
         }
     }
 }
-static inline void      MCObject_bye(mc_message_arg(MCObject), voida) {}
+static inline void      MCObject_bye(MCObject* const obj, voida) {}
 static inline mc_class* MCObject_load(mc_class* const cla) {
     _binding(cla, "responseChainConnect", (MCFuncPtr)MCObject_responseChainConnect);
     _binding(cla, "responseChainDisconnect", (MCFuncPtr)MCObject_responseChainDisconnect);

@@ -11,6 +11,7 @@ import UIKit
 class MainViewController: UIViewController {
 
     @IBOutlet weak var beview: BEView!
+    @IBOutlet weak var beview2: BEView!
     @IBOutlet weak var panoview: BEPanoramaView!
     
     override func viewDidLoad() {
@@ -19,12 +20,16 @@ class MainViewController: UIViewController {
         beview.loadModelNamed("monkey2.obj")
         beview.renderer.doesAutoRotateCamera = false
         
+        beview2.loadModelNamed("monkey2.obj")
+        beview2.renderer.doesAutoRotateCamera = false
+        
         panoview.loadPanoramaTexture("panorama360.jpg")
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         beview.startDraw3DContent(BECameraRotateAroundModelManual)
+        beview2.startDraw3DContent(BECameraRotateAroundModelByGyroscope)
         panoview.startDraw()
     }
 

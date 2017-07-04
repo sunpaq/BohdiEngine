@@ -9,11 +9,11 @@
 #ifndef BEMainLoop_h
 #define BEMainLoop_h
 
-void BETeardownGL();
+void BETeardownGL(void);
 void BESetupGL(unsigned width, unsigned height);
 void BEResizeGL(unsigned width, unsigned height);
-void BEUpdateGL();
-void BEDrawGL();
+void BEUpdateGL(void);
+void BEDrawGL(void);
 
 void BEPanGesture(float x, float y);
 void BEPinchGesture(float scale);
@@ -24,9 +24,9 @@ void BEAddSkyboxNames(const char* negx, const char* posx,
                       const char* negz, const char* posz);
 void BEAddSkysphNamed(const char* name);
 
-void BERemoveCurrentModel();
-void BERemoveCurrentSkybox();
-void BERemoveCurrentSkysph();
+void BERemoveCurrentModel(void);
+void BERemoveCurrentSkybox(void);
+void BERemoveCurrentSkysph(void);
 
 void BESetClearScreenColor(float R, float G, float B, float A);
 void BESetDeviceRotateMat3(float m00, float m01, float m02,

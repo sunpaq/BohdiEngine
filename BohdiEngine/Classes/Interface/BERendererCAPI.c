@@ -67,7 +67,7 @@ void BEPinchGesture(float scale)
     
     MCCamera* camera = computed(director, cameraHandler);
     if (director) {
-        MCCamera_distanceScale(0, camera, MCFloatF(20.0/pinch_scale));
+        MCCamera_distanceScale(camera, MCFloatF(20.0/pinch_scale));
     }
 }
 
@@ -105,12 +105,12 @@ void BERemoveCurrentModel()
 
 void BERemoveCurrentSkybox()
 {
-    MCDirector_removeCurrentSkybox(0, director, 0);
+    MCDirector_removeCurrentSkybox(director, 0);
 }
 
 void BERemoveCurrentSkysph()
 {
-    MCDirector_removeCurrentSkysph(0, director, 0);
+    MCDirector_removeCurrentSkysph(director, 0);
 }
 
 void BESetClearScreenColor(float R, float G, float B, float A)
@@ -195,7 +195,7 @@ void BECameraRotate(float m00, float m01, float m02,
             m10, m11, m12,
             m20, m21, m22
         };
-        MC3DNode_rotateMat3(0, &cam->Super, mat3.m, incremental?true:false);
+        MC3DNode_rotateMat3(&cam->Super, mat3.m, incremental?true:false);
     }
 }
 
@@ -212,7 +212,7 @@ void BESkysphCameraReset(float m00, float m01, float m02, float m03,
             m20, m21, m22, m23,
             m30, m31, m32, m33
         };
-        MC3DScene_setRotationMat4(0, scene, &mat4[0]);
+        MC3DScene_setRotationMat4(scene, &mat4[0]);
     }
 }
 
@@ -224,7 +224,7 @@ void BECameraTranslate(float x, float y, float z, _Bool incremental)
         cam->R_value = MCVector3Length(eye);
         cam->eye = eye;
 
-        MC3DNode_translateVec3(0, &cam->Super, &eye, incremental?true:false);
+        MC3DNode_translateVec3(&cam->Super, &eye, incremental?true:false);
     }
 }
 

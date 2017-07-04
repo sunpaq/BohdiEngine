@@ -46,7 +46,7 @@ oninit(MCCamera)
 
 method(MCCamera, void, bye, voida)
 {
-    MC3DNode_bye(0, sobj, 0);
+    MC3DNode_bye(sobj, 0);
 }
 
 method(MCCamera, void, printDebugInfo, voida)
@@ -79,7 +79,7 @@ compute(MCMatrix4, viewMatrix)
     as(MCCamera);
     double r = cpt(Radius);
     if (obj->rotateMode == MCCameraRotateAroundModelManual) {
-        MCCamera_transformSelfByEularAngle(0, obj, obj->lookat, cpt(Radius), obj->fai, obj->tht);
+        MCCamera_transformSelfByEularAngle(obj, obj->lookat, cpt(Radius), obj->fai, obj->tht);
     }
     else if (obj->rotateMode == MCCameraRotateAroundModelByGyroscope) {
         sobj->transform = MCMatrix4MakeLookAt(0, 0, r, 0, 0, 0, 0, 1, 0);
@@ -168,10 +168,10 @@ method(MCCamera, void, update, MCGLContext* ctx)
     MCGLUniformData data;
     
     data.mat4 = cpt(viewMatrix);
-    MCGLContext_updateUniform(0, ctx, view_view, data);
+    MCGLContext_updateUniform(ctx, view_view, data);
     
     data.mat4 = cpt(projectionMatrix);
-    MCGLContext_updateUniform(0, ctx, view_projection, data);
+    MCGLContext_updateUniform(ctx, view_projection, data);
 }
 
 method(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)

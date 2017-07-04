@@ -997,11 +997,11 @@ asm(".globl _push_jump");
 asm(".p2align 4, 0x00");
 asm("_push_jump:");
 #endif
-asm("movq (%rdi), %r15");
+asm("movq (%rdi), %r11"); //%rbp %rbx %r12-r15 belong to caller
 asm("movq $0, (%rdi)");
-asm("cmpq $0, %r15");
+asm("cmpq $0, %r11");
 asm("je 0f");
-asm("jmp *%r15");
+asm("jmp *%r11");
 asm("0:");
 asm("ret");
 #endif
@@ -1017,9 +1017,11 @@ asm(".globl _push_jump");
 asm(".p2align 2, 0x00");
 asm("_push_jump:");
 #endif
-asm("cmpl $0, 0(%esp)");
+asm("mov (%esp), %edx");
+//asm("movw $0, (%esp)");
+asm("cmpl $0, %edx");
 asm("je 0f");
-asm("jmp *0(%esp)");
+asm("jmp *%edx");
 asm("0:");
 asm("ret");
 #endif
@@ -1035,19 +1037,19 @@ asm(".globl _push_jump");
 asm(".p2align 4, 0x00");
 asm("_push_jump:");
 #endif
-asm("ldr x16, [x0]");
-asm("mov x17, #0");
-asm("str x17, [x0]");
-asm("cmp x16, #0");
+asm("ldr x15, [x0]"); //x9-x15 temporary regs
+asm("mov x14, #0");
+asm("str x14, [x0]");
+asm("cmp x15, #0");
 asm("beq 0f");
 #if defined(__MACH__)
 asm("ldp x1, x2, [sp]");
 asm("ldp x3, x4, [sp, #16]");
 asm("ldp x5, x6, [sp, #32]");
 asm("ldr x7, [sp, #48]");
-asm("br x16");
+asm("br x15");
 #else
-asm("br x16");
+asm("br x15");
 #endif
 asm("0:");
 asm("ret");

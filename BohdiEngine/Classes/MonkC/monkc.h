@@ -396,8 +396,10 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 //callbacks
 #define onload(cls)					mc_class* cls##_load(mc_class* const cla)
 #define oninit(cls)						 cls* cls##_init(cls* const obj)
+#define onextend(cls, tag)               void cls##_##tag(mc_class* cla)
 #define load(supercls)                        supercls##_load(cla)
 #define init(supercls)                        supercls##_init((supercls*)obj)
+#define extend(cls, tag)                      cls##_##tag(_load(#cls, sizeof(cls), cls##_##load))
 #define preload(cls)                          _load(#cls, sizeof(cls), cls##_##load)
 #define superbye(cls)                         cls##_bye(0, &obj->Super, 0)
 

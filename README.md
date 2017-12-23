@@ -2,6 +2,8 @@
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
+[![Cocoapods compatible]](https://cocoapod-badges.herokuapp.com/v/$PODNAME/badge.png)(https://cocoapods.org)
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
@@ -12,20 +14,20 @@ iOS devices support OpenGLES 3.0 with arm64 CPU (>=iPhone5s)
 
 ## Installation
 
+By Carthage, add the following line to your Cartfile:
+
+	github "sunpaq/BohdiEngine-pod"
+
 BohdiEngine is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
-```ruby
-pod "BohdiEngine"
-```
+	pod "BohdiEngine"
 
 If you need to use the developing version:
 
-```
-target 'App' do
-    pod 'BohdiEngine', :git => 'https://github.com/sunpaq/BohdiEngine-pod.git', :branch => 'develop'
-end
-```
+	target 'App' do
+    	pod 'BohdiEngine', :git => 'https://github.com/sunpaq/BohdiEngine-pod.git', :branch => 'develop'
+	end
 
 ## Build your App use BohdiEngine
 

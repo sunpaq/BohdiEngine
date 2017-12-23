@@ -1,7 +1,6 @@
 # BohdiEngine
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-
 [![Cocoapods compatible](https://cocoapod-badges.herokuapp.com/v/BohdiEngine/badge.png)](https://cocoapods.org)
 
 ## Example
@@ -31,14 +30,14 @@ If you need to use the developing version:
 
 ## Build your App use BohdiEngine
 
-Please notice that you should have default shaders and sample model in your
-App's Resource folder. please just copy the following files:
+	1. add a UIView to any of your interface in storyboard
+	2. set the class of the view -> BEView
+	3. set a outlet of the view to your controller
+	4. call the beview.loadModelNamed("monkey2.obj") method
+	5. call the beview.startDraw3DContent(BECameraRotateAroundModelManual) method
 
-    2.obj
-    beengine.mtl
-
-    from
-    <PodRoot>/BohdiEngine/Assets/models
+	for swift you also need add a bridge header and import:
+	#import <monkc/monkc-umbrella.h>
 
 for OpenGL setup and Engine usage, please check the Example of this Pod (Objective-C)
 there also have a [demo written use swift](https://github.com/sunpaq/BohdiEngineDemoSwift)

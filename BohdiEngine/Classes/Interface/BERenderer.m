@@ -204,12 +204,13 @@
 
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Tag:(int)tag
 {
+    MCDirector* dir = director;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        MC3DModel* m = MCDirector_addModelNamed(director, name, MCFloatF(scale));
+        MC3DModel* m = MCDirector_addModelNamed(dir, name, MCFloatF(scale));
         m->tag = tag;
         MC3DModel_rotateAroundSelfAxisX(m, ccwRadian);
-        MCDirector_cameraFocusOn(director, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
+        MCDirector_cameraFocusOn(dir, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
     });
 }
 

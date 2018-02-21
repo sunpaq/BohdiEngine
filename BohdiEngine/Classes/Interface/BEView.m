@@ -45,6 +45,8 @@
             [self insertSubview:glview belowSubview:view];
         }
     }
+    //render delegate
+    _delegate = nil;
     //renderer
     renderer = [[BERenderer alloc] initWithFrame:frame];
     //runloop
@@ -54,14 +56,21 @@
 }
 
 - (void)drawFrame
-{
+{    
     if (motion) {
         CMAttitude* att = nil;
         if ((att=[motion getDeltaAttitude]) != nil) {
             renderer.deviceRotateMat3 = att.rotationMatrix;
         }
     }
+    
+    if (_delegate) {
+        [_delegate beforeRenderFrame];
+    }
     [renderer drawFrameOnGLView:glview];
+    if (_delegate) {
+        [_delegate afterRenderFrame];
+    }
 }
 
 - (void) loadModelNamed:(NSString*)name

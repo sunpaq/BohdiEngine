@@ -11,8 +11,16 @@
 #import "BERenderer.h"
 #import "BERunLoop.h"
 #import "BEMotionManager.h"
+#import "BEGameController.h"
+
+@protocol BEViewRenderingDelegate
+- (void) beforeRenderFrame;
+- (void) afterRenderFrame;
+@end
 
 @interface BEView : UIView
+
+@property (nonatomic) id<BEViewRenderingDelegate> delegate;
 
 @property (atomic, readonly) BEMotionManager* motion;
 @property (atomic, readonly) BERenderer* renderer;

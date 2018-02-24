@@ -5,7 +5,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BohdiEngine'
-  s.version          = '1.1.7'
+  s.version          = '1.1.8'
   s.summary          = 'A simple 3D engine written by Monk-C'
   s.description      = 'BohdiEngine is a simple 3D model rendering engine. it is cross platform'
 

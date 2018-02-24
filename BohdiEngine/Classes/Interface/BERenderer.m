@@ -419,6 +419,60 @@
     }
 }
 
+-(void) drawFrame:(CGRect)viewport
+{
+    if (director) {
+        int x = viewport.origin.x;
+        int y = viewport.origin.y;
+        int width = viewport.size.width;
+        int height = viewport.size.height;
+        MCDirector_scissorAllScene(director, x, y, width, height);
+        MCDirector_updateAll(director, 0);
+        MCDirector_drawAll(director, 0);
+    }
+}
+
+-(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye
+{
+    if (director) {
+        MCCamera* cam = computed(director, cameraHandler);
+        if (cam) {
+            GLKMatrix4 mat4 = GLKMatrix4Multiply(eye, head);
+            MCMatrix4 m4 = MCMatrix4Make(mat4.m);
+            MCCamera_transformWorld(cam, &m4);
+        }
+        
+        int x = viewport.origin.x;
+        int y = viewport.origin.y;
+        int width = viewport.size.width;
+        int height = viewport.size.height;
+        MCDirector_scissorAllScene(director, x, y, width, height);
+        MCDirector_updateAll(director, 0);
+        MCDirector_drawAll(director, 0);
+    }
+}
+
+-(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye vrFOV:(CGFloat)fov
+{
+    if (director) {
+        MCCamera* cam = computed(director, cameraHandler);
+        if (cam) {
+            cam->field_of_view = (double)fov;
+            GLKMatrix4 mat4 = GLKMatrix4Multiply(eye, head);
+            MCMatrix4 m4 = MCMatrix4Make(mat4.m);
+            MCCamera_transformWorld(cam, &m4);
+        }
+        
+        int x = viewport.origin.x;
+        int y = viewport.origin.y;
+        int width = viewport.size.width;
+        int height = viewport.size.height;
+        MCDirector_scissorAllScene(director, x, y, width, height);
+        MCDirector_updateAll(director, 0);
+        MCDirector_drawAll(director, 0);
+    }
+}
+
 -(void) drawFrameOnCALayer:(CALayer*)calayer
 {
     if (director) {

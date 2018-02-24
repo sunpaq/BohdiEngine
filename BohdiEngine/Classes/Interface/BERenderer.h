@@ -70,6 +70,10 @@ typedef enum {
 -(void) updateModelTag:(int)tag PoseMat4F:(float*)mat4;
 
 -(void) drawFrame;
+-(void) drawFrame:(CGRect)viewport;
+-(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye;
+-(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye vrFOV:(CGFloat)fov;
+
 -(void) drawFrameOnCALayer:(CALayer*)calayer;
 -(void) drawFrameOnGLView:(GLKView*)glview;
 

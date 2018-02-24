@@ -204,12 +204,13 @@
 
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Tag:(int)tag
 {
+    MCDirector* dir = director;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        MC3DModel* m = MCDirector_addModelNamed(director, name, MCFloatF(scale));
+        MC3DModel* m = MCDirector_addModelNamed(dir, name, MCFloatF(scale));
         m->tag = tag;
         MC3DModel_rotateAroundSelfAxisX(m, ccwRadian);
-        MCDirector_cameraFocusOn(director, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
+        MCDirector_cameraFocusOn(dir, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
     });
 }
 
@@ -413,6 +414,60 @@
 -(void) drawFrame
 {
     if (director) {
+        MCDirector_updateAll(director, 0);
+        MCDirector_drawAll(director, 0);
+    }
+}
+
+-(void) drawFrame:(CGRect)viewport
+{
+    if (director) {
+        int x = viewport.origin.x;
+        int y = viewport.origin.y;
+        int width = viewport.size.width;
+        int height = viewport.size.height;
+        MCDirector_scissorAllScene(director, x, y, width, height);
+        MCDirector_updateAll(director, 0);
+        MCDirector_drawAll(director, 0);
+    }
+}
+
+-(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye
+{
+    if (director) {
+        MCCamera* cam = computed(director, cameraHandler);
+        if (cam) {
+            GLKMatrix4 mat4 = GLKMatrix4Multiply(eye, head);
+            MCMatrix4 m4 = MCMatrix4Make(mat4.m);
+            MCCamera_transformWorld(cam, &m4);
+        }
+        
+        int x = viewport.origin.x;
+        int y = viewport.origin.y;
+        int width = viewport.size.width;
+        int height = viewport.size.height;
+        MCDirector_scissorAllScene(director, x, y, width, height);
+        MCDirector_updateAll(director, 0);
+        MCDirector_drawAll(director, 0);
+    }
+}
+
+-(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye vrFOV:(CGFloat)fov
+{
+    if (director) {
+        MCCamera* cam = computed(director, cameraHandler);
+        if (cam) {
+            cam->field_of_view = (double)fov;
+            GLKMatrix4 mat4 = GLKMatrix4Multiply(eye, head);
+            MCMatrix4 m4 = MCMatrix4Make(mat4.m);
+            MCCamera_transformWorld(cam, &m4);
+        }
+        
+        int x = viewport.origin.x;
+        int y = viewport.origin.y;
+        int width = viewport.size.width;
+        int height = viewport.size.height;
+        MCDirector_scissorAllScene(director, x, y, width, height);
         MCDirector_updateAll(director, 0);
         MCDirector_drawAll(director, 0);
     }

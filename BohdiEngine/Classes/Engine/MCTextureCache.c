@@ -54,7 +54,12 @@ method(MCTextureCache, MCTexture*, findTextureNamed, const char* name)
 method(MCTextureCache, void, cacheTextureNamed, MCTexture* tex, const char* name)
 {
     if (tex) {
-        MCMap_setValueForKey(var(map), MCGenericO(cast(MCObject*, tex)), name);
+        MCGeneric result;
+        MCMap_getValueForKey(var(map), &result, name);
+        if (!result.mcobject) {
+            MCMap_setValueForKey(var(map), MCGenericO(cast(MCObject*, tex)), name);
+            retain(tex);
+        }
     }
 }
 

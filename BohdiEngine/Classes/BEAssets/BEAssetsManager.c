@@ -65,6 +65,8 @@ int MCFileGetPathFromBundle(const char* bundlename, const char* filename, char* 
             subpath = "textures";
         } else if (strcmp(extension, "tga") == 0) {
             subpath = "textures";
+        } else if (strcmp(extension, "dds") == 0) {
+            subpath = "textures";
         } else {
             subpath = "raw";
             error_log("can not detect use raw folder\n");
@@ -119,7 +121,7 @@ int MCFileGetPathFromBundle(const char* bundlename, const char* filename, char* 
     CFStringGetCString(BundlePath, rootpath, PATH_MAX, kCFStringEncodingUTF8);
     
     strcat(rootpath, filename);
-    strncpy(buffer, rootpath, PATH_MAX);
+    MCStringFillLimited(buffer, rootpath, strlen(rootpath));
     return 0;
 
 #endif

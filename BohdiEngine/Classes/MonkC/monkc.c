@@ -468,8 +468,9 @@ mc_hashitem* new_item(const char* key, MCGeneric value, MCHash hashval)
     if (aitem != null) {
         aitem->next = null;
         aitem->hash = hashval;
-        strncpy(aitem->key, key, strlen(key));
-        aitem->key[MAX_KEY_CHARS-1] = NUL;
+        size_t len = strlen(key);
+        strncpy(aitem->key, key, len);
+        aitem->key[len] = NUL;
         //aitem->key = key;
         aitem->value = value;
         return aitem;
@@ -485,7 +486,9 @@ static MCBool override_samekeyitem(mc_hashitem* item, mc_hashitem* newitem, cons
         //replace
         item->value = newitem->value;
         item->hash  = newitem->hash;
-        strncpy(item->key, classname, strlen(classname));
+        size_t len = strlen(classname);
+        strncpy(item->key, classname, len);
+        item->key[len] = NUL;
         //free the new item!
         runtime_log("[%s]:override-item[%d/%s]\n", classname, item->hash, item->key);
         free(newitem);

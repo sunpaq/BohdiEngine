@@ -14,5 +14,8 @@
 +(instancetype)shared;
 
 -(void) detectObjModelNames;
+-(void) preloadJPGTextures;
+-(void) preloadTGATextures;
+-(void) preloadTextures:(NSString*)extension;
 
 @end

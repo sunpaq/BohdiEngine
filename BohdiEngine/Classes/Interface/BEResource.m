@@ -6,6 +6,7 @@
 //
 
 #import "BEResource.h"
+#import "MCTextureCache.h"
 
 @implementation BEResource
 
@@ -28,6 +29,31 @@ static BEResource* _instance = nil;
     for (NSURL* path in paths) {
         NSString* name = [path lastPathComponent];
         [objModelNames addObject:name];
+    }
+}
+
+-(void) preloadJPGTextures
+{
+    [self preloadTextures:@"jpg"];
+}
+
+-(void) preloadTGATextures
+{
+    [self preloadTextures:@"tga"];
+}
+
+-(void) preloadTextures:(NSString*)extension
+{
+    //Monk-C
+    MCTextureCache* tcache = MCTextureCache_shared(0);
+    //Obj-C
+    NSArray<NSURL*>* paths =[[NSBundle mainBundle] URLsForResourcesWithExtension:extension subdirectory:nil];
+    for (NSURL* path in paths) {
+        NSString* name = [path lastPathComponent];
+        const char* cname = [name cStringUsingEncoding:NSUTF8StringEncoding];
+        MCTexture* tex = MCTexture_initWithFileName(new(MCTexture), cname);
+        MCTextureCache_cacheTextureNamed(tcache, tex, cname);
+        release(tex);
     }
 }
 

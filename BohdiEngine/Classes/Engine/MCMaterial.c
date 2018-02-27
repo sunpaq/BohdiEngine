@@ -19,7 +19,7 @@ oninit(MCMaterial)
         obj->specularLightPower = 32.0;
         obj->dissolve = 1.0;
         obj->hidden   = 0;
-        obj->illum    = 0;
+        obj->illum    = 2;
         obj->dataChanged = true;
         
         obj->tag[0] = NUL;

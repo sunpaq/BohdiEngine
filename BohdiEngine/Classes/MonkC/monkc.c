@@ -988,7 +988,7 @@ MCObject* MCObject_init(MCObject* const obj)
  and keep the code runable on old device
  */
 
-#ifndef __ANDROID__
+
 
 #ifndef asm
 #define asm __asm__
@@ -1098,7 +1098,3 @@ asm("0:");
 asm("blr");
 #endif
 #endif
-
-#endif
-
-

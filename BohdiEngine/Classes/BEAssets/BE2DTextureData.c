@@ -42,14 +42,19 @@ utility(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path
     
     size_t psize = strlen(decodepath) * sizeof(char);
     data->path = strcpy(malloc(psize), decodepath);
-    
-    data->raw = SOIL_load_image(data->path, &data->width, &data->height, &data->channels, SOIL_LOAD_AUTO);
+
+    off_t buffsize;
+    const char* buff = MCFileCopyContentWithPathGetBufferSize(path, &buffsize);
+    data->raw = SOIL_load_image_from_memory(buff, buffsize, &data->width, &data->height, &data->channels, SOIL_LOAD_AUTO);
+    MCFileReleaseContent(buff);
+
     if (!data->raw) {
-        error_log("BE2DTextureData - load texture failed: %s\n", SOIL_last_result());
+        error_log("BE2DTextureData - load texture failed: %s (%s)\n", SOIL_last_result(), path);
         release(data);
         return null;
     }
     return data;
+
 }
 
 utility(BE2DTextureData, BE2DTextureData*, newWithPathname, const char* path)

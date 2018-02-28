@@ -10,6 +10,7 @@
 @implementation BEGameController
 
 @synthesize gameController;
+@synthesize conneted;
 @synthesize stickFactor;
 
 static BEGameController* _instance = nil;
@@ -18,6 +19,8 @@ static BEGameController* _instance = nil;
 {
     if (_instance == nil) {
         _instance = [[BEGameController alloc] init];
+        _instance.gameController = NULL;
+        _instance.conneted = NO;
         _instance.stickFactor = 1.0;
     }
     return _instance;
@@ -49,6 +52,7 @@ static BEGameController* _instance = nil;
 -(void)gameControllerFound:(NSNotification*)noti
 {
     self.gameController = noti.object;
+    self.conneted = YES;
 }
 
 @end

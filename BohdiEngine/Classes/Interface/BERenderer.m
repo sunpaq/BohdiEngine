@@ -20,7 +20,7 @@
 
 -(BOOL)doesAutoRotateCamera
 {
-    return computed(director, cameraHandler)->isLockRotation;
+    return director->lastScene->cameraAutoRotate;
 }
 
 -(BOOL)doesDrawWireFrame
@@ -49,7 +49,7 @@
 
 -(void)setDoesAutoRotateCamera:(BOOL)doesAutoRotateCamera
 {
-    computed(director, cameraHandler)->isLockRotation = doesAutoRotateCamera? false : true;
+    director->lastScene->cameraAutoRotate = doesAutoRotateCamera? true : false;
 }
 
 -(void)setDoesDrawWireFrame:(BOOL)doesDrawWireFrame

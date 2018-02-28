@@ -137,7 +137,7 @@ void BESetDeviceRotateMat3(float m00, float m01, float m02,
 
 void BESetDoesRotateCamera(_Bool doesRotate)
 {
-    computed(director, cameraHandler)->isLockRotation = doesRotate? false : true;
+    director->lastScene->cameraAutoRotate = doesRotate? true : false;
 }
 
 void BESetDoesDrawWireFrame(_Bool doesDrawWF)

@@ -37,6 +37,7 @@ oninit(MCTextureCache) {
 method(MCTextureCache, void, bye, voida)
 {
     release(var(map));
+    var(map) = null;
     MCObject_bye(sobj, 0);
 }
 

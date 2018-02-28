@@ -11,6 +11,8 @@
 @interface BEGameController : NSObject
 
 @property GCController* gameController;
+@property BOOL conneted;
+
 @property (readonly) CGPoint leftStick;
 @property (readonly) CGPoint rightStick;
 @property (readwrite) CGFloat stickFactor;

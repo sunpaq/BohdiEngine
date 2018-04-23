@@ -6,19 +6,17 @@
 //
 //
 
-#if defined(__IOS__)
-
-#import "BERenderer.h"
+#import "BEWindowRenderer.h"
 #import "MCDirector.h"
 
-@interface BERenderer()
+@interface BEWindowRenderer()
 {
     MCDirector* director;
     float pinch_scale;
 }
 @end
 
-@implementation BERenderer
+@implementation BEWindowRenderer
 
 -(BOOL)doesAutoRotateCamera
 {
@@ -30,6 +28,7 @@
     return computed(director, contextHandler)->drawMode == MCLineStrip? YES : NO;
 }
 
+/*
 -(CMRotationMatrix) deviceRotateMat3
 {
     CMRotationMatrix mat3 = {0};
@@ -48,6 +47,7 @@
     }
     return mat3;
 }
+*/
 
 -(void)setDoesAutoRotateCamera:(BOOL)doesAutoRotateCamera
 {
@@ -59,6 +59,7 @@
     computed(director, contextHandler)->drawMode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
 }
 
+/*
 -(void) setDeviceRotateMat3:(CMRotationMatrix)mat3
 {
     if (director) {
@@ -75,8 +76,9 @@
         director->deviceRotationMat3.m22 = mat3.m33;
     }
 }
+*/
 
-+(void) createFramebuffersWithContext:(EAGLContext*)ctx AndLayer:(CAEAGLLayer*)lyr
++(void) createFramebuffersWithContext:(NSOpenGLContext*)ctx AndLayer:(NSOpenGLLayer*)lyr
 {
     GLsizei width  = lyr.bounds.size.width;
     GLsizei height = lyr.bounds.size.height;
@@ -89,7 +91,9 @@
     glGenRenderbuffers(1, &colorRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
-    [ctx renderbufferStorage:GL_RENDERBUFFER fromDrawable:lyr];
+    
+    //[ctx renderbufferStorage:GL_RENDERBUFFER fromDrawable:lyr];
+    
     glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
     
     GLuint depthRenderbuffer;
@@ -105,9 +109,10 @@
     }
 }
 
-+(GLKView*) createDefaultGLView:(CGRect)frame
++(NSOpenGLView*) createDefaultGLView:(CGRect)frame
 {
-    EAGLContext* ctx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+    /*
+    NSOpenGLContext* ctx = [[NSOpenGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
     ctx.multiThreaded = YES;
     
     [EAGLContext setCurrentContext:ctx];
@@ -121,6 +126,9 @@
     glview.drawableStencilFormat = GLKViewDrawableStencilFormat8;
     
     return glview;
+    */
+    
+    return nil;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame
@@ -128,13 +136,13 @@
     if (self = [super init]) {
         pinch_scale = 10.0;
         director = new(MCDirector);
-        CGFloat scale = [UIScreen mainScreen].scale;
+        CGFloat scale = [NSScreen mainScreen].backingScaleFactor;
         MCDirector_setupMainScene(director,
                                   frame.size.width * scale,
                                   frame.size.height * scale);
         
         computed(director, cameraHandler)->rotateMode = MCCameraRotateAroundModelManual;
-        [self setBackgroundColor:[UIColor darkGrayColor]];
+        [self setBackgroundColor:[NSColor darkGrayColor]];
         return self;
     }
     return nil;
@@ -156,7 +164,7 @@
     return self;
 }
 
--(instancetype) setBackgroundColor:(UIColor*)color
+-(instancetype) setBackgroundColor:(NSColor*)color
 {
     if (director) {
         CGFloat red, green, blue, alpha;
@@ -169,7 +177,7 @@
 -(instancetype) resizeAllScene:(CGSize)frameSize
 {
     if (director) {
-        CGFloat scale = [UIScreen mainScreen].scale;
+        CGFloat scale = [NSScreen mainScreen].backingScaleFactor;
         MCDirector_resizeAllScene(director, (int)frameSize.width * scale, (int)frameSize.height * scale);
     }
     return self;
@@ -485,7 +493,7 @@
     }
 }
 
--(void) drawFrameOnGLView:(GLKView*)glview
+-(void) drawFrameOnGLView:(NSOpenGLView*)glview
 {
     if (director) {
         if (glview) {
@@ -503,5 +511,3 @@
 }
 
 @end
-
-#endif

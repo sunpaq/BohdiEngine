@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 oreisoft. All rights reserved.
 //
 
-#ifdef __APPLE__
+#if defined(__IOS__)
 //#include <OpenGLES/ES1/glext.h>
 //#include <OpenGLES/ES2/glext.h>
 #include <OpenGLES/ES3/glext.h>
-#elif __ANDROID__
+#elif defined(__ANDROID__)
 #ifndef GL_GLEXT_PROTOTYPES
 #define GL_GLEXT_PROTOTYPES 1
 #endif
@@ -25,6 +25,9 @@
 //#include <GLES3/gl3ext.h>
 //#include <GLES3/gl3platform.h>
 //#include <GLES3/gl31.h>
+#elif defined(__APPLE__) && defined(__MACH__)
+#import <OpenGL/OpenGL.h>
+#import <OpenGL/gl3.h>
 #else
 #include <GL/gl.h>
 #endif
@@ -41,13 +44,6 @@ typedef enum {
     MCGLBlend = GL_BLEND,
     MCGLCullFace = GL_CULL_FACE,
 } MCGLFeature;
-
-typedef struct {
-    MCFloat R;
-    MCFloat G;
-    MCFloat B;
-    MCFloat A;
-} MCColorf;
 
 typedef enum {
     MCGLFront = GL_FRONT,
@@ -69,6 +65,13 @@ typedef enum {
     MCVertexShader = GL_VERTEX_SHADER,
     MCFragmentShader = GL_FRAGMENT_SHADER
 } MCShaderType;
+
+typedef struct {
+    MCFloat R;
+    MCFloat G;
+    MCFloat B;
+    MCFloat A;
+} MCColorf;
 
 //typedef enum {
 //    MCGLPosition = 0,

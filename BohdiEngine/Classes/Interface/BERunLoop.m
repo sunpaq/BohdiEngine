@@ -6,6 +6,8 @@
 //
 //
 
+#if defined(__IOS__)
+
 #import "BERunLoop.h"
 
 @interface BERunLoop()
@@ -36,3 +38,5 @@
 }
 
 @end
+
+#endif

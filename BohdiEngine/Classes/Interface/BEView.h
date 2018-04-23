@@ -6,6 +6,8 @@
 //
 //
 
+#if defined(__IOS__)
+
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 #import "BERenderer.h"
@@ -36,3 +38,5 @@
 - (void) resetAttitude;
 
 @end
+
+#endif

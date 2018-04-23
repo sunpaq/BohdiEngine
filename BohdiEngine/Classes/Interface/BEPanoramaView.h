@@ -6,6 +6,8 @@
 //
 //
 
+#if defined(__IOS__)
+
 #import "BEView.h"
 
 @interface BEPanoramaView : BEView
@@ -21,3 +23,5 @@
 - (void) stopDraw3DContent __unavailable;
 
 @end
+
+#endif

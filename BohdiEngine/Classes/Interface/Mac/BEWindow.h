@@ -9,15 +9,19 @@
 
 #import <Cocoa/Cocoa.h>
 #import "BEWindowRenderer.h"
-//#import <QuartzCore/CVDisplayLink.h>
+#import "BEWindowRunloop.h"
 
-//#import "modelUtil.h"
-//#import "imageUtil.h"
+@protocol BEWindowRenderingDelegate
+- (void) beforeRenderFrame;
+- (void) afterRenderFrame;
+@end
 
-@interface BEWindow : NSOpenGLView {
-	CVDisplayLinkRef displayLink;
-}
+@interface BEWindow : NSView
 
-@property (nonatomic) BEWindowRenderer* renderer;
+@property (nonatomic) id<BEWindowRenderingDelegate> delegate;
+
+@property (atomic, readonly) NSOpenGLView* glview;
+@property (atomic, readonly) BEWindowRunloop* runloop;
+@property (atomic, readonly) BEWindowRenderer* renderer;
 
 @end

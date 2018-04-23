@@ -110,25 +110,22 @@
 }
 
 +(NSOpenGLView*) createDefaultGLView:(CGRect)frame
-{
-    /*
-    NSOpenGLContext* ctx = [[NSOpenGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-    ctx.multiThreaded = YES;
-    
-    [EAGLContext setCurrentContext:ctx];
-    GLKView* glview = [[GLKView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height) context:ctx];
-    
-    glview.enableSetNeedsDisplay = YES;
-    glview.opaque = NO;
-    
-    glview.drawableColorFormat   = GLKViewDrawableColorFormatRGBA8888;
-    glview.drawableDepthFormat   = GLKViewDrawableDepthFormat16;
-    glview.drawableStencilFormat = GLKViewDrawableStencilFormat8;
-    
-    return glview;
-    */
-    
-    return nil;
+{    
+    NSOpenGLPixelFormatAttribute attrs[] =
+    {
+        NSOpenGLPFADoubleBuffer,
+        NSOpenGLPFADepthSize, 24,
+        NSOpenGLPFAOpenGLProfile,
+        NSOpenGLProfileVersion3_2Core,
+        0
+    };
+    NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+    NSOpenGLContext* context = [[NSOpenGLContext alloc] initWithFormat:pf shareContext:nil];
+    NSOpenGLView* view = [[NSOpenGLView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)
+                                                 pixelFormat:pf];
+    [view setOpenGLContext:context];
+    [view setWantsBestResolutionOpenGLSurface:YES];
+    return view;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame
@@ -142,7 +139,11 @@
                                   frame.size.height * scale);
         
         computed(director, cameraHandler)->rotateMode = MCCameraRotateAroundModelManual;
-        [self setBackgroundColor:[NSColor darkGrayColor]];
+        
+        //NSColor* color1 = [NSColor colorWithCalibratedWhite:0.65 alpha:1.0];
+        //NSColor* color2 = [color1 colorUsingColorSpace:NSColorSpace.deviceRGBColorSpace];
+        
+        [self setBackgroundColor:NSColor.blueColor];
         return self;
     }
     return nil;
@@ -497,7 +498,9 @@
 {
     if (director) {
         if (glview) {
-            [glview display];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [glview display];
+            });
         }
         [self drawFrame];
     }

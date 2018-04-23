@@ -28,6 +28,7 @@
 #elif defined(__APPLE__) && defined(__MACH__)
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl3.h>
+#define ESSENTIAL_GL_PRACTICES_SUPPORT_GL3 1
 #else
 #include <GL/gl.h>
 #endif

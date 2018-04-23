@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-
-//#import <CoreMotion/CoreMotion.h>
 #import <GLKit/GLKit.h>
 
 typedef enum {
@@ -76,7 +74,7 @@ typedef enum {
 -(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye vrFOV:(CGFloat)fov;
 
 -(void) drawFrameOnCALayer:(CALayer*)calayer;
-//-(void) drawFrameOnGLView:(GLKView*)glview;
+-(void) drawFrameOnGLView:(NSOpenGLView*)glview;
 
 -(void) pauseDraw:(BOOL)pause;
 

@@ -6,19 +6,17 @@
 //
 //
 
-#if defined(__IOS__)
-
-#import "BERenderer.h"
+#import "BENSRenderer.h"
 #import "MCDirector.h"
 
-@interface BERenderer()
+@interface BENSRenderer()
 {
     MCDirector* director;
     float pinch_scale;
 }
 @end
 
-@implementation BERenderer
+@implementation BENSRenderer
 
 -(BOOL)doesAutoRotateCamera
 {
@@ -30,6 +28,7 @@
     return computed(director, contextHandler)->drawMode == MCLineStrip? YES : NO;
 }
 
+/*
 -(CMRotationMatrix) deviceRotateMat3
 {
     CMRotationMatrix mat3 = {0};
@@ -48,6 +47,7 @@
     }
     return mat3;
 }
+*/
 
 -(void)setDoesAutoRotateCamera:(BOOL)doesAutoRotateCamera
 {
@@ -59,6 +59,7 @@
     computed(director, contextHandler)->drawMode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
 }
 
+/*
 -(void) setDeviceRotateMat3:(CMRotationMatrix)mat3
 {
     if (director) {
@@ -75,8 +76,9 @@
         director->deviceRotationMat3.m22 = mat3.m33;
     }
 }
+*/
 
-+(void) createFramebuffersWithContext:(EAGLContext*)ctx AndLayer:(CAEAGLLayer*)lyr
++(void) createFramebuffersWithContext:(NSOpenGLContext*)ctx AndLayer:(NSOpenGLLayer*)lyr
 {
     GLsizei width  = lyr.bounds.size.width;
     GLsizei height = lyr.bounds.size.height;
@@ -89,7 +91,9 @@
     glGenRenderbuffers(1, &colorRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
-    [ctx renderbufferStorage:GL_RENDERBUFFER fromDrawable:lyr];
+    
+    //[ctx renderbufferStorage:GL_RENDERBUFFER fromDrawable:lyr];
+    
     glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
     
     GLuint depthRenderbuffer;
@@ -105,22 +109,35 @@
     }
 }
 
-+(GLKView*) createDefaultGLView:(CGRect)frame
-{
-    EAGLContext* ctx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-    ctx.multiThreaded = YES;
++(NSOpenGLView*) createDefaultGLView:(CGRect)frame
+{    
+    NSOpenGLPixelFormatAttribute attrs[] =
+    {
+        NSOpenGLPFADoubleBuffer,
+        NSOpenGLPFADepthSize, 24,
+        NSOpenGLPFAOpenGLProfile,
+        NSOpenGLProfileVersion3_2Core,
+        0
+    };
+    NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+    NSOpenGLContext* context = [[NSOpenGLContext alloc] initWithFormat:pf shareContext:nil];
+    NSOpenGLView* view = [[NSOpenGLView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)
+                                                 pixelFormat:pf];
+    [view setOpenGLContext:context];
+    [view setPixelFormat:pf];
+    [view setWantsBestResolutionOpenGLSurface:YES];
     
-    [EAGLContext setCurrentContext:ctx];
-    GLKView* glview = [[GLKView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height) context:ctx];
+    // The reshape function may have changed the thread to which our OpenGL
+    // context is attached before prepareOpenGL and initGL are called.  So call
+    // makeCurrentContext to ensure that our OpenGL context current to this
+    // thread (i.e. makeCurrentContext directs all OpenGL calls on this thread
+    // to [self openGLContext])
+    [context makeCurrentContext];
     
-    glview.enableSetNeedsDisplay = YES;
-    glview.opaque = NO;
-    
-    glview.drawableColorFormat   = GLKViewDrawableColorFormatRGBA8888;
-    glview.drawableDepthFormat   = GLKViewDrawableDepthFormat16;
-    glview.drawableStencilFormat = GLKViewDrawableStencilFormat8;
-    
-    return glview;
+    // Synchronize buffer swaps with vertical refresh rate
+    GLint swapInt = 1;
+    [context setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
+    return view;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame
@@ -128,13 +145,17 @@
     if (self = [super init]) {
         pinch_scale = 10.0;
         director = new(MCDirector);
-        CGFloat scale = [UIScreen mainScreen].scale;
+        CGFloat scale = [NSScreen mainScreen].backingScaleFactor;
         MCDirector_setupMainScene(director,
                                   frame.size.width * scale,
                                   frame.size.height * scale);
         
         computed(director, cameraHandler)->rotateMode = MCCameraRotateAroundModelManual;
-        [self setBackgroundColor:[UIColor darkGrayColor]];
+        
+        //NSColor* color1 = [NSColor colorWithCalibratedWhite:0.65 alpha:1.0];
+        //NSColor* color2 = [color1 colorUsingColorSpace:NSColorSpace.deviceRGBColorSpace];
+        
+        //[self setBackgroundColor:NSColor.blueColor];
         return self;
     }
     return nil;
@@ -156,12 +177,12 @@
     return self;
 }
 
--(instancetype) setBackgroundColor:(UIColor*)color
+-(instancetype) setBackgroundColor:(NSColor*)color
 {
     if (director) {
-        CGFloat red, green, blue, alpha;
-        [color getRed:&red green:&green blue:&blue alpha:&alpha];
-        MCDirector_setBackgroudColor(director, red, green, blue, alpha);
+        CGFloat red, green, blue;
+        [color getRed:&red green:&green blue:&blue alpha:nil];
+        MCDirector_setBackgroudColor(director, red, green, blue, 1.0);
     }
     return self;
 }
@@ -169,7 +190,7 @@
 -(instancetype) resizeAllScene:(CGSize)frameSize
 {
     if (director) {
-        CGFloat scale = [UIScreen mainScreen].scale;
+        CGFloat scale = [NSScreen mainScreen].backingScaleFactor;
         MCDirector_resizeAllScene(director, (int)frameSize.width * scale, (int)frameSize.height * scale);
     }
     return self;
@@ -187,6 +208,22 @@
 -(void) removeCurrentModel
 {
     ff(director, removeCurrentModel, 0);
+}
+
+-(void) addModel:(NSString*)modelpath
+{
+    MCDirector* dir = director;
+    double scale = 10.0;
+    double ccwRadian = 0;
+    int tag = -1;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        const char* path = [modelpath cStringUsingEncoding:NSUTF8StringEncoding];
+        MC3DModel* m = MCDirector_addModelPathed(dir, path, MCFloatF(scale));
+        m->tag = tag;
+        MC3DModel_rotateAroundSelfAxisX(m, ccwRadian);
+        MCDirector_cameraFocusOn(dir, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
+    });
 }
 
 -(void) addModelNamed:(NSString*)modelName
@@ -485,11 +522,13 @@
     }
 }
 
--(void) drawFrameOnGLView:(GLKView*)glview
+-(void) drawFrameOnGLView:(NSOpenGLView*)glview
 {
     if (director) {
         if (glview) {
-            [glview display];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [glview display];
+            });
         }
         [self drawFrame];
     }
@@ -503,5 +542,3 @@
 }
 
 @end
-
-#endif

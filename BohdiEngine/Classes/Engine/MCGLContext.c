@@ -48,7 +48,11 @@ method(MCGLContext, MCGLContext*, initWithShaderCode, const char* vcode, const c
         glBindAttribLocation(obj->pid, i, attribs[i]);
     }
     
+#if defined(__APPLE__) && defined(__MACH__)
+    MCGLEngine_prepareShader(obj->pid, vcode, fcode, "#version 330 core\n");
+#else
     MCGLEngine_prepareShader(obj->pid, vcode, fcode, "#version 300 es\n");
+#endif
 
     //uniforms
     for (int i=0; i<ucount; i++) {

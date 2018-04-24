@@ -6,6 +6,8 @@
 //
 //
 
+#if defined(__IOS__)
+
 #import <Foundation/Foundation.h>
 #import <CoreMotion/CoreMotion.h>
 
@@ -24,3 +26,5 @@
 -(CMAttitude*)getDeltaAttitude;
 
 @end
+
+#endif

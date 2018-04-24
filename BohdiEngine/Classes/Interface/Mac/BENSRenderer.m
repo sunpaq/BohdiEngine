@@ -6,17 +6,17 @@
 //
 //
 
-#import "BEWindowRenderer.h"
+#import "BENSRenderer.h"
 #import "MCDirector.h"
 
-@interface BEWindowRenderer()
+@interface BENSRenderer()
 {
     MCDirector* director;
     float pinch_scale;
 }
 @end
 
-@implementation BEWindowRenderer
+@implementation BENSRenderer
 
 -(BOOL)doesAutoRotateCamera
 {
@@ -124,7 +124,19 @@
     NSOpenGLView* view = [[NSOpenGLView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)
                                                  pixelFormat:pf];
     [view setOpenGLContext:context];
+    [view setPixelFormat:pf];
     [view setWantsBestResolutionOpenGLSurface:YES];
+    
+    // The reshape function may have changed the thread to which our OpenGL
+    // context is attached before prepareOpenGL and initGL are called.  So call
+    // makeCurrentContext to ensure that our OpenGL context current to this
+    // thread (i.e. makeCurrentContext directs all OpenGL calls on this thread
+    // to [self openGLContext])
+    [context makeCurrentContext];
+    
+    // Synchronize buffer swaps with vertical refresh rate
+    GLint swapInt = 1;
+    [context setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
     return view;
 }
 
@@ -143,7 +155,7 @@
         //NSColor* color1 = [NSColor colorWithCalibratedWhite:0.65 alpha:1.0];
         //NSColor* color2 = [color1 colorUsingColorSpace:NSColorSpace.deviceRGBColorSpace];
         
-        [self setBackgroundColor:NSColor.blueColor];
+        //[self setBackgroundColor:NSColor.blueColor];
         return self;
     }
     return nil;
@@ -168,9 +180,9 @@
 -(instancetype) setBackgroundColor:(NSColor*)color
 {
     if (director) {
-        CGFloat red, green, blue, alpha;
-        [color getRed:&red green:&green blue:&blue alpha:&alpha];
-        MCDirector_setBackgroudColor(director, red, green, blue, alpha);
+        CGFloat red, green, blue;
+        [color getRed:&red green:&green blue:&blue alpha:nil];
+        MCDirector_setBackgroudColor(director, red, green, blue, 1.0);
     }
     return self;
 }
@@ -196,6 +208,22 @@
 -(void) removeCurrentModel
 {
     ff(director, removeCurrentModel, 0);
+}
+
+-(void) addModel:(NSString*)modelpath
+{
+    MCDirector* dir = director;
+    double scale = 10.0;
+    double ccwRadian = 0;
+    int tag = -1;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        const char* path = [modelpath cStringUsingEncoding:NSUTF8StringEncoding];
+        MC3DModel* m = MCDirector_addModelPathed(dir, path, MCFloatF(scale));
+        m->tag = tag;
+        MC3DModel_rotateAroundSelfAxisX(m, ccwRadian);
+        MCDirector_cameraFocusOn(dir, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
+    });
 }
 
 -(void) addModelNamed:(NSString*)modelName

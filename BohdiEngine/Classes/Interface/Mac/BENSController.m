@@ -6,20 +6,20 @@
  Window controller subclass.
  */
 
-#import "BEWindowController.h"
-#import "BEFullscreenWindow.h"
+#import "BENSController.h"
+#import "BENSFullscreenWindow.h"
 
-@interface BEWindowController ()
+@interface BENSController ()
 {
     // Fullscreen window
-    BEFullscreenWindow *_fullscreenWindow;
+    BENSFullscreenWindow *_fullscreenWindow;
 
     // Non-Fullscreen window (also the initial window)
     NSWindow* _standardWindow;
 }
 @end
 
-@implementation BEWindowController
+@implementation BENSController
 
 - (instancetype)initWithWindow:(NSWindow *)window
 {
@@ -44,7 +44,7 @@
 	}
 
 	// Allocate a new fullscreen window
-	_fullscreenWindow = [[BEFullscreenWindow alloc] init];
+	_fullscreenWindow = [[BENSFullscreenWindow alloc] init];
 
 	// Resize the view to screensize
 	NSRect viewRect = [_fullscreenWindow frame];

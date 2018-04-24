@@ -30,7 +30,7 @@ oninit(MCMap)
 method(MCMap, void, bye, voida)
 {
     MCHashTableSize count = cpt(itemsCount);
-    for (MCHashTableIndex i; i<count; i++) {
+    for (MCHashTableIndex i=0; i<count; i++) {
         mc_hashitem* item = obj->table->items[i];
         if (item) {
             MCGeneric v = item->value;

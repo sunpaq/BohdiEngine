@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 #import <GLKit/GLKit.h>
+#import "MCGLBase.h"
 
 typedef enum {
     BECameraFixedAtOrigin = 0,
@@ -17,7 +18,7 @@ typedef enum {
     BECameraRotateAroundModelByGyroscopeReverse
 } BECameraRotateMode;
 
-@interface BEWindowRenderer : NSObject
+@interface BENSRenderer : NSObject
 
 @property (atomic, readwrite) BOOL doesAutoRotateCamera;
 @property (atomic, readwrite) BOOL doesDrawWireFrame;
@@ -35,6 +36,7 @@ typedef enum {
 -(instancetype) scissorAllScene:(CGRect)frame;
 
 -(void) removeCurrentModel;
+-(void) addModel:(NSString*)modelpath;
 -(void) addModelNamed:(NSString*)modelName;
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale;
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian;

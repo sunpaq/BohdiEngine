@@ -5,11 +5,14 @@
 //  Created by 孙御礼 on 4/23/30 H.
 //
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
 @interface BEWindowRunloop : NSObject
 
--(instancetype) initWithTarget:(id)target Selector:(SEL)selector OpenGLView:(NSOpenGLView*)glview;
+@property (nonatomic) id target;
+@property (nonatomic) SEL selector;
+
+-(instancetype) initWithOpenGLView:(NSOpenGLView*)glview;
 -(void) startRunloop;
 -(void) stopRunloop;
 

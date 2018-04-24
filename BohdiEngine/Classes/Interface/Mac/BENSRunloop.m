@@ -5,17 +5,18 @@
 //  Created by 孙御礼 on 4/23/30 H.
 //
 
-#import "BEWindowRunloop.h"
+#import "BENSRunloop.h"
 
 @interface BEWindowRunloop()
 {
     CVDisplayLinkRef displayLink;
-    id target;
-    SEL selector;
 }
 @end
 
 @implementation BEWindowRunloop
+
+@synthesize target;
+@synthesize selector;
 
 - (CVReturn) getFrameForTime:(const CVTimeStamp*)outputTime
 {
@@ -23,9 +24,11 @@
     // because it will be called from a background thread.
     // It's important to create one or app can leak objects.
     @autoreleasepool {
-        if (target) {
-            [target performSelector:selector];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.target) {
+                [self.target performSelector:self.selector];
+            }
+        });
     }
     return kCVReturnSuccess;
 }
@@ -42,7 +45,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
     return result;
 }
 
--(instancetype) initWithTarget:(id)target Selector:(SEL)selector OpenGLView:(NSOpenGLView*)glview
+-(instancetype) initWithOpenGLView:(NSOpenGLView*)glview
 {
     CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
     

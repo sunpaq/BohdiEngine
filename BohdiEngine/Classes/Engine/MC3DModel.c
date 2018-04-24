@@ -406,11 +406,13 @@ method(MC3DModel, void, resizeToFit, double maxsize)
 {
     if (var(fitted) == false) {
         double maxl  = cpt(maxlength);
-        double scale = maxsize / maxl;
-        MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
-        MC3DNode_scaleVec3(sobj, &scaleVec, false);
-        var(fitted) = true;
-        debug_log("MC3DModel - model maxlength=%lf scale=%lf\n", maxl, scale);
+        if (maxl > DBL_EPSILON) {
+            double scale = maxsize / maxl;
+            MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
+            MC3DNode_scaleVec3(sobj, &scaleVec, false);
+            var(fitted) = true;
+            debug_log("MC3DModel - model maxlength=%lf scale=%lf\n", maxl, scale);
+        }
     }
 }
 

@@ -8,8 +8,8 @@
 
 
 #import <Cocoa/Cocoa.h>
-#import "BEWindow.h"
+#import "BENSView.h"
 
-@interface BEWindowController : NSWindowController
+@interface BENSController : NSWindowController
 
 @end

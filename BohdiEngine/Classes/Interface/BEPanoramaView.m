@@ -6,6 +6,8 @@
 //
 //
 
+#if defined(__IOS__)
+
 #import "BEPanoramaView.h"
 
 @implementation BEPanoramaView
@@ -26,3 +28,5 @@
 }
 
 @end
+
+#endif

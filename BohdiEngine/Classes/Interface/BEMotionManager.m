@@ -6,6 +6,8 @@
 //
 //
 
+#if defined(__IOS__)
+
 #import "BEMotionManager.h"
 
 @interface BEMotionManager()
@@ -78,3 +80,5 @@ static BEMotionManager* _instance = nil;
 }
 
 @end
+
+#endif

@@ -122,7 +122,12 @@ int MCFileGetPathFromBundle(const char* bundlename, const char* filename, char* 
     char rootpath[PATH_MAX] = {0};
     CFStringGetCString(BundlePath, rootpath, PATH_MAX, kCFStringEncodingUTF8);
     
+#if defined(__MACH__)
+    strcat(rootpath, "Contents/Resources/");
     strcat(rootpath, filename);
+#else
+    strcat(rootpath, filename);
+#endif
     MCStringFillLimited(buffer, rootpath, strlen(rootpath));
     return 0;
 

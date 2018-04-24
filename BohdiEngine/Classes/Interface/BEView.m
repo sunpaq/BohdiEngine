@@ -6,6 +6,8 @@
 //
 //
 
+#if defined(__IOS__)
+
 #import "BEView.h"
 
 @implementation BEView
@@ -112,3 +114,5 @@
 }
 
 @end
+
+#endif

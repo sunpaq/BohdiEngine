@@ -15,6 +15,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/sunpaq/BohdiEngine-pod.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '9.0'
+  s.osx.deployment_target  = '10.10'
 
   s.source_files         = 'BohdiEngine/**/**/*.{h,c,m}'
   s.public_header_files  = 'BohdiEngine/Classes/**/*.h'

@@ -52,7 +52,8 @@ utility(MCGLEngine, void, activeTextureUnit, MCUInt index);
 utility(MCGLEngine, void, bindCubeTexture, MCUInt tid);
 utility(MCGLEngine, void, bind2DTexture, MCUInt tid);
 utility(MCGLEngine, void, unbind2DTextures, voida);
-
+utility(MCGLEngine, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype);
+utility(MCGLEngine, void, setupTexParameter, MCTexture* tex, GLenum textype);
 //Shader
 utility(MCGLEngine, GLuint, createShader, voida);
 utility(MCGLEngine, GLuint, prepareShader, GLuint Id, const char* vcode, const char* fcode, const char* version);

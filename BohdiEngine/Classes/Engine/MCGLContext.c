@@ -148,35 +148,6 @@ function(int, setUniform, const char* name, int loc, MCGLUniform* uniform)
     return loc;
 }
 
-function(void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
-{
-    if (tex->data && tex->data->raw) {
-        if (tex->data->channels == 4) {
-            glTexImage2D(textype, 0, GL_RGBA, tex->width, tex->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex->data->raw);
-            glGenerateMipmap(textype);
-        }
-        else {
-            glTexImage2D(textype, 0, GL_RGB, tex->width, tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->data->raw);
-            glGenerateMipmap(textype);
-        }
-    }
-}
-
-//GL_TEXTURE_2D
-function(void, setupTexParameter, MCTexture* tex, GLenum textype)
-{
-    if (tex->displayMode == MCTextureRepeat) {
-        glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(textype, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    }
-    else {
-        glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(textype, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    }
-    glTexParameteri(textype, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(textype, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-}
-
 method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
 {
     if (tex) {
@@ -185,8 +156,8 @@ method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
             glGenTextures(1, &tex->Id);
             MCGLEngine_activeTextureUnit(tex->textureUnit);
             MCGLEngine_bind2DTexture(tex->Id);
-            rawdataToTexbuffer(obj, tex, GL_TEXTURE_2D);
-            setupTexParameter(obj, tex, GL_TEXTURE_2D);
+            MCGLEngine_rawdataToTexbuffer(tex, GL_TEXTURE_2D);
+            MCGLEngine_setupTexParameter(tex, GL_TEXTURE_2D);
         }
         glUniform1i(glGetUniformLocation(obj->pid, samplerName), tex->textureUnit);
         MCGLEngine_activeTextureUnit(tex->textureUnit);

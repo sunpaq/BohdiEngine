@@ -83,33 +83,6 @@ method(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex)
     return null;
 }
 
-//method(MCTexture, void, loadToGLBuffer, GLuint pid, const char* uniformName)
-//{
-//    if (var(loadedToGL) == false) {
-//        var(loadedToGL) = true;
-//        glGenTextures(1, &obj->Id);
-//        MCGLEngine_activeTextureUnit(obj->textureUnit);
-//        MCGLEngine_bind2DTexture(obj->Id);
-//        
-//        rawdataToTexbuffer(obj, GL_TEXTURE_2D);
-//        setupTexParameter(obj, GL_TEXTURE_2D);
-//    }
-//    if (obj) {
-//        glUniform1i(glGetUniformLocation(pid, uniformName), obj->textureUnit);
-//        MCGLEngine_activeTextureUnit(obj->textureUnit);
-//        MCGLEngine_bind2DTexture(obj->Id);
-//    }
-//}
-
-//method(MCTexture, void, active, GLuint pid, const char* uniformName)
-//{
-//    if (obj) {
-//        glUniform1i(glGetUniformLocation(pid, uniformName), obj->textureUnit);
-//        MCGLEngine_activeTextureUnit(obj->textureUnit);
-//        MCGLEngine_bind2DTexture(obj->Id);
-//    }
-//}
-
 onload(MCTexture)
 {
     if (load(MCObject)) {

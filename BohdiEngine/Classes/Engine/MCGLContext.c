@@ -153,13 +153,13 @@ method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
     if (tex) {
         if (tex->loadedToGL == false) {
             tex->loadedToGL = true;
-            glGenTextures(1, &tex->Id);
+            MCGLEngine_generateTextureId(&tex->Id);
             MCGLEngine_activeTextureUnit(tex->textureUnit);
             MCGLEngine_bind2DTexture(tex->Id);
             MCGLEngine_rawdataToTexbuffer(tex, GL_TEXTURE_2D);
             MCGLEngine_setupTexParameter(tex, GL_TEXTURE_2D);
         }
-        glUniform1i(glGetUniformLocation(obj->pid, samplerName), tex->textureUnit);
+        MCGLEngine_shaderSetUInt(obj->pid, samplerName, tex->textureUnit);
         MCGLEngine_activeTextureUnit(tex->textureUnit);
         MCGLEngine_bind2DTexture(tex->Id);
     }

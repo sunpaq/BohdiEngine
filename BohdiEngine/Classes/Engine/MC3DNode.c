@@ -210,9 +210,9 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
         
         //draw self texture
         if (obj->diffuseTexture != null) {
-            glUniform1i(glGetUniformLocation(ctx->pid, "usetexture"), true);
+            MCGLEngine_shaderSetBool(ctx->pid, "usetexture", true);
         } else {
-            glUniform1i(glGetUniformLocation(ctx->pid, "usetexture"), false);
+            MCGLEngine_shaderSetBool(ctx->pid, "usetexture", false);
         }
         
         //batch setup

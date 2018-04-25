@@ -110,6 +110,11 @@ utility(MCGLEngine, MCUInt, getMaxTextureUnits, voida)
     return (MCUInt)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
 }
 
+utility(MCGLEngine, void, generateTextureId, MCUInt* tid)
+{
+    glGenTextures(1, tid);
+}
+
 utility(MCGLEngine, void, activeTextureUnit, MCUInt index)
 {
     glActiveTexture(GL_TEXTURE0 + index);
@@ -217,6 +222,16 @@ utility(MCGLEngine, GLuint, prepareShader, GLuint Id, const char* vcode, const c
     }
     
     return Id;
+}
+
+utility(MCGLEngine, void, shaderSetUInt, GLuint Id, const char* name, MCUInt value)
+{
+    glUniform1i(glGetUniformLocation(Id, name), value);
+}
+
+utility(MCGLEngine, void, shaderSetBool, GLuint Id, const char* name, MCBool value)
+{
+    glUniform1i(glGetUniformLocation(Id, name), value);
 }
 
 utility(MCGLEngine, int, prepareShaderName, GLuint Id, const char* bundlename, const char* vname, const char* fname, const char* version)

@@ -48,6 +48,7 @@ utility(MCGLEngine, void, cullBackFace, voida);
 //Texture
 utility(MCGLEngine, MCUInt, getIdleTextureUnit, voida);
 utility(MCGLEngine, MCUInt, getMaxTextureUnits, voida);
+utility(MCGLEngine, void, generateTextureId, MCUInt* tid);
 utility(MCGLEngine, void, activeTextureUnit, MCUInt index);
 utility(MCGLEngine, void, bindCubeTexture, MCUInt tid);
 utility(MCGLEngine, void, bind2DTexture, MCUInt tid);
@@ -57,6 +58,8 @@ utility(MCGLEngine, void, setupTexParameter, MCTexture* tex, GLenum textype);
 //Shader
 utility(MCGLEngine, GLuint, createShader, voida);
 utility(MCGLEngine, GLuint, prepareShader, GLuint Id, const char* vcode, const char* fcode, const char* version);
+utility(MCGLEngine, void, shaderSetUInt, GLuint Id, const char* name, MCUInt value);
+utility(MCGLEngine, void, shaderSetBool, GLuint Id, const char* name, MCBool value);
 //pass bundlename = null to get main bundle
 utility(MCGLEngine, int, prepareShaderName, GLuint Id, const char* bundlename, const char* vname, const char* fname, const char* version);
 utility(MCGLEngine, void, tryUseShaderProgram, GLuint Id);

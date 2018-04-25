@@ -180,9 +180,15 @@
 -(instancetype) setBackgroundColor:(NSColor*)color
 {
     if (director) {
-        CGFloat red, green, blue;
-        [color getRed:&red green:&green blue:&blue alpha:nil];
-        MCDirector_setBackgroudColor(director, red, green, blue, 1.0);
+        NSColorSpace* csp = [[NSColorSpace alloc] initWithCGColorSpace:CGColorSpaceCreateDeviceRGB()];
+        color = [color colorUsingColorSpace:csp];
+        
+        CGFloat red = [color redComponent];
+        CGFloat green = [color greenComponent];
+        CGFloat blue = [color blueComponent];
+        CGFloat alpha = [color alphaComponent];
+        
+        MCDirector_setBackgroudColor(director, red, green, blue, alpha);
     }
     return self;
 }

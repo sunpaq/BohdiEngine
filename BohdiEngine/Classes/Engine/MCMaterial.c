@@ -9,6 +9,7 @@
 #include "MCMaterial.h"
 #include "MC3DBase.h"
 #include "MCGLRenderer.h"
+#include "MCGLEngine.h"
 
 oninit(MCMaterial)
 {
@@ -59,8 +60,7 @@ method(MCMaterial, void, prepareMatrial, MCGLContext* ctx)
         obj->dataChanged = false;
     }
     //set each time
-    glUniform1i(glGetUniformLocation(ctx->pid, "illum"), obj->illum);
-
+    MCGLEngine_shaderSetUInt(ctx->pid, "illum", obj->illum);
 }
 
 onload(MCMaterial)

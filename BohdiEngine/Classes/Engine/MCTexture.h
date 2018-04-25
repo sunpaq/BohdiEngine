@@ -28,6 +28,7 @@ class(MCTexture, MCObject,
       MCBool loadedToGL;
 );
 
+method(MCTexture, void, bye, voida);
 method(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode);
 method(MCTexture, MCTexture*, initWithFileName, const char* name);
 method(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex);

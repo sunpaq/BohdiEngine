@@ -94,6 +94,17 @@ utility(MCGLEngine, void, cullBackFace, voida)
 }
 
 //Texture
+static MCUInt texUnitNum = 1;
+utility(MCGLEngine, MCUInt, getIdleTextureUnit, voida)
+{
+    if (texUnitNum < MCGLEngine_getMaxTextureUnits(0)) {
+        texUnitNum++;
+    } else {
+        texUnitNum = 1;
+    }
+    return texUnitNum;
+}
+
 utility(MCGLEngine, MCUInt, getMaxTextureUnits, voida)
 {
     return (MCUInt)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
@@ -101,29 +112,23 @@ utility(MCGLEngine, MCUInt, getMaxTextureUnits, voida)
 
 utility(MCGLEngine, void, activeTextureUnit, MCUInt index)
 {
-    static int texCache = -1;
-    if (index != texCache) {
-        glActiveTexture(GL_TEXTURE0 + (0x0001*index));
-        texCache = index;
-    }
+    glActiveTexture(GL_TEXTURE0 + index);
 }
 
 utility(MCGLEngine, void, bindCubeTexture, MCUInt tid)
 {
-    static int texCache = -1;
-    if (tid != texCache) {
-        glBindTexture(GL_TEXTURE_CUBE_MAP, tid);
-        texCache = tid;
-    }
+    glBindTexture(GL_TEXTURE_CUBE_MAP, tid);
 }
 
 utility(MCGLEngine, void, bind2DTexture, MCUInt tid)
 {
-    static int texCache = -1;
-    if (tid != texCache) {
-        glBindTexture(GL_TEXTURE_2D, tid);
-        texCache = tid;
-    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, tid);
+}
+
+utility(MCGLEngine, void, unbind2DTextures, voida)
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 utility(MCGLEngine, GLuint, createShader, voida)

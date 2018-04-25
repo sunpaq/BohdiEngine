@@ -46,10 +46,13 @@ utility(MCGLEngine, void, setFrontCounterClockWise, MCBool isCCW);
 utility(MCGLEngine, void, cullFace, MCGLFace face);
 utility(MCGLEngine, void, cullBackFace, voida);
 //Texture
+utility(MCGLEngine, MCUInt, getIdleTextureUnit, voida);
 utility(MCGLEngine, MCUInt, getMaxTextureUnits, voida);
 utility(MCGLEngine, void, activeTextureUnit, MCUInt index);
 utility(MCGLEngine, void, bindCubeTexture, MCUInt tid);
 utility(MCGLEngine, void, bind2DTexture, MCUInt tid);
+utility(MCGLEngine, void, unbind2DTextures, voida);
+
 //Shader
 utility(MCGLEngine, GLuint, createShader, voida);
 utility(MCGLEngine, GLuint, prepareShader, GLuint Id, const char* vcode, const char* fcode, const char* version);

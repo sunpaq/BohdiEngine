@@ -10,19 +10,13 @@
 #include "MCGLEngine.h"
 #include "BEAssetsManager.h"
 
-static unsigned unitNum = 1;
-
 oninit(MCTexture)
 {
     if (init(MCObject)) {
         var(Id) = -1;
         var(width) = 512;
         var(height)= 512;
-        if (unitNum < 32) {
-            obj->textureUnit = unitNum++;
-        } else {
-            unitNum = 1;
-        }
+        var(textureUnit) = MCGLEngine_getIdleTextureUnit(0);
         var(data) = null;
         var(displayMode) = MCTextureRepeat;
         var(loadedToGL) = false;
@@ -81,7 +75,16 @@ function(void, setupTexParameter, GLenum textype)
 function(void, freeRawdata, voida)
 {
     as(MCTexture);
-    release(obj->data);
+    if (obj->data) {
+        release(obj->data);
+        obj->data = null;
+    }
+}
+
+method(MCTexture, void, bye, voida)
+{
+    superbye(MCObject);
+    freeRawdata(obj, 0);
 }
 
 method(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode)
@@ -114,14 +117,14 @@ method(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex)
 method(MCTexture, void, loadToGLBuffer, voida)
 {
     if (var(loadedToGL) == false) {
+        var(loadedToGL) = true;
         glGenTextures(1, &obj->Id);
         MCGLEngine_activeTextureUnit(obj->textureUnit);
         MCGLEngine_bind2DTexture(obj->Id);
         
         rawdataToTexbuffer(obj, GL_TEXTURE_2D);
         setupTexParameter(obj, GL_TEXTURE_2D);
-        //freeRawdata(0, obj, 0);
-        var(loadedToGL) = true;
+        freeRawdata(obj, 0);
     } else {
         MCGLEngine_activeTextureUnit(obj->textureUnit);
         MCGLEngine_bind2DTexture(obj->Id);
@@ -146,6 +149,7 @@ onload(MCTexture)
         mixing(void, setupTexParameter, GLenum textype);
         mixing(void, freeRawdata, voida);
         
+        binding(MCTexture, void, bye, voida);
         binding(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode);
         binding(MCTexture, MCTexture*, initWithFileName, const char* name);
         binding(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex);

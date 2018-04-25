@@ -49,7 +49,7 @@ function(void, rawdataToTexbuffer, GLenum textype)
             glTexImage2D(textype, 0, GL_RGBA, obj->width, obj->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, obj->data->raw);
             glGenerateMipmap(textype);
         }
-        else if (obj->data->channels == 3) {
+        else {
             glTexImage2D(textype, 0, GL_RGB, obj->width, obj->height, 0, GL_RGB, GL_UNSIGNED_BYTE, obj->data->raw);
             glGenerateMipmap(textype);
         }
@@ -123,11 +123,6 @@ method(MCTexture, void, loadToGLBuffer, voida)
         MCGLEngine_bind2DTexture(obj->Id);
         
         rawdataToTexbuffer(obj, GL_TEXTURE_2D);
-        setupTexParameter(obj, GL_TEXTURE_2D);
-        freeRawdata(obj, 0);
-    } else {
-        MCGLEngine_activeTextureUnit(obj->textureUnit);
-        MCGLEngine_bind2DTexture(obj->Id);
         setupTexParameter(obj, GL_TEXTURE_2D);
     }
 }

@@ -294,8 +294,6 @@ function(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
         //set mtl
         if (mtl) {
             setMaterialForNode(null, &model->Super, mtl);
-
-
         }else{
             setDefaultMaterialForNode(null, &model->Super);
         }

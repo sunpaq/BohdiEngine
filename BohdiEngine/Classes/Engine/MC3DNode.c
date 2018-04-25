@@ -217,14 +217,21 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
         
         //batch setup
         MCGLContext_setUniforms(ctx, 0);
-        
+
         //draw self meshes
         MCLinkedListForEach(var(meshes),
                             MCMesh* mesh = (MCMesh*)item;
                             if (mesh != null) {
-                                mesh->diffuseTextureRef  = obj->diffuseTexture;
-                                mesh->specularTextureRef = obj->specularTexture;
                                 MCMesh_prepareMesh(mesh, ctx);
+                                //texture
+                                if (obj->diffuseTexture) {
+                                    MCTexture_loadToGLBuffer(obj->diffuseTexture, 0);
+                                    MCTexture_active(obj->diffuseTexture, ctx->pid, "diffuse_sampler");
+                                }
+                                if (obj->specularTexture) {
+                                    MCTexture_loadToGLBuffer(obj->specularTexture, 0);
+                                    MCTexture_active(obj->specularTexture, ctx->pid, "specular_sampler");
+                                }
                                 MCMesh_drawMesh(mesh, ctx);
                             })
     //}

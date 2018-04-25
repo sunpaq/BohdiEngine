@@ -194,7 +194,7 @@ const char* MCFileCopyContentWithPath(const char* filepath)
     return MCFileCopyContentWithPathGetBufferSize(filepath, null);
 }
 
-void MCFileReleaseContent(void* buff)
+void MCFileReleaseContent(const char* buff)
 {
 	free(buff);
 }

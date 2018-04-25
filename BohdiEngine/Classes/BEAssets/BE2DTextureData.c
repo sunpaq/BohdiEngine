@@ -27,6 +27,9 @@ oninit(BE2DTextureData)
         
         //output
         obj->raw = null;
+        obj->width = 512;
+        obj->height = 512;
+        obj->channels = 3;
         return obj;
     }else{
         return null;
@@ -45,8 +48,10 @@ utility(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path
 
     off_t buffsize;
     const char* buff = MCFileCopyContentWithPathGetBufferSize(path, &buffsize);
-    data->raw = SOIL_load_image_from_memory(buff, buffsize, &data->width, &data->height, &data->channels, SOIL_LOAD_AUTO);
-    MCFileReleaseContent(buff);
+    data->raw = SOIL_load_image_from_memory((const unsigned char*)buff, (int)buffsize,
+                                            &data->width, &data->height, &data->channels,
+                                            SOIL_LOAD_AUTO);
+    MCFileReleaseContent((void*)buff);
 
     if (!data->raw) {
         error_log("BE2DTextureData - load texture failed: %s (%s)\n", SOIL_last_result(), path);

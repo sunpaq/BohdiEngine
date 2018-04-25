@@ -225,12 +225,10 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
                                 MCMesh_prepareMesh(mesh, ctx);
                                 //texture
                                 if (obj->diffuseTexture) {
-                                    MCTexture_loadToGLBuffer(obj->diffuseTexture, 0);
-                                    MCTexture_active(obj->diffuseTexture, ctx->pid, "diffuse_sampler");
+                                    MCGLContext_loadTexture(ctx, obj->diffuseTexture, "diffuse_sampler");
                                 }
                                 if (obj->specularTexture) {
-                                    MCTexture_loadToGLBuffer(obj->specularTexture, 0);
-                                    MCTexture_active(obj->specularTexture, ctx->pid, "specular_sampler");
+                                    MCGLContext_loadTexture(ctx, obj->specularTexture, "specular_sampler");
                                 }
                                 MCMesh_drawMesh(mesh, ctx);
                             })

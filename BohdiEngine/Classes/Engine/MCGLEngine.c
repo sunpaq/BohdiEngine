@@ -122,7 +122,6 @@ utility(MCGLEngine, void, bindCubeTexture, MCUInt tid)
 
 utility(MCGLEngine, void, bind2DTexture, MCUInt tid)
 {
-    glBindTexture(GL_TEXTURE_2D, 0);
     glBindTexture(GL_TEXTURE_2D, tid);
 }
 

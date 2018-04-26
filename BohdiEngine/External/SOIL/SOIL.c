@@ -24,8 +24,6 @@
 #include "TargetConditionals.h"
 /*	I can't test this Apple stuff!	*/
 #ifdef TARGET_OS_IOS
-#include <OpenGLES/ES1/glext.h>
-#include <OpenGLES/ES2/glext.h>
 #include <OpenGLES/ES3/glext.h>
 #else
 #import <OpenGL/OpenGL.h>

@@ -23,7 +23,7 @@
 #elif defined(__APPLE__) || defined(__APPLE_CC__)
 #include "TargetConditionals.h"
 /*	I can't test this Apple stuff!	*/
-#ifdef TARGET_OS_IOS
+#if TARGET_OS_IOS
 #import <OpenGLES/ES3/gl.h>
 #import <OpenGLES/ES3/glext.h>
 #else

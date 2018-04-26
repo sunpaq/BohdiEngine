@@ -6,7 +6,8 @@
 //
 //
 
-#if defined(__IOS__)
+#include "TargetConditionals.h"
+#if TARGET_OS_IOS
 
 #import "BEView.h"
 

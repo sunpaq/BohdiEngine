@@ -7,6 +7,7 @@
 //
 
 #ifdef __APPLE__
+#include "TargetConditionals.h"
 #include <CoreFoundation/CoreFoundation.h>
 #include <pthread.h>
 static CFStringRef BundlePath = NULL;
@@ -122,7 +123,7 @@ int MCFileGetPathFromBundle(const char* bundlename, const char* filename, char* 
     char rootpath[PATH_MAX] = {0};
     CFStringGetCString(BundlePath, rootpath, PATH_MAX, kCFStringEncodingUTF8);
     
-#if defined(__MACH__)
+#if TARGET_OS_OSX
     strcat(rootpath, "Contents/Resources/");
     strcat(rootpath, filename);
 #else

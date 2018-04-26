@@ -6,10 +6,10 @@
 //
 //
 
-#if defined(__IOS__)
-
 #import "BERenderer.h"
 #import "MCDirector.h"
+
+#if TARGET_OS_IOS
 
 @interface BERenderer()
 {

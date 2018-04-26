@@ -21,8 +21,9 @@
 #include <wingdi.h>
 #include <GL/gl.h>
 #elif defined(__APPLE__) || defined(__APPLE_CC__)
+#include "TargetConditionals.h"
 /*	I can't test this Apple stuff!	*/
-#ifdef __IOS__
+#ifdef TARGET_OS_IOS
 #include <OpenGLES/ES1/glext.h>
 #include <OpenGLES/ES2/glext.h>
 #include <OpenGLES/ES3/glext.h>

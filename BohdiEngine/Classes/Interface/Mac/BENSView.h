@@ -1,3 +1,7 @@
+#if __APPLE__
+#include "TargetConditionals.h"
+#if TARGET_OS_OSX
+
 #import <Cocoa/Cocoa.h>
 #import "BENSRenderer.h"
 
@@ -22,3 +26,6 @@
 - (void) stopDraw3DContent;
 
 @end
+
+#endif //TARGET_OS_OSX
+#endif //__APPLE__

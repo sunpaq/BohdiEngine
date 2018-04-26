@@ -9,6 +9,8 @@
 #import "BENSRenderer.h"
 #import "MCDirector.h"
 
+#if TARGET_OS_OSX
+
 @interface BENSRenderer()
 {
     MCDirector* director;
@@ -548,3 +550,5 @@
 }
 
 @end
+
+#endif

@@ -6,9 +6,9 @@
 //
 //
 
-#if defined(__IOS__)
-
 #import "BEMotionManager.h"
+
+#if TARGET_OS_IOS
 
 @interface BEMotionManager()
 {

@@ -6,6 +6,9 @@
 //
 //
 
+#include "TargetConditionals.h"
+#if TARGET_OS_IOS
+
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
 
@@ -16,3 +19,5 @@
 -(void) stopRunloop;
 
 @end
+
+#endif

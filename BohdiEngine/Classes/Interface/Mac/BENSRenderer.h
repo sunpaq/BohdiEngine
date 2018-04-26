@@ -6,6 +6,9 @@
 //
 //
 
+#include "TargetConditionals.h"
+#if TARGET_OS_OSX
+
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 #import <GLKit/GLKit.h>
@@ -81,3 +84,5 @@ typedef enum {
 -(void) pauseDraw:(BOOL)pause;
 
 @end
+
+#endif

@@ -1,5 +1,6 @@
 #import "BENSView.h"
 
+#if TARGET_OS_OSX
 #define SUPPORT_RETINA_RESOLUTION 1
 
 @implementation BENSView
@@ -229,3 +230,5 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	CVDisplayLinkRelease(displayLink);
 }
 @end
+
+#endif

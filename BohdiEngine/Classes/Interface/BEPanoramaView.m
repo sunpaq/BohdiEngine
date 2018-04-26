@@ -8,6 +8,8 @@
 
 #import "BEPanoramaView.h"
 
+#if TARGET_OS_IOS
+
 @implementation BEPanoramaView
 
 - (void) loadPanoramaTexture:(NSString*)texname
@@ -26,3 +28,5 @@
 }
 
 @end
+
+#endif

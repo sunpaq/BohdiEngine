@@ -7,7 +7,6 @@
 //
 
 #include "MC2DTex.h"
-#include "MCGLEngine.h"
 
 oninit(MC2DTex)
 {

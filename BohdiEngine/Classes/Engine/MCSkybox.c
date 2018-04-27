@@ -7,7 +7,6 @@
 //
 
 #include "MCSkybox.h"
-#include "MCGLEngine.h"
 #include "MCGLContext.h"
 #include "MCCamera.h"
 
@@ -75,10 +74,10 @@ oninit(MCSkybox)
         var(boxCameraRatio)= 9.0/16.0;
         var(boxCameraAngle)= M_PI * 0.55;
         
-        MCGLEngine_setClearScreenColor((MCColorf){0.05, 0.25, 0.35, 1.0});
-        MCGLEngine_featureSwith(MCGLCullFace, true);
-        MCGLEngine_cullFace(MCGLBack);
-        MCGLEngine_setFrontCounterClockWise(true);//CCW
+        MCGLContext_setClearScreenColor((MCColorf){0.05, 0.25, 0.35, 1.0});
+        MCGLContext_featureSwith(MCGLCullFace, true);
+        MCGLContext_cullFace(MCGLBack);
+        MCGLContext_setFrontCounterClockWise(true);//CCW
         return obj;
     }else{
         return null;
@@ -94,7 +93,7 @@ method(MCSkybox, void, bye, voida)
 method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
 {
     //Shader
-    MCGLContext_initWithShaderCode(var(ctx), vsource, fsource,
+    MCGLShader_initWithShaderCode(var(ctx)->shader, vsource, fsource,
                                    (const char* []){
                                        "position"
                                    }, 1,
@@ -129,8 +128,8 @@ method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
         sizeof(GLfloat) * 3, MCBUFFER_OFFSET(0)};
     MCVertexAttributeLoad(&attr);
     //Texture
-    MCGLEngine_activeTextureUnit(0);
-    MCGLEngine_bindCubeTexture(var(texid));
+    MCGLContext_activeTextureUnit(0);
+    MCGLContext_bindCubeTexture(var(texid));
     for (int i=0; i<6; i++) {
         BE2DTextureData* face = cubetex->faces[i];
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
@@ -196,24 +195,24 @@ method(MCSkybox, void, update, MCGLContext* ctx)
     obj->boxViewMatrix = boxViewMatrix(obj, 0);
     obj->boxProjectionMatrix = boxProjectionMatrix(obj, 0);
     
-    MCGLContext_activateShaderProgram(var(ctx), 0);
+    MCGLShader_activateShaderProgram(var(ctx)->shader, 0);
     MCGLUniformData data;
     data.mat4 = obj->boxProjectionMatrix;
-    MCGLContext_updateUniform(var(ctx), "boxProjectionMatrix", data);
+    MCGLShader_updateUniform(var(ctx)->shader, "boxProjectionMatrix", data);
 }
 
 method(MCSkybox, void, draw, MCGLContext* ctx)
 {
     glDepthMask(GL_FALSE);
-    MCGLContext_activateShaderProgram(var(ctx), 0);
+    MCGLShader_activateShaderProgram(var(ctx)->shader, 0);
     MCGLUniformData data;
     data.mat4 = obj->boxViewMatrix;
-    MCGLContext_updateUniform(var(ctx), "boxViewMatrix", data);
-    MCGLContext_setUniforms(var(ctx), 0);
+    MCGLShader_updateUniform(var(ctx)->shader, "boxViewMatrix", data);
+    MCGLShader_setUniforms(var(ctx)->shader, 0);
     
     glBindVertexArray(obj->vaoid);
-    MCGLEngine_activeTextureUnit(0);
-    //MCGLEngine_bindCubeTexture(obj->texid);
+    MCGLContext_activeTextureUnit(0);
+    //MCGLContext_bindCubeTexture(obj->texid);
     
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, MCBUFFER_OFFSET(0));
     

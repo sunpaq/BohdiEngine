@@ -10,7 +10,8 @@
 #define MCMatrial_h
 
 #include "monkc.h"
-#include "MCGLContext.h"
+#include "MCGLBase.h"
+//#include "MCGLContext.h"
 
 class(MCMaterial, MCObject,
       MCBool      dataChanged;
@@ -24,6 +25,6 @@ class(MCMaterial, MCObject,
       char        tag[256];
 );
 
-method(MCMaterial, void, prepareMatrial, MCGLContext* ctx);
+//method(MCMaterial, void, prepareMatrial, MCGLContext* ctx);
 
 #endif /* MCMatrial_h */

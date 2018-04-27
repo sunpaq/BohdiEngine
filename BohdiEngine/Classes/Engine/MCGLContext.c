@@ -8,15 +8,14 @@
 
 #include "MCGLContext.h"
 #include "MC3DBase.h"
-#include "MCGLEngine.h"
+#include "MCGLContext.h"
 #include "BEAssetsManager.h"
 #include "MCGLRenderer.h"
 
 oninit(MCGLContext)
 {
     if (init(MCObject)) {
-        var(pid) = glCreateProgram();
-        var(uniformCount) = 0;
+        var(shader) = new(MCGLShader);
         var(drawMode) = MCDrawNone;
         return obj;
     }else{
@@ -24,128 +23,10 @@ oninit(MCGLContext)
     }
 }
 
-function(int, fillUniformLocation, MCGLUniform* uniform)
-{
-    as(MCGLContext);
-    if (uniform->location == MC3DErrUniformNotFound) {
-        uniform->location = glGetUniformLocation(var(pid), uniform->name);
-    }
-    return uniform->location;
-}
-
 method(MCGLContext, void, bye, voida)
 {
-    glDeleteProgram(var(pid));
-}
-
-method(MCGLContext, MCGLContext*, initWithShaderCode, const char* vcode, const char* fcode,
-       const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount)
-{
-    MCGLEngine_tryUseShaderProgram(var(pid));
-    
-    //attribute
-    for (int i=0; i<acount; i++) {
-        glBindAttribLocation(obj->pid, i, attribs[i]);
-    }
-
-#if TARGET_OS_OSX
-    MCGLEngine_prepareShader(obj->pid, vcode, fcode, "#version 330 core\n");
-#else
-    MCGLEngine_prepareShader(obj->pid, vcode, fcode, "#version 300 es\n");
-#endif
-
-    //uniforms
-    for (int i=0; i<ucount; i++) {
-        MCGLUniform* f = &obj->uniforms[obj->uniformCount++];
-        MCGLUniformSetName(f, uniforms[i]);
-        f->type = types[i];
-        f->location = glGetUniformLocation(var(pid), uniforms[i]);
-        obj->uniformsDirty[i] = false;
-    }
-    
-    return obj;
-}
-
-method(MCGLContext, MCGLContext*, initWithShaderName, const char* vname, const char* fname,
-       const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount)
-{
-    char vpath[LINE_MAX] = {0};
-    if(MCFileGetPath(vname, vpath))
-        return null;
-    const char* vcode = MCFileCopyContentWithPath(vpath);
-    
-    char fpath[LINE_MAX] = {0};
-    if(MCFileGetPath(fname, fpath))
-        return null;
-    const char* fcode = MCFileCopyContentWithPath(fpath);
-    
-    MCGLContext_initWithShaderCode(obj, vcode, fcode, attribs, acount, types, uniforms, ucount);
-    
-    free((void*)vcode);
-    free((void*)fcode);
-    return obj;
-}
-
-method(MCGLContext, void, activateShaderProgram, voida)
-{
-    MCGLEngine_tryUseShaderProgram(var(pid));
-}
-
-method(MCGLContext, int, getUniformLocation, const char* name)
-{
-    for (MCUInt i=0; i<obj->uniformCount; i++) {
-        if (strcmp(name, obj->uniforms[i].name)==0) {
-            return fillUniformLocation(obj, &obj->uniforms[i]);
-        }
-    }
-    return MC3DErrUniformNotFound;
-}
-
-//MCGLUniformScalar,
-//MCGLUniformVec2,
-//MCGLUniformVec3,
-//MCGLUniformVec4,
-//MCGLUniformMat3,
-//MCGLUniformMat4
-function(int, setUniform, const char* name, int loc, MCGLUniform* uniform)
-{
-    as(MCGLContext);
-    if (var(pid) == 0) {
-        return -1;
-    }
-    if (name != null) {
-        loc = glGetUniformLocation(var(pid), name);
-    }
-    if (loc != MC3DErrUniformNotFound) {
-        switch (uniform->type) {
-            case MCGLUniformScalar:
-                glUniform1i(loc, uniform->data.scalar);
-                break;
-            case MCGLUniformVec1:
-                glUniform1f(loc, uniform->data.vec1);
-                break;
-            case MCGLUniformVec2:
-                glUniform2f(loc, uniform->data.vec2.x, uniform->data.vec2.y);
-                break;
-            case MCGLUniformVec3:
-                glUniform3f(loc, uniform->data.vec3.x, uniform->data.vec3.y,
-                            uniform->data.vec3.z);
-                break;
-            case MCGLUniformVec4:
-                glUniform4f(loc, uniform->data.vec4.x, uniform->data.vec4.y,
-                            uniform->data.vec4.z, uniform->data.vec4.w);
-                break;
-            case MCGLUniformMat3:
-                glUniformMatrix3fv(loc, 1, 0, uniform->data.mat3.m);
-                break;
-            case MCGLUniformMat4:
-                glUniformMatrix4fv(loc, 1, 0, uniform->data.mat4.m);
-                break;
-            default:
-                break;
-        }
-    }
-    return loc;
+    release(obj->shader);
+    obj->shader = null;
 }
 
 method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
@@ -153,132 +34,351 @@ method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
     if (tex) {
         if (tex->loadedToGL == false) {
             tex->loadedToGL = true;
-            MCGLEngine_generateTextureId(&tex->Id);
-            MCGLEngine_activeTextureUnit(tex->textureUnit);
-            MCGLEngine_bind2DTexture(tex->Id);
-            MCGLEngine_rawdataToTexbuffer(tex, GL_TEXTURE_2D);
-            MCGLEngine_setupTexParameter(tex, GL_TEXTURE_2D);
+            MCGLContext_generateTextureId(&tex->Id);
+            MCGLContext_activeTextureUnit(tex->textureUnit);
+            MCGLContext_bind2DTexture(tex->Id);
+            MCGLContext_rawdataToTexbuffer(tex, GL_TEXTURE_2D);
+            MCGLContext_setupTexParameter(tex, GL_TEXTURE_2D);
         }
-        MCGLEngine_shaderSetUInt(obj->pid, samplerName, tex->textureUnit);
-        MCGLEngine_activeTextureUnit(tex->textureUnit);
-        MCGLEngine_bind2DTexture(tex->Id);
+        MCGLShader_shaderSetUInt(obj->shader, samplerName, tex->textureUnit);
+        MCGLContext_activeTextureUnit(tex->textureUnit);
+        MCGLContext_bind2DTexture(tex->Id);
     }
 }
 
-method(MCGLContext, void, updateUniform, const char* name, MCGLUniformData udata)
+method(MCGLContext, void, loadMaterial, MCMaterial* mtl)
 {
-    MCGLUniform* u = null;
-    int f = -1;
-    for (int i=0; i<var(uniformCount); i++) {
-        u = &var(uniforms)[i];
-        if (strcmp(name, u->name) == 0) {
-            f = i;
-            break;
-        }
+    //set up once part
+    if (mtl->dataChanged == true) {
+        MCGLShader_activateShaderProgram(obj->shader, 0);
+        
+        MCGLUniform f;
+        f.type = MCGLUniformVec3;
+        f.data.vec3 = mtl->ambientLightColor;
+        MCGLShader_updateUniform(obj->shader, material_ambient, f.data);
+        
+        f.data.vec3 = mtl->diffuseLightColor;
+        f.type = MCGLUniformVec3;
+        MCGLShader_updateUniform(obj->shader, material_diffuse, f.data);
+        
+        f.type = MCGLUniformVec3;
+        f.data.vec3 = mtl->specularLightColor;
+        MCGLShader_updateUniform(obj->shader, material_specular, f.data);
+        
+        f.data.vec1 = mtl->specularLightPower;
+        f.type = MCGLUniformVec1;
+        MCGLShader_updateUniform(obj->shader, material_shininess, f.data);
+        
+        f.data.vec1 = mtl->dissolve;
+        f.type = MCGLUniformVec1;
+        MCGLShader_updateUniform(obj->shader, material_dissolve, f.data);
+        
+        mtl->dataChanged = false;
     }
-    
-    if (u != null && f != -1 && !MCGLUniformDataEqual(u->type, &u->data, &udata)) {
-        var(uniformsDirty)[f] = true;
-        var(uniforms)[f].data = udata;
-    }
-    else if (f != -1){
-        var(uniformsDirty)[f] = false;
-    }
-}
-
-method(MCGLContext, void,  setUniforms, voida)
-{
-    for (int i=0; i<var(uniformCount); i++) {
-        if (var(uniformsDirty)[i] == true) {
-            MCGLUniform* f = &var(uniforms)[i];
-            setUniform(obj, null, f->location, f);
-            var(uniformsDirty)[i] = false;
-        }
-    }
-    
-}
-
-method(MCGLContext, int, getUniformVector, const char* name, GLfloat* params)
-{
-    int loc = (int)ff(obj, getUniformLocation, name);
-    glGetUniformfv(var(pid), loc, params);
-    return loc;
-}
-
-method(MCGLContext, void, printUniforms, voida)
-{
-    MCLogTypeSet(MC_DEBUG);
-    
-    GLfloat buff[16];
-    for (int i=0; i<var(uniformCount); i++) {
-        MCGLUniform* f = &var(uniforms)[i];
-        if (f) {
-            ff(obj, getUniformVector, f->name, buff);
-            if (f->type == MCGLUniformMat4) {
-                //mat4
-                debug_log("mat4:%s\n [%f/%f/%f/%f]\n [%f/%f/%f/%f]\n [%f/%f/%f/%f]\n [%f/%f/%f/%f]\n",
-                          f->name,
-                          buff[0],  buff[1],  buff[2],  buff[3],
-                          buff[4],  buff[5],  buff[6],  buff[7],
-                          buff[8],  buff[9],  buff[10], buff[11],
-                          buff[12], buff[13], buff[14], buff[15]);
-            }
-            if (f->type == MCGLUniformMat3) {
-                //mat3
-                debug_log("mat3:%s\n [%f/%f/%f]\n [%f/%f/%f]\n [%f/%f/%f]\n",
-                          f->name,
-                          buff[0], buff[1], buff[2],
-                          buff[3], buff[4], buff[5],
-                          buff[6], buff[7], buff[8]);
-            }
-            if (f->type == MCGLUniformVec4) {
-                //vec4
-                debug_log("vec4:%s [%f/%f/%f/%f]\n", f->name, buff[0], buff[1], buff[2], buff[3]);
-            }
-            if (f->type == MCGLUniformVec3) {
-                //vec3
-                debug_log("vec3:%s [%f/%f/%f]\n", f->name, buff[0], buff[1], buff[2]);
-            }
-            if (f->type == MCGLUniformVec2) {
-                //vec2
-                debug_log("vec2:%s [%f/%f/%f]\n", f->name, buff[0], buff[1]);
-            }
-            if (f->type == MCGLUniformVec1) {
-                //vec1
-                debug_log("vec1:%s [%f]\n", f->name, buff[0]);
-            }
-            if (f->type == MCGLUniformScalar) {
-                //scalar
-                int value;
-                ff(obj, getUniformVector, f->name, &value);
-                debug_log("scalar:%s [%d]\n", f->name, value);
-            }
-        }
-    }
+    //set each time
+    MCGLShader_shaderSetUInt(obj->shader, "illum", mtl->illum);
 }
 
 onload(MCGLContext)
 {
     if (load(MCObject)) {
-        mixing(int, setUniform, const char* name, int loc, MCGLUniform* uniform);
 
         binding(MCGLContext, void, bye, voida);
-        binding(MCGLContext, void, activateShaderProgram, voida);
-        
-        binding(MCGLContext, MCGLContext*, initWithShaderCode, const char* vcode, const char* fcode,
-               const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
-        binding(MCGLContext, MCGLContext*, initWithShaderName, const char* vname, const char* fname,
-                const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
-        
-        binding(MCGLContext, void, updateUniform, const char* name, MCGLUniformData udata);
-        binding(MCGLContext, void, setUniforms, voida);
         binding(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
-        binding(MCGLContext, int,  getUniformVector,  const char* name, GLfloat* params);
-        binding(MCGLContext, int,  getUniformLocation, const char* name);
-        binding(MCGLContext, void, printUniforms, voida);
+        binding(MCGLContext, void, loadMaterial, MCMaterial* mtl);
 
         return cla;
     }else{
         return null;
     }
+}
+
+//Global
+utility(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature)
+{
+    return (MCBool)glIsEnabled(feature);
+}
+
+utility(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff)
+{
+    MCBool isOn = (MCBool)glIsEnabled(feature);
+    if (onOrOff) {
+        if (!isOn) glEnable(feature);
+    }else{
+        if (isOn) glDisable(feature);
+    }
+}
+
+utility(MCGLContext, void, flushCommandAsync, voida)
+{
+    glFlush();
+}
+
+utility(MCGLContext, void, flushCommandBlock, voida)
+{
+    glFinish();
+}
+
+utility(MCGLContext, void, clearScreen, voida)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+utility(MCGLContext, void, clearScreenWithColor, MCColorf color)
+{
+    glClearColor(color.R.f, color.G.f, color.B.f, color.A.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+utility(MCGLContext, void, clearDepthBuffer, voida)
+{
+    glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+utility(MCGLContext, void, clearStencilBuffer, voida)
+{
+    glClear(GL_STENCIL_BUFFER_BIT);
+}
+
+utility(MCGLContext, void, setClearScreenColor, MCColorf color)
+{
+    glClearColor(color.R.f, color.G.f, color.B.f, color.A.f);
+}
+
+utility(MCGLContext, void, setPointSize, double pointsize)
+{
+    //glPointSize is replaced by the gl_PointSize variable in the vertex shader.
+    //glPointSize((GLfloat)pointsize);
+}
+
+utility(MCGLContext, void, setLineWidth, double linewidth)
+{
+    glLineWidth((GLfloat)linewidth);
+}
+
+utility(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW)
+{
+    if (isCCW) {
+        glFrontFace(GL_CCW);
+    }else{
+        glFrontFace(GL_CW);
+    }
+}
+
+utility(MCGLContext, void, cullFace, MCGLFace face)
+{
+    glCullFace(face);
+}
+
+utility(MCGLContext, void, cullBackFace, voida)
+{
+    MCGLContext_cullFace(MCGLBack);
+}
+
+//Texture
+static MCUInt texUnitNum = 1;
+utility(MCGLContext, MCUInt, getIdleTextureUnit, voida)
+{
+    if (texUnitNum < MCGLContext_getMaxTextureUnits(0)) {
+        texUnitNum++;
+    } else {
+        texUnitNum = 1;
+    }
+    return texUnitNum;
+}
+
+utility(MCGLContext, MCUInt, getMaxTextureUnits, voida)
+{
+    return (MCUInt)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
+}
+
+utility(MCGLContext, void, generateTextureId, MCUInt* tid)
+{
+    glGenTextures(1, tid);
+}
+
+utility(MCGLContext, void, activeTextureUnit, MCUInt index)
+{
+    glActiveTexture(GL_TEXTURE0 + index);
+}
+
+utility(MCGLContext, void, bindCubeTexture, MCUInt tid)
+{
+    glBindTexture(GL_TEXTURE_CUBE_MAP, tid);
+}
+
+utility(MCGLContext, void, bind2DTexture, MCUInt tid)
+{
+    glBindTexture(GL_TEXTURE_2D, tid);
+}
+
+utility(MCGLContext, void, unbind2DTextures, voida)
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+utility(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
+{
+    if (tex->data && tex->data->raw) {
+        if (tex->data->channels == 4) {
+            glTexImage2D(textype, 0, GL_RGBA, tex->width, tex->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex->data->raw);
+            glGenerateMipmap(textype);
+        }
+        else {
+            glTexImage2D(textype, 0, GL_RGB, tex->width, tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->data->raw);
+            glGenerateMipmap(textype);
+        }
+    }
+}
+
+//GL_TEXTURE_2D
+utility(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype)
+{
+    if (tex->displayMode == MCTextureRepeat) {
+        glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(textype, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+    else {
+        glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(textype, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    }
+    glTexParameteri(textype, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(textype, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+utility(MCGLContext, void, enableTransparency, MCBool enable)
+{
+    if (enable) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    else {
+        glDisable(GL_BLEND);
+    }
+}
+
+utility(MCGLContext, void, enablePolygonOffset, MCBool enable)
+{
+    if (enable) {
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonOffset(0, -1.0);
+    }
+    else {
+        glDisable(GL_POLYGON_OFFSET_FILL);
+    }
+}
+
+//Frame Rate (FPS)
+utility(MCGLContext, int, tickFPS, MCClock* clock)
+{
+    static unsigned fcount = 0;
+    static clock_t elapse = 0;
+    static clock_t time, lastime;
+    
+    MCClock_getCPUClocksSinceStart(clock, &time);
+    if (elapse >= CLOCKS_PER_SEC ) {
+        unsigned result = fcount;
+        //reset
+        elapse = 0;
+        fcount = 0;
+        lastime = time;
+        
+        return result;
+    }else{
+        elapse += (time - lastime);
+        fcount++;
+        return -1;
+    }
+}
+
+//Shader
+utility(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version)
+{
+    if (!source) {
+        return false;
+    }
+    GLint status = 0;
+    
+    const char* sources[] = {version, source};
+    
+    *shader = glCreateShader(type);
+    glShaderSource(*shader, 2, sources, NULL);
+    glCompileShader(*shader);
+    
+    GLint logLength = 0;
+    glGetShaderiv(*shader, GL_INFO_LOG_LENGTH, &logLength);
+    if (logLength > 0) {
+        GLchar *log = (GLchar *)malloc(logLength);
+        glGetShaderInfoLog(*shader, logLength, &logLength, log);
+        printf("Shader compile log:\n%s", log);
+        free(log);
+        
+        //dump source
+        //error_log(source);
+    }
+    
+    glGetShaderiv(*shader, GL_COMPILE_STATUS, &status);
+    if (status == 0) {
+        glDeleteShader(*shader);
+        return false;
+    }
+    
+    return true;
+}
+
+utility(MCGLContext, int, linkProgram, GLuint prog)
+{
+    GLint status;
+    glLinkProgram(prog);
+    
+    GLint logLength;
+    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
+    if (logLength > 0) {
+        GLchar *log = (GLchar *)malloc(logLength);
+        glGetProgramInfoLog(prog, logLength, &logLength, log);
+        printf("Program link log:\n%s", log);
+        free(log);
+    }
+    
+    glGetProgramiv(prog, GL_LINK_STATUS, &status);
+    if (status == 0) {
+        return 0;
+    }
+    
+    return 1;
+}
+
+utility(MCGLContext, int, validateProgram, GLuint prog)
+{
+    GLint logLength, status;
+    
+    glValidateProgram(prog);
+    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
+    if (logLength > 0) {
+        GLchar *log = (GLchar *)malloc(logLength);
+        glGetProgramInfoLog(prog, logLength, &logLength, log);
+        printf("Program validate log:\n%s", log);
+        free(log);
+    }
+    
+    glGetProgramiv(prog, GL_VALIDATE_STATUS, &status);
+    if (status == 0) {
+        return 0;
+    }
+    
+    return 1;
+}
+
+utility(MCGLContext, void, setViewport, int x, int y, int width, int height)
+{
+    glEnable(GL_DEPTH_TEST);//this is for Google cardboard
+    glViewport(x, y, width, height);
+}
+
+utility(MCGLContext, void, setScissor, int x, int y, int width, int height)
+{
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(x, y, width, height);
 }

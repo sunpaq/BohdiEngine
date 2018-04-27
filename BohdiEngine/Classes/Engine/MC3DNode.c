@@ -7,7 +7,6 @@
 //
 
 #include "MC3DNode.h"
-#include "MCGLEngine.h"
 #include "MCLinkedList.h"
 #include "MCGLRenderer.h"
 
@@ -184,7 +183,7 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
 {
     //draw self
     //if (obj->visible) {
-        MCGLContext_activateShaderProgram(ctx, 0);
+        MCGLShader_activateShaderProgram(ctx->shader, 0);
         MCGLUniform f;
         
         //scale translate
@@ -192,12 +191,12 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
 
         if (!MCMatrix4Equal(&MCMatrix4Identity, &viewModel)) {
             f.data.mat4 = viewModel;
-            MCGLContext_updateUniform(ctx, model_model, f.data);
+            MCGLShader_updateUniform(ctx->shader, model_model, f.data);
         }
     
         MCMatrix3 nor = MCMatrix3InvertAndTranspose(MCMatrix4GetMatrix3(var(transform)), NULL);
         f.data.mat3 = nor;
-        MCGLContext_updateUniform(ctx, model_normal, f.data);
+        MCGLShader_updateUniform(ctx->shader, model_normal, f.data);
         
         //material
         if (obj->material != null) {
@@ -205,18 +204,18 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
                 return;
             }
             obj->material->dataChanged = true;
-            MCMaterial_prepareMatrial(obj->material, ctx);
+            MCGLContext_loadMaterial(ctx, obj->material);
         }
         
         //draw self texture
         if (obj->diffuseTexture != null) {
-            MCGLEngine_shaderSetBool(ctx->pid, "usetexture", true);
+            MCGLShader_shaderSetBool(ctx->shader, "usetexture", true);
         } else {
-            MCGLEngine_shaderSetBool(ctx->pid, "usetexture", false);
+            MCGLShader_shaderSetBool(ctx->shader, "usetexture", false);
         }
         
         //batch setup
-        MCGLContext_setUniforms(ctx, 0);
+        MCGLShader_setUniforms(ctx->shader, 0);
 
         //draw self meshes
         MCLinkedListForEach(var(meshes),

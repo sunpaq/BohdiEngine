@@ -7,7 +7,6 @@
 //
 
 #include "MCDirector.h"
-#include "MCGLEngine.h"
 #include "MCThread.h"
 #include "MCCube.h"
 #include "MC3DModelCache.h"
@@ -182,8 +181,8 @@ method(MCDirector, void, resizeAllScene, int width, int height)
 
 method(MCDirector, void, scissorAllScene, int x, int y, int width, int height)
 {
-    MCGLEngine_setViewport(x, y, width, height);
-    MCGLEngine_setScissor(x, y, width, height);
+    MCGLContext_setViewport(x, y, width, height);
+    MCGLContext_setScissor(x, y, width, height);
     //call resize scene
     MCDirector_resizeAllScene(obj, width, height);
 }

@@ -8,7 +8,7 @@
 
 #include "MCMesh.h"
 #include "MC3DBase.h"
-#include "MCGLEngine.h"
+#include "MCGLContext.h"
 
 oninit(MCMesh)
 {
@@ -164,7 +164,7 @@ method(MCMesh, void, drawMesh, MCGLContext* ctx)
     }
     //Unbind
     glBindVertexArray(0);
-    MCGLEngine_unbind2DTextures(0);
+    MCGLContext_unbind2DTextures(0);
 }
 
 onload(MCMesh)

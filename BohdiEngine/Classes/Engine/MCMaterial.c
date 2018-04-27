@@ -9,7 +9,6 @@
 #include "MCMaterial.h"
 #include "MC3DBase.h"
 #include "MCGLRenderer.h"
-#include "MCGLEngine.h"
 
 oninit(MCMaterial)
 {
@@ -30,43 +29,43 @@ oninit(MCMaterial)
     }
 }
 
-method(MCMaterial, void, prepareMatrial, MCGLContext* ctx)
-{
-    //set up once part
-    if (obj->dataChanged == true) {
-        MCGLContext_activateShaderProgram(ctx, 0);
-        
-        MCGLUniform f;
-        f.type = MCGLUniformVec3;
-        f.data.vec3 = obj->ambientLightColor;
-        MCGLContext_updateUniform(ctx, material_ambient, f.data);
-
-        f.data.vec3 = obj->diffuseLightColor;
-        f.type = MCGLUniformVec3;
-        MCGLContext_updateUniform(ctx, material_diffuse, f.data);
-    
-        f.type = MCGLUniformVec3;
-        f.data.vec3 = obj->specularLightColor;
-        MCGLContext_updateUniform(ctx, material_specular, f.data);
-        
-        f.data.vec1 = obj->specularLightPower;
-        f.type = MCGLUniformVec1;
-        MCGLContext_updateUniform(ctx, material_shininess, f.data);
-    
-        f.data.vec1 = obj->dissolve;
-        f.type = MCGLUniformVec1;
-        MCGLContext_updateUniform(ctx, material_dissolve, f.data);
-
-        obj->dataChanged = false;
-    }
-    //set each time
-    MCGLEngine_shaderSetUInt(ctx->pid, "illum", obj->illum);
-}
+//method(MCMaterial, void, prepareMatrial, MCGLContext* ctx)
+//{
+//    //set up once part
+//    if (obj->dataChanged == true) {
+//        MCShader_activateShaderProgram(ctx, 0);
+//
+//        MCGLUniform f;
+//        f.type = MCGLUniformVec3;
+//        f.data.vec3 = obj->ambientLightColor;
+//        MCGLContext_updateUniform(ctx, material_ambient, f.data);
+//
+//        f.data.vec3 = obj->diffuseLightColor;
+//        f.type = MCGLUniformVec3;
+//        MCGLContext_updateUniform(ctx, material_diffuse, f.data);
+//
+//        f.type = MCGLUniformVec3;
+//        f.data.vec3 = obj->specularLightColor;
+//        MCGLContext_updateUniform(ctx, material_specular, f.data);
+//
+//        f.data.vec1 = obj->specularLightPower;
+//        f.type = MCGLUniformVec1;
+//        MCGLContext_updateUniform(ctx, material_shininess, f.data);
+//
+//        f.data.vec1 = obj->dissolve;
+//        f.type = MCGLUniformVec1;
+//        MCGLContext_updateUniform(ctx, material_dissolve, f.data);
+//
+//        obj->dataChanged = false;
+//    }
+//    //set each time
+//    MCGLContext_shaderSetUInt(ctx->pid, "illum", obj->illum);
+//}
 
 onload(MCMaterial)
 {
     if (load(MCObject)) {
-        binding(MCMaterial, void, prepareMatrial, MCGLContext* ctx);
+        //binding(MCMaterial, void, prepareMatrial, MCGLContext* ctx);
         return cla;
     }else{
         return null;

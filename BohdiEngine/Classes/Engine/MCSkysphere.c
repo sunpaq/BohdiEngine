@@ -7,7 +7,7 @@
 //
 
 #include "MCSkysphere.h"
-#include "MCGLEngine.h"
+#include "MCGLContext.h"
 #include "MC3DShapeBase.h"
 
 static const char* vsource = S(
@@ -88,10 +88,10 @@ oninit(MCSkysphere)
         var(indices)  = (GLuint*)malloc(obj->indices_size);
         var(ic) = MCGenerateSkysphere(nr, nc, 100.0, var(vertices), var(indices));
         
-        MCGLEngine_setClearScreenColor((MCColorf){0.05, 0.25, 0.35, 1.0});
-        MCGLEngine_featureSwith(MCGLCullFace, true);
-        MCGLEngine_cullFace(MCGLBack);
-        MCGLEngine_setFrontCounterClockWise(true);//CW
+        MCGLContext_setClearScreenColor((MCColorf){0.05, 0.25, 0.35, 1.0});
+        MCGLContext_featureSwith(MCGLCullFace, true);
+        MCGLContext_cullFace(MCGLBack);
+        MCGLContext_setFrontCounterClockWise(true);//CW
         return obj;
     }else{
         return null;
@@ -122,7 +122,7 @@ method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
     var(tex) = tex;
     
     //Shader
-    MCGLContext_initWithShaderCode(var(ctx), vsource, fsource,
+    MCGLShader_initWithShaderCode(var(ctx)->shader, vsource, fsource,
                                    (const char* []){
                                        "position",
                                        "texcoord"
@@ -158,8 +158,8 @@ method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
     MCVertexAttribute attr2 = (MCVertexAttribute){1, 2, GL_FLOAT, GL_FALSE, 20, MCBUFFER_OFFSET(12)};
     MCVertexAttributeLoad(&attr2);
     //Texture
-    MCGLEngine_activeTextureUnit(0);
-    MCGLEngine_bind2DTexture(var(texid));
+    MCGLContext_activeTextureUnit(0);
+    MCGLContext_bind2DTexture(var(texid));
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex->width, tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->raw);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -214,11 +214,11 @@ method(MCSkysphere, void, update, MCGLContext* ctx)
         obj->sphViewMatrix = sphViewMatrix(obj, 0);
         obj->sphProjectionMatrix = sphProjectionMatrix(obj, 0);
         
-        MCGLContext_activateShaderProgram(var(ctx), 0);
+        MCGLShader_activateShaderProgram(var(ctx)->shader, 0);
         
         MCGLUniformData data;
         data.mat4 = obj->sphProjectionMatrix;
-        MCGLContext_updateUniform(var(ctx), "sphProjectionMatrix", data);
+        MCGLShader_updateUniform(var(ctx)->shader, "sphProjectionMatrix", data);
     }
 }
 
@@ -226,14 +226,14 @@ method(MCSkysphere, void, draw, MCGLContext* ctx)
 {
     if (obj && obj->Super.visible) {
         glDepthMask(GL_FALSE);
-        MCGLContext_activateShaderProgram(var(ctx), 0);
+        MCGLShader_activateShaderProgram(var(ctx)->shader, 0);
         MCGLUniformData data;
         data.mat4 = obj->sphViewMatrix;
-        MCGLContext_updateUniform(var(ctx), "sphViewMatrix", data);
-        MCGLContext_setUniforms(var(ctx), 0);
+        MCGLShader_updateUniform(var(ctx)->shader, "sphViewMatrix", data);
+        MCGLShader_setUniforms(var(ctx)->shader, 0);
         
         glBindVertexArray(obj->vaoid);
-        MCGLEngine_activeTextureUnit(0);
+        MCGLContext_activeTextureUnit(0);
         glDrawElements(GL_TRIANGLE_STRIP, var(ic), GL_UNSIGNED_INT, MCBUFFER_OFFSET(0));
         glBindVertexArray(0);
         glDepthMask(GL_TRUE);

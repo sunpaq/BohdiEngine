@@ -7,7 +7,6 @@
 //
 
 #include "MCGLRenderer.h"
-#include "MCGLEngine.h"
 #include "MC3DBase.h"
 #include "MCIO.h"
 
@@ -281,12 +280,12 @@ static void prehash()
 oninit(MCGLRenderer)
 {
     if(init(MCObject)){
-        MCGLEngine_featureSwith(MCGLDepthTest, true);
-        MCGLEngine_featureSwith(MCGLStencilTest, true);
-        MCGLEngine_featureSwith(MCGLCullFace, true);
+        MCGLContext_featureSwith(MCGLDepthTest, true);
+        MCGLContext_featureSwith(MCGLStencilTest, true);
+        MCGLContext_featureSwith(MCGLCullFace, true);
 
-        MCGLEngine_cullFace(MCGLBack);
-        MCGLEngine_setFrontCounterClockWise(true);//CCW
+        MCGLContext_cullFace(MCGLBack);
+        MCGLContext_setFrontCounterClockWise(true);//CCW
 
         //glDepthFunc(GL_LESS);
         
@@ -310,7 +309,7 @@ method(MCGLRenderer, void, bye, voida)
 
 method(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode)
 {
-    MCGLContext_initWithShaderCode(obj->context, vcode, fcode,
+    MCGLShader_initWithShaderCode(obj->context->shader, vcode, fcode,
         (const char* []){
             "position",
             "normal",
@@ -400,8 +399,8 @@ method(MCGLRenderer, void, drawNodes, MC3DNode* rootnode)
     if (rootnode != null) {
         ff(rootnode, draw, obj->context);
         //make FPS stable motion more smooth
-        //MCGLEngine_flushCommandBlock(0);
-        //MCGLEngine_flushCommandAsync(0);
+        //MCGLContext_flushCommandBlock(0);
+        //MCGLContext_flushCommandAsync(0);
     }
 }
 

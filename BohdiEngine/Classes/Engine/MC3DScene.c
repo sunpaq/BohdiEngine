@@ -7,7 +7,6 @@
 //
 
 #include "MC3DScene.h"
-#include "MCGLEngine.h"
 #include "BEAssetsManager.h"
 
 compute(MCBool, isDrawSky)
@@ -229,17 +228,17 @@ method(MC3DScene, void, updateScene, voida)
 
 method(MC3DScene, int, drawScene, voida)
 {
-    MCGLEngine_clearScreenWithColor(var(bgcolor));
-    //MCGLEngine_clearScreen(0);
+    MCGLContext_clearScreenWithColor(var(bgcolor));
+    //MCGLContext_clearScreen(0);
     if (cpt(isDrawSky)) {
         //no model
         if (var(combineMode) == MC3DSceneSkyboxOnly) {
             MCSkybox_draw(var(skybox), var(renderer)->context);
-            return MCGLEngine_tickFPS(var(clock));
+            return MCGLContext_tickFPS(var(clock));
         }
         else if (var(combineMode) == MC3DSceneSkysphOnly) {
             MCSkysphere_draw(var(skysph), var(renderer)->context);
-            return MCGLEngine_tickFPS(var(clock));
+            return MCGLContext_tickFPS(var(clock));
         }
         //with model
         else if (var(combineMode) == MC3DSceneModelWithSkybox) {
@@ -252,7 +251,7 @@ method(MC3DScene, int, drawScene, voida)
 
     MCGLRenderer_drawNodes(var(renderer), var(rootnode));
     //calculate FPS
-    return MCGLEngine_tickFPS(var(clock));
+    return MCGLContext_tickFPS(var(clock));
 }
 
 method(MC3DScene, void, setRotationMat3, float mat3[9])

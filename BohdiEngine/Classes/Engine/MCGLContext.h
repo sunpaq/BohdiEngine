@@ -13,38 +13,66 @@
 #include "MCMath.h"
 #include "MCGLBase.h"
 #include "MCTexture.h"
+#include "MCMaterial.h"
+#include "MCGLShader.h"
+#include "MCClock.h"
 
 #define MAX_VATTR_NUM     100
 #define MAX_UNIFORM_NUM   100
 
 class(MCGLContext, MCObject,
-      GLuint pid;
+      MCGLShader* shader;
       double cameraRatio;
-      
-      MCGLUniform uniforms[MAX_UNIFORM_NUM];
-      MCBool uniformsDirty[MAX_UNIFORM_NUM];
-      MCUInt uniformCount;
-      
       MCDrawMode drawMode;
 );
 
 method(MCGLContext, void, bye, voida);
-//shader
-//please cache the location index when you first call the setters
-//then directly pass the location index and pass name null
-method(MCGLContext, MCGLContext*, initWithShaderCode, const char* vcode, const char* fcode,
-       const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
-method(MCGLContext, MCGLContext*, initWithShaderName, const char* vname, const char* fname,
-       const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
 
-method(MCGLContext, void, activateShaderProgram, voida);
-method(MCGLContext, int,  getUniformLocation, const char* name);
-method(MCGLContext, void, updateUniform, const char* name, MCGLUniformData udata);
-method(MCGLContext, void, setUniforms, voida);
 //texture
 method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
-//for debug
-method(MCGLContext, int,  getUniformVector,  const char* name, GLfloat* params);
-method(MCGLContext, void, printUniforms, voida);
+method(MCGLContext, void, loadMaterial, MCMaterial* mtl);
+
+//Global
+utility(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature);
+utility(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff);
+utility(MCGLContext, void, flushCommandAsync, voida);
+utility(MCGLContext, void, flushCommandBlock, voida);
+utility(MCGLContext, void, clearScreen, voida);
+utility(MCGLContext, void, clearScreenWithColor, MCColorf color);
+utility(MCGLContext, void, clearDepthBuffer, voida);
+utility(MCGLContext, void, clearStencilBuffer, voida);
+utility(MCGLContext, void, setClearScreenColor, MCColorf color);
+utility(MCGLContext, void, setPointSize, double pointsize);
+utility(MCGLContext, void, setLineWidth, double linewidth);
+utility(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW);
+utility(MCGLContext, void, cullFace, MCGLFace face);
+utility(MCGLContext, void, cullBackFace, voida);
+//Texture
+utility(MCGLContext, MCUInt, getIdleTextureUnit, voida);
+utility(MCGLContext, MCUInt, getMaxTextureUnits, voida);
+utility(MCGLContext, void, generateTextureId, MCUInt* tid);
+utility(MCGLContext, void, activeTextureUnit, MCUInt index);
+utility(MCGLContext, void, bindCubeTexture, MCUInt tid);
+utility(MCGLContext, void, bind2DTexture, MCUInt tid);
+utility(MCGLContext, void, unbind2DTextures, voida);
+utility(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype);
+utility(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype);
+
+//Alpha Blend
+utility(MCGLContext, void, enableTransparency, MCBool enable);
+//Z-Fighting
+utility(MCGLContext, void, enablePolygonOffset, MCBool enable);
+
+//Frame Rate (FPS)
+utility(MCGLContext, int, tickFPS, MCClock* clock);
+
+//Shader
+utility(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version);
+utility(MCGLContext, int, linkProgram, GLuint prog);
+utility(MCGLContext, int, validateProgram, GLuint prog);
+
+//Viewport
+utility(MCGLContext, void, setViewport, int x, int y, int width, int height);
+utility(MCGLContext, void, setScissor, int x, int y, int width, int height);
 
 #endif /* MCGLContext_h */

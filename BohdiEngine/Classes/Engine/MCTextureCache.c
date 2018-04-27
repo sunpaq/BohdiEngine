@@ -46,6 +46,7 @@ method(MCTextureCache, MCTexture*, findTextureNamed, const char* name)
     MCGeneric result;
     MCMap_getValueForKey(var(map), &result, name);
     if (result.mcobject) {
+        debug_log("MCTextureCache - find object for key: %s\n", name);
         return (MCTexture*)result.mcobject;
     } else {
         return null;
@@ -55,11 +56,13 @@ method(MCTextureCache, MCTexture*, findTextureNamed, const char* name)
 method(MCTextureCache, void, cacheTextureNamed, MCTexture* tex, const char* name)
 {
     if (tex) {
+        retain(tex);
         MCGeneric result;
         MCMap_getValueForKey(var(map), &result, name);
         if (!result.mcobject) {
             MCMap_setValueForKey(var(map), MCGenericO(cast(MCObject*, tex)), name);
-            retain(tex);
+        } else {
+            debug_log("MCTextureCache - already have object for key: %s\n", name);
         }
     }
 }

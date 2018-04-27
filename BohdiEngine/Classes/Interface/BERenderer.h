@@ -6,13 +6,22 @@
 //
 //
 
+#import <Foundation/Foundation.h>
+#import <GLKit/GLKit.h>
+
 #include "TargetConditionals.h"
 #if TARGET_OS_IOS
-
-#import <Foundation/Foundation.h>
 #import <CoreMotion/CoreMotion.h>
 #import <UIKit/UIKit.h>
-#import <GLKit/GLKit.h>
+#define Color UIColor
+#define GLView GLKView
+#define ScreenScale ([UIScreen mainScreen].scale)
+#else
+#import <AppKit/AppKit.h>
+#define Color NSColor
+#define GLView NSOpenGLView
+#define ScreenScale ([NSScreen mainScreen].backingScaleFactor)
+#endif
 
 typedef enum {
     BECameraFixedAtOrigin = 0,
@@ -25,16 +34,17 @@ typedef enum {
 
 @property (atomic, readwrite) BOOL doesAutoRotateCamera;
 @property (atomic, readwrite) BOOL doesDrawWireFrame;
+#if TARGET_OS_IOS
 @property (atomic, readwrite) CMRotationMatrix deviceRotateMat3;
-
 +(GLKView*) createDefaultGLView:(CGRect)frame;
 +(void) createFramebuffersWithContext:(EAGLContext*)ctx AndLayer:(CAEAGLLayer*)lyr;
+#endif
 
 -(instancetype) init __unavailable;
 -(instancetype) initWithFrame:(CGRect)frame;
 
 -(instancetype) setCameraRotateMode:(BECameraRotateMode)rmode;
--(instancetype) setBackgroundColor:(UIColor*)color;
+-(instancetype) setBackgroundColor:(Color*)color;
 -(instancetype) resizeAllScene:(CGSize)frameSize;
 -(instancetype) scissorAllScene:(CGRect)frame;
 
@@ -78,10 +88,10 @@ typedef enum {
 -(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye vrFOV:(CGFloat)fov;
 
 -(void) drawFrameOnCALayer:(CALayer*)calayer;
--(void) drawFrameOnGLView:(GLKView*)glview;
+-(void) drawFrameOnGLView:(GLView*)glview;
 
 -(void) pauseDraw:(BOOL)pause;
 
 @end
 
-#endif
+//#endif

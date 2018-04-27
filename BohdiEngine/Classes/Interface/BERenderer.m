@@ -9,8 +9,6 @@
 #import "BERenderer.h"
 #import "MCDirector.h"
 
-#if TARGET_OS_IOS
-
 @interface BERenderer()
 {
     MCDirector* director;
@@ -30,6 +28,7 @@
     return computed(director, contextHandler)->drawMode == MCLineStrip? YES : NO;
 }
 
+#if TARGET_OS_IOS
 -(CMRotationMatrix) deviceRotateMat3
 {
     CMRotationMatrix mat3 = {0};
@@ -49,33 +48,23 @@
     return mat3;
 }
 
--(void)setDoesAutoRotateCamera:(BOOL)doesAutoRotateCamera
-{
-    director->lastScene->cameraAutoRotate = doesAutoRotateCamera? true : false;
-}
-
--(void)setDoesDrawWireFrame:(BOOL)doesDrawWireFrame
-{
-    computed(director, contextHandler)->drawMode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
-}
-
 -(void) setDeviceRotateMat3:(CMRotationMatrix)mat3
 {
     if (director) {
         director->deviceRotationMat3.m00 = mat3.m11;
         director->deviceRotationMat3.m01 = mat3.m12;
         director->deviceRotationMat3.m02 = mat3.m13;
-
+        
         director->deviceRotationMat3.m10 = mat3.m21;
         director->deviceRotationMat3.m11 = mat3.m22;
         director->deviceRotationMat3.m12 = mat3.m23;
-
+        
         director->deviceRotationMat3.m20 = mat3.m31;
         director->deviceRotationMat3.m21 = mat3.m32;
         director->deviceRotationMat3.m22 = mat3.m33;
     }
 }
-
+    
 +(void) createFramebuffersWithContext:(EAGLContext*)ctx AndLayer:(CAEAGLLayer*)lyr
 {
     GLsizei width  = lyr.bounds.size.width;
@@ -122,19 +111,29 @@
     
     return glview;
 }
+#endif
+
+-(void)setDoesAutoRotateCamera:(BOOL)doesAutoRotateCamera
+{
+    director->lastScene->cameraAutoRotate = doesAutoRotateCamera? true : false;
+}
+
+-(void)setDoesDrawWireFrame:(BOOL)doesDrawWireFrame
+{
+    computed(director, contextHandler)->drawMode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
+}
 
 -(instancetype) initWithFrame:(CGRect)frame
 {
     if (self = [super init]) {
         pinch_scale = 10.0;
         director = new(MCDirector);
-        CGFloat scale = [UIScreen mainScreen].scale;
         MCDirector_setupMainScene(director,
-                                  frame.size.width * scale,
-                                  frame.size.height * scale);
+                                  frame.size.width * ScreenScale,
+                                  frame.size.height * ScreenScale);
         
         computed(director, cameraHandler)->rotateMode = MCCameraRotateAroundModelManual;
-        [self setBackgroundColor:[UIColor darkGrayColor]];
+        [self setBackgroundColor:[Color darkGrayColor]];
         return self;
     }
     return nil;
@@ -156,11 +155,18 @@
     return self;
 }
 
--(instancetype) setBackgroundColor:(UIColor*)color
+-(instancetype) setBackgroundColor:(Color*)color
 {
     if (director) {
-        CGFloat red, green, blue, alpha;
-        [color getRed:&red green:&green blue:&blue alpha:&alpha];
+#if TARGET_OS_MAC
+        NSColorSpace* csp = [[NSColorSpace alloc] initWithCGColorSpace:CGColorSpaceCreateDeviceRGB()];
+        color = [color colorUsingColorSpace:csp];
+#endif
+        CGFloat red = [color redComponent];
+        CGFloat green = [color greenComponent];
+        CGFloat blue = [color blueComponent];
+        CGFloat alpha = [color alphaComponent];
+
         MCDirector_setBackgroudColor(director, red, green, blue, alpha);
     }
     return self;
@@ -169,7 +175,7 @@
 -(instancetype) resizeAllScene:(CGSize)frameSize
 {
     if (director) {
-        CGFloat scale = [UIScreen mainScreen].scale;
+        CGFloat scale = ScreenScale;
         MCDirector_resizeAllScene(director, (int)frameSize.width * scale, (int)frameSize.height * scale);
     }
     return self;
@@ -485,7 +491,7 @@
     }
 }
 
--(void) drawFrameOnGLView:(GLKView*)glview
+-(void) drawFrameOnGLView:(GLView*)glview
 {
     if (director) {
         if (glview) {
@@ -503,5 +509,3 @@
 }
 
 @end
-
-#endif

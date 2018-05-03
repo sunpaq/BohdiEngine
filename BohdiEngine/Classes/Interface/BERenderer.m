@@ -9,6 +9,8 @@
 #import "BERenderer.h"
 #import "MCDirector.h"
 
+#include "TargetConditionals.h"
+
 @interface BERenderer()
 {
     MCDirector* director;
@@ -158,15 +160,17 @@
 -(instancetype) setBackgroundColor:(Color*)color
 {
     if (director) {
-#if TARGET_OS_MAC
+        CGFloat red, green, blue, alpha;
+#if TARGET_OS_IOS
+        [color getRed:&red green:&green blue:&blue alpha:&alpha];
+#else
         NSColorSpace* csp = [[NSColorSpace alloc] initWithCGColorSpace:CGColorSpaceCreateDeviceRGB()];
         color = [color colorUsingColorSpace:csp];
+        red = [color redComponent];
+        green = [color greenComponent];
+        blue = [color blueComponent];
+        alpha = [color alphaComponent];
 #endif
-        CGFloat red = [color redComponent];
-        CGFloat green = [color greenComponent];
-        CGFloat blue = [color blueComponent];
-        CGFloat alpha = [color alphaComponent];
-
         MCDirector_setBackgroudColor(director, red, green, blue, alpha);
     }
     return self;

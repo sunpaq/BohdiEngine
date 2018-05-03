@@ -6,10 +6,14 @@
 //
 //
 
+#ifndef __BERenderer__
+#define __BERenderer__
+
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
 
 #include "TargetConditionals.h"
+
 #if TARGET_OS_IOS
 #import <CoreMotion/CoreMotion.h>
 #import <UIKit/UIKit.h>
@@ -94,4 +98,4 @@ typedef enum {
 
 @end
 
-//#endif
+#endif

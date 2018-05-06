@@ -79,14 +79,65 @@ method(MCGLContext, void, loadMaterial, MCMaterial* mtl)
     MCGLShader_shaderSetUInt(obj->shader, "illum", mtl->illum);
 }
 
+method(MCGLContext, void, loadMesh, MCMesh* meth)
+{
+    if (meth->isDataLoaded == false) {
+        glGenVertexArrays(1, &meth->VAO);
+        glGenBuffers(1, &meth->VBO);
+        //VAO
+        glBindVertexArray(meth->VAO);
+        //VBO
+        glBindBuffer(GL_ARRAY_BUFFER, meth->VBO);
+        glBufferData(GL_ARRAY_BUFFER, meth->vertexDataSize, meth->vertexDataPtr, meth->useage);
+        //EBO
+        if (meth->vertexIndexes != null) {
+            glGenBuffers(1, &meth->EBO);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meth->EBO);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*meth->vertexCount, meth->vertexIndexes, meth->useage);
+        }
+        //VAttributes
+        int i;
+        for (i=0; i<MCVertexAttribIndexMax-1; i++) {
+            MCVertexAttribute attr = meth->vertexAttribArray[i];
+            if (attr.vectorsize != (GLint)null) {
+                MCVertexAttributeLoad(&meth->vertexAttribArray[i]);
+            }
+        }
+        //Unbind
+        glBindVertexArray(0);
+        meth->isDataLoaded = true;
+    }
+}
+
+method(MCGLContext, void, drawMesh, MCMesh* meth)
+{
+    glBindVertexArray(meth->VAO);
+    //override draw mode
+    GLenum mode = meth->mode;
+    if (obj->drawMode != MCDrawNone) {
+        mode = obj->drawMode;
+    }
+    //draw
+    if (mode != MCDrawNone) {
+        if (meth->vertexIndexes != null) {
+            glDrawElements(mode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
+        }else{
+            glDrawArrays(mode, 0, meth->vertexCount);
+        }
+    }
+    //Unbind
+    glBindVertexArray(0);
+    MCGLContext_unbind2DTextures(0);
+}
+
 onload(MCGLContext)
 {
     if (load(MCObject)) {
-
         binding(MCGLContext, void, bye, voida);
         binding(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
         binding(MCGLContext, void, loadMaterial, MCMaterial* mtl);
-
+        binding(MCGLContext, void, loadMesh, MCMesh* meth);
+        binding(MCGLContext, void, drawMesh, MCMesh* ctx);
         return cla;
     }else{
         return null;

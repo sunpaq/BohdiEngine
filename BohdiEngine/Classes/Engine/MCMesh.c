@@ -116,57 +116,6 @@ method(MCMesh, void, normalizeNormals, voida)
     }
 }
 
-method(MCMesh, void, prepareMesh, MCGLContext* ctx)
-{
-    if (var(isDataLoaded) == false) {
-        glGenVertexArrays(1, &obj->VAO);
-        glGenBuffers(1, &obj->VBO);
-        //VAO
-        glBindVertexArray(obj->VAO);
-        //VBO
-        glBindBuffer(GL_ARRAY_BUFFER, obj->VBO);
-        glBufferData(GL_ARRAY_BUFFER, obj->vertexDataSize, obj->vertexDataPtr, obj->useage);
-        //EBO
-        if (var(vertexIndexes) != null) {
-            glGenBuffers(1, &obj->EBO);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*obj->vertexCount, obj->vertexIndexes, obj->useage);
-        }
-        //VAttributes
-        int i;
-        for (i=0; i<MCVertexAttribIndexMax-1; i++) {
-            MCVertexAttribute attr = obj->vertexAttribArray[i];
-            if (attr.vectorsize != (GLint)null) {
-                MCVertexAttributeLoad(&obj->vertexAttribArray[i]);
-            }
-        }
-        //Unbind
-        glBindVertexArray(0);
-        var(isDataLoaded) = true;
-    }
-}
-
-method(MCMesh, void, drawMesh, MCGLContext* ctx)
-{
-    glBindVertexArray(obj->VAO);
-    //override draw mode
-    GLenum mode = var(mode);
-    if (ctx->drawMode != MCDrawNone) {
-        mode = ctx->drawMode;
-    }
-    //draw
-    if (mode != MCDrawNone) {
-        if (var(vertexIndexes) != null) {
-            glDrawElements(mode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
-        }else{
-            glDrawArrays(mode, 0, var(vertexCount));
-        }
-    }
-    //Unbind
-    glBindVertexArray(0);
-    MCGLContext_unbind2DTextures(0);
-}
-
 onload(MCMesh)
 {
     if (load(MCItem)) {
@@ -174,8 +123,6 @@ onload(MCMesh)
         binding(MCMesh, MCMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount);
         binding(MCMesh, void, setVertex, GLuint offset, MCMeshVertexData* data);
         binding(MCMesh, void, normalizeNormals, voida);
-        binding(MCMesh, void, prepareMesh, voida);
-        binding(MCMesh, void, drawMesh, voida);
         return cla;
     }else{
         return null;

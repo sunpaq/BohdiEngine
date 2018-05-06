@@ -221,7 +221,6 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
         MCLinkedListForEach(var(meshes),
                             MCMesh* mesh = (MCMesh*)item;
                             if (mesh != null) {
-                                MCMesh_prepareMesh(mesh, ctx);
                                 //texture
                                 if (obj->diffuseTexture) {
                                     MCGLContext_loadTexture(ctx, obj->diffuseTexture, "diffuse_sampler");
@@ -229,7 +228,8 @@ method(MC3DNode, void, draw, MCGLContext* ctx)
                                 if (obj->specularTexture) {
                                     MCGLContext_loadTexture(ctx, obj->specularTexture, "specular_sampler");
                                 }
-                                MCMesh_drawMesh(mesh, ctx);
+                                MCGLContext_loadMesh(ctx, mesh);
+                                MCGLContext_drawMesh(ctx, mesh);
                             })
     //}
     

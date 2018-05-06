@@ -9,6 +9,7 @@
 #define MCGLShader_h
 
 #include "MCGLBase.h"
+#include "MCGLDefaultShader.h"
 
 #define MAX_UNIFORM_NUM   100
 

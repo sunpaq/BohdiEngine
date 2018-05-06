@@ -10,7 +10,7 @@
 #define MCMesh_h
 
 #include "monkc.h"
-#include "MCGLContext.h"
+#include "MCGLBase.h"
 #include "MCLinkedList.h"
 #include "MCMath.h"
 #include "BAObjParser.h"
@@ -51,17 +51,13 @@ class(MCMesh, MCItem,
 
       MCVertexAttribute vertexAttribArray[MCVertexAttribIndexMax];
       MCDrawMode mode;
-
-      //MCTexture* diffuseTextureRef;
-      //MCTexture* specularTextureRef;
 );
 
 method(MCMesh, void, bye, voida);
 method(MCMesh, MCMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount);
 method(MCMesh, void, setVertex, GLuint offset, MCMeshVertexData* data);
 method(MCMesh, void, normalizeNormals, voida);
-method(MCMesh, void, prepareMesh, MCGLContext* ctx);
-method(MCMesh, void, drawMesh, MCGLContext* ctx);
+
 method(MCMesh, void, dump, voida);
 
 #endif /* MCMesh_h */

@@ -8,6 +8,13 @@
 #import "BEMTView.h"
 #import "BEMTContext.h"
 
+#include "TargetConditionals.h"
+#if TARGET_OS_IOS
+#define Rect CGRect
+#else
+#define Rect NSRect
+#endif
+
 @implementation BEMTView
 {
     BEMTContext* _ctx;
@@ -30,7 +37,7 @@
     return nil;
 }
 
--(instancetype)initWithFrame:(NSRect)frameRect
+-(instancetype)initWithFrame:(Rect)frameRect
 {
     if (self = [super initWithFrame:frameRect]) {
         [self setupContext];

@@ -9,7 +9,7 @@
 
 - (void) loadModelNamed:(NSString*)name
 {
-    [renderer addModelNamed:name Scale:10.0];
+    [renderer addModelNamed:name Scale:1.0];
 }
 
 - (void) loadSkysphNamed:(NSString*)texname
@@ -214,7 +214,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	// simultaneously when resizing
 	CGLLockContext([[self openGLContext] CGLContextObj]);
 
+    if (self.delegate) {
+        [self.delegate beforeRenderFrame];
+    }
     [renderer drawFrame];
+    if (self.delegate) {
+        [self.delegate afterRenderFrame];
+    }
 
 	CGLFlushDrawable([[self openGLContext] CGLContextObj]);
 	CGLUnlockContext([[self openGLContext] CGLContextObj]);

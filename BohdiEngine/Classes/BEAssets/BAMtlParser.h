@@ -13,7 +13,7 @@
 #include "MCMath.h"
 #include "MCGeometry.h"
 #include "MCString.h"
-#include "MCLexer.h"
+#include "BALexer.h"
 
 /* illum_0 -> illum_10
 0   Color on and Ambient off 

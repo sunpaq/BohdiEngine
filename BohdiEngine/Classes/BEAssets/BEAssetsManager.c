@@ -12,23 +12,17 @@
 #include <pthread.h>
 static CFStringRef BundlePath = NULL;
 #endif
-#include "BEAssetsManager.h"
-#include "MCString.h"
+
 #ifdef __ANDROID__
 static AAssetManager* assetManager_ = null;
 static ANativeWindow* window_ = null;
-
-//File
-void MCFileSetAssetManager(AAssetManager* assetManager)
-{
-	assetManager_ = assetManager;
-}
-
-AAssetManager* MCFileGetAssetManager()
-{
-    return assetManager_;
-}
+void MCFileSetAssetManager(AAssetManager* assetManager) { assetManager_ = assetManager; }
+AAssetManager* MCFileGetAssetManager() { return assetManager_; }
 #endif
+
+#include "BEAssetsManager.h"
+#include "BALexer.h"
+#include "MCString.h"
 
 int MCFileGetPath(const char* filename, char* buffer)
 {

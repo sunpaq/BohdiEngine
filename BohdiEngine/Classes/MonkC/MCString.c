@@ -1,6 +1,37 @@
 #include "MCString.h"
 #include "MCMath.h"
 
+static const char  MCTab = '\t';
+static const char  MCWhiteSpace = ' ';
+static const char  MCNewLineN = '\n';
+static const char  MCNewLineR = '\r';
+#define MCCond_PathDiv(w)   (*w == '/' || *w =='\\')
+
+//return remain string
+utility(MCString, const char*, trimWhiteSpace, const char** target_p)
+{
+    const char* iter = *target_p;
+    while (*iter == MCWhiteSpace || *iter == MCTab)
+    iter++;
+    *target_p = iter;//update remain
+    return iter;
+}
+
+//Old Mac9 end of line sequence: \r
+//Unix OSX end of line sequence: \n
+//Windows  end of line sequence: \r\n
+utility(MCString, MCBool, isNewLine, const char* s)
+{
+    if (s) {
+        if (*s == MCNewLineN) {
+            return true;
+        } else if (*s == MCNewLineR) { //Windows NewLine
+            return true;
+        }
+    }
+    return false;
+}
+
 utility(MCString, MCBool, contains, const char* str, const char* instr)
 {
     if (strstr(instr, str)) {
@@ -194,7 +225,7 @@ utility(MCString, const char*, baseFromPath, const char* path, char (*buff)[])
 
 utility(MCString, const char*, filenameFromPath, const char* path, char (*buff)[])
 {
-    trimWhiteSpace(&path);
+    MCString_trimWhiteSpace(&path);
 
     char reversebuff[PATH_MAX] = {0};
     MCString_reverse(path, reversebuff);
@@ -218,7 +249,7 @@ utility(MCString, const char*, filenameFromPath, const char* path, char (*buff)[
 
 utility(MCString, size_t, filenameTrimExtension, const char* name, char* buff)
 {
-    trimWhiteSpace(&name);
+    MCString_trimWhiteSpace(&name);
     char reversebuff[PATH_MAX] = {0};
     MCString_reverse(name, reversebuff);
     
@@ -259,7 +290,7 @@ utility(MCString, size_t, filenameTrimExtension, const char* name, char* buff)
 
 utility(MCString, size_t, extensionFromFilename, const char* name, char* basebuff, char* extbuff)
 {
-    trimWhiteSpace(&name);
+    MCString_trimWhiteSpace(&name);
     int i=0, j=0;
     while (name[i] != NUL && name[i] != NUL) {
         if (name[i] == '.') {
@@ -462,7 +493,7 @@ MCString* MCString_newForHttp(char* cstr, int isHttps)
 static char get_one_char()
 {
     char cf = NUL;
-    while(!isNewLine(&cf)) {
+    while(!MCString_isNewLine(&cf)) {
         cf = getchar();
     }//clear the buff
 	return cf;
@@ -472,7 +503,7 @@ static void get_chars_until_enter(char resultString[])
 {
 	char tc = NUL;
 	int i=0;
-	while(!isNewLine(&tc)){
+	while(!MCString_isNewLine(&tc)){
 		resultString[i]=tc;
 		i++;
 	}

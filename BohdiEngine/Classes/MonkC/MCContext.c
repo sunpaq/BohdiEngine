@@ -1,5 +1,5 @@
 #include "MCContext.h"
-#include "MCLexer.h"
+#include "MCString.h"
 
 oninit(MCContext)
 {
@@ -27,7 +27,7 @@ struct privateData
 static char get_one_char()
 {
     char cf = '\0';
-    while(!isNewLine(&cf)) {
+    while(!MCString_isNewLine(&cf)) {
         cf = getchar();
     };//clear the buff
 	return cf;
@@ -37,7 +37,7 @@ static void get_chars_until_enter(char resultString[])
 {
 	char tc = NUL;
 	int i=0;
-	while(!isNewLine(&tc)){
+	while(!MCString_isNewLine(&tc)){
         tc = getchar();
 		resultString[i]=tc;
 		i++;

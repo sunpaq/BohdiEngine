@@ -12,7 +12,7 @@
 #include "monkc.h"
 #include "MCMath.h"
 #include "MCGeometry.h"
-#include "MCLexer.h"
+#include "BALexer.h"
 #include "BEAssetsManager.h"
 #include "BAMtlParser.h"
 

@@ -1,9 +1,8 @@
-#include <string.h>
-#include "MCContext.h"
-#include "MCLexer.h"
+#ifndef MCString_h
+#define MCString_h
 
-#ifndef MCString_
-#define MCString_
+#include <string.h>
+#include "monkc.h"
 
 class(MCString, MCObject,
 	size_t length;
@@ -52,6 +51,8 @@ utility(MCString, const char*, compressToCharCount, const char* source, char* bu
 utility(MCString, const char*, extractFromCharCount, const char* source, char* buff);
 
 utility(MCString, void, printPermutationOf, char str[]);
+utility(MCString, const char*, trimWhiteSpace, const char** target_p);
+utility(MCString, MCBool, isNewLine, const char* s);
 
 MCInline char* MCStringFill(char* dest, const char* src) {
     char* res = strcpy(dest, src);

@@ -1,5 +1,4 @@
 #include "MCIO.h"
-#include "MCLexer.h"
 
 #pragma mark - MCFile unbuffered IO
 

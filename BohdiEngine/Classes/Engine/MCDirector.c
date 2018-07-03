@@ -254,7 +254,7 @@ method(MCDirector, void, removeCurrentModel, voida)
 method(MCDirector, void, addSkyboxNamed, const char* names[6])
 {
     if (obj->lastScene) {
-        MCSkybox* box = ff(new(MCSkybox), initWithFileNames, names);
+        MCGLSkybox* box = ff(new(MCGLSkybox), initWithFileNames, names);
         if (box) {
             MC3DScene_addSkybox(obj->lastScene, box);
             release(box);
@@ -265,7 +265,7 @@ method(MCDirector, void, addSkyboxNamed, const char* names[6])
 method(MCDirector, void, addSkysphereNamed, const char* name)
 {
     if (obj->lastScene) {
-        MCSkysphere* sph = ff(new(MCSkysphere), initWithFileName, name);
+        MCGLSkysphere* sph = ff(new(MCGLSkysphere), initWithFileName, name);
         if (sph) {
             MC3DScene_addSkysph(obj->lastScene, sph);
             release(sph);

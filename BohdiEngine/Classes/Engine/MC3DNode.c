@@ -8,12 +8,12 @@
 
 #include "MC3DNode.h"
 #include "MCLinkedList.h"
-#include "MCGLRenderer.h"
 
 oninit(MC3DNode)
 {
     if (init(MCItem)) {
         var(visible) = true;
+        var(receiveEvent) = false;
         var(center) = MCVector3Make(0, 0, 0);
         
         var(transform) = MCMatrix4Identity;
@@ -168,81 +168,6 @@ method(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental)
     }
 }
 
-method(MC3DNode, void, update, MCGLContext* ctx)
-{
-    //update children
-    MCLinkedListForEach(var(children),
-                        MC3DNode* node = (MC3DNode*)item;
-                        if (node != null && node->visible != false) {
-                            ff(node, update, ctx);
-                            //ff(node, update, ctx);
-                        })
-}
-
-method(MC3DNode, void, draw, MCGLContext* ctx)
-{
-    //draw self
-    //if (obj->visible) {
-        MCGLShader_activateShaderProgram(ctx->shader, 0);
-        MCGLUniform f;
-        
-        //scale translate
-        MCMatrix4 viewModel = MCMatrix4Multiply(var(viewtrans), var(transform));
-
-        if (!MCMatrix4Equal(&MCMatrix4Identity, &viewModel)) {
-            f.data.mat4 = viewModel;
-            MCGLShader_updateUniform(ctx->shader, model_model, f.data);
-        }
-    
-        MCMatrix3 nor = MCMatrix3InvertAndTranspose(MCMatrix4GetMatrix3(var(transform)), NULL);
-        f.data.mat3 = nor;
-        MCGLShader_updateUniform(ctx->shader, model_normal, f.data);
-        
-        //material
-        if (obj->material != null) {
-            if (obj->material->hidden == 1) {
-                return;
-            }
-            obj->material->dataChanged = true;
-            MCGLContext_loadMaterial(ctx, obj->material);
-        }
-        
-        //draw self texture
-        if (obj->diffuseTexture != null) {
-            MCGLShader_shaderSetBool(ctx->shader, "usetexture", true);
-        } else {
-            MCGLShader_shaderSetBool(ctx->shader, "usetexture", false);
-        }
-        
-        //batch setup
-        MCGLShader_setUniforms(ctx->shader, 0);
-
-        //draw self meshes
-        MCLinkedListForEach(var(meshes),
-                            MCMesh* mesh = (MCMesh*)item;
-                            if (mesh != null) {
-                                //texture
-                                if (obj->diffuseTexture) {
-                                    MCGLContext_loadTexture(ctx, obj->diffuseTexture, "diffuse_sampler");
-                                }
-                                if (obj->specularTexture) {
-                                    MCGLContext_loadTexture(ctx, obj->specularTexture, "specular_sampler");
-                                }
-                                MCGLContext_loadMesh(ctx, mesh);
-                                MCGLContext_drawMesh(ctx, mesh);
-                            })
-    //}
-    
-    //draw children
-    MCLinkedListForEach(var(children),
-                        MC3DNode* node = (MC3DNode*)item;
-                        if (node != null && node->visible != false) {
-                            ff(node, draw, ctx);
-                        })
-    
-    //ff(ctx, printUniforms, 0);
-}
-
 method(MC3DNode, void, hide, voida)
 {
     var(visible) = false;
@@ -251,6 +176,16 @@ method(MC3DNode, void, hide, voida)
 method(MC3DNode, void, show, voida)
 {
     var(visible) = true;
+}
+
+method(MC3DNode, void, willDraw, voida)
+{
+    
+}
+
+method(MC3DNode, void, didDraw, voida)
+{
+    
 }
 
 onload(MC3DNode)
@@ -271,10 +206,10 @@ onload(MC3DNode)
         binding(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental);
         binding(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental);
         binding(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
-        binding(MC3DNode, void, update, voida);
-        binding(MC3DNode, void, draw, voida);
         binding(MC3DNode, void, hide, voida);
         binding(MC3DNode, void, show, voida);
+        binding(MC3DNode, void, willDraw, voida);
+        binding(MC3DNode, void, didDraw, voida);
         return cla;
     }else{
         return null;

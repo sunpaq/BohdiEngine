@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include "MCMath.h"
-#include "MCGLBase.h"
+//#include "MCGLBase.h"
 
 #define MCBUFFER_OFFSET(i)         ((char *)NULL + (i))
 #define MCARRAY_COUNT(array, type) (sizeof(array)/sizeof(type))

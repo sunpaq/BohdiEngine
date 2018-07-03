@@ -15,8 +15,8 @@
 #include "MCCamera.h"
 #include "MCClock.h"
 #include "MCLight.h"
-#include "MCSkybox.h"
-#include "MCSkysphere.h"
+#include "MCGLSkybox.h"
+#include "MCGLSkysphere.h"
 
 typedef enum {
     MC3DSceneModelOnly,
@@ -34,8 +34,8 @@ class(MC3DScene, MCObject,
       unsigned      scenewidth;
       unsigned      sceneheight;
       
-      MCSkybox*     skybox;
-      MCSkysphere*  skysph;
+      MCGLSkybox*     skybox;
+      MCGLSkysphere*  skysph;
       
       MCGLRenderer* renderer;
       MC3DNode*     rootnode;
@@ -56,8 +56,8 @@ method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, uns
 method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname);
 method(MC3DScene, MC3DScene*, initWithWidthHeightDefaultShader, unsigned width, unsigned height);
 method(MC3DScene, void, resizeScene, unsigned width, unsigned height);
-method(MC3DScene, void, addSkybox, MCSkybox* box);
-method(MC3DScene, void, addSkysph, MCSkysphere* sph);
+method(MC3DScene, void, addSkybox, MCGLSkybox* box);
+method(MC3DScene, void, addSkysph, MCGLSkysphere* sph);
 method(MC3DScene, void, removeSkybox, voida);
 method(MC3DScene, void, removeSkysph, voida);
 method(MC3DScene, void, updateScene, voida);

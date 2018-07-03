@@ -10,8 +10,8 @@
 #define MC3DModel_h
 
 #include "monkc.h"
-#include "MCGLBase.h"
-#include "MCMesh.h"
+//#include "MCGLBase.h"
+#include "MCGLMesh.h"
 #include "MCTexture.h"
 #include "MCIO.h"
 #include "MC3DNode.h"
@@ -45,8 +45,5 @@ method(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian);
 method(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian);
 //resize
 method(MC3DModel, void, resizeToFit, double maxsize);
-//override
-method(MC3DModel, void, update, MCGLContext* ctx);
-method(MC3DModel, void, draw, MCGLContext* ctx);
 
 #endif /* MC3DModel_h */

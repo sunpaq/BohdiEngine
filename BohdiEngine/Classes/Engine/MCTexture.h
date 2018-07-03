@@ -10,19 +10,17 @@
 #define MCTexture_h
 
 #include "monkc.h"
-#include "MCGLBase.h"
 #include "BE2DTextureData.h"
 
 typedef enum {
-    MCTextureRepeat      = GL_REPEAT,
-    MCTextureClampToEdge = GL_CLAMP_TO_EDGE
+    MCTextureRepeat,
+    MCTextureClampToEdge
 } MCTextureDisplayMode;
 
 class(MCTexture, MCObject,
-      GLuint Id;
+      unsigned Id;
       int width;
       int height;
-      unsigned textureUnit;
       BE2DTextureData* data;
       MCTextureDisplayMode displayMode;
       MCBool loadedToGL;

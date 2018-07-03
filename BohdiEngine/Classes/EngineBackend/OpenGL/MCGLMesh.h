@@ -1,13 +1,13 @@
 //
-//  MCMesh.h
+//  MCGLMesh.h
 //  monkcGame
 //
 //  Created by Sun YuLi on 16/2/20.
 //  Copyright © 2016年 oreisoft. All rights reserved.
 //
 
-#ifndef MCMesh_h
-#define MCMesh_h
+#ifndef MCGLMesh_h
+#define MCGLMesh_h
 
 #include "monkc.h"
 #include "MCGLBase.h"
@@ -30,9 +30,9 @@ typedef union {
         GLfloat v;
     };
     GLfloat data[11];
-} MCMeshVertexData;
+} MCVertexData;
 
-class(MCMesh, MCItem,
+class(MCGLMesh, MCItem,
       MCBool     isDataLoaded;
       MCBool     calculatedNormal;
       
@@ -53,11 +53,11 @@ class(MCMesh, MCItem,
       MCDrawMode mode;
 );
 
-method(MCMesh, void, bye, voida);
-method(MCMesh, MCMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount);
-method(MCMesh, void, setVertex, GLuint offset, MCMeshVertexData* data);
-method(MCMesh, void, normalizeNormals, voida);
+method(MCGLMesh, void, bye, voida);
+method(MCGLMesh, MCGLMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount);
+method(MCGLMesh, void, setVertex, GLuint offset, MCVertexData* data);
+method(MCGLMesh, void, normalizeNormals, voida);
 
-method(MCMesh, void, dump, voida);
+method(MCGLMesh, void, dump, voida);
 
-#endif /* MCMesh_h */
+#endif /* MCGLMesh_h */

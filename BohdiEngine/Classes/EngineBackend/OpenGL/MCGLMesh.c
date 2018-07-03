@@ -1,16 +1,16 @@
 //
-//  MCMesh.c
+//  MCGLMesh.c
 //  monkcGame
 //
 //  Created by Sun YuLi on 16/2/20.
 //  Copyright © 2016年 oreisoft. All rights reserved.
 //
 
-#include "MCMesh.h"
+#include "MCGLMesh.h"
 #include "MC3DBase.h"
 #include "MCGLContext.h"
 
-oninit(MCMesh)
+oninit(MCGLMesh)
 {
     if (init(MCItem)) {
         var(isDataLoaded) = false;
@@ -18,7 +18,7 @@ oninit(MCMesh)
         
         var(Frame) = (MC3DFrame){0,0,0,0,0,0};
         var(useage) = GL_STATIC_DRAW;
-        var(mode) = MCTriAngles;
+        //var(mode) = MCTriAngles;
 
         var(vertexDataNeedRelease) = true;
         var(vertexDataPtr) = null;
@@ -27,14 +27,14 @@ oninit(MCMesh)
         var(vertexCount)   = 0;
         
         memset(var(vertexAttribArray), (int)null, sizeof(var(vertexAttribArray)));
-        //debug_log("MCMesh - init finished\n");
+        //debug_log("MCGLMesh - init finished\n");
         return obj;
     }else{
         return null;
     }
 }
 
-method(MCMesh, void, bye, voida)
+method(MCGLMesh, void, bye, voida)
 {
     glDeleteBuffers(1, &obj->VBO);
     glDeleteVertexArrays(1, &obj->VAO);
@@ -43,7 +43,7 @@ method(MCMesh, void, bye, voida)
     }
 }
 
-method(MCMesh, void, allocVertexBuffer, GLsizei vertexCount)
+method(MCGLMesh, void, allocVertexBuffer, GLsizei vertexCount)
 {
     obj->vertexCount = vertexCount ;
     obj->vertexDataSize = obj->vertexCount * 11 * sizeof(GLfloat);
@@ -55,9 +55,9 @@ method(MCMesh, void, allocVertexBuffer, GLsizei vertexCount)
     }
 }
 
-method(MCMesh, MCMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount)
+method(MCGLMesh, MCGLMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount)
 {
-    //debug_log("MCMesh - initWithDefaultVertexAttributes\n");
+    //debug_log("MCGLMesh - initWithDefaultVertexAttributes\n");
     obj->vertexAttribArray[0] = (MCVertexAttribute){
         MCVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(0)};
     obj->vertexAttribArray[1] = (MCVertexAttribute){
@@ -68,13 +68,13 @@ method(MCMesh, MCMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount)
         MCVertexAttribTexCoord0,2, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(36)};
     
     //alloc vertex buffer
-    MCMesh_allocVertexBuffer(obj, vertexCount);
+    MCGLMesh_allocVertexBuffer(obj, vertexCount);
     //obj->vertexIndexes = (GLuint*)malloc(sizeof(GLuint)*obj->vforertexCount);
     
     return obj;
 }
 
-method(MCMesh, void, setVertex, GLuint offset, MCMeshVertexData* data)
+method(MCGLMesh, void, setVertex, GLuint offset, MCVertexData* data)
 {
     obj->vertexDataPtr[offset+0] = data->x;
     obj->vertexDataPtr[offset+1] = data->y;
@@ -98,7 +98,7 @@ method(MCMesh, void, setVertex, GLuint offset, MCMeshVertexData* data)
     obj->vertexDataPtr[offset+10] = data->v;
 }
 
-method(MCMesh, void, normalizeNormals, voida)
+method(MCGLMesh, void, normalizeNormals, voida)
 {
     if (!obj->calculatedNormal) {
         return;
@@ -116,13 +116,13 @@ method(MCMesh, void, normalizeNormals, voida)
     }
 }
 
-onload(MCMesh)
+onload(MCGLMesh)
 {
     if (load(MCItem)) {
-        binding(MCMesh, void, bye, voida);
-        binding(MCMesh, MCMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount);
-        binding(MCMesh, void, setVertex, GLuint offset, MCMeshVertexData* data);
-        binding(MCMesh, void, normalizeNormals, voida);
+        binding(MCGLMesh, void, bye, voida);
+        binding(MCGLMesh, MCGLMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount);
+        binding(MCGLMesh, void, setVertex, GLuint offset, MCGLMeshVertexData* data);
+        binding(MCGLMesh, void, normalizeNormals, voida);
         return cla;
     }else{
         return null;

@@ -7,21 +7,13 @@
 //
 
 #include "MCGLRenderer.h"
-#include "MC3DBase.h"
-#include "MCIO.h"
-
-static MCHash _draw;
-static MCHash _update;
-
-static void prehash()
-{
-    _draw = hash("draw");
-    _update = hash("update");
-}
+#include "MCGLContext.h"
 
 oninit(MCGLRenderer)
 {
     if(init(MCObject)){
+        var(drawMode) = MCDrawNone;
+
         MCGLContext_featureSwith(MCGLDepthTest, true);
         MCGLContext_featureSwith(MCGLStencilTest, true);
         MCGLContext_featureSwith(MCGLCullFace, true);
@@ -29,7 +21,7 @@ oninit(MCGLRenderer)
         MCGLContext_cullFace(MCGLBack);
         MCGLContext_setFrontCounterClockWise(true);//CCW
 
-        //glDepthFunc(GL_LESS);
+        glDepthFunc(GL_LESS);
         
         // Enable blending
         //glEnable(GL_BLEND);
@@ -128,51 +120,117 @@ method(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida)
     return MCGLRenderer_initWithShaderCodeString(obj, VCODE, FCODE);
 }
 
-method(MCGLRenderer, void, updateNodes, MC3DNode* rootnode)
+method(MCGLRenderer, void, updateNodes, MC3DNode* node)
 {
-    //update nodes
-    if (rootnode != null) {
-        ff(rootnode, update, obj->context);
+
+}
+
+function(void, drawMesh, MCGLMesh* mesh)
+{
+    as(MCGLRenderer);
+    glBindVertexArray(mesh->VAO);
+    //override draw mode
+    GLenum mode = mesh->mode;
+    if (obj->drawMode != MCDrawNone) {
+        mode = obj->drawMode;
     }
-}
-
-method(MCGLRenderer, void, drawNodes, MC3DNode* rootnode)
-{
-    if (rootnode != null) {
-        ff(rootnode, draw, obj->context);
-        //make FPS stable motion more smooth
-        //MCGLContext_flushCommandBlock(0);
-        //MCGLContext_flushCommandAsync(0);
+    //draw
+    if (mode != MCDrawNone) {
+        if (mesh->vertexIndexes != null) {
+            glDrawElements(mode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
+        }else{
+            glDrawArrays(mode, 0, mesh->vertexCount);
+        }
     }
+    //Unbind
+    glBindVertexArray(0);
+    MCGLContext_unbind2DTextures(0);
 }
 
-method(MCGLRenderer, void, drawMesh, MCMesh* mesh)
+method(MCGLRenderer, void, drawNodes, MC3DNode* node)
 {
-
-}
-
-method(MCGLRenderer, void, drawMaterial, MCMaterial* material)
-{
+    //callback
+    if (node->receiveEvent) {
+        ff(node, willDraw, obj);
+    }
     
-}
-
-method(MCGLRenderer, void, drawTexture, MCTexture* texture)
-{
+    //draw self
+    MCGLContext* ctx = obj->context;
+    MCGLShader* shader = ctx->shader;
     
+    MCGLShader_activateShaderProgram(shader, 0);
+    MCGLUniform f;
+    
+    //scale translate
+    MCMatrix4 viewModel = MCMatrix4Multiply(node->viewtrans, node->transform);
+    
+    if (!MCMatrix4Equal(&MCMatrix4Identity, &viewModel)) {
+        f.data.mat4 = viewModel;
+        MCGLShader_updateUniform(shader, model_model, f.data);
+    }
+    
+    MCMatrix3 nor = MCMatrix3InvertAndTranspose(MCMatrix4GetMatrix3(node->transform), NULL);
+    f.data.mat3 = nor;
+    MCGLShader_updateUniform(ctx->shader, model_normal, f.data);
+    
+    //material
+    if (node->material != null) {
+        if (node->material->hidden == 1) {
+            return;
+        }
+        node->material->dataChanged = true;
+        MCGLContext_loadMaterial(ctx, node->material);
+    }
+    
+    //draw self texture
+    if (node->diffuseTexture != null) {
+        MCGLShader_shaderSetBool(ctx->shader, "usetexture", true);
+    } else {
+        MCGLShader_shaderSetBool(ctx->shader, "usetexture", false);
+    }
+    
+    //batch setup
+    MCGLShader_setUniforms(ctx->shader, 0);
+    
+    //draw self meshes
+    MCLinkedListForEach(node->meshes,
+                        MCGLMesh* mesh = (MCGLMesh*)item;
+                        if (mesh != null) {
+                            //texture
+                            if (node->diffuseTexture) {
+                                MCGLContext_loadTexture(ctx, node->diffuseTexture, "diffuse_sampler");
+                            }
+                            if (node->specularTexture) {
+                                MCGLContext_loadTexture(ctx, node->specularTexture, "specular_sampler");
+                            }
+                            MCGLContext_loadMesh(ctx, mesh);
+                            drawMesh(obj, mesh);
+                        })
+
+    //callback
+    if (node->receiveEvent) {
+        ff(node, didDraw, obj);
+    }
+    
+    //draw children
+    MCLinkedListForEach(node->children,
+                        MC3DNode* child = (MC3DNode*)item;
+                        if (child != null && child->visible != false) {
+                            MCGLRenderer_drawNodes(obj, child);
+                        })
+    
+    //ff(ctx, printUniforms, 0);
 }
 
 onload(MCGLRenderer)
 {
     if (load(MCObject)) {
-        prehash();
+        //prehash();
         binding(MCGLRenderer, void, bye, voida);
         binding(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
         binding(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
         binding(MCGLRenderer, void, updateNodes, MC3DNode* rootnode);
         binding(MCGLRenderer, void, drawNodes, MC3DNode* rootnode);
-        binding(MCGLRenderer, void, drawMesh, MCMesh* mesh);
-        binding(MCGLRenderer, void, drawMaterial, MCMaterial* material);
-        binding(MCGLRenderer, void, drawTexture, MCTexture* texture);
         return cla;
     }else{
         return null;

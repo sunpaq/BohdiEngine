@@ -30,12 +30,13 @@
 #include "MCGLBase.h"
 #include "MC3DNode.h"
 #include "MCGLContext.h"
-#include "MCMesh.h"
+#include "MCGLMesh.h"
 #include "MCMaterial.h"
 #include "MCTexture.h"
 
 class(MCGLRenderer, MCObject,
-      MCGLContext* context;
+    MCGLContext* context;
+    MCDrawMode drawMode;
 );
 //life cycle
 method(MCGLRenderer, void, bye, voida);
@@ -43,11 +44,7 @@ method(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode,
 method(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
 method(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
 //draw
-method(MCGLRenderer, void, updateNodes, MC3DNode* rootnode);
-method(MCGLRenderer, void, drawNodes, MC3DNode* rootnode);
-
-method(MCGLRenderer, void, drawMesh, MCMesh* mesh);
-method(MCGLRenderer, void, drawMaterial, MCMaterial* material);
-method(MCGLRenderer, void, drawTexture, MCTexture* texture);
+method(MCGLRenderer, void, updateNodes, MC3DNode* node);
+method(MCGLRenderer, void, drawNodes, MC3DNode* node);
 
 #endif /* MCGLRenderer_h */

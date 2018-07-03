@@ -59,7 +59,7 @@ oninit(MCCube)
 {
     if (init(MC3DNode)) {
         
-        MCMesh* mesh = new(MCMesh);
+        MCGLMesh* mesh = new(MCGLMesh);
         mesh->vertexCount = 36;
         mesh->vertexAttribArray[0] = (MCVertexAttribute){MCVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(0)};
         mesh->vertexAttribArray[1] = (MCVertexAttribute){MCVertexAttribNormal,   3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(12)};

@@ -19,7 +19,7 @@ compute(MC3DFrame, frame)
     MC3DFrame allframe = (MC3DFrame){0,0,0,0,0,0};
     
     MCLinkedListForEach(sobj->meshes,
-        MCMesh* m = (MCMesh*)item;
+        MCGLMesh* m = (MCGLMesh*)item;
         if (m != null) {
             MC3DFrame mf = m->Frame;
             //MAX
@@ -101,7 +101,7 @@ method(MC3DModel, void, bye, voida)
     MC3DNode_bye(sobj, 0);
 }
 
-function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, size_t offset, MCColorf color)
+function(void, meshLoadFaceElement, MCGLMesh* mesh, BAObjData* buff, BAFaceElement e, size_t offset, MCColorf color)
 {
     MCVector3 v, n;
     MCVector2 t;
@@ -143,7 +143,7 @@ function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement
     MCMath_accumulateMind(&buff->Frame.ymin, v.y);
     MCMath_accumulateMind(&buff->Frame.zmin, v.z);
 
-    MCMeshVertexData data = {
+    MCVertexData data = {
             v.x, v.y, v.z,
             n.x, n.y, n.z,
             color.R.f, color.G.f, color.B.f,
@@ -151,12 +151,12 @@ function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement
             //0,0
     };
 
-    MCMesh_setVertex(mesh, (GLuint)offset, &data);
+    MCGLMesh_setVertex(mesh, (GLuint)offset, &data);
 }
 
-function(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
+function(MCGLMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
 {
-    MCMesh* mesh = MCMesh_initWithDefaultVertexAttributes(new(MCMesh), (GLsizei)tricount*3);
+    MCGLMesh* mesh = MCGLMesh_initWithDefaultVertexAttributes(new(MCGLMesh), (GLsizei)tricount*3);
     
     for (size_t i=0; i<tricount; i++) {
         size_t offset = i * 33;
@@ -166,7 +166,7 @@ function(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t trico
     }
     
     //normalize normal
-    MCMesh_normalizeNormals(mesh, 0);
+    MCGLMesh_normalizeNormals(mesh, 0);
     
     //frame
     for (int i=0; i<6; i++) {
@@ -284,7 +284,7 @@ function(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
         
         BATriangle* triangles = createTrianglesBuffer(faces, bamesh->totalFaceCount);
         size_t tricount = trianglization(triangles, faces, bamesh->totalFaceCount, buff->vertexbuff);
-        MCMesh* mesh = createMeshWithBATriangles(null, triangles, tricount, buff, color);
+        MCGLMesh* mesh = createMeshWithBATriangles(null, triangles, tricount, buff, color);
         
         model->Super.material = new(MCMaterial);
         model->Super.diffuseTexture  = null;
@@ -414,17 +414,6 @@ method(MC3DModel, void, resizeToFit, double maxsize)
     }
 }
 
-//override
-method(MC3DModel, void, update, MCGLContext* ctx)
-{
-    MC3DNode_update(sobj, ctx);
-}
-
-method(MC3DModel, void, draw, MCGLContext* ctx)
-{
-    MC3DNode_draw(sobj, ctx);
-}
-
 onload(MC3DModel)
 {
     if (load(MC3DNode)) {
@@ -437,9 +426,6 @@ onload(MC3DModel)
         binding(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian);
         binding(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian);
         binding(MC3DModel, void, resizeToFit, double maxsize);
-        //override
-        binding(MC3DModel, void, update, MCGLContext* ctx);
-        binding(MC3DModel, void, draw, MCGLContext* ctx);
         binding(MC3DModel, void, translateToOrigin, voida);
         return cla;
     }else{

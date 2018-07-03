@@ -1,18 +1,18 @@
 //
-//  MCSkysphere.h
+//  MCGLSkysphere.h
 //  Sapindus
 //
 //  Created by Sun YuLi on 2017/3/4.
 //  Copyright © 2017年 oreisoft. All rights reserved.
 //
 
-#ifndef MCSkysphere_h
-#define MCSkysphere_h
+#ifndef MCGLSkysphere_h
+#define MCGLSkysphere_h
 
 #include "MC3DNode.h"
 #include "BE2DTextureData.h"
 
-class(MCSkysphere, MC3DNode,
+class(MCGLSkysphere, MC3DNode,
       BE2DTextureData* tex;
       MCGLContext* ctx;
       
@@ -39,15 +39,15 @@ class(MCSkysphere, MC3DNode,
       MCUInt eboid;
       MCUInt texid);
 
-method(MCSkysphere, void, bye, voida);
-method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex);
-method(MCSkysphere, MCSkysphere*, initWithFileName, const char* name);
-method(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida);
+method(MCGLSkysphere, void, bye, voida);
+method(MCGLSkysphere, MCGLSkysphere*, initWithBE2DTexture, BE2DTextureData* tex);
+method(MCGLSkysphere, MCGLSkysphere*, initWithFileName, const char* name);
+method(MCGLSkysphere, MCGLSkysphere*, initWithDefaultFile, voida);
 
-method(MCSkysphere, void, setRotationMat3, float mat3[9]);
-method(MCSkysphere, void, setRotationMat4, float mat4[16]);
+method(MCGLSkysphere, void, setRotationMat3, float mat3[9]);
+method(MCGLSkysphere, void, setRotationMat4, float mat4[16]);
 //override
-method(MCSkysphere, void, update, MCGLContext* ctx);
-method(MCSkysphere, void, draw, MCGLContext* ctx);
+method(MCGLSkysphere, void, update, MCGLContext* ctx);
+method(MCGLSkysphere, void, draw, MCGLContext* ctx);
 
-#endif /* MCSkysphere_h */
+#endif /* MCGLSkysphere_h */

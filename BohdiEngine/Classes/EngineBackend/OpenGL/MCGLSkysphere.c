@@ -1,12 +1,12 @@
 //
-//  MCSkysphere.c
+//  MCGLSkysphere.c
 //  Sapindus
 //
 //  Created by Sun YuLi on 2017/3/4.
 //  Copyright © 2017年 oreisoft. All rights reserved.
 //
 
-#include "MCSkysphere.h"
+#include "MCGLSkysphere.h"
 #include "MCGLContext.h"
 #include "MC3DShapeBase.h"
 
@@ -55,7 +55,7 @@ void main()
 }
 );//fsource end
 
-oninit(MCSkysphere)
+oninit(MCGLSkysphere)
 {
     if (init(MC3DNode)) {
         obj->Super.visible = true;
@@ -98,7 +98,7 @@ oninit(MCSkysphere)
     }
 }
 
-method(MCSkysphere, void, bye, voida)
+method(MCGLSkysphere, void, bye, voida)
 {
     
     free(var(vertices));
@@ -116,7 +116,7 @@ method(MCSkysphere, void, bye, voida)
     MC3DNode_bye(sobj, 0);
 }
 
-method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
+method(MCGLSkysphere, MCGLSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
 {
     retain(tex);
     var(tex) = tex;
@@ -171,25 +171,25 @@ method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
     return obj;
 }
 
-method(MCSkysphere, MCSkysphere*, initWithFileName, const char* name)
+method(MCGLSkysphere, MCGLSkysphere*, initWithFileName, const char* name)
 {
     BE2DTextureData* data = BE2DTextureData_newWithFilename(name);
     if (data) {
-        MCSkysphere* sph = MCSkysphere_initWithBE2DTexture(obj, data);
+        MCGLSkysphere* sph = MCGLSkysphere_initWithBE2DTexture(obj, data);
         release(data);
         return sph;
     }
     return null;
 }
 
-method(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida)
+method(MCGLSkysphere, MCGLSkysphere*, initWithDefaultFile, voida)
 {
-    return MCSkysphere_initWithFileName(obj, "skysphtex.jpg");
+    return MCGLSkysphere_initWithFileName(obj, "skysphtex.jpg");
 }
 
 function(MCMatrix4, sphViewMatrix, voida)
 {
-    as(MCSkysphere);
+    as(MCGLSkysphere);
     MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, 0,
                                       0, 0,-1,
                                       0, 1, 0);
@@ -200,7 +200,7 @@ function(MCMatrix4, sphViewMatrix, voida)
 
 function(MCMatrix4, sphProjectionMatrix, voida)
 {
-    as(MCSkysphere);
+    as(MCGLSkysphere);
     return MCMatrix4MakePerspective(obj->sphCameraAngle,
                                     obj->sphCameraRatio,
                                     0.001,
@@ -208,7 +208,7 @@ function(MCMatrix4, sphProjectionMatrix, voida)
 }
 
 //override
-method(MCSkysphere, void, update, MCGLContext* ctx)
+method(MCGLSkysphere, void, update, MCGLContext* ctx)
 {
     if (obj && obj->Super.visible) {
         obj->sphViewMatrix = sphViewMatrix(obj, 0);
@@ -222,7 +222,7 @@ method(MCSkysphere, void, update, MCGLContext* ctx)
     }
 }
 
-method(MCSkysphere, void, draw, MCGLContext* ctx)
+method(MCGLSkysphere, void, draw, MCGLContext* ctx)
 {
     if (obj && obj->Super.visible) {
         glDepthMask(GL_FALSE);
@@ -240,35 +240,35 @@ method(MCSkysphere, void, draw, MCGLContext* ctx)
     }
 }
 
-method(MCSkysphere, void, setRotationMat3, float mat3[9])
+method(MCGLSkysphere, void, setRotationMat3, float mat3[9])
 {
     MC3DNode_rotateMat3(sobj, mat3, false);
 }
 
-method(MCSkysphere, void, setRotationMat4, float mat4[16])
+method(MCGLSkysphere, void, setRotationMat4, float mat4[16])
 {
     MC3DNode_rotateMat4(sobj, mat4, false);
 }
 
-method(MCSkysphere, void, transformSelfByEularAngle, double R, double fai, double tht)
+method(MCGLSkysphere, void, transformSelfByEularAngle, double R, double fai, double tht)
 {
     //MCMatrix4 lookat = MCMatrix4MakeLookAt(0, 0, 0, 0, 0,-1, 0, 1, 0);
     //double R = var(R_value) * var(R_percent);
     //sobj->transform = MCMatrix4MakeLookAtByEulerAngle_EyeUp(lookat, R, fai, tht, null, null);
 }
 
-onload(MCSkysphere)
+onload(MCGLSkysphere)
 {
     if (load(MC3DNode)) {
-        binding(MCSkysphere, void, bye, voida);
-        binding(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex);
-        binding(MCSkysphere, MCSkysphere*, initWithFileName, const char* name);
-        binding(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida);
-        binding(MCSkysphere, void, setRotationMat3, float mat3[9]);
-        binding(MCSkysphere, void, setRotationMat4, float mat4[16]);
+        binding(MCGLSkysphere, void, bye, voida);
+        binding(MCGLSkysphere, MCGLSkysphere*, initWithBE2DTexture, BE2DTextureData* tex);
+        binding(MCGLSkysphere, MCGLSkysphere*, initWithFileName, const char* name);
+        binding(MCGLSkysphere, MCGLSkysphere*, initWithDefaultFile, voida);
+        binding(MCGLSkysphere, void, setRotationMat3, float mat3[9]);
+        binding(MCGLSkysphere, void, setRotationMat4, float mat4[16]);
         //override
-        binding(MCSkysphere, void, update, MCGLContext* ctx);
-        binding(MCSkysphere, void, draw, MCGLContext* ctx);
+        binding(MCGLSkysphere, void, update, MCGLContext* ctx);
+        binding(MCGLSkysphere, void, draw, MCGLContext* ctx);
         
         return cla;
     }else{

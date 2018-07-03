@@ -16,7 +16,6 @@ oninit(MCGLContext)
 {
     if (init(MCObject)) {
         var(shader) = new(MCGLShader);
-        var(drawMode) = MCDrawNone;
         return obj;
     }else{
         return null;
@@ -32,16 +31,17 @@ method(MCGLContext, void, bye, voida)
 method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
 {
     if (tex) {
+        unsigned texunit = 0;
         if (tex->loadedToGL == false) {
             tex->loadedToGL = true;
             MCGLContext_generateTextureId(&tex->Id);
-            MCGLContext_activeTextureUnit(tex->textureUnit);
+            MCGLContext_activeTextureUnit(texunit);
             MCGLContext_bind2DTexture(tex->Id);
             MCGLContext_rawdataToTexbuffer(tex, GL_TEXTURE_2D);
             MCGLContext_setupTexParameter(tex, GL_TEXTURE_2D);
         }
-        MCGLShader_shaderSetUInt(obj->shader, samplerName, tex->textureUnit);
-        MCGLContext_activeTextureUnit(tex->textureUnit);
+        MCGLShader_shaderSetUInt(obj->shader, samplerName, texunit);
+        MCGLContext_activeTextureUnit(texunit);
         MCGLContext_bind2DTexture(tex->Id);
     }
 }
@@ -79,7 +79,7 @@ method(MCGLContext, void, loadMaterial, MCMaterial* mtl)
     MCGLShader_shaderSetUInt(obj->shader, "illum", mtl->illum);
 }
 
-method(MCGLContext, void, loadMesh, MCMesh* meth)
+method(MCGLContext, void, loadMesh, MCGLMesh* meth)
 {
     if (meth->isDataLoaded == false) {
         glGenVertexArrays(1, &meth->VAO);
@@ -109,35 +109,13 @@ method(MCGLContext, void, loadMesh, MCMesh* meth)
     }
 }
 
-method(MCGLContext, void, drawMesh, MCMesh* meth)
-{
-    glBindVertexArray(meth->VAO);
-    //override draw mode
-    GLenum mode = meth->mode;
-    if (obj->drawMode != MCDrawNone) {
-        mode = obj->drawMode;
-    }
-    //draw
-    if (mode != MCDrawNone) {
-        if (meth->vertexIndexes != null) {
-            glDrawElements(mode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
-        }else{
-            glDrawArrays(mode, 0, meth->vertexCount);
-        }
-    }
-    //Unbind
-    glBindVertexArray(0);
-    MCGLContext_unbind2DTextures(0);
-}
-
 onload(MCGLContext)
 {
     if (load(MCObject)) {
         binding(MCGLContext, void, bye, voida);
         binding(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
         binding(MCGLContext, void, loadMaterial, MCMaterial* mtl);
-        binding(MCGLContext, void, loadMesh, MCMesh* meth);
-        binding(MCGLContext, void, drawMesh, MCMesh* ctx);
+        binding(MCGLContext, void, loadMesh, MCGLMesh* meth);
         return cla;
     }else{
         return null;

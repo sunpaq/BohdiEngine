@@ -7,7 +7,6 @@
 //
 
 #include "MCTexture.h"
-#include "MCGLContext.h"
 #include "BEAssetsManager.h"
 
 oninit(MCTexture)
@@ -16,7 +15,6 @@ oninit(MCTexture)
         var(Id) = -1;
         var(width) = 512;
         var(height)= 512;
-        var(textureUnit) = MCGLContext_getIdleTextureUnit(0);
         var(data) = null;
         var(displayMode) = MCTextureRepeat;
         var(loadedToGL) = false;

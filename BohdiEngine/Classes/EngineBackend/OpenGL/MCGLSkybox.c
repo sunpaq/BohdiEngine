@@ -1,12 +1,12 @@
 //
-//  MCSkybox.c
+//  MCGLSkybox.c
 //  monkcGame
 //
 //  Created by Sun YuLi on 16/4/13.
 //  Copyright © 2016年 oreisoft. All rights reserved.
 //
 
-#include "MCSkybox.h"
+#include "MCGLSkybox.h"
 #include "MCGLContext.h"
 #include "MCCamera.h"
 
@@ -60,7 +60,7 @@ static GLuint indexs[] = {
     0,1,4,4,1,5
 };
 
-oninit(MCSkybox)
+oninit(MCGLSkybox)
 {
     if (init(MC3DNode)) {
         var(vaoid) = 0;
@@ -84,13 +84,13 @@ oninit(MCSkybox)
     }
 }
 
-method(MCSkybox, void, bye, voida)
+method(MCGLSkybox, void, bye, voida)
 {
     release(var(ctx));
     MC3DNode_bye(sobj, 0);
 }
 
-method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
+method(MCGLSkybox, MCGLSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
 {
     //Shader
     MCGLShader_initWithShaderCode(var(ctx)->shader, vsource, fsource,
@@ -146,23 +146,23 @@ method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
     return obj;
 }
 
-method(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[])
+method(MCGLSkybox, MCGLSkybox*, initWithFileNames, const char* namelist[])
 {
     BECubeTextureData* data = BECubeTextureData_newWithFaces(namelist);
-    MCSkybox* skybox = MCSkybox_initWithCubeTexture(obj, data);
+    MCGLSkybox* skybox = MCGLSkybox_initWithCubeTexture(obj, data);
     release(data);
     return skybox;
 }
 
-method(MCSkybox, MCSkybox*, initWithDefaultFiles, voida)
+method(MCGLSkybox, MCGLSkybox*, initWithDefaultFiles, voida)
 {
     const char* names[6] = {"right.jpg","left.jpg","top.jpg","bottom.jpg","back.jpg","front.jpg"};
-    return MCSkybox_initWithFileNames(obj, names);
+    return MCGLSkybox_initWithFileNames(obj, names);
 }
 
 function(MCMatrix4, boxViewMatrix, voida)
 {
-    as(MCSkybox);
+    as(MCGLSkybox);
     MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, 0,
                                       0, 0,-1,
                                       0, 1, 0);
@@ -173,24 +173,24 @@ function(MCMatrix4, boxViewMatrix, voida)
 
 function(MCMatrix4, boxProjectionMatrix, voida)
 {
-    as(MCSkybox);
+    as(MCGLSkybox);
     return MCMatrix4MakePerspective(obj->boxCameraAngle,
                                     obj->boxCameraRatio,
                                     0.001,
                                     200.0);
 }
 
-method(MCSkybox, void, setRotationMat3, float mat3[9])
+method(MCGLSkybox, void, setRotationMat3, float mat3[9])
 {
     MC3DNode_rotateMat3(sobj, mat3, false);
 }
 
-method(MCSkybox, void, setRotationMat4, float mat4[16])
+method(MCGLSkybox, void, setRotationMat4, float mat4[16])
 {
     MC3DNode_rotateMat4(sobj, mat4, false);
 }
 
-method(MCSkybox, void, update, MCGLContext* ctx)
+method(MCGLSkybox, void, update, MCGLContext* ctx)
 {
     obj->boxViewMatrix = boxViewMatrix(obj, 0);
     obj->boxProjectionMatrix = boxProjectionMatrix(obj, 0);
@@ -201,7 +201,7 @@ method(MCSkybox, void, update, MCGLContext* ctx)
     MCGLShader_updateUniform(var(ctx)->shader, "boxProjectionMatrix", data);
 }
 
-method(MCSkybox, void, draw, MCGLContext* ctx)
+method(MCGLSkybox, void, draw, MCGLContext* ctx)
 {
     glDepthMask(GL_FALSE);
     MCGLShader_activateShaderProgram(var(ctx)->shader, 0);
@@ -220,19 +220,19 @@ method(MCSkybox, void, draw, MCGLContext* ctx)
     glDepthMask(GL_TRUE);
 }
 
-onload(MCSkybox)
+onload(MCGLSkybox)
 {
     if (load(MC3DNode)) {
-        binding(MCSkybox, void, bye, voida);
-        binding(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
-        binding(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[]);
-        binding(MCSkybox, MCSkybox*, initWithDefaultFiles, voida);
-        //binding(MCSkybox, void, resizeWithWidthHeight, unsigned width, unsigned height);
-        //binding(MCSkybox, void, setWidthHeightRatio, double widthHeightRatio);
-        binding(MCSkybox, void, setRotationMat3, float mat3[9]);
-        binding(MCSkybox, void, setRotationMat4, float mat4[16]);
-        binding(MCSkybox, void, update, MCGLContext* ctx);
-        binding(MCSkybox, void, draw, MCGLContext* ctx);
+        binding(MCGLSkybox, void, bye, voida);
+        binding(MCGLSkybox, MCGLSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
+        binding(MCGLSkybox, MCGLSkybox*, initWithFileNames, const char* namelist[]);
+        binding(MCGLSkybox, MCGLSkybox*, initWithDefaultFiles, voida);
+        //binding(MCGLSkybox, void, resizeWithWidthHeight, unsigned width, unsigned height);
+        //binding(MCGLSkybox, void, setWidthHeightRatio, double widthHeightRatio);
+        binding(MCGLSkybox, void, setRotationMat3, float mat3[9]);
+        binding(MCGLSkybox, void, setRotationMat4, float mat4[16]);
+        binding(MCGLSkybox, void, update, MCGLContext* ctx);
+        binding(MCGLSkybox, void, draw, MCGLContext* ctx);
         return cla;
     }else{
         return null;

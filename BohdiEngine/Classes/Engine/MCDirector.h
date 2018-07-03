@@ -15,8 +15,8 @@
 #include "MCThread.h"
 #include "MCLight.h"
 
-#include "MCSkybox.h"
-#include "MCSkysphere.h"
+#include "MCGLSkybox.h"
+#include "MCGLSkysphere.h"
 
 class(MCDirector, MCObject,
       MC3DScene* lastScene;
@@ -34,13 +34,13 @@ class(MCDirector, MCObject,
       MCMatrix3 deviceRotationMat3;
       
       //common skybox for many scenes
-      //MCSkybox* skybox;
-      //MCSkysphere* skysph;
+      //MCGLSkybox* skybox;
+      //MCGLSkysphere* skysph;
       
       computing(MCLight*, lightHandler);
       computing(MCCamera*, cameraHandler);
       computing(MCGLContext*, contextHandler);
-      //computing(MCSkyboxCamera*, skyboxCameraHandler);
+      //computing(MCGLSkyboxCamera*, skyboxCameraHandler);
 );
 
 method(MCDirector, void, bye, voida);

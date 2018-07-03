@@ -131,7 +131,7 @@ method(MC3DScene, void, resizeScene, unsigned width, unsigned height)
     }
 }
 
-method(MC3DScene, void, addSkybox, MCSkybox* box)
+method(MC3DScene, void, addSkybox, MCGLSkybox* box)
 {
     if (obj->skybox) {
         release(obj->skybox);
@@ -141,7 +141,7 @@ method(MC3DScene, void, addSkybox, MCSkybox* box)
     retain(box);
 }
 
-method(MC3DScene, void, addSkysph, MCSkysphere* sph)
+method(MC3DScene, void, addSkysph, MCGLSkysphere* sph)
 {
     if (obj->skysph) {
         release(obj->skysph);
@@ -184,7 +184,7 @@ method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht)
 {
     if (var(cameraLock) == false) {
 //        if (var(skyboxRef) != null) {
-//            MCSkyboxCamera_move(var(skyboxRef)->camera, deltaFai.d / 5, deltaTht.d / 5);
+//            MCGLSkyboxCamera_move(var(skyboxRef)->camera, deltaFai.d / 5, deltaTht.d / 5);
 //        }
 
         MCCamera_move(var(mainCamera), deltaFai, deltaTht);
@@ -194,7 +194,7 @@ method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht)
 method(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht)
 {
     if (cpt(isDrawSky)) {
-        //MCSkyboxCamera_move(var(skyboxRef)->camera, deltaFai, deltaTht);
+        //MCGLSkyboxCamera_move(var(skyboxRef)->camera, deltaFai, deltaTht);
     }
 }
 
@@ -203,19 +203,19 @@ method(MC3DScene, void, updateScene, voida)
     if(cpt(isDrawSky)) {
         //no model
         if (var(combineMode) == MC3DSceneSkyboxOnly) {
-            MCSkybox_update(var(skybox), var(renderer)->context);
+            MCGLSkybox_update(var(skybox), var(renderer)->context);
             return;
         }
         else if (var(combineMode) == MC3DSceneSkysphOnly) {
-            MCSkysphere_update(var(skysph), var(renderer)->context);
+            MCGLSkysphere_update(var(skysph), var(renderer)->context);
             return;
         }
         //with model
         else if (var(combineMode) == MC3DSceneModelWithSkybox) {
-            MCSkybox_update(var(skybox), var(renderer)->context);
+            MCGLSkybox_update(var(skybox), var(renderer)->context);
         }
         else if (var(combineMode) == MC3DSceneModelWithSkysph) {
-            MCSkysphere_update(var(skysph), var(renderer)->context);
+            MCGLSkysphere_update(var(skysph), var(renderer)->context);
         }
     }
     if (var(cameraAutoRotate)) {
@@ -233,19 +233,19 @@ method(MC3DScene, int, drawScene, voida)
     if (cpt(isDrawSky)) {
         //no model
         if (var(combineMode) == MC3DSceneSkyboxOnly) {
-            MCSkybox_draw(var(skybox), var(renderer)->context);
+            MCGLSkybox_draw(var(skybox), var(renderer)->context);
             return MCGLContext_tickFPS(var(clock));
         }
         else if (var(combineMode) == MC3DSceneSkysphOnly) {
-            MCSkysphere_draw(var(skysph), var(renderer)->context);
+            MCGLSkysphere_draw(var(skysph), var(renderer)->context);
             return MCGLContext_tickFPS(var(clock));
         }
         //with model
         else if (var(combineMode) == MC3DSceneModelWithSkybox) {
-            MCSkybox_draw(var(skybox), var(renderer)->context);
+            MCGLSkybox_draw(var(skybox), var(renderer)->context);
         }
         else if (var(combineMode) == MC3DSceneModelWithSkysph) {
-            MCSkysphere_draw(var(skysph), var(renderer)->context);
+            MCGLSkysphere_draw(var(skysph), var(renderer)->context);
         }
     }
 
@@ -258,10 +258,10 @@ method(MC3DScene, void, setRotationMat3, float mat3[9])
 {
     if (cpt(isDrawSky)) {
         if (var(skybox)) {
-            MCSkybox_setRotationMat3(var(skybox), mat3);
+            MCGLSkybox_setRotationMat3(var(skybox), mat3);
         }
         if (var(skysph)) {
-            MCSkysphere_setRotationMat3(var(skysph), mat3);
+            MCGLSkysphere_setRotationMat3(var(skysph), mat3);
         }
     }
     MCCamera_setRotationMat3(var(mainCamera), mat3);
@@ -271,10 +271,10 @@ method(MC3DScene, void, setRotationMat4, float mat4[16])
 {
     if (cpt(isDrawSky)) {
         if (var(skybox)) {
-            MCSkybox_setRotationMat4(var(skybox), mat4);
+            MCGLSkybox_setRotationMat4(var(skybox), mat4);
         }
         if (var(skysph)) {
-            MCSkysphere_setRotationMat4(var(skysph), mat4);
+            MCGLSkysphere_setRotationMat4(var(skysph), mat4);
         }
     }
     //TODO rotate camera
@@ -289,8 +289,8 @@ onload(MC3DScene)
         binding(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname);
         binding(MC3DScene, MC3DScene*, initWithWidthHeightDefaultShader, unsigned width, unsigned height);
         binding(MC3DScene, void, resizeScene, unsigned width, unsigned height);
-        binding(MC3DScene, void, addSkybox, MCSkybox* box);
-        binding(MC3DScene, void, addSkysph, MCSkysphere* sph);
+        binding(MC3DScene, void, addSkybox, MCGLSkybox* box);
+        binding(MC3DScene, void, addSkysph, MCGLSkysphere* sph);
         binding(MC3DScene, void, removeSkybox, voida);
         binding(MC3DScene, void, removeSkysph, voida);
         binding(MC3DScene, void, updateScene, voida);

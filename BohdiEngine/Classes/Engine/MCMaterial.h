@@ -10,8 +10,7 @@
 #define MCMatrial_h
 
 #include "monkc.h"
-#include "MCGLBase.h"
-//#include "MCGLContext.h"
+#include "MCMath.h"
 
 class(MCMaterial, MCObject,
       MCBool      dataChanged;

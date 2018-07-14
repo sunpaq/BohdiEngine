@@ -10,8 +10,6 @@
 #define MC3DModel_h
 
 #include "monkc.h"
-//#include "MCGLBase.h"
-#include "MCGLMesh.h"
 #include "MCTexture.h"
 #include "MCIO.h"
 #include "MC3DNode.h"

@@ -161,15 +161,23 @@ method(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, do
 }
 
 //override
-method(MCCamera, void, update, MCGLContext* ctx)
+method(MCCamera, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model)
 {
-    MCGLUniformData data;
+    if (projection) {
+        *projection = cpt(projectionMatrix);
+    }
     
-    data.mat4 = cpt(viewMatrix);
-    MCGLShader_updateUniform(ctx->shader, view_view, data);
-    
-    data.mat4 = cpt(projectionMatrix);
-    MCGLShader_updateUniform(ctx->shader, view_projection, data);
+    if (view) {
+        *view = cpt(viewMatrix);
+    }
+
+//    MCGLUniformData data;
+//
+//    data.mat4 = cpt(viewMatrix);
+//    MCGLShader_updateUniform(ctx->shader, view_view, data);
+//
+//    data.mat4 = cpt(projectionMatrix);
+//    MCGLShader_updateUniform(ctx->shader, view_projection, data);
 }
 
 method(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)
@@ -229,10 +237,10 @@ onload(MCCamera)
         binding(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY);
         binding(MCCamera, void, pull, MCFloat deltaR);
         binding(MCCamera, void, reset, MCBool updateOrNot);
-        binding(MCCamera, void, update);
         binding(MCCamera, void, distanceScale, MCFloat scale);
         binding(MCCamera, void, setRotationMat3, float mat3[9]);
         binding(MCCamera, void, printDebugInfo, voida);
+        binding(MCCamera, void, willDraw, voida);//override
         return cla;
     }else{
         return null;

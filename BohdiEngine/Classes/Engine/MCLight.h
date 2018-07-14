@@ -22,7 +22,7 @@ class(MCLight, MC3DNode,
       MCVector3 lightPosition;
 );
 
-method(MCLight, void, update, MCGLContext* ctx);
+//method(MCLight, void, update, MCGLContext* ctx);
 method(MCLight, void, printDebugInfo, voida);
 
 #endif /* MCLight_h */

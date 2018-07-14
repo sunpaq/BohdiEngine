@@ -14,6 +14,7 @@ oninit(MC3DNode)
     if (init(MCItem)) {
         var(visible) = true;
         var(receiveEvent) = false;
+        var(overrideDraw) = false;
         var(center) = MCVector3Make(0, 0, 0);
         
         var(transform) = MCMatrix4Identity;
@@ -178,12 +179,17 @@ method(MC3DNode, void, show, voida)
     var(visible) = true;
 }
 
-method(MC3DNode, void, willDraw, voida)
+method(MC3DNode, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model)
 {
     
 }
 
 method(MC3DNode, void, didDraw, voida)
+{
+    
+}
+
+method(MC3DNode, void, draw, voida)
 {
     
 }
@@ -208,8 +214,9 @@ onload(MC3DNode)
         binding(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
         binding(MC3DNode, void, hide, voida);
         binding(MC3DNode, void, show, voida);
-        binding(MC3DNode, void, willDraw, voida);
+        binding(MC3DNode, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);
         binding(MC3DNode, void, didDraw, voida);
+        binding(MC3DNode, void, draw, voida);
         return cla;
     }else{
         return null;

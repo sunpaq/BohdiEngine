@@ -18,7 +18,7 @@ oninit(MCGLMesh)
         
         var(Frame) = (MC3DFrame){0,0,0,0,0,0};
         var(useage) = GL_STATIC_DRAW;
-        //var(mode) = MCTriAngles;
+        var(mode) = MCTriAngles;
 
         var(vertexDataNeedRelease) = true;
         var(vertexDataPtr) = null;

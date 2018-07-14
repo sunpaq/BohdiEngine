@@ -27,7 +27,7 @@
 
 -(BOOL)doesDrawWireFrame
 {
-    return director->lastScene->renderer->drawMode == MCLineStrip? YES : NO;
+    return director->renderer->drawMode == MCLineStrip? YES : NO;
 }
 
 #if TARGET_OS_IOS
@@ -122,7 +122,7 @@
 
 -(void)setDoesDrawWireFrame:(BOOL)doesDrawWireFrame
 {
-    director->lastScene->renderer->drawMode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
+    director->renderer->drawMode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame

@@ -34,36 +34,36 @@ method(MCLight, void, printDebugInfo, voida)
               obj->lightPosition.x, obj->lightPosition.y, obj->lightPosition.z);
 }
 
-method(MCLight, void, update, MCGLContext* ctx)
-{
-    if (obj->dataChanged == true) {
-        MCGLShader_activateShaderProgram(ctx->shader, 0);
-        
-        MCGLUniformData data;
-        
-        data.vec3 = obj->ambientLightStrength;
-        MCGLShader_updateUniform(ctx->shader, light_ambient, data);
-        
-        data.vec3 = obj->diffuseLightStrength;
-        MCGLShader_updateUniform(ctx->shader, light_diffuse, data);
-        
-        data.vec3 = obj->specularLightStrength;
-        MCGLShader_updateUniform(ctx->shader, light_specular, data);
-        
-        data.vec3 = obj->lightColor;
-        MCGLShader_updateUniform(ctx->shader, light_color, data);
-        
-        data.vec3 = obj->lightPosition;
-        MCGLShader_updateUniform(ctx->shader, light_position, data);
-        
-        obj->dataChanged = false;
-    }
-}
+//method(MCLight, void, update, MCGLContext* ctx)
+//{
+//    if (obj->dataChanged == true) {
+//        MCGLShader_activateShaderProgram(ctx->shader, 0);
+//
+//        MCGLUniformData data;
+//
+//        data.vec3 = obj->ambientLightStrength;
+//        MCGLShader_updateUniform(ctx->shader, light_ambient, data);
+//
+//        data.vec3 = obj->diffuseLightStrength;
+//        MCGLShader_updateUniform(ctx->shader, light_diffuse, data);
+//
+//        data.vec3 = obj->specularLightStrength;
+//        MCGLShader_updateUniform(ctx->shader, light_specular, data);
+//
+//        data.vec3 = obj->lightColor;
+//        MCGLShader_updateUniform(ctx->shader, light_color, data);
+//
+//        data.vec3 = obj->lightPosition;
+//        MCGLShader_updateUniform(ctx->shader, light_position, data);
+//
+//        obj->dataChanged = false;
+//    }
+//}
 
 onload(MCLight)
 {
     if (load(MC3DNode)) {
-        binding(MCLight, void, update, MCGLContext* ctx);
+        //binding(MCLight, void, update, MCGLContext* ctx);
         binding(MCLight, void, printDebugInfo, voida);
         return cla;
     }else{

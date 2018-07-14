@@ -133,7 +133,7 @@ void BESetDoesRotateCamera(_Bool doesRotate)
 
 void BESetDoesDrawWireFrame(_Bool doesDrawWF)
 {
-    director->lastScene->renderer->drawMode = doesDrawWF ? MCLineStrip : MCTriAngles;
+    director->renderer->drawMode = doesDrawWF ? MCLineStrip : MCTriAngles;
 }
 
 void BESetLightFollowCamera(_Bool lightFollowCam)

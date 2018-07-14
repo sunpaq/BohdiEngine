@@ -8,6 +8,7 @@
 
 #include "MCCube.h"
 #include "MC3DBase.h"
+#include "MCGLMesh.h"
 
 static float gCubeVertexData[11*6*6] = {
     // Data layout for each line below is:

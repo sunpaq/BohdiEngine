@@ -10,7 +10,6 @@
 #define __monkcGame__MCOrbit__
 
 #include "monkc.h"
-#include "MCGLBase.h"
 #include "MC3DNode.h"
 
 class(MCOrbit, MC3DNode,

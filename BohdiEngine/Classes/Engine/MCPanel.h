@@ -12,6 +12,6 @@
 #include "monkc.h"
 #include "MC3DNode.h"
 
-class(MCPanel, MC3DNode);
+//class(MCPanel, MC3DNode);
 
 #endif /* MCPanel_h */

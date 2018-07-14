@@ -12,6 +12,7 @@
 #include "monkc.h"
 #include "MC3DNode.h"
 #include "BECubeTextureData.h"
+#include "MCGLContext.h"
 
 class(MCGLSkybox, MC3DNode,
       MCGLContext* ctx;

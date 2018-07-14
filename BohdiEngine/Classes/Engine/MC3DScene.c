@@ -27,7 +27,7 @@ oninit(MC3DScene)
         var(skybox)  = null;
         var(skysph)  = null;
         
-        var(renderer)   = new(MCGLRenderer);
+        //var(renderer)   = new(MCGLRenderer);
         var(rootnode)   = new(MC3DNode);
         var(mainCamera) = new(MCCamera);
         var(clock)      = new(MCClock);
@@ -59,7 +59,7 @@ method(MC3DScene, void, bye, voida)
     release(var(skybox));
     release(var(skysph));
     
-    release(var(renderer));
+    //release(var(renderer));
     release(var(rootnode));
     release(var(mainCamera));
     release(var(clock));
@@ -68,52 +68,55 @@ method(MC3DScene, void, bye, voida)
     superbye(MCObject);
 }
 
-method(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width, unsigned height,
-       const char* vsource, const char* fsource)
+//method(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width, unsigned height,
+//       const char* vsource, const char* fsource)
+//{
+//    var(scenewidth)  = width;
+//    var(sceneheight) = height;
+//    MCCamera_initWithWidthHeight(var(mainCamera), width, height);
+//    if (vsource && fsource) {
+//        MCGLRenderer_initWithShaderCodeString(var(renderer), vsource, fsource);
+//    } else {
+//        MCGLRenderer_initWithDefaultShader(var(renderer), 0);
+//    }
+//    debug_log("MC3DScene - init end\n");
+//    return obj;
+//}
+//
+//method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname)
+//{
+//    return MC3DScene_initWithWidthHeightVNameFNameInBundle(obj, width, height, NULL, vname, fname);
+//}
+//
+//method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname)
+//{
+//    char vpath[LINE_MAX] = {0};
+//    if (MCFileGetPathFromBundle(bundleId, vname, vpath))
+//        return null;
+//    const char* vsource = MCFileCopyContentWithPath(vpath);
+//
+//    char fpath[LINE_MAX] = {0};
+//    if (MCFileGetPathFromBundle(bundleId, fname, fpath))
+//        return null;
+//    const char* fsource = MCFileCopyContentWithPath(fpath);
+//
+//    //debug_log("MC3DScene vsource: %s", vsource);
+//    //debug_log("MC3DScene fsource: %s", fsource);
+//    MC3DScene_initWithWidthHeightVSourceFSource(obj, width, height, vsource, fsource);
+//
+//    free((void*)vsource);
+//    free((void*)fsource);
+//
+//    return obj;
+//}
+
+method(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height)
 {
+    debug_log("MC3DScene initWithWidthHeightDefaultShader %dx%d %s\n", width, height, "MCGLRenderer");
     var(scenewidth)  = width;
     var(sceneheight) = height;
     MCCamera_initWithWidthHeight(var(mainCamera), width, height);
-    if (vsource && fsource) {
-        MCGLRenderer_initWithShaderCodeString(var(renderer), vsource, fsource);
-    } else {
-        MCGLRenderer_initWithDefaultShader(var(renderer), 0);
-    }
-    debug_log("MC3DScene - init end\n");
     return obj;
-}
-
-method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname)
-{
-    return MC3DScene_initWithWidthHeightVNameFNameInBundle(obj, width, height, NULL, vname, fname);
-}
-
-method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname)
-{
-    char vpath[LINE_MAX] = {0};
-    if (MCFileGetPathFromBundle(bundleId, vname, vpath))
-        return null;
-    const char* vsource = MCFileCopyContentWithPath(vpath);
-    
-    char fpath[LINE_MAX] = {0};
-    if (MCFileGetPathFromBundle(bundleId, fname, fpath))
-        return null;
-    const char* fsource = MCFileCopyContentWithPath(fpath);
-    
-    //debug_log("MC3DScene vsource: %s", vsource);
-    //debug_log("MC3DScene fsource: %s", fsource);
-    MC3DScene_initWithWidthHeightVSourceFSource(obj, width, height, vsource, fsource);
-    
-    free((void*)vsource);
-    free((void*)fsource);
-    
-    return obj;
-}
-
-method(MC3DScene, MC3DScene*, initWithWidthHeightDefaultShader, unsigned width, unsigned height)
-{
-    debug_log("MC3DScene initWithWidthHeightDefaultShader %dx%d %s\n", width, height, "MCGLRenderer");
-	return MC3DScene_initWithWidthHeightVSourceFSource(obj, width, height, NULL, NULL);
 }
 
 method(MC3DScene, void, resizeScene, unsigned width, unsigned height)
@@ -198,61 +201,7 @@ method(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht)
     }
 }
 
-method(MC3DScene, void, updateScene, voida)
-{
-    if(cpt(isDrawSky)) {
-        //no model
-        if (var(combineMode) == MC3DSceneSkyboxOnly) {
-            MCGLSkybox_update(var(skybox), var(renderer)->context);
-            return;
-        }
-        else if (var(combineMode) == MC3DSceneSkysphOnly) {
-            MCGLSkysphere_update(var(skysph), var(renderer)->context);
-            return;
-        }
-        //with model
-        else if (var(combineMode) == MC3DSceneModelWithSkybox) {
-            MCGLSkybox_update(var(skybox), var(renderer)->context);
-        }
-        else if (var(combineMode) == MC3DSceneModelWithSkysph) {
-            MCGLSkysphere_update(var(skysph), var(renderer)->context);
-        }
-    }
-    if (var(cameraAutoRotate)) {
-        MC3DScene_moveCameraOneStep(obj, MCFloatF(0.5), MCFloatF(0.0));
-    }
-    MCCamera_update(obj->mainCamera, obj->renderer->context);
-    MCLight_update(obj->light, obj->renderer->context);
-    MCGLRenderer_updateNodes(var(renderer), var(rootnode));
-}
 
-method(MC3DScene, int, drawScene, voida)
-{
-    MCGLContext_clearScreenWithColor(var(bgcolor));
-    //MCGLContext_clearScreen(0);
-    if (cpt(isDrawSky)) {
-        //no model
-        if (var(combineMode) == MC3DSceneSkyboxOnly) {
-            MCGLSkybox_draw(var(skybox), var(renderer)->context);
-            return MCGLContext_tickFPS(var(clock));
-        }
-        else if (var(combineMode) == MC3DSceneSkysphOnly) {
-            MCGLSkysphere_draw(var(skysph), var(renderer)->context);
-            return MCGLContext_tickFPS(var(clock));
-        }
-        //with model
-        else if (var(combineMode) == MC3DSceneModelWithSkybox) {
-            MCGLSkybox_draw(var(skybox), var(renderer)->context);
-        }
-        else if (var(combineMode) == MC3DSceneModelWithSkysph) {
-            MCGLSkysphere_draw(var(skysph), var(renderer)->context);
-        }
-    }
-
-    MCGLRenderer_drawNodes(var(renderer), var(rootnode));
-    //calculate FPS
-    return MCGLContext_tickFPS(var(clock));
-}
 
 method(MC3DScene, void, setRotationMat3, float mat3[9])
 {
@@ -284,17 +233,17 @@ onload(MC3DScene)
 {
     if (load(MCObject)) {
         binding(MC3DScene, void, bye, voida);
-        binding(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width, unsigned height, const char* vsource, const char* fsource);
-        binding(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname);
-        binding(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname);
-        binding(MC3DScene, MC3DScene*, initWithWidthHeightDefaultShader, unsigned width, unsigned height);
+//        binding(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width, unsigned height, const char* vsource, const char* fsource);
+//        binding(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname);
+//        binding(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname);
+        binding(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height);
         binding(MC3DScene, void, resizeScene, unsigned width, unsigned height);
         binding(MC3DScene, void, addSkybox, MCGLSkybox* box);
         binding(MC3DScene, void, addSkysph, MCGLSkysphere* sph);
         binding(MC3DScene, void, removeSkybox, voida);
         binding(MC3DScene, void, removeSkysph, voida);
-        binding(MC3DScene, void, updateScene, voida);
-        binding(MC3DScene, void, drawScene, voida);
+        //binding(MC3DScene, void, updateScene, voida);
+        //binding(MC3DScene, void, drawScene, voida);
         binding(MC3DScene, void, lockCamera, MCBool lock);
         binding(MC3DScene, MCCamera*, getCamera, voida);
         binding(MC3DScene, void, moveCameraOneStep, double deltaFai, double deltaTht);

@@ -11,6 +11,8 @@
 
 #include "MC3DNode.h"
 #include "BE2DTextureData.h"
+#include "MCGLContext.h"
+
 
 class(MCGLSkysphere, MC3DNode,
       BE2DTextureData* tex;

@@ -10,7 +10,6 @@
 #define MCWorld_h
 
 #include "monkc.h"
-#include "MCGLBase.h"
 
 class(MCWorld, MCObject);
 

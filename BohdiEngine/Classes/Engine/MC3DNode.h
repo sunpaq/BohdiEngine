@@ -14,16 +14,19 @@
 #include "MCTexture.h"
 #include "MCMaterial.h"
 #include "MCTexture.h"
-#include "MCGLContext.h"
-#include "MCGLMesh.h"
+#include "MCLinkedList.h"
+//#include "MCGLContext.h"
+//#include "MCGLMesh.h"
 
 class(MC3DNode, MCItem,
       MCUInt index;
       MCInt zorder;
       MCBool visible;
+
       MCBool receiveEvent;
+      MCBool overrideDraw;
+
       MCVector3 center;
-      
       MCMatrix4 transform;
       MCMatrix4 viewtrans;
 
@@ -55,8 +58,9 @@ method(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental);
 method(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
 
 //draw
-method(MC3DNode, void, willDraw, voida);
+method(MC3DNode, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);
 method(MC3DNode, void, didDraw, voida);
+method(MC3DNode, void, draw, voida);
 method(MC3DNode, void, show, voida);
 method(MC3DNode, void, hide, voida);
 method(MC3DNode, void, show, voida);

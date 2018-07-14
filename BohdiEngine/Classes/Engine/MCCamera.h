@@ -50,10 +50,11 @@ method(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
 method(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY);
 method(MCCamera, void, pull, MCFloat deltaR);
 method(MCCamera, void, reset, voida);
-method(MCCamera, void, update, MCGLContext* ctx);//override
 method(MCCamera, void, distanceScale, MCFloat scale);
 method(MCCamera, void, setRotationMat3, float mat3[9]);
 method(MCCamera, void, printDebugInfo, voida);
+
+method(MCCamera, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);//override
 
 #define MCLensStandard50mm (0.050)
 #define MCLensWide24mm     (0.024)

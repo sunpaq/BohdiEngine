@@ -3,7 +3,6 @@
 
 #include <math.h>
 #include "MCMath.h"
-//#include "MCGLBase.h"
 
 #define MCBUFFER_OFFSET(i)         ((char *)NULL + (i))
 #define MCARRAY_COUNT(array, type) (sizeof(array)/sizeof(type))
@@ -14,6 +13,27 @@ typedef enum {
     MC3DErrChildNotFound,
     MC3DErrUniformNotFound = -1,
 } MC3DErrCode;
+
+typedef union {
+    struct {
+        double xmax;
+        double xmin;
+        double ymax;
+        double ymin;
+        double zmax;
+        double zmin;
+    };
+    double m[6];
+} MC3DFrame;
+
+typedef struct {
+    MCFloat R;
+    MCFloat G;
+    MCFloat B;
+    MCFloat A;
+} MCColorf;
+
+
 
 //world is right hand y on top, local is left hand z on top
 MCInline MCVector3 MCWorldCoorFromLocal(MCVector3 localvertex, MCVector3 modelposition) {

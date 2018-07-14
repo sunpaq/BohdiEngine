@@ -9,6 +9,7 @@
 #include "MCPanel.h"
 #include "MCTexture.h"
 
+/*
 const GLfloat U = 1.0f;
 
 GLfloat vertices[] = {
@@ -51,3 +52,4 @@ onload(MCPanel)
         return null;
     }
 }
+*/

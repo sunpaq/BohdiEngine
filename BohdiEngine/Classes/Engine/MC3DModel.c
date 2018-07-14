@@ -12,6 +12,7 @@
 #include "MCMath.h"
 #include "MCLinkedList.h"
 #include "MCTextureCache.h"
+#include "MCGLMesh.h"
 
 compute(MC3DFrame, frame)
 {

@@ -32,7 +32,7 @@ compute(MCCamera*, cameraHandler)
 compute(MCGLContext*, contextHandler)
 {
     as(MCDirector);
-    return var(lastScene)->renderer->context;
+    return var(renderer)->context;
 }
 
 oninit(MCDirector)
@@ -53,6 +53,7 @@ oninit(MCDirector)
         //var(skybox) = null;
         //var(skysph) = null;
         
+        var(renderer) = new(MCGLRenderer);
         var(skyboxThread) = new(MCThread);
         var(modelThread) = new(MCThread);
         return obj;
@@ -99,7 +100,8 @@ method(MCDirector, void, updateAll, voida)
             cpt(lightHandler)->lightPosition = computed(cpt(cameraHandler), currentPosition);
             cpt(lightHandler)->dataChanged = true;
         }
-        MC3DScene_updateScene(var(lastScene), 0);
+        //MC3DScene_updateScene(var(lastScene), 0);
+        MCGLRenderer_updateScene(var(renderer), var(lastScene));
     }
 }
 
@@ -107,14 +109,17 @@ method(MCDirector, int, drawAll, voida)
 {
     int fps = -1;
     if (obj && var(lastScene) != null && var(pause) == false) {
-        fps = MC3DScene_drawScene(var(lastScene), 0);
+        MCGLRenderer_drawScene(var(renderer), var(lastScene));
+        //fps = MC3DScene_drawScene(var(lastScene), 0);
     }
     return fps;
 }
 
 method(MCDirector, void, setupMainScene, unsigned width, unsigned height)
 {
-    MC3DScene* scene = ff(new(MC3DScene), initWithWidthHeightDefaultShader, width, height);
+    MC3DScene* scene = ff(new(MC3DScene), initWithWidthHeight, width, height);
+    obj->renderer = MCGLRenderer_initWithDefaultShader(obj->renderer, 0);
+    
     if (scene) {
         releaseScenes(obj, obj->lastScene);
         MCDirector_pushScene(obj, scene);

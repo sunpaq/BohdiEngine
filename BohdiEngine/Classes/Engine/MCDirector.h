@@ -17,10 +17,12 @@
 
 #include "MCGLSkybox.h"
 #include "MCGLSkysphere.h"
+#include "MCGLRenderer.h"
 
 class(MCDirector, MCObject,
+      MCGLRenderer* renderer;
       MC3DScene* lastScene;
-      
+
       MCThread* skyboxThread;
       MCThread* modelThread;
       

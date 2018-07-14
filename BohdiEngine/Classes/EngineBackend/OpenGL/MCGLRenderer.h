@@ -27,10 +27,14 @@
 #define MCGLRenderer_h
 
 #include "monkc.h"
+
 #include "MCGLBase.h"
-#include "MC3DNode.h"
 #include "MCGLContext.h"
 #include "MCGLMesh.h"
+
+#include "MC3DScene.h"
+#include "MC3DNode.h"
+#include "MCCamera.h"
 #include "MCMaterial.h"
 #include "MCTexture.h"
 
@@ -44,7 +48,7 @@ method(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode,
 method(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
 method(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
 //draw
-method(MCGLRenderer, void, updateNodes, MC3DNode* node);
-method(MCGLRenderer, void, drawNodes, MC3DNode* node);
+method(MCGLRenderer, void, updateScene, MC3DScene* scene);
+method(MCGLRenderer, void, drawScene, MC3DScene* scene);
 
 #endif /* MCGLRenderer_h */

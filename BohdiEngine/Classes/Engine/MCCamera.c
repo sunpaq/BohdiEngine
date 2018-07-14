@@ -1,5 +1,4 @@
 #include "MCCamera.h"
-#include "MCGLRenderer.h"
 
 compute(double, Radius);
 compute(MCMatrix3, normal);

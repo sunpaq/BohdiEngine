@@ -16,7 +16,8 @@
 oninit(MCGLRenderer)
 {
     if(init(MCObject)){
-        var(drawMode) = MCDrawNone;
+        var(drawMode) = MCTriAngles;
+        var(useage) = GL_STATIC_DRAW;
 
         MCGLContext_featureSwith(MCGLDepthTest, true);
         MCGLContext_featureSwith(MCGLStencilTest, true);
@@ -124,26 +125,48 @@ method(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida)
     return MCGLRenderer_initWithShaderCodeString(obj, VCODE, FCODE);
 }
 
-function(void, drawMesh, MCGLMesh* mesh)
+function(void, drawMesh, MCMesh* mesh)
 {
     as(MCGLRenderer);
-    glBindVertexArray(mesh->VAO);
-    //override draw mode
-    GLenum mode = mesh->mode;
-    if (obj->drawMode != MCDrawNone) {
-        mode = obj->drawMode;
+    GLuint     VAO;  //VAO
+    GLuint     VBO;  //VBO
+    GLuint     EBO;  //EBO
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    //VAO
+    glBindVertexArray(VAO);
+    //VBO
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, mesh->vertexDataSize, mesh->vertexDataPtr, obj->useage);
+    //EBO
+    if (mesh->vertexIndexes != null) {
+        glGenBuffers(1, &EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*mesh->vertexCount, mesh->vertexIndexes, obj->useage);
     }
+    //VAttributes
+    MCVertexAttribute attr1 = {MCVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(0)};
+    MCVertexAttribute attr2 = {MCVertexAttribNormal,   3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(12)};
+    MCVertexAttribute attr3 = {MCVertexAttribColor,    3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(24)};
+    MCVertexAttribute attr4 = {MCVertexAttribTexCoord0,2, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(36)};
+    MCVertexAttributeLoad(&attr1);
+    MCVertexAttributeLoad(&attr2);
+    MCVertexAttributeLoad(&attr3);
+    MCVertexAttributeLoad(&attr4);
     //draw
-    if (mode != MCDrawNone) {
+    if (obj->drawMode != MCDrawNone) {
         if (mesh->vertexIndexes != null) {
-            glDrawElements(mode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
+            glDrawElements(obj->drawMode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
         }else{
-            glDrawArrays(mode, 0, mesh->vertexCount);
+            glDrawArrays(obj->drawMode, 0, mesh->vertexCount);
         }
     }
     //Unbind
     glBindVertexArray(0);
     MCGLContext_unbind2DTextures(0);
+    //delete
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO);
 }
 
 function(void, drawNode, MC3DNode* node)
@@ -197,7 +220,7 @@ function(void, drawNode, MC3DNode* node)
         
         //draw self meshes
         MCLinkedListForEach(node->meshes,
-                            MCGLMesh* mesh = (MCGLMesh*)item;
+                            MCMesh* mesh = (MCMesh*)item;
                             if (mesh != null) {
                                 //texture
                                 if (node->diffuseTexture) {
@@ -206,7 +229,6 @@ function(void, drawNode, MC3DNode* node)
                                 if (node->specularTexture) {
                                     MCGLContext_loadTexture(ctx, node->specularTexture, "specular_sampler");
                                 }
-                                MCGLContext_loadMesh(ctx, mesh);
                                 drawMesh(obj, mesh);
                             })
     }
@@ -333,12 +355,14 @@ method(MCGLRenderer, void, drawScene, MC3DScene* scene)
 onload(MCGLRenderer)
 {
     if (load(MCObject)) {
-        //prehash();
+        //life cycle
         binding(MCGLRenderer, void, bye, voida);
         binding(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
         binding(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
-        //binding(MCGLRenderer, void, updateNodes, MC3DNode* rootnode);
-        //binding(MCGLRenderer, void, drawNodes, MC3DNode* rootnode);
+        binding(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
+        //draw
+        binding(MCGLRenderer, void, updateScene, MC3DScene* scene);
+        binding(MCGLRenderer, void, drawScene, MC3DScene* scene);
         return cla;
     }else{
         return null;

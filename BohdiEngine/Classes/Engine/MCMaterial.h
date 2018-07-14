@@ -24,6 +24,4 @@ class(MCMaterial, MCObject,
       char        tag[256];
 );
 
-//method(MCMaterial, void, prepareMatrial, MCGLContext* ctx);
-
 #endif /* MCMatrial_h */

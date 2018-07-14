@@ -25,7 +25,7 @@ oninit(MCPanel)
 {
     if (init(MC3DNode)) {
         
-        MCGLMesh* mesh = new(MCGLMesh);
+        MCMesh* mesh = new(MCMesh);
         mesh->vertexCount = 6;
         mesh->vertexAttribArray[0] = (MCVertexAttribute){0,  3, GL_FLOAT, GL_FALSE, 32, MCBUFFER_OFFSET(0)};
         mesh->vertexAttribArray[1] = (MCVertexAttribute){1,  3, GL_FLOAT, GL_FALSE, 32, MCBUFFER_OFFSET(12)};

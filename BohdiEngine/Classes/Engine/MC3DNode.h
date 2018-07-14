@@ -15,16 +15,14 @@
 #include "MCMaterial.h"
 #include "MCTexture.h"
 #include "MCLinkedList.h"
-//#include "MCGLContext.h"
-//#include "MCGLMesh.h"
 
 class(MC3DNode, MCItem,
       MCUInt index;
       MCInt zorder;
       MCBool visible;
 
-      MCBool receiveEvent;
       MCBool overrideDraw;
+      MCBool receiveEvent;
 
       MCVector3 center;
       MCMatrix4 transform;

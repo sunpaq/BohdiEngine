@@ -12,7 +12,7 @@
 #include "MCMath.h"
 #include "MCLinkedList.h"
 #include "MCTextureCache.h"
-#include "MCGLMesh.h"
+#include "MCMesh.h"
 
 compute(MC3DFrame, frame)
 {
@@ -20,7 +20,7 @@ compute(MC3DFrame, frame)
     MC3DFrame allframe = (MC3DFrame){0,0,0,0,0,0};
     
     MCLinkedListForEach(sobj->meshes,
-        MCGLMesh* m = (MCGLMesh*)item;
+        MCMesh* m = (MCMesh*)item;
         if (m != null) {
             MC3DFrame mf = m->Frame;
             //MAX
@@ -102,7 +102,7 @@ method(MC3DModel, void, bye, voida)
     MC3DNode_bye(sobj, 0);
 }
 
-function(void, meshLoadFaceElement, MCGLMesh* mesh, BAObjData* buff, BAFaceElement e, size_t offset, MCColorf color)
+function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, size_t offset, MCColorf color)
 {
     MCVector3 v, n;
     MCVector2 t;
@@ -152,12 +152,12 @@ function(void, meshLoadFaceElement, MCGLMesh* mesh, BAObjData* buff, BAFaceEleme
             //0,0
     };
 
-    MCGLMesh_setVertex(mesh, (GLuint)offset, &data);
+    MCMesh_setVertex(mesh, (uint32_t)offset, &data);
 }
 
-function(MCGLMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
+function(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
 {
-    MCGLMesh* mesh = MCGLMesh_initWithDefaultVertexAttributes(new(MCGLMesh), (GLsizei)tricount*3);
+    MCMesh* mesh = MCMesh_initWithVertexCount(new(MCMesh), (int32_t)tricount*3);
     
     for (size_t i=0; i<tricount; i++) {
         size_t offset = i * 33;
@@ -167,7 +167,7 @@ function(MCGLMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tri
     }
     
     //normalize normal
-    MCGLMesh_normalizeNormals(mesh, 0);
+    MCMesh_normalizeNormals(mesh, 0);
     
     //frame
     for (int i=0; i<6; i++) {
@@ -285,7 +285,7 @@ function(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
         
         BATriangle* triangles = createTrianglesBuffer(faces, bamesh->totalFaceCount);
         size_t tricount = trianglization(triangles, faces, bamesh->totalFaceCount, buff->vertexbuff);
-        MCGLMesh* mesh = createMeshWithBATriangles(null, triangles, tricount, buff, color);
+        MCMesh* mesh = createMeshWithBATriangles(null, triangles, tricount, buff, color);
         
         model->Super.material = new(MCMaterial);
         model->Super.diffuseTexture  = null;

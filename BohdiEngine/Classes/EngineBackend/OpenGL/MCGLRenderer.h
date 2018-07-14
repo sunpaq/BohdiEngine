@@ -30,7 +30,7 @@
 
 #include "MCGLBase.h"
 #include "MCGLContext.h"
-#include "MCGLMesh.h"
+#include "MCMesh.h"
 
 #include "MC3DScene.h"
 #include "MC3DNode.h"
@@ -41,6 +41,7 @@
 class(MCGLRenderer, MCObject,
     MCGLContext* context;
     MCDrawMode drawMode;
+    GLenum     useage;
 );
 //life cycle
 method(MCGLRenderer, void, bye, voida);

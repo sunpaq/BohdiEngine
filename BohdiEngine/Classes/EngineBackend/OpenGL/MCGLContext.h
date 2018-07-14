@@ -16,7 +16,7 @@
 #include "MCMaterial.h"
 #include "MCGLShader.h"
 #include "MCClock.h"
-#include "MCGLMesh.h"
+#include "MCMesh.h"
 
 #define MAX_VATTR_NUM     100
 #define MAX_UNIFORM_NUM   100
@@ -31,7 +31,6 @@ method(MCGLContext, void, bye, voida);
 //texture
 method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
 method(MCGLContext, void, loadMaterial, MCMaterial* mtl);
-method(MCGLContext, void, loadMesh, MCGLMesh* meth);
 
 //Global
 utility(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature);

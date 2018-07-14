@@ -79,43 +79,12 @@ method(MCGLContext, void, loadMaterial, MCMaterial* mtl)
     MCGLShader_shaderSetUInt(obj->shader, "illum", mtl->illum);
 }
 
-method(MCGLContext, void, loadMesh, MCGLMesh* meth)
-{
-    if (meth->isDataLoaded == false) {
-        glGenVertexArrays(1, &meth->VAO);
-        glGenBuffers(1, &meth->VBO);
-        //VAO
-        glBindVertexArray(meth->VAO);
-        //VBO
-        glBindBuffer(GL_ARRAY_BUFFER, meth->VBO);
-        glBufferData(GL_ARRAY_BUFFER, meth->vertexDataSize, meth->vertexDataPtr, meth->useage);
-        //EBO
-        if (meth->vertexIndexes != null) {
-            glGenBuffers(1, &meth->EBO);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meth->EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*meth->vertexCount, meth->vertexIndexes, meth->useage);
-        }
-        //VAttributes
-        int i;
-        for (i=0; i<MCVertexAttribIndexMax-1; i++) {
-            MCVertexAttribute attr = meth->vertexAttribArray[i];
-            if (attr.vectorsize != (GLint)null) {
-                MCVertexAttributeLoad(&meth->vertexAttribArray[i]);
-            }
-        }
-        //Unbind
-        glBindVertexArray(0);
-        meth->isDataLoaded = true;
-    }
-}
-
 onload(MCGLContext)
 {
     if (load(MCObject)) {
         binding(MCGLContext, void, bye, voida);
         binding(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
         binding(MCGLContext, void, loadMaterial, MCMaterial* mtl);
-        binding(MCGLContext, void, loadMesh, MCGLMesh* meth);
         return cla;
     }else{
         return null;

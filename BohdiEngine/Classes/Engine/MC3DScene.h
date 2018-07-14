@@ -11,12 +11,11 @@
 
 #include "monkc.h"
 #include "MC3DNode.h"
-//#include "MCGLRenderer.h"
 #include "MCCamera.h"
 #include "MCClock.h"
 #include "MCLight.h"
-#include "MCGLSkybox.h"
-#include "MCGLSkysphere.h"
+#include "MCSkybox.h"
+#include "MCSkysphere.h"
 
 typedef enum {
     MC3DSceneModelOnly,
@@ -35,9 +34,8 @@ class(MC3DScene, MCObject,
       unsigned      sceneheight;
       
       MCGLSkybox*     skybox;
-      MCGLSkysphere*  skysph;
+      MCSkysphere*  skysph;
       
-      //MCGLRenderer* renderer;
       MC3DNode*     rootnode;
       MCCamera*     mainCamera;
       MCLight*      light;
@@ -51,20 +49,12 @@ class(MC3DScene, MCObject,
 );
 
 method(MC3DScene, void, bye, voida);
-//method(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width, unsigned height, const char* vsource, const char* fsource);
-//method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname);
-//method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname);
 method(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height);
 method(MC3DScene, void, resizeScene, unsigned width, unsigned height);
 method(MC3DScene, void, addSkybox, MCGLSkybox* box);
-method(MC3DScene, void, addSkysph, MCGLSkysphere* sph);
+method(MC3DScene, void, addSkysph, MCSkysphere* sph);
 method(MC3DScene, void, removeSkybox, voida);
 method(MC3DScene, void, removeSkysph, voida);
-method(MC3DScene, void, updateScene, voida);
-//return -1 or positive fps number
-//please update your view only when it is not -1
-//method(MC3DScene, int, drawScene, voida);
-
 method(MC3DScene, void, lockCamera, MCBool lock);
 method(MC3DScene, MCCamera*, getCamera, voida);
 method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht);

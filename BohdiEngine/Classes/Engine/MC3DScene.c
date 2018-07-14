@@ -27,7 +27,6 @@ oninit(MC3DScene)
         var(skybox)  = null;
         var(skysph)  = null;
         
-        //var(renderer)   = new(MCGLRenderer);
         var(rootnode)   = new(MC3DNode);
         var(mainCamera) = new(MCCamera);
         var(clock)      = new(MCClock);
@@ -58,8 +57,6 @@ method(MC3DScene, void, bye, voida)
 {
     release(var(skybox));
     release(var(skysph));
-    
-    //release(var(renderer));
     release(var(rootnode));
     release(var(mainCamera));
     release(var(clock));
@@ -67,48 +64,6 @@ method(MC3DScene, void, bye, voida)
     
     superbye(MCObject);
 }
-
-//method(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width, unsigned height,
-//       const char* vsource, const char* fsource)
-//{
-//    var(scenewidth)  = width;
-//    var(sceneheight) = height;
-//    MCCamera_initWithWidthHeight(var(mainCamera), width, height);
-//    if (vsource && fsource) {
-//        MCGLRenderer_initWithShaderCodeString(var(renderer), vsource, fsource);
-//    } else {
-//        MCGLRenderer_initWithDefaultShader(var(renderer), 0);
-//    }
-//    debug_log("MC3DScene - init end\n");
-//    return obj;
-//}
-//
-//method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname)
-//{
-//    return MC3DScene_initWithWidthHeightVNameFNameInBundle(obj, width, height, NULL, vname, fname);
-//}
-//
-//method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname)
-//{
-//    char vpath[LINE_MAX] = {0};
-//    if (MCFileGetPathFromBundle(bundleId, vname, vpath))
-//        return null;
-//    const char* vsource = MCFileCopyContentWithPath(vpath);
-//
-//    char fpath[LINE_MAX] = {0};
-//    if (MCFileGetPathFromBundle(bundleId, fname, fpath))
-//        return null;
-//    const char* fsource = MCFileCopyContentWithPath(fpath);
-//
-//    //debug_log("MC3DScene vsource: %s", vsource);
-//    //debug_log("MC3DScene fsource: %s", fsource);
-//    MC3DScene_initWithWidthHeightVSourceFSource(obj, width, height, vsource, fsource);
-//
-//    free((void*)vsource);
-//    free((void*)fsource);
-//
-//    return obj;
-//}
 
 method(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height)
 {
@@ -144,7 +99,7 @@ method(MC3DScene, void, addSkybox, MCGLSkybox* box)
     retain(box);
 }
 
-method(MC3DScene, void, addSkysph, MCGLSkysphere* sph)
+method(MC3DScene, void, addSkysph, MCSkysphere* sph)
 {
     if (obj->skysph) {
         release(obj->skysph);
@@ -201,8 +156,6 @@ method(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht)
     }
 }
 
-
-
 method(MC3DScene, void, setRotationMat3, float mat3[9])
 {
     if (cpt(isDrawSky)) {
@@ -210,7 +163,7 @@ method(MC3DScene, void, setRotationMat3, float mat3[9])
             MCGLSkybox_setRotationMat3(var(skybox), mat3);
         }
         if (var(skysph)) {
-            MCGLSkysphere_setRotationMat3(var(skysph), mat3);
+            MCSkysphere_setRotationMat3(var(skysph), mat3);
         }
     }
     MCCamera_setRotationMat3(var(mainCamera), mat3);
@@ -223,7 +176,7 @@ method(MC3DScene, void, setRotationMat4, float mat4[16])
             MCGLSkybox_setRotationMat4(var(skybox), mat4);
         }
         if (var(skysph)) {
-            MCGLSkysphere_setRotationMat4(var(skysph), mat4);
+            MCSkysphere_setRotationMat4(var(skysph), mat4);
         }
     }
     //TODO rotate camera
@@ -233,17 +186,12 @@ onload(MC3DScene)
 {
     if (load(MCObject)) {
         binding(MC3DScene, void, bye, voida);
-//        binding(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width, unsigned height, const char* vsource, const char* fsource);
-//        binding(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname);
-//        binding(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname);
         binding(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height);
         binding(MC3DScene, void, resizeScene, unsigned width, unsigned height);
         binding(MC3DScene, void, addSkybox, MCGLSkybox* box);
-        binding(MC3DScene, void, addSkysph, MCGLSkysphere* sph);
+        binding(MC3DScene, void, addSkysph, MCSkysphere* sph);
         binding(MC3DScene, void, removeSkybox, voida);
         binding(MC3DScene, void, removeSkysph, voida);
-        //binding(MC3DScene, void, updateScene, voida);
-        //binding(MC3DScene, void, drawScene, voida);
         binding(MC3DScene, void, lockCamera, MCBool lock);
         binding(MC3DScene, MCCamera*, getCamera, voida);
         binding(MC3DScene, void, moveCameraOneStep, double deltaFai, double deltaTht);

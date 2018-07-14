@@ -8,6 +8,8 @@
 
 #include "MCGLRenderer.h"
 #include "MCGLDefaultShader.h"
+#include "MCGLSkyboxShader.h"
+#include "MCGLSkysphereShader.h"
 #include "MCGLContext.h"
 #include "MC3DBase.h"
 #include "MCCamera.h"
@@ -33,6 +35,7 @@ oninit(MCGLRenderer)
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         obj->context = new(MCGLContext);
+        obj->skycontext = null;
 
         return obj;
     }else{
@@ -40,9 +43,55 @@ oninit(MCGLRenderer)
     }
 }
 
+function(void, initSkybox, voida)
+{
+    as(MCGLRenderer);
+    if (obj->skycontext == null) {
+        obj->skycontext = new(MCGLContext);
+        MCGLShader_initWithShaderCode(obj->skycontext->shader, MCGLSkybox_vsource, MCGLSkybox_fsource,
+                                      (const char* []){
+                                          "position"
+                                      }, 1,
+                                      (MCGLUniformType []){
+                                          MCGLUniformMat4,
+                                          MCGLUniformMat4,
+                                          MCGLUniformScalar
+                                      },
+                                      (const char* []){
+                                          "boxViewMatrix",
+                                          "boxProjectionMatrix",
+                                          "cubeSampler"
+                                      }, 3);
+    }
+}
+
+function(void, initSkysphere, voida)
+{
+    as(MCGLRenderer);
+    if (obj->skycontext == null) {
+        obj->skycontext = new(MCGLContext);
+        MCGLShader_initWithShaderCode(obj->skycontext->shader, MCSkysphere_vsource, MCSkysphere_fsource,
+                                      (const char* []){
+                                          "position",
+                                          "texcoord"
+                                      }, 2,
+                                      (MCGLUniformType []){
+                                          MCGLUniformMat4,
+                                          MCGLUniformMat4,
+                                          MCGLUniformScalar
+                                      },
+                                      (const char* []){
+                                          "sphViewMatrix",
+                                          "sphProjectionMatrix",
+                                          "sampler"
+                                      }, 3);
+    }
+}
+
 method(MCGLRenderer, void, bye, voida)
 {
     release(obj->context);
+    release(obj->skycontext);
     superbye(MCObject);
 }
 
@@ -122,7 +171,7 @@ method(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader,
 
 method(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida)
 {
-    return MCGLRenderer_initWithShaderCodeString(obj, VCODE, FCODE);
+    return MCGLRenderer_initWithShaderCodeString(obj, MCGLDefault_vsource, MCGLDefault_fsource);
 }
 
 function(void, drawMesh, MCMesh* mesh)
@@ -287,26 +336,138 @@ function(void, updateLight, MCLight* light)
     }
 }
 
+function(void, drawSkybox, MCGLSkybox* skybox)
+{
+    as(MCGLRenderer);
+    //init
+    MCGLShader* shader = obj->context->shader;
+    MCUInt vaoid;
+    MCUInt vboid;
+    MCUInt eboid;
+    MCUInt texid;
+    //Mesh & Texture
+    MCUInt buffers[3];
+    glGenVertexArrays(1, &vaoid);
+    glGenBuffers(3, buffers);
+    vboid = buffers[0];
+    eboid = buffers[1];
+    texid = buffers[2];
+    //VAO
+    glBindVertexArray(vaoid);
+    //VBO
+    glBindBuffer(GL_ARRAY_BUFFER, vboid);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skybox->skyboxVertices), skybox->skyboxVertices, GL_STATIC_DRAW);
+    //EBO
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboid);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(skybox->indexs), skybox->indexs, GL_STATIC_DRAW);
+    //VAttributes
+    MCVertexAttribute attr = (MCVertexAttribute){MCVertexAttribPosition, 3, GL_FLOAT, GL_FALSE,
+        sizeof(GLfloat) * 3, MCBUFFER_OFFSET(0)};
+    MCVertexAttributeLoad(&attr);
+    //Texture
+    MCGLContext_activeTextureUnit(0);
+    MCGLContext_bindCubeTexture(texid);
+    for (int i=0; i<6; i++) {
+        BE2DTextureData* face = skybox->cubedata->faces[i];
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+                     GL_RGB, face->width, face->height, 0,
+                     GL_RGB, GL_UNSIGNED_BYTE, face->raw);
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //Unbind
+    glBindVertexArray(0);
+    //update
+    MCGLShader_activateShaderProgram(shader, 0);
+    MCGLUniformData data;
+    MCGLSkybox_getViewMatrix(skybox, &data.mat4);
+    MCGLShader_updateUniform(shader, "boxProjectionMatrix", data);
+    //draw
+    glDepthMask(GL_FALSE);
+    MCGLShader_activateShaderProgram(shader, 0);
+    MCGLSkybox_getProjectionMatrix(skybox, &data.mat4);
+    MCGLShader_updateUniform(shader, "boxViewMatrix", data);
+    MCGLShader_setUniforms(shader, 0);
+    
+    glBindVertexArray(vaoid);
+    MCGLContext_activeTextureUnit(0);
+    //MCGLContext_bindCubeTexture(obj->texid);
+    
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, MCBUFFER_OFFSET(0));
+    
+    glBindVertexArray(0);
+    glDepthMask(GL_TRUE);
+    
+    glDeleteVertexArrays(1, &vaoid);
+    glDeleteBuffers(3, buffers);
+}
+
+function(void, drawSkysphere, MCSkysphere* sphere)
+{
+    as(MCGLRenderer);
+    MCGLShader* shader = obj->context->shader;
+    MCUInt vaoid;
+    MCUInt vboid;
+    MCUInt eboid;
+    MCUInt texid;
+    MCUInt ic;
+    //Mesh & Texture
+    MCUInt buffers[4];
+    glGenVertexArrays(1, &vaoid);
+    glGenBuffers(3, buffers);
+    vboid = buffers[0];
+    eboid = buffers[1];
+    texid = buffers[2];
+    ic = buffers[3];
+    //VAO
+    glBindVertexArray(vaoid);
+    //VBO
+    glBindBuffer(GL_ARRAY_BUFFER, vboid);
+    glBufferData(GL_ARRAY_BUFFER, sphere->vertices_size, sphere->vertices, GL_STATIC_DRAW);
+    //EBO
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboid);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sphere->indices_size, sphere->indices, GL_STATIC_DRAW);
+    //VAttributes
+    MCVertexAttribute attr1 = (MCVertexAttribute){0, 3, GL_FLOAT, GL_FALSE, 20, MCBUFFER_OFFSET(0)};
+    MCVertexAttributeLoad(&attr1);
+    MCVertexAttribute attr2 = (MCVertexAttribute){1, 2, GL_FLOAT, GL_FALSE, 20, MCBUFFER_OFFSET(12)};
+    MCVertexAttributeLoad(&attr2);
+    //Texture
+    MCGLContext_activeTextureUnit(0);
+    MCGLContext_bind2DTexture(texid);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, sphere->tex->width, sphere->tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, sphere->tex->raw);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //Unbind
+    glBindVertexArray(0);
+    //Shader
+    MCGLShader_activateShaderProgram(shader, 0);
+    MCGLUniformData data;
+    MCSkysphere_getProjectionMatrix(sphere, &data.mat4);
+    MCGLShader_updateUniform(shader, "sphProjectionMatrix", data);
+    
+    glDepthMask(GL_FALSE);
+    MCGLShader_activateShaderProgram(shader, 0);
+    MCSkysphere_getViewMatrix(sphere, &data.mat4);
+    MCGLShader_updateUniform(shader, "sphViewMatrix", data);
+    MCGLShader_setUniforms(shader, 0);
+    
+    glBindVertexArray(vaoid);
+    MCGLContext_activeTextureUnit(0);
+    glDrawElements(GL_TRIANGLE_STRIP, ic, GL_UNSIGNED_INT, MCBUFFER_OFFSET(0));
+    glBindVertexArray(0);
+    glDepthMask(GL_TRUE);
+    
+    glDeleteVertexArrays(1, &vaoid);
+    glDeleteBuffers(4, buffers);
+}
+
 method(MCGLRenderer, void, updateScene, MC3DScene* scene)
 {
-    if(computed(scene, isDrawSky)) {
-        //no model
-        if (scene->combineMode == MC3DSceneSkyboxOnly) {
-            MCGLSkybox_update(scene->skybox, var(context));
-            return;
-        }
-        else if (scene->combineMode == MC3DSceneSkysphOnly) {
-            MCGLSkysphere_update(scene->skysph, var(context));
-            return;
-        }
-        //with model
-        else if (scene->combineMode == MC3DSceneModelWithSkybox) {
-            MCGLSkybox_update(scene->skybox, var(context));
-        }
-        else if (scene->combineMode == MC3DSceneModelWithSkysph) {
-            MCGLSkysphere_update(scene->skysph, var(context));
-        }
-    }
     if (scene->cameraAutoRotate) {
         MC3DScene_moveCameraOneStep(scene, MCFloatF(0.5), MCFloatF(0.0));
     }
@@ -321,19 +482,23 @@ method(MCGLRenderer, void, drawScene, MC3DScene* scene)
     if (scene->isDrawSky) {
         //no model
         if (scene->combineMode == MC3DSceneSkyboxOnly) {
-            MCGLSkybox_draw(scene->skybox, var(context));
+            initSkybox(obj, scene->skybox);
+            drawSkybox(obj, scene->skybox);
             //return MCGLContext_tickFPS(var(clock));
         }
         else if (scene->combineMode == MC3DSceneSkysphOnly) {
-            MCGLSkysphere_draw(scene->skysph, var(context));
+            initSkysphere(obj, scene->skysph);
+            drawSkysphere(obj, scene->skysph);
             //return MCGLContext_tickFPS(var(clock));
         }
         //with model
         else if (scene->combineMode == MC3DSceneModelWithSkybox) {
-            MCGLSkybox_draw(scene->skybox, var(context));
+            initSkybox(obj, scene->skybox);
+            drawSkybox(obj, scene->skybox);
         }
         else if (scene->combineMode == MC3DSceneModelWithSkysph) {
-            MCGLSkysphere_draw(scene->skysph, var(context));
+            initSkysphere(obj, scene->skysph);
+            drawSkysphere(obj, scene->skysph);
         }
     }
     

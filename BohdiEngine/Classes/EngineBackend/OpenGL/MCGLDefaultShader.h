@@ -33,7 +33,7 @@ MCGlobalKey diffuse_sampler = "diffuse_sampler";
 MCGlobalKey specular_sampler = "specular_sampler";
 
 
-static const char* VCODE = S(
+static const char* MCGLDefault_vsource = S(
 //version is specified in MCGLContext
 precision highp float;
 precision mediump int;
@@ -84,7 +84,7 @@ void main()
 }
 );//VCODE END
 
-static const char* FCODE = S(
+static const char* MCGLDefault_fsource = S(
 //version is specified in MCGLContext
 precision highp sampler3D;
 precision highp float;

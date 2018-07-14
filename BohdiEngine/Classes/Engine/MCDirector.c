@@ -270,7 +270,7 @@ method(MCDirector, void, addSkyboxNamed, const char* names[6])
 method(MCDirector, void, addSkysphereNamed, const char* name)
 {
     if (obj->lastScene) {
-        MCGLSkysphere* sph = ff(new(MCGLSkysphere), initWithFileName, name);
+        MCSkysphere* sph = ff(new(MCSkysphere), initWithFileName, name);
         if (sph) {
             MC3DScene_addSkysph(obj->lastScene, sph);
             release(sph);

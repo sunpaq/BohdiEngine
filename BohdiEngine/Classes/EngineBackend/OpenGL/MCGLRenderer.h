@@ -39,6 +39,7 @@
 #include "MCTexture.h"
 
 class(MCGLRenderer, MCObject,
+    MCGLContext* skycontext;
     MCGLContext* context;
     MCDrawMode drawMode;
     GLenum     useage;

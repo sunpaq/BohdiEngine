@@ -15,8 +15,7 @@
 #include "MCThread.h"
 #include "MCLight.h"
 
-#include "MCGLSkybox.h"
-#include "MCGLSkysphere.h"
+#include "MCSkysphere.h"
 #include "MCGLRenderer.h"
 
 class(MCDirector, MCObject,
@@ -37,7 +36,7 @@ class(MCDirector, MCObject,
       
       //common skybox for many scenes
       //MCGLSkybox* skybox;
-      //MCGLSkysphere* skysph;
+      //MCSkysphere* skysph;
       
       computing(MCLight*, lightHandler);
       computing(MCCamera*, cameraHandler);

@@ -89,7 +89,7 @@ method(MC3DScene, void, resizeScene, unsigned width, unsigned height)
     }
 }
 
-method(MC3DScene, void, addSkybox, MCGLSkybox* box)
+method(MC3DScene, void, addSkybox, MCSkybox* box)
 {
     if (obj->skybox) {
         release(obj->skybox);
@@ -142,7 +142,7 @@ method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht)
 {
     if (var(cameraLock) == false) {
 //        if (var(skyboxRef) != null) {
-//            MCGLSkyboxCamera_move(var(skyboxRef)->camera, deltaFai.d / 5, deltaTht.d / 5);
+//            MCSkyboxCamera_move(var(skyboxRef)->camera, deltaFai.d / 5, deltaTht.d / 5);
 //        }
 
         MCCamera_move(var(mainCamera), deltaFai, deltaTht);
@@ -152,7 +152,7 @@ method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht)
 method(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht)
 {
     if (cpt(isDrawSky)) {
-        //MCGLSkyboxCamera_move(var(skyboxRef)->camera, deltaFai, deltaTht);
+        //MCSkyboxCamera_move(var(skyboxRef)->camera, deltaFai, deltaTht);
     }
 }
 
@@ -160,7 +160,7 @@ method(MC3DScene, void, setRotationMat3, float mat3[9])
 {
     if (cpt(isDrawSky)) {
         if (var(skybox)) {
-            MCGLSkybox_setRotationMat3(var(skybox), mat3);
+            MCSkybox_setRotationMat3(var(skybox), mat3);
         }
         if (var(skysph)) {
             MCSkysphere_setRotationMat3(var(skysph), mat3);
@@ -173,7 +173,7 @@ method(MC3DScene, void, setRotationMat4, float mat4[16])
 {
     if (cpt(isDrawSky)) {
         if (var(skybox)) {
-            MCGLSkybox_setRotationMat4(var(skybox), mat4);
+            MCSkybox_setRotationMat4(var(skybox), mat4);
         }
         if (var(skysph)) {
             MCSkysphere_setRotationMat4(var(skysph), mat4);
@@ -188,7 +188,7 @@ onload(MC3DScene)
         binding(MC3DScene, void, bye, voida);
         binding(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height);
         binding(MC3DScene, void, resizeScene, unsigned width, unsigned height);
-        binding(MC3DScene, void, addSkybox, MCGLSkybox* box);
+        binding(MC3DScene, void, addSkybox, MCSkybox* box);
         binding(MC3DScene, void, addSkysph, MCSkysphere* sph);
         binding(MC3DScene, void, removeSkybox, voida);
         binding(MC3DScene, void, removeSkysph, voida);

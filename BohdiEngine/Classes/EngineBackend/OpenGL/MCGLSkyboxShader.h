@@ -1,16 +1,16 @@
 //
-//  MCGLSkyboxShader.h
+//  MCSkyboxShader.h
 //  Pods
 //
 //  Created by 孙御礼 on 7/15/30 H.
 //
 
-#ifndef MCGLSkyboxShader_h
-#define MCGLSkyboxShader_h
+#ifndef MCSkyboxShader_h
+#define MCSkyboxShader_h
 
 #include "monkc.h"
 
-static const char* MCGLSkybox_vsource = S(precision highp float;
+static const char* MCSkybox_vsource = S(precision highp float;
                                precision mediump int;
                                
                                layout (location=0) in vec3 position;
@@ -25,7 +25,7 @@ static const char* MCGLSkybox_vsource = S(precision highp float;
                                }
                                );//end vsource
 
-static const char* MCGLSkybox_fsource = S(precision highp sampler3D;
+static const char* MCSkybox_fsource = S(precision highp sampler3D;
                                precision highp float;
                                precision lowp int;
                                const float Epsilon = 0.0000001;
@@ -40,4 +40,4 @@ static const char* MCGLSkybox_fsource = S(precision highp sampler3D;
                                }
                                );//end fsource
 
-#endif /* MCGLSkyboxShader_h */
+#endif /* MCSkyboxShader_h */

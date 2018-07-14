@@ -29,12 +29,6 @@ compute(MCCamera*, cameraHandler)
     return null;
 }
 
-compute(MCGLContext*, contextHandler)
-{
-    as(MCDirector);
-    return var(renderer)->context;
-}
-
 oninit(MCDirector)
 {
     if (init(MCObject)) {
@@ -48,12 +42,11 @@ oninit(MCDirector)
         
         var(lightHandler) = lightHandler;
         var(cameraHandler) = cameraHandler;
-        var(contextHandler) = contextHandler;
         
-        //var(skybox) = null;
-        //var(skysph) = null;
+        var(skybox) = null;
+        var(skysph) = null;
         
-        var(renderer) = new(MCGLRenderer);
+        var(renderer) = new(MCRenderer);
         var(skyboxThread) = new(MCThread);
         var(modelThread) = new(MCThread);
         return obj;
@@ -81,8 +74,8 @@ method(MCDirector, void, bye, voida)
         releaseScenes(obj, obj->lastScene);
         obj->lastScene = null;
     }
-    //release(var(skybox));
-    //release(var(skysph));
+    release(var(skybox));
+    release(var(skysph));
     release(var(skyboxThread));
     release(var(modelThread));
 
@@ -101,7 +94,7 @@ method(MCDirector, void, updateAll, voida)
             cpt(lightHandler)->dataChanged = true;
         }
         //MC3DScene_updateScene(var(lastScene), 0);
-        MCGLRenderer_updateScene(var(renderer), var(lastScene));
+        MCRenderer_updateScene(var(renderer), var(lastScene));
     }
 }
 
@@ -109,7 +102,7 @@ method(MCDirector, int, drawAll, voida)
 {
     int fps = -1;
     if (obj && var(lastScene) != null && var(pause) == false) {
-        MCGLRenderer_drawScene(var(renderer), var(lastScene));
+        MCRenderer_drawScene(var(renderer), var(lastScene));
         //fps = MC3DScene_drawScene(var(lastScene), 0);
     }
     return fps;
@@ -118,7 +111,7 @@ method(MCDirector, int, drawAll, voida)
 method(MCDirector, void, setupMainScene, unsigned width, unsigned height)
 {
     MC3DScene* scene = ff(new(MC3DScene), initWithWidthHeight, width, height);
-    obj->renderer = MCGLRenderer_initWithDefaultShader(obj->renderer, 0);
+    obj->renderer = MCRenderer_initWithDefaultShader(obj->renderer, 0);
     
     if (scene) {
         releaseScenes(obj, obj->lastScene);
@@ -259,7 +252,7 @@ method(MCDirector, void, removeCurrentModel, voida)
 method(MCDirector, void, addSkyboxNamed, const char* names[6])
 {
     if (obj->lastScene) {
-        MCGLSkybox* box = ff(new(MCGLSkybox), initWithFileNames, names);
+        MCSkybox* box = ff(new(MCSkybox), initWithFileNames, names);
         if (box) {
             MC3DScene_addSkybox(obj->lastScene, box);
             release(box);

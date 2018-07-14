@@ -41,8 +41,8 @@
 class(MCGLRenderer, MCObject,
     MCGLContext* skycontext;
     MCGLContext* context;
-    MCDrawMode drawMode;
-    GLenum     useage;
+    GLenum useage;
+    GLenum drawMode;
 );
 //life cycle
 method(MCGLRenderer, void, bye, voida);

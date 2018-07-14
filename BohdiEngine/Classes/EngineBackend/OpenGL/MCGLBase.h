@@ -53,16 +53,6 @@ typedef enum {
 } MCGLFace;
 
 typedef enum {
-    MCDrawNone = -1,
-    MCPoints = GL_POINTS,
-    MCLines  = GL_LINES,
-    MCLineLoop = GL_LINE_LOOP,
-    MCLineStrip = GL_LINE_STRIP,
-    MCTriAngles = GL_TRIANGLES,
-    MCTriAngleFan = GL_TRIANGLE_FAN
-} MCDrawMode;
-
-typedef enum {
     MCVertexShader = GL_VERTEX_SHADER,
     MCFragmentShader = GL_FRAGMENT_SHADER
 } MCShaderType;

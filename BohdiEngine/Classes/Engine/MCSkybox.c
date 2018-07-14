@@ -1,5 +1,5 @@
 //
-//  MCGLSkybox.c
+//  MCSkybox.c
 //  monkcGame
 //
 //  Created by Sun YuLi on 16/4/13.
@@ -29,7 +29,7 @@ static float indexs[] = {
     0,1,4,4,1,5
 };
 
-oninit(MCGLSkybox)
+oninit(MCSkybox)
 {
     if (init(MC3DNode)) {
         var(boxCameraRatio)= 9.0/16.0;
@@ -49,43 +49,43 @@ oninit(MCGLSkybox)
     }
 }
 
-method(MCGLSkybox, void, bye, voida)
+method(MCSkybox, void, bye, voida)
 {
     MC3DNode_bye(sobj, 0);
 }
 
-method(MCGLSkybox, MCGLSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
+method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
 {
     obj->cubedata = cubetex;
     return obj;
 }
 
-method(MCGLSkybox, MCGLSkybox*, initWithFileNames, const char* namelist[])
+method(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[])
 {
     BECubeTextureData* data = BECubeTextureData_newWithFaces(namelist);
-    MCGLSkybox* skybox = MCGLSkybox_initWithCubeTexture(obj, data);
+    MCSkybox* skybox = MCSkybox_initWithCubeTexture(obj, data);
     release(data);
     return skybox;
 }
 
-method(MCGLSkybox, MCGLSkybox*, initWithDefaultFiles, voida)
+method(MCSkybox, MCSkybox*, initWithDefaultFiles, voida)
 {
     const char* names[6] = {"right.jpg","left.jpg","top.jpg","bottom.jpg","back.jpg","front.jpg"};
-    return MCGLSkybox_initWithFileNames(obj, names);
+    return MCSkybox_initWithFileNames(obj, names);
 }
 
-method(MCGLSkybox, void, setRotationMat3, float mat3[9])
+method(MCSkybox, void, setRotationMat3, float mat3[9])
 {
     MC3DNode_rotateMat3(sobj, mat3, false);
 }
 
-method(MCGLSkybox, void, setRotationMat4, float mat4[16])
+method(MCSkybox, void, setRotationMat4, float mat4[16])
 {
     MC3DNode_rotateMat4(sobj, mat4, false);
 }
 
 //property
-method(MCGLSkybox, void, getViewMatrix, MCMatrix4* mat4)
+method(MCSkybox, void, getViewMatrix, MCMatrix4* mat4)
 {
     MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, 0,
                                       0, 0,-1,
@@ -94,7 +94,7 @@ method(MCGLSkybox, void, getViewMatrix, MCMatrix4* mat4)
     *mat4 = MCMatrix4Multiply(m, imat4);
 }
 
-method(MCGLSkybox, void, getProjectionMatrix, MCMatrix4* mat4)
+method(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4)
 {
     *mat4 = MCMatrix4MakePerspective(obj->boxCameraAngle,
                                     obj->boxCameraRatio,
@@ -102,17 +102,17 @@ method(MCGLSkybox, void, getProjectionMatrix, MCMatrix4* mat4)
                                     200.0);
 }
 
-onload(MCGLSkybox)
+onload(MCSkybox)
 {
     if (load(MC3DNode)) {
-        binding(MCGLSkybox, void, bye, voida);
-        binding(MCGLSkybox, MCGLSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
-        binding(MCGLSkybox, MCGLSkybox*, initWithFileNames, const char* namelist[]);
-        binding(MCGLSkybox, MCGLSkybox*, initWithDefaultFiles, voida);
-        binding(MCGLSkybox, void, setRotationMat3, float mat3[9]);
-        binding(MCGLSkybox, void, setRotationMat4, float mat4[16]);
-        binding(MCGLSkybox, void, getViewMatrix, MCMatrix4* mat4);
-        binding(MCGLSkybox, void, getProjectionMatrix, MCMatrix4* mat4);
+        binding(MCSkybox, void, bye, voida);
+        binding(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
+        binding(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[]);
+        binding(MCSkybox, MCSkybox*, initWithDefaultFiles, voida);
+        binding(MCSkybox, void, setRotationMat3, float mat3[9]);
+        binding(MCSkybox, void, setRotationMat4, float mat4[16]);
+        binding(MCSkybox, void, getViewMatrix, MCMatrix4* mat4);
+        binding(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4);
         return cla;
     }else{
         return null;

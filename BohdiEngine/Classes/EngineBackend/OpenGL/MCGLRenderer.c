@@ -18,7 +18,7 @@
 oninit(MCGLRenderer)
 {
     if(init(MCObject)){
-        var(drawMode) = MCTriAngles;
+        var(drawMode) = GL_TRIANGLES;
         var(useage) = GL_STATIC_DRAW;
 
         MCGLContext_featureSwith(MCGLDepthTest, true);
@@ -48,7 +48,7 @@ function(void, initSkybox, voida)
     as(MCGLRenderer);
     if (obj->skycontext == null) {
         obj->skycontext = new(MCGLContext);
-        MCGLShader_initWithShaderCode(obj->skycontext->shader, MCGLSkybox_vsource, MCGLSkybox_fsource,
+        MCGLShader_initWithShaderCode(obj->skycontext->shader, MCSkybox_vsource, MCSkybox_fsource,
                                       (const char* []){
                                           "position"
                                       }, 1,
@@ -203,7 +203,7 @@ function(void, drawMesh, MCMesh* mesh)
     MCVertexAttributeLoad(&attr3);
     MCVertexAttributeLoad(&attr4);
     //draw
-    if (obj->drawMode != MCDrawNone) {
+    if (obj->drawMode != -1) {
         if (mesh->vertexIndexes != null) {
             glDrawElements(obj->drawMode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
         }else{
@@ -336,7 +336,7 @@ function(void, updateLight, MCLight* light)
     }
 }
 
-function(void, drawSkybox, MCGLSkybox* skybox)
+function(void, drawSkybox, MCSkybox* skybox)
 {
     as(MCGLRenderer);
     //init
@@ -382,12 +382,12 @@ function(void, drawSkybox, MCGLSkybox* skybox)
     //update
     MCGLShader_activateShaderProgram(shader, 0);
     MCGLUniformData data;
-    MCGLSkybox_getViewMatrix(skybox, &data.mat4);
+    MCSkybox_getViewMatrix(skybox, &data.mat4);
     MCGLShader_updateUniform(shader, "boxProjectionMatrix", data);
     //draw
     glDepthMask(GL_FALSE);
     MCGLShader_activateShaderProgram(shader, 0);
-    MCGLSkybox_getProjectionMatrix(skybox, &data.mat4);
+    MCSkybox_getProjectionMatrix(skybox, &data.mat4);
     MCGLShader_updateUniform(shader, "boxViewMatrix", data);
     MCGLShader_setUniforms(shader, 0);
     

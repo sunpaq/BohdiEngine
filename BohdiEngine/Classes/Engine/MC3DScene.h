@@ -33,7 +33,7 @@ class(MC3DScene, MCObject,
       unsigned      scenewidth;
       unsigned      sceneheight;
       
-      MCGLSkybox*     skybox;
+      MCSkybox*     skybox;
       MCSkysphere*  skysph;
       
       MC3DNode*     rootnode;
@@ -51,7 +51,7 @@ class(MC3DScene, MCObject,
 method(MC3DScene, void, bye, voida);
 method(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height);
 method(MC3DScene, void, resizeScene, unsigned width, unsigned height);
-method(MC3DScene, void, addSkybox, MCGLSkybox* box);
+method(MC3DScene, void, addSkybox, MCSkybox* box);
 method(MC3DScene, void, addSkysph, MCSkysphere* sph);
 method(MC3DScene, void, removeSkybox, voida);
 method(MC3DScene, void, removeSkysph, voida);

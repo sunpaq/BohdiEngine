@@ -1,19 +1,19 @@
 //
-//  MCGLSkybox.h
+//  MCSkybox.h
 //  monkcGame
 //
 //  Created by Sun YuLi on 16/4/13.
 //  Copyright © 2016年 oreisoft. All rights reserved.
 //
 
-#ifndef MCGLSkybox_h
-#define MCGLSkybox_h
+#ifndef MCSkybox_h
+#define MCSkybox_h
 
 #include "monkc.h"
 #include "MC3DNode.h"
 #include "BECubeTextureData.h"
 
-class(MCGLSkybox, MC3DNode,
+class(MCSkybox, MC3DNode,
       double boxCameraRatio;
       double boxCameraAngle;
 
@@ -23,15 +23,15 @@ class(MCGLSkybox, MC3DNode,
       BECubeTextureData* cubedata;
 );
 
-method(MCGLSkybox, void, bye, voida);
-method(MCGLSkybox, MCGLSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
-method(MCGLSkybox, MCGLSkybox*, initWithFileNames, const char* namelist[]);
-method(MCGLSkybox, MCGLSkybox*, initWithDefaultFiles, voida);
+method(MCSkybox, void, bye, voida);
+method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
+method(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[]);
+method(MCSkybox, MCSkybox*, initWithDefaultFiles, voida);
 //override
-method(MCGLSkybox, void, setRotationMat3, float mat3[9]);
-method(MCGLSkybox, void, setRotationMat4, float mat4[16]);
+method(MCSkybox, void, setRotationMat3, float mat3[9]);
+method(MCSkybox, void, setRotationMat4, float mat4[16]);
 //property
-method(MCGLSkybox, void, getViewMatrix, MCMatrix4* mat4);
-method(MCGLSkybox, void, getProjectionMatrix, MCMatrix4* mat4);
+method(MCSkybox, void, getViewMatrix, MCMatrix4* mat4);
+method(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4);
 
-#endif /* MCGLSkybox_h */
+#endif /* MCSkybox_h */

@@ -14,6 +14,25 @@ typedef enum {
     MC3DErrUniformNotFound = -1,
 } MC3DErrCode;
 
+//#define GL_POINTS                                        0x0000
+//#define GL_LINES                                         0x0001
+//#define GL_LINE_LOOP                                     0x0002
+//#define GL_LINE_STRIP                                    0x0003
+//#define GL_TRIANGLES                                     0x0004
+//#define GL_TRIANGLE_STRIP                                0x0005
+//#define GL_TRIANGLE_FAN                                  0x0006
+
+typedef enum {
+    MCDrawNone = -1,
+    MCPoints = 0,
+    MCLines  = 1,
+    MCLineLoop = 2,
+    MCLineStrip = 3,
+    MCTriAngles = 4,
+    MCTriAngleStrip = 5,
+    MCTriAngleFan = 6
+} MCDrawMode;
+
 typedef union {
     struct {
         double xmax;

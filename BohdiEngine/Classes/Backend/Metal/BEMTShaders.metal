@@ -59,7 +59,7 @@ vertexShader(uint vertexID [[vertex_id]],
     // Pass our input color straight to our output color.  This value will be interpolated
     //   with the other color values of the vertices that make up the triangle to produce
     //   the color value for each fragment in our fragment shader
-    out.color = vertices[vertexID].color;
+    out.color = vector_float4(vertices[vertexID].color, 1.0);
 
     return out;
 }

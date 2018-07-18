@@ -12,6 +12,18 @@
 #import <MetalKit/MetalKit.h>
 
 @interface BEMTContext : NSObject<MTKViewDelegate>
+{
+    MTKView* _view;
+}
+
+@property id<MTLDevice> device;
+@property id<MTLRenderPipelineState> pipelineState;
+@property id<MTLCommandQueue> commandQueue;
+@property vector_uint2 viewportSize;
+
+- (MTLRenderPassDescriptor*)getCurrentRenderPassDescriptor;
+- (id <CAMetalDrawable>)getCurrentDrawable;
+
 - (nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)mtkView;
 @end
 

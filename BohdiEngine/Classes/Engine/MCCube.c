@@ -72,8 +72,8 @@ oninit(MCCube)
         mesh->vertexDataSize = sizeof(gCubeVertexData);
                 
         MCLinkedList_addItem(svar(meshes), (MCItem*)mesh);
-        sobj->material = new(MCMaterial);
-        sobj->diffuseTexture = MCTexture_initWithFileName(new(MCTexture), "tex8.bmp");
+        //sobj->material = new(MCMaterial);
+        //sobj->diffuseTexture = MCTexture_initWithFileName(new(MCTexture), "tex8.bmp");
         
         return obj;
     }else{

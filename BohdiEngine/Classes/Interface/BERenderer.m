@@ -7,8 +7,8 @@
 //
 
 #import "BERenderer.h"
-#import "MCDirector.h"
 
+#include "../Engine/MCDirector.h"
 #include "TargetConditionals.h"
 
 @interface BERenderer()

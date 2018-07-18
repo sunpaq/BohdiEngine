@@ -26,10 +26,12 @@ typedef struct
 {
     // Positions in pixel space
     // (e.g. a value of 100 indicates 100 pixels from the center)
-    vector_float2 position;
-    
+    vector_float4 position;
+    vector_float3 normal;
+
     // Floating-point RGBA colors
-    vector_float4 color;
+    vector_float3 color;
+    vector_float2 tex;
 } AAPLVertex;
 
 #endif /* BEMTShaderTypes_h */

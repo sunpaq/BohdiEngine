@@ -46,7 +46,7 @@ oninit(MCDirector)
         var(skybox) = null;
         var(skysph) = null;
         
-        var(renderer) = new(MCRenderer);
+        var(renderer) = null;
         var(skyboxThread) = new(MCThread);
         var(modelThread) = new(MCThread);
         return obj;
@@ -78,7 +78,7 @@ method(MCDirector, void, bye, voida)
     release(var(skysph));
     release(var(skyboxThread));
     release(var(modelThread));
-
+    release(var(renderer));
     superbye(MCObject);
 }
 
@@ -94,25 +94,31 @@ method(MCDirector, void, updateAll, voida)
             cpt(lightHandler)->dataChanged = true;
         }
         //MC3DScene_updateScene(var(lastScene), 0);
-        MCRenderer_updateScene(var(renderer), var(lastScene));
+        if (var(renderer)) {
+            ff(var(renderer), updateScene, var(lastScene));
+        }
     }
 }
 
-method(MCDirector, int, drawAll, voida)
-{
-    int fps = -1;
-    if (obj && var(lastScene) != null && var(pause) == false) {
-        MCRenderer_drawScene(var(renderer), var(lastScene));
-        //fps = MC3DScene_drawScene(var(lastScene), 0);
-    }
-    return fps;
-}
+//method(MCDirector, int, drawAll, voida)
+//{
+//    int fps = -1;
+//    if (obj && var(lastScene) && var(renderer) && var(pause) == false) {
+//        ff(var(renderer), drawScene, var(lastScene));
+//        //fps = MC3DScene_drawScene(var(lastScene), 0);
+//    }
+//    return fps;
+//}
+//
+//method(MCDirector, void, setupRenderer, MCObject* renderer)
+//{
+//    var(renderer) = renderer;
+//    retain(renderer);
+//}
 
 method(MCDirector, void, setupMainScene, unsigned width, unsigned height)
 {
     MC3DScene* scene = ff(new(MC3DScene), initWithWidthHeight, width, height);
-    obj->renderer = MCRenderer_initWithDefaultShader(obj->renderer, 0);
-    
     if (scene) {
         releaseScenes(obj, obj->lastScene);
         MCDirector_pushScene(obj, scene);
@@ -177,13 +183,13 @@ method(MCDirector, void, resizeAllScene, int width, int height)
     var(currentHeight) = height;
 }
 
-method(MCDirector, void, scissorAllScene, int x, int y, int width, int height)
-{
-    MCGLContext_setViewport(x, y, width, height);
-    MCGLContext_setScissor(x, y, width, height);
-    //call resize scene
-    MCDirector_resizeAllScene(obj, width, height);
-}
+//method(MCDirector, void, scissorAllScene, int x, int y, int width, int height)
+//{
+//    MCGLContext_setViewport(x, y, width, height);
+//    MCGLContext_setScissor(x, y, width, height);
+//    //call resize scene
+//    MCDirector_resizeAllScene(obj, width, height);
+//}
 
 method(MCDirector, void, addNode, MC3DNode* node)
 {
@@ -347,13 +353,11 @@ onload(MCDirector)
         
         binding(MCDirector, void, bye, voida);
         binding(MCDirector, void, updateAll, voida);
-        binding(MCDirector, void, drawAll, voida);
         binding(MCDirector, void, setupMainScene, unsigned width, unsigned height);
         binding(MCDirector, void, setBackgroudColor, float R, float G, float B, float A);
         binding(MCDirector, void, pushScene, MC3DScene* scene);
         binding(MCDirector, void, popScene, voida);
         binding(MCDirector, void, resizeAllScene, int width, int height);
-        binding(MCDirector, void, scissorAllScene, int x, int y, int width, int height);
         binding(MCDirector, void, addNode, MC3DNode* node);
         binding(MCDirector, void, addModel, MC3DModel* model, int maxsize);
         binding(MCDirector, void, addModelAtIndex, MC3DModel* model, MCFloat maxsize, int index);

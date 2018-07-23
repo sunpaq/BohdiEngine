@@ -15,8 +15,6 @@ oninit(MCMesh)
         var(calculatedNormal) = false;
         
         var(Frame) = (MC3DFrame){0,0,0,0,0,0};
-        //var(useage) = GL_STATIC_DRAW;
-        //var(mode) = MCTriAngles;
 
         var(vertexDataNeedRelease) = true;
         var(vertexDataPtr) = null;
@@ -24,8 +22,7 @@ oninit(MCMesh)
         var(vertexIndexes) = null;
         var(vertexCount)   = 0;
         
-        //memset(var(vertexAttribArray), (int)null, sizeof(var(vertexAttribArray)));
-        //debug_log("MCMesh - init finished\n");
+        debug_log("MCMesh - init finished\n");
         return obj;
     }else{
         return null;
@@ -42,7 +39,7 @@ method(MCMesh, void, bye, voida)
 method(MCMesh, void, allocVertexBuffer, int32_t vertexCount)
 {
     obj->vertexCount = vertexCount ;
-    obj->vertexDataSize = obj->vertexCount * 11 * sizeof(float);
+    obj->vertexDataSize = obj->vertexCount * sizeof(MCVertexData);
     if (obj->vertexDataSize != 0) {
         obj->vertexDataPtr = (float*)malloc(obj->vertexDataSize);
         memset(obj->vertexDataPtr, 0, obj->vertexDataSize);
@@ -59,28 +56,29 @@ method(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount)
     return obj;
 }
 
-method(MCMesh, void, setVertex, uint32_t offset, MCVertexData* data)
+method(MCMesh, void, setVertex, uint32_t index, MCVertexData* data)
 {
-    obj->vertexDataPtr[offset+0] = data->x;
-    obj->vertexDataPtr[offset+1] = data->y;
-    obj->vertexDataPtr[offset+2] = data->z;
-    
+    MCVertexData* array = (MCVertexData*)obj->vertexDataPtr;
+    array[index].x = data->x;
+    array[index].y = data->y;
+    array[index].z = data->z;
+
     if (obj->calculatedNormal) {
-        obj->vertexDataPtr[offset+3] += data->nx;
-        obj->vertexDataPtr[offset+4] += data->ny;
-        obj->vertexDataPtr[offset+5] += data->nz;
+        array[index].nx += data->nx;
+        array[index].ny += data->ny;
+        array[index].nz += data->nz;
     } else {
-        obj->vertexDataPtr[offset+3] = data->nx;
-        obj->vertexDataPtr[offset+4] = data->ny;
-        obj->vertexDataPtr[offset+5] = data->nz;
+        array[index].nx = data->nx;
+        array[index].ny = data->ny;
+        array[index].nz = data->nz;
     }
     
-    obj->vertexDataPtr[offset+6] = data->r;
-    obj->vertexDataPtr[offset+7] = data->g;
-    obj->vertexDataPtr[offset+8] = data->b;
+    array[index].r = data->r;
+    array[index].g = data->g;
+    array[index].b = data->b;
     
-    obj->vertexDataPtr[offset+9]  = data->u;
-    obj->vertexDataPtr[offset+10] = data->v;
+    array[index].u = data->u;
+    array[index].v = data->v;
 }
 
 method(MCMesh, void, normalizeNormals, voida)
@@ -88,16 +86,12 @@ method(MCMesh, void, normalizeNormals, voida)
     if (!obj->calculatedNormal) {
         return;
     }
+    MCVertexData* array = (MCVertexData*)obj->vertexDataPtr;
     for (int i=0; i<obj->vertexCount; i++) {
-        size_t offset = i * 11;
-        float x = obj->vertexDataPtr[offset+3];
-        float y = obj->vertexDataPtr[offset+4];
-        float z = obj->vertexDataPtr[offset+5];
-        
-        MCVector3 n = MCVector3Normalize(MCVector3Make(x, y, z));
-        obj->vertexDataPtr[offset+3] = n.x;
-        obj->vertexDataPtr[offset+4] = n.y;
-        obj->vertexDataPtr[offset+5] = n.z;
+        MCVector3 n = MCVector3Normalize(MCVector3Make(array[i].nx, array[i].ny, array[i].nz));
+        array[i].nx = n.x;
+        array[i].ny = n.y;
+        array[i].nz = n.z;
     }
 }
 

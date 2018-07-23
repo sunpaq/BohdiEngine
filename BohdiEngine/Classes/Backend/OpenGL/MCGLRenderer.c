@@ -466,17 +466,16 @@ function(void, drawSkysphere, MCSkysphere* sphere)
     glDeleteBuffers(4, buffers);
 }
 
-method(MCGLRenderer, void, updateScene, MC3DScene* scene)
+function(void, updateScene, MC3DScene* scene)
 {
     if (scene->cameraAutoRotate) {
         MC3DScene_moveCameraOneStep(scene, MCFloatF(0.5), MCFloatF(0.0));
     }
-    //MCCamera_update(scene->mainCamera, obj->context);
-    //MCLight_update(scene->light, obj->context);
 }
 
-method(MCGLRenderer, void, drawScene, MC3DScene* scene)
+function(void, drawScene, MC3DScene* scene)
 {
+    as(MCGLRenderer);
     MCGLContext_clearScreenWithColor(scene->bgcolor);
     //MCGLContext_clearScreen(0);
     if (scene->isDrawSky) {
@@ -507,7 +506,7 @@ method(MCGLRenderer, void, drawScene, MC3DScene* scene)
     if (cam) {
         updateCamera(obj, cam);
     }
-
+    
     //Light
     MCLight* light = scene->light;
     if (light) {
@@ -517,17 +516,33 @@ method(MCGLRenderer, void, drawScene, MC3DScene* scene)
     drawNode(obj, scene->rootnode);
 }
 
+function(MCDrawMode, getDrawMode, voida)
+{
+    as(MCGLRenderer);
+    return (MCDrawMode)obj->drawMode;
+}
+
+function(void, setDrawMode, MCDrawMode mode)
+{
+    as(MCGLRenderer);
+    obj->drawMode = mode;
+}
+
+function(void, scissorAllScene, int x, int y, int width, int height)
+{
+    MCGLContext_setViewport(x, y, width, height);
+    MCGLContext_setScissor(x, y, width, height);
+}
+
 onload(MCGLRenderer)
 {
     if (load(MCObject)) {
+        #include "../../Engine/MCRenderer.p"
         //life cycle
         binding(MCGLRenderer, void, bye, voida);
         binding(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
         binding(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
         binding(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
-        //draw
-        binding(MCGLRenderer, void, updateScene, MC3DScene* scene);
-        binding(MCGLRenderer, void, drawScene, MC3DScene* scene);
         return cla;
     }else{
         return null;

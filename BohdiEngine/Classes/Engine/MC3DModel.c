@@ -102,7 +102,7 @@ method(MC3DModel, void, bye, voida)
     MC3DNode_bye(sobj, 0);
 }
 
-function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, size_t offset, MCColorf color)
+function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, size_t index, MCColorf color)
 {
     MCVector3 v, n;
     MCVector2 t;
@@ -152,7 +152,7 @@ function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement
             //0,0
     };
 
-    MCMesh_setVertex(mesh, (uint32_t)offset, &data);
+    MCMesh_setVertex(mesh, (uint32_t)index, &data);
 }
 
 function(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
@@ -160,10 +160,10 @@ function(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t trico
     MCMesh* mesh = MCMesh_initWithVertexCount(new(MCMesh), (int32_t)tricount*3);
     
     for (size_t i=0; i<tricount; i++) {
-        size_t offset = i * 33;
-        meshLoadFaceElement(null, mesh, buff, triangles[i].e1, offset+0, color);
-        meshLoadFaceElement(null, mesh, buff, triangles[i].e2, offset+11, color);
-        meshLoadFaceElement(null, mesh, buff, triangles[i].e3, offset+22, color);
+        size_t index = i * 3;
+        meshLoadFaceElement(null, mesh, buff, triangles[i].e1, index+0, color);
+        meshLoadFaceElement(null, mesh, buff, triangles[i].e2, index+1, color);
+        meshLoadFaceElement(null, mesh, buff, triangles[i].e3, index+2, color);
     }
     
     //normalize normal

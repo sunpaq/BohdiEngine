@@ -19,7 +19,7 @@
 -(void)setupContext
 {
     self.device = MTLCreateSystemDefaultDevice();
-    self.renderer = [[BEMTRenderer alloc] initWithMTKView:self];
+    self.renderer = [[BEMTRenderer alloc] initWithMetalKitView:self];
     [self mtkView:self drawableSizeWillChange:self.drawableSize];
     self.delegate = self;
 }
@@ -53,7 +53,12 @@
 
 - (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
 {
-    
+    // Save the size of the drawable as we'll pass these
+    //   values to our vertex shader when we draw
+    vector_uint2 vsize;
+    vsize.x = size.width;
+    vsize.y = size.height;
+    self.renderer.viewportSize = vsize;
 }
 
 - (void)drawInMTKView:(nonnull MTKView *)view

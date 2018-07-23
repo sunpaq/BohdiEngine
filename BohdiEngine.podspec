@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.osx.deployment_target  = '10.13'
 
-  s.source_files         = 'BohdiEngine/**/**/**/*.{h,c,m,metal}'
+  s.source_files         = 'BohdiEngine/**/**/**/*.{h,c,m,mm,metal}'
   s.public_header_files  = 'BohdiEngine/Classes/**/**/*.h'
   s.private_header_files = 'BohdiEngine/External/**/*.h'
 

@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include "MCMath.h"
+#include "MCShaderTypes.h"
 
 #define MCBUFFER_OFFSET(i)         ((char *)NULL + (i))
 #define MCARRAY_COUNT(array, type) (sizeof(array)/sizeof(type))
@@ -51,8 +52,6 @@ typedef struct {
     MCFloat B;
     MCFloat A;
 } MCColorf;
-
-
 
 //world is right hand y on top, local is left hand z on top
 MCInline MCVector3 MCWorldCoorFromLocal(MCVector3 localvertex, MCVector3 modelposition) {

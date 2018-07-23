@@ -38,6 +38,8 @@
 #include "MCMaterial.h"
 #include "MCTexture.h"
 
+//including MCRenderer.h
+
 class(MCGLRenderer, MCObject,
     MCGLContext* skycontext;
     MCGLContext* context;
@@ -49,8 +51,5 @@ method(MCGLRenderer, void, bye, voida);
 method(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
 method(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
 method(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
-//draw
-method(MCGLRenderer, void, updateScene, MC3DScene* scene);
-method(MCGLRenderer, void, drawScene, MC3DScene* scene);
 
 #endif /* MCGLRenderer_h */

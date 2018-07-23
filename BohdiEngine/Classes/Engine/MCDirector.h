@@ -16,10 +16,9 @@
 #include "MCLight.h"
 #include "MCSkybox.h"
 #include "MCSkysphere.h"
-#include "MCRenderer.h"
 
 class(MCDirector, MCObject,
-      MCRenderer* renderer;
+      MCObject* renderer;
       MC3DScene* lastScene;
 
       MCThread* skyboxThread;
@@ -47,15 +46,15 @@ method(MCDirector, void, updateAll, voida);
 
 //return -1 or positive fps number
 //please update your view only when it is not -1
-method(MCDirector, int, drawAll, voida);
+//method(MCDirector, int, drawAll, voida);
 
+//method(MCDirector, void, setupRenderer, MCObject* renderer);
 method(MCDirector, void, setupMainScene, unsigned width, unsigned height);
 method(MCDirector, void, setBackgroudColor, float R, float G, float B, float A);
 
 method(MCDirector, void, pushScene, MC3DScene* scene);
 method(MCDirector, void, popScene, voida);
 method(MCDirector, void, resizeAllScene, int width, int height);
-method(MCDirector, void, scissorAllScene, int x, int y, int width, int height);
 
 method(MCDirector, void, addNode, MC3DNode* node);
 method(MCDirector, void, addModel, MC3DModel* model, MCFloat maxsize);

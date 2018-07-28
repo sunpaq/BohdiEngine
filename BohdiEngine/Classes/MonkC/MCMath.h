@@ -1,9 +1,9 @@
+#ifndef MCMath_H
+#define MCMath_H
+
 #include "MCContext.h"
 #include <math.h>
 #include <float.h>
-
-#ifndef MCMath_ 
-#define MCMath_
 
 #ifndef MAX
 #define MAX(A, B) ((A>B)?A:B)

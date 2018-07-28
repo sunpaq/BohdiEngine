@@ -140,8 +140,9 @@ typedef void         (*MCFuncPtr)(void);
 
 //true, false
 #define printb(B)    (B?"true":"false")
-typedef _Bool MCBool;
-
+#define MCBool int
+#define true 1
+#define false 0
 /*
  Generic Type
  */
@@ -435,6 +436,7 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 #define info(cls)                  		mc_info(S(cls))
 
 //for call method
+#define msg(obj, message, ...)           _push_jump(response_to((MCObject*)obj, message), __VA_ARGS__)//send message
 #define ff(obj, met, ...)				 _push_jump(response_to((MCObject*)obj, S(met)), __VA_ARGS__)//send message
 #define ffindex(obj, idx, ...)		     _push_jump(response_to_i((MCObject*)obj, idx), __VA_ARGS__)//send index
 

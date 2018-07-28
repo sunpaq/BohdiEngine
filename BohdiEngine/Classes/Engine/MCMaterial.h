@@ -9,8 +9,7 @@
 #ifndef MCMatrial_h
 #define MCMatrial_h
 
-#include "monkc.h"
-#include "MCMath.h"
+#include "beengine_import.h"
 
 class(MCMaterial, MCObject,
       MCBool      dataChanged;

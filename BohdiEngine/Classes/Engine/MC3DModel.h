@@ -9,11 +9,9 @@
 #ifndef MC3DModel_h
 #define MC3DModel_h
 
-#include "monkc.h"
-#include "MCTexture.h"
-#include "MCIO.h"
+#include "beengine_import.h"
 #include "MC3DNode.h"
-#include "MCMath.h"
+#include "MCTexture.h"
 
 class(MC3DModel, MC3DNode,
       int tag;

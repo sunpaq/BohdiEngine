@@ -9,6 +9,9 @@
 #ifndef MCFileParser_h
 #define MCFileParser_h
 
+#include <stdbool.h>
+#include <limits.h>
+
 //parser
 typedef enum {
     MCTokenIdentifier,
@@ -225,7 +228,9 @@ static inline int getDate(const char* s, long* buff)
 //MCTokenUnknown
 static inline MCToken tokenize(const char* word)
 {
-    MCToken token = (MCToken){MCTokenUnknown, 0};
+    MCToken token;
+    token.type = MCTokenUnknown;
+    token.value.Integer = 0;
     //don't change the order!
     if (isFloat(word) == true) {
         token.type = MCTokenFloat;

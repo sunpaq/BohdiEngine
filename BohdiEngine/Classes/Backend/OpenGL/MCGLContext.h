@@ -9,14 +9,10 @@
 #ifndef MCGLContext_h
 #define MCGLContext_h
 
-#include "monkc.h"
-#include "MCMath.h"
+#include "opengl_import.h"
+
 #include "MCGLBase.h"
-#include "MCTexture.h"
-#include "MCMaterial.h"
 #include "MCGLShader.h"
-#include "MCClock.h"
-#include "MCMesh.h"
 
 #define MAX_VATTR_NUM     100
 #define MAX_UNIFORM_NUM   100

@@ -11,9 +11,6 @@
 #include "MCGLSkyboxShader.h"
 #include "MCGLSkysphereShader.h"
 #include "MCGLContext.h"
-#include "MC3DBase.h"
-#include "MCCamera.h"
-#include "MCLight.h"
 
 oninit(MCGLRenderer)
 {

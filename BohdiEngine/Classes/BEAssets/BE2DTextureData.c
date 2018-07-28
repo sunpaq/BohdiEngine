@@ -6,10 +6,8 @@
 //  Copyright © 2017 oreisoft. All rights reserved.
 //
 
-#include "BEAssetsManager.h"
 #include "BE2DTextureData.h"
-#include "MCString.h"
-#include "SOIL.h"
+#include "BEAssetsManager.h"
 
 oninit(BE2DTextureData)
 {

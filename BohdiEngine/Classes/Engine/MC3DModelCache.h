@@ -9,8 +9,7 @@
 #ifndef MC3DModelCache_h
 #define MC3DModelCache_h
 
-#include "monkc.h"
-#include "MCMap.h"
+#include "beengine_import.h"
 #include "MC3DModel.h"
 
 class(MC3DModelCache, MCObject,

@@ -9,7 +9,7 @@
 #ifndef __monkcGame__MCCube__
 #define __monkcGame__MCCube__
 
-#include "monkc.h"
+#include "beengine_import.h"
 #include "MC3DNode.h"
 
 class(MCCube, MC3DNode,

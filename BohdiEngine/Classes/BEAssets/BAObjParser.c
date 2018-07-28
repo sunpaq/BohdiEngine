@@ -1,7 +1,4 @@
 #include "BAObjParser.h"
-#include "BEAssetsManager.h"
-#include "MCGeometry.h"
-#include "MCIO.h"
 
 void parseObjMeta(BAObjMeta* meta, const char* buff)
 {

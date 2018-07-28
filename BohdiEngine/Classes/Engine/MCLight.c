@@ -7,7 +7,6 @@
 //
 
 #include "MCLight.h"
-#include "MCGLRenderer.h"
 
 oninit(MCLight)
 {

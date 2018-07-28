@@ -9,12 +9,11 @@
 #ifndef MC3DFileParser_h
 #define MC3DFileParser_h
 
-#include "monkc.h"
-#include "MCMath.h"
-#include "MCGeometry.h"
+#include "beassets_import.h"
+
 #include "BALexer.h"
-#include "BEAssetsManager.h"
 #include "BAMtlParser.h"
+#include "BEAssetsManager.h"
 
 typedef struct {
     long*  big;

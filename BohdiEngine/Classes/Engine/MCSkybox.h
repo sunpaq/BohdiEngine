@@ -9,9 +9,8 @@
 #ifndef MCSkybox_h
 #define MCSkybox_h
 
-#include "monkc.h"
+#include "beengine_import.h"
 #include "MC3DNode.h"
-#include "BECubeTextureData.h"
 
 class(MCSkybox, MC3DNode,
       double boxCameraRatio;

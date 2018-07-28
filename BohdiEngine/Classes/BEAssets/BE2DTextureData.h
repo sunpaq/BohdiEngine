@@ -9,7 +9,7 @@
 #ifndef BE2DTextureData_h
 #define BE2DTextureData_h
 
-#include "monkc.h"
+#include "beassets_import.h"
 
 //handle image, no GL related code
 class(BE2DTextureData, MCObject,

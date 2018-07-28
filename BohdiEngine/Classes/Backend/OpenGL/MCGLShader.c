@@ -5,10 +5,8 @@
 //  Created by 孙御礼 on 4/27/30 H.
 //
 
-#include "MC3DBase.h"
-#include "MCGLContext.h"
 #include "MCGLShader.h"
-#include "BEAssetsManager.h"
+#include "MCGLContext.h"
 
 oninit(MCGLShader)
 {

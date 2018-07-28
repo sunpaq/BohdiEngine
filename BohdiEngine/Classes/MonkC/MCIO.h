@@ -1,5 +1,5 @@
-#ifndef MCFile_
-#define MCFile_
+#ifndef MCIO_H
+#define MCIO_H
 
 #include "MCContext.h"
 #include "MCBuffer.h"
@@ -102,7 +102,6 @@ while (*c!=NUL) {\
     }\
     __VA_ARGS__\
 }
-#endif
 
 /* MCStream */
 
@@ -136,8 +135,6 @@ static inline MCStreamType MakeMCStreamType(const unsigned btype, const char* fo
 }
 
 //default is a wide-char fully-buffered stream
-#ifndef MCStream_
-#define MCStream_
 
 class(MCStream, MCObject,
 	FILE* fileObject;
@@ -169,12 +166,7 @@ method(MCStream, int, seekFromEnd, off_t offset);
 method(MCStream, long, tellSize, voida);
 method(MCStream, void, dump, voida);
 
-#endif
-
 /* MCByteStream */
-
-#ifndef MCByteStream_
-#define MCByteStream_
 
 class(MCByteStream, MCStream,
 );
@@ -182,49 +174,26 @@ class(MCByteStream, MCStream,
 method(MCByteStream, void, bye, voida);
 method(MCByteStream, MCByteStream*, newWithPath, MCStreamType type, char* path);
 
-#endif
-
 /* MCStdinStream */
-
-#ifndef MCStdinStream_
-#define MCStdinStream_
 
 class(MCStdinStream, MCStream,
 );
 
 method(MCStdinStream, void, bye, voida);
-#endif
 
 /* MCStdoutStream */
-
-#ifndef MCStdoutStream_
-#define MCStdoutStream_
 
 class(MCStdoutStream, MCStream,
 );
 
 method(MCStdoutStream, void, bye, voida);
-#endif
 
 /* MCStderrStream */
-
-#ifndef MCStdoutStream_
-#define MCStdoutStream_
-
-class(MCStdoutStream, MCStream,
-);
-
-method(MCStdoutStream, void, bye);
-#endif
-
-#ifndef MCStderrStream_
-#define MCStderrStream_
 
 class(MCStderrStream, MCStream,
 );
 
 method(MCStderrStream, void, bye, voida);
-#endif
 
 /* MCSelect */
 
@@ -233,9 +202,6 @@ typedef enum _MCSelect_fd_type{
 	MCSelect_Writefd,
 	MCSelect_Exceptionfd,
 }MCSelect_fd_type;
-
-#ifndef MCSelect_
-#define MCSelect_ 
 
 class(MCSelect, MCObject,
 	int maxfd;

@@ -9,7 +9,7 @@
 #ifndef __monkcGame__MCOrbit__
 #define __monkcGame__MCOrbit__
 
-#include "monkc.h"
+#include "beengine_import.h"
 #include "MC3DNode.h"
 
 class(MCOrbit, MC3DNode,

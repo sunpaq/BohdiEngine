@@ -1,7 +1,6 @@
-#ifndef _MC3DBase
-#define _MC3DBase
+#ifndef MC3DBase_H
+#define MC3DBase_H
 
-#include <math.h>
 #include "MCMath.h"
 #include "MCShaderTypes.h"
 
@@ -237,7 +236,7 @@ MCInline MCMatrix4 MCMatrix4Invert(MCMatrix4 matrix, MCBool* isInvertible) {
     return MCMatrix4FromMatrix3(i3);
 }
 
-MCInline MCMatrix3 MCMatrix3InvertAndTranspose(MCMatrix3 matrix, void* isInvertible) {
+MCInline MCMatrix3 MCMatrix3InvertAndTranspose(MCMatrix3 matrix, MCBool* isInvertible) {
     return MCMatrix3Transpose(MCMatrix3Invert(matrix, isInvertible));
 }
 

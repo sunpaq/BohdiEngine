@@ -26,17 +26,10 @@
 #ifndef MCGLRenderer_h
 #define MCGLRenderer_h
 
-#include "monkc.h"
+#include "opengl_import.h"
 
 #include "MCGLBase.h"
 #include "MCGLContext.h"
-#include "MCMesh.h"
-
-#include "MC3DScene.h"
-#include "MC3DNode.h"
-#include "MCCamera.h"
-#include "MCMaterial.h"
-#include "MCTexture.h"
 
 //including MCRenderer.h
 

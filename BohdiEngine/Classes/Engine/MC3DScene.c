@@ -7,7 +7,6 @@
 //
 
 #include "MC3DScene.h"
-#include "BEAssetsManager.h"
 
 compute(MCBool, isDrawSky)
 {

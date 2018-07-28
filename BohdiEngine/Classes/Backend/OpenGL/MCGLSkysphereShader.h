@@ -8,7 +8,7 @@
 #ifndef MCSkysphereShader_h
 #define MCSkysphereShader_h
 
-#include "monkc.h"
+#include "opengl_import.h"
 
 static const char* MCSkysphere_vsource = S(
                                //version is specified in MCGLContext

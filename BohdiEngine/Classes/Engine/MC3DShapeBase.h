@@ -1,6 +1,7 @@
 #ifndef __MC3DShapeBase__
 #define __MC3DShapeBase__
-#include "MCGLBase.h"
+
+#include "beengine_import.h"
 #include "MC3DBase.h"
 #include "MCUIBase.h"
 

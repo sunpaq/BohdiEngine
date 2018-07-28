@@ -13,16 +13,14 @@
 static CFStringRef BundlePath = NULL;
 #endif
 
-#ifdef __ANDROID__
+#include "BEAssetsManager.h"
+
+#if defined(__ANDROID__)
 static AAssetManager* assetManager_ = null;
 static ANativeWindow* window_ = null;
 void MCFileSetAssetManager(AAssetManager* assetManager) { assetManager_ = assetManager; }
 AAssetManager* MCFileGetAssetManager() { return assetManager_; }
 #endif
-
-#include "BEAssetsManager.h"
-#include "BALexer.h"
-#include "MCString.h"
 
 int MCFileGetPath(const char* filename, char* buffer)
 {

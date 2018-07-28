@@ -7,7 +7,6 @@
 //
 
 #include "MCDirector.h"
-#include "MCThread.h"
 #include "MCCube.h"
 #include "MC3DModelCache.h"
 

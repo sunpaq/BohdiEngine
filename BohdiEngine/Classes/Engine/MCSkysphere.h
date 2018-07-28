@@ -9,6 +9,7 @@
 #ifndef MCSkysphere_h
 #define MCSkysphere_h
 
+#include "beengine_import.h"
 #include "MC3DNode.h"
 #include "BE2DTextureData.h"
 

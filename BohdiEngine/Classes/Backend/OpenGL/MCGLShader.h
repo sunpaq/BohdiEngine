@@ -8,6 +8,8 @@
 #ifndef MCGLShader_h
 #define MCGLShader_h
 
+#include "opengl_import.h"
+
 #include "MCGLBase.h"
 #include "MCGLDefaultShader.h"
 

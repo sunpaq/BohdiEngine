@@ -7,9 +7,6 @@
 //
 
 #include "MCGLContext.h"
-#include "MC3DBase.h"
-#include "MCGLContext.h"
-#include "BEAssetsManager.h"
 #include "MCGLRenderer.h"
 
 oninit(MCGLContext)

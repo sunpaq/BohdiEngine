@@ -1,6 +1,7 @@
-#import "BERendererCAPI.h"
-#import "MCDirector.h"
-#import "MCGLContext.h"
+#include "beassets_import.h"
+
+#include "BERendererCAPI.h"
+#include "MCDirector.h"
 
 static MCDirector* director = null;
 static float pinch_scale = 10.0;

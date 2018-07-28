@@ -9,10 +9,9 @@
 #ifndef MCDirector_h
 #define MCDirector_h
 
-#include "monkc.h"
+#include "beengine_import.h"
 #include "MC3DScene.h"
 #include "MC3DModel.h"
-#include "MCThread.h"
 #include "MCLight.h"
 #include "MCSkybox.h"
 #include "MCSkysphere.h"

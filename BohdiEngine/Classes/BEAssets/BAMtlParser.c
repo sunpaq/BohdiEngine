@@ -6,9 +6,8 @@
 //  Copyright © 2016年 oreisoft. All rights reserved.
 //
 
-#include "BEAssetsManager.h"
 #include "BAMtlParser.h"
-#include "MCIO.h"
+#include "BEAssetsManager.h"
 
 /*
  Ka|Kd|Ks|Tf [xyz|spectral] rx gy bz | [file.rfl factor]

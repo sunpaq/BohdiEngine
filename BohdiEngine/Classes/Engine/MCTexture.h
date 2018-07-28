@@ -9,8 +9,7 @@
 #ifndef MCTexture_h
 #define MCTexture_h
 
-#include "monkc.h"
-#include "BE2DTextureData.h"
+#include "beengine_import.h"
 
 typedef enum {
     MCTextureRepeat,

@@ -1,6 +1,7 @@
 #ifndef _MCUIBase_
 #define _MCUIBase_
-#include "monkc.h"
+
+#include "beengine_import.h"
 
 typedef struct {
     double x;

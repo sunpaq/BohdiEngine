@@ -7,10 +7,7 @@
 //
 
 #include "MCSkysphere.h"
-#include "MCGLContext.h"
 #include "MC3DShapeBase.h"
-
-
 
 oninit(MCSkysphere)
 {

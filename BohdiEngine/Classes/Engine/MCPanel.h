@@ -9,7 +9,7 @@
 #ifndef MCPanel_h
 #define MCPanel_h
 
-#include "monkc.h"
+#include "beengine_import.h"
 #include "MC3DNode.h"
 
 //class(MCPanel, MC3DNode);

@@ -9,7 +9,7 @@
 #ifndef MC3DAxis_h
 #define MC3DAxis_h
 
-#include "monkc.h"
+#include "beengine_import.h"
 #include "MC3DNode.h"
 #include "MC3DShapeBase.h"
 

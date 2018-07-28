@@ -9,10 +9,9 @@
 #ifndef MC3DScene_h
 #define MC3DScene_h
 
-#include "monkc.h"
+#include "beengine_import.h"
 #include "MC3DNode.h"
 #include "MCCamera.h"
-#include "MCClock.h"
 #include "MCLight.h"
 #include "MCSkybox.h"
 #include "MCSkysphere.h"

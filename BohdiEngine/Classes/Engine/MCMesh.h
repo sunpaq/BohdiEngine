@@ -9,11 +9,8 @@
 #ifndef MCMesh_h
 #define MCMesh_h
 
-#include "monkc.h"
+#include "beengine_import.h"
 #include "MC3DBase.h"
-#include "MCLinkedList.h"
-#include "MCMath.h"
-#include "BAObjParser.h"
 
 class(MCMesh, MCItem,
       MCBool     isDataLoaded;

@@ -6,8 +6,8 @@
 //  Copyright © 2017 oreisoft. All rights reserved.
 //
 
-#include "BEAssetsManager.h"
 #include "BECubeTextureData.h"
+#include "BEAssetsManager.h"
 
 oninit(BECubeTextureData)
 {

@@ -2,6 +2,7 @@
 #define MCString_h
 
 #include <string.h>
+
 #include "monkc.h"
 
 class(MCString, MCObject,

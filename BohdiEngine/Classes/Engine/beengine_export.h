@@ -5,7 +5,6 @@
 #ifndef MONKC4ANDROID_BEENGINE_EXPORT_H
 #define MONKC4ANDROID_BEENGINE_EXPORT_H
 
-#include "BERendererCAPI.h"
 #include "MC2DTex.h"
 #include "MC3DAxis.h"
 #include "MC3DBase.h"
@@ -25,7 +24,7 @@
 #include "MCShaderTypes.h"
 #include "MCSkybox.h"
 #include "MCSkysphere.h"
-#include "MCTexture.h
+#include "MCTexture.h"
 #include "MCTextureCache.h"
 #include "MCUIBase.h"
 #include "MCWorld.h"

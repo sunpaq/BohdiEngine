@@ -35,7 +35,7 @@
 //#include <GL/gl.h>
 //#endif
 
-#include "opengl_import.h"
+#include "monkc_export.h"
 
 typedef enum {
     MCGLDepthTest = GL_DEPTH_TEST,

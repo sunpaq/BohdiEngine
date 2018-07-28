@@ -1,5 +1,10 @@
 #include "MCClock.h"
 
+#include <limits.h>
+#ifndef LINE_MAX
+#define LINE_MAX 2048
+#endif
+
 oninit(MCClock)
 {
     if (init(MCObject)) {

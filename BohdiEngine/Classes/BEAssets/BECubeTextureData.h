@@ -9,7 +9,7 @@
 #ifndef BECubeTextureData_h
 #define BECubeTextureData_h
 
-#include "beassets_import.h"
+#include "monkc_export.h"
 #include "BE2DTextureData.h"
 
 //usual face order: "right","left","top","bottom","back","front"

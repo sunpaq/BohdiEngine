@@ -9,7 +9,7 @@
 #ifndef MCDirector_h
 #define MCDirector_h
 
-#include "beengine_import.h"
+#include "monkc_export.h"
 #include "MC3DScene.h"
 #include "MC3DModel.h"
 #include "MCLight.h"

@@ -1,7 +1,9 @@
 #ifndef __MC3DShapeBase__
 #define __MC3DShapeBase__
 
-#include "beengine_import.h"
+#include "monkc_export.h"
+#include "opengl_export.h"
+
 #include "MC3DBase.h"
 #include "MCUIBase.h"
 

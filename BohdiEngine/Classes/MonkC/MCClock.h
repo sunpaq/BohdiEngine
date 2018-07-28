@@ -1,8 +1,10 @@
-#include <time.h>
+#ifndef MCCLOCK_H
+#define MCCLOCK_H
+
 #include "MCContext.h"
 
-#ifndef MCClock_
-#define MCClock_
+#include <time.h>
+#include <limits.h>
 
 class(MCClock, MCObject,
       struct tm rawtime;

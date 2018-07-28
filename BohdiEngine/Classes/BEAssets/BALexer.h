@@ -9,8 +9,14 @@
 #ifndef MCFileParser_h
 #define MCFileParser_h
 
+#include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+
 #include <limits.h>
+#ifndef LINE_MAX
+#define LINE_MAX 2048
+#endif
 
 //parser
 typedef enum {

@@ -1,6 +1,11 @@
 #include "MCString.h"
 #include "MCMath.h"
 
+#include <limits.h>
+#ifndef LINE_MAX
+#define LINE_MAX 2048
+#endif
+
 static const char  MCTab = '\t';
 static const char  MCWhiteSpace = ' ';
 static const char  MCNewLineN = '\n';

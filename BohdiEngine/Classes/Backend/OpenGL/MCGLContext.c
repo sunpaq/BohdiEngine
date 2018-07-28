@@ -7,7 +7,6 @@
 //
 
 #include "MCGLContext.h"
-#include "MCGLRenderer.h"
 
 oninit(MCGLContext)
 {

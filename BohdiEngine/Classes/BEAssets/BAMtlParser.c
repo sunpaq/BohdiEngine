@@ -6,6 +6,8 @@
 //  Copyright © 2016年 oreisoft. All rights reserved.
 //
 
+#include <limits.h>
+
 #include "BAMtlParser.h"
 #include "BEAssetsManager.h"
 

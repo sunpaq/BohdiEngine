@@ -8,8 +8,6 @@
 #ifndef MCSkyboxShader_h
 #define MCSkyboxShader_h
 
-#include "opengl_import.h"
-
 static const char* MCSkybox_vsource = S(precision highp float;
                                precision mediump int;
                                

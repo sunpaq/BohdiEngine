@@ -1,7 +1,7 @@
 #ifndef _MCCamera
 #define _MCCamera
 
-#include "beengine_import.h"
+#include "monkc_export.h"
 #include "MC3DBase.h"
 #include "MC3DNode.h"
 

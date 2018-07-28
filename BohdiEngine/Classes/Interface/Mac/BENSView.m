@@ -182,19 +182,19 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 }
 
 
-- (void)renewGState
-{	
-	// Called whenever graphics state updated (such as window resize)
-	
-	// OpenGL rendering is not synchronous with other rendering on the OSX.
-	// Therefore, call disableScreenUpdatesUntilFlush so the window server
-	// doesn't render non-OpenGL content in the window asynchronously from
-	// OpenGL content, which could cause flickering.  (non-OpenGL content
-	// includes the title bar and drawing done by the app with other APIs)
-	[[self window] disableScreenUpdatesUntilFlush];
-
-	[super renewGState];
-}
+//- (void)renewGState
+//{
+//    // Called whenever graphics state updated (such as window resize)
+//
+//    // OpenGL rendering is not synchronous with other rendering on the OSX.
+//    // Therefore, call disableScreenUpdatesUntilFlush so the window server
+//    // doesn't render non-OpenGL content in the window asynchronously from
+//    // OpenGL content, which could cause flickering.  (non-OpenGL content
+//    // includes the title bar and drawing done by the app with other APIs)
+//    [[self window] disableScreenUpdatesUntilFlush];
+//
+//    [super renewGState];
+//}
 
 - (void) drawRect: (NSRect) theRect
 {

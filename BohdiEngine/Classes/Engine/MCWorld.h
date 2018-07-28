@@ -9,7 +9,7 @@
 #ifndef MCWorld_h
 #define MCWorld_h
 
-#include "beengine_import.h"
+#include "monkc_export.h"
 
 class(MCWorld, MCObject);
 

@@ -9,7 +9,7 @@
 #ifndef MC3DScene_h
 #define MC3DScene_h
 
-#include "beengine_import.h"
+#include "monkc_export.h"
 #include "MC3DNode.h"
 #include "MCCamera.h"
 #include "MCLight.h"

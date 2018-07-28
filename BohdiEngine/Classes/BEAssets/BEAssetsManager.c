@@ -164,7 +164,7 @@ const char* MCFileCopyContentWithPathGetBufferSize(const char* filepath, off_t* 
         char* buffer = (char*)malloc(size);
         if (!buffer) {
             error_log("MCFileCopyContent(%s) can not alloc buffer\n", filepath);
-            return null;
+            return NULL;
         }
         memset(buffer, 0, size);
         //copy
@@ -176,7 +176,7 @@ const char* MCFileCopyContentWithPathGetBufferSize(const char* filepath, off_t* 
         return buffer;
     }else{
         error_log("MCFileCopyContent(%s) fopen return null\n", filepath);
-        return null;
+        return NULL;
     }
 
 #endif
@@ -184,10 +184,10 @@ const char* MCFileCopyContentWithPathGetBufferSize(const char* filepath, off_t* 
 
 const char* MCFileCopyContentWithPath(const char* filepath)
 {
-    return MCFileCopyContentWithPathGetBufferSize(filepath, null);
+    return MCFileCopyContentWithPathGetBufferSize(filepath, NULL);
 }
 
 void MCFileReleaseContent(const char* buff)
 {
-	free(buff);
+	free((void*)buff);
 }

@@ -8,7 +8,7 @@
 #ifndef MCGLDefaultShader_h
 #define MCGLDefaultShader_h
 
-#include "opengl_import.h"
+#include "monkc_export.h"
 
 MCGlobalKey view_view       = "view_view";
 MCGlobalKey view_projection = "view_projection";

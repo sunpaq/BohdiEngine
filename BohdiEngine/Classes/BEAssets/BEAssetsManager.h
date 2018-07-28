@@ -9,7 +9,7 @@
 #ifndef BEAssetsManager_h
 #define BEAssetsManager_h
 
-#include "beassets_import.h"
+#include "monkc_export.h"
 #include "BALexer.h"
 
 #if defined(__ANDROID__)

@@ -1,8 +1,7 @@
-#include "monkc.h"
-#include "string.h"
-
 #ifndef MCContext_
 #define MCContext_
+
+#include "monkc.h"
 
 class(MCContext, MCObject,
 	int argc;

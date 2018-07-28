@@ -9,7 +9,7 @@
 #ifndef MC3DModel_h
 #define MC3DModel_h
 
-#include "beengine_import.h"
+#include "monkc_export.h"
 #include "MC3DNode.h"
 #include "MCTexture.h"
 

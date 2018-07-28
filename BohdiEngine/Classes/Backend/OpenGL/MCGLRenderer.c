@@ -10,7 +10,8 @@
 #include "MCGLDefaultShader.h"
 #include "MCGLSkyboxShader.h"
 #include "MCGLSkysphereShader.h"
-#include "MCGLContext.h"
+
+#include "beengine_export.h"
 
 oninit(MCGLRenderer)
 {

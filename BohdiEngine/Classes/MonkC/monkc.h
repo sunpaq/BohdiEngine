@@ -45,12 +45,12 @@ static inline unsigned monkc_version() {return __MCRuntimeVer__;}
 #error "your platform doesn't support C99"
 #endif
 
-#ifndef LINE_MAX
-#define LINE_MAX 2048
-#endif
-#ifndef PATH_MAX
-#define PATH_MAX 1024
-#endif
+//#ifndef LINE_MAX
+//#define LINE_MAX 2048
+//#endif
+//#ifndef PATH_MAX
+//#define PATH_MAX 1024
+//#endif
 
 /* *
  * Configure strict mode:

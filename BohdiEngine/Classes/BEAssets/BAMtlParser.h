@@ -9,7 +9,7 @@
 #ifndef MC3DMtlParser_h
 #define MC3DMtlParser_h
 
-#include "beassets_import.h"
+#include "monkc_export.h"
 #include "BALexer.h"
 
 /* illum_0 -> illum_10

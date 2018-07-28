@@ -26,18 +26,16 @@
 #ifndef MCGLRenderer_h
 #define MCGLRenderer_h
 
-#include "opengl_import.h"
-
-#include "MCGLBase.h"
+#include "monkc_export.h"
 #include "MCGLContext.h"
 
 //including MCRenderer.h
 
 class(MCGLRenderer, MCObject,
-    MCGLContext* skycontext;
-    MCGLContext* context;
     GLenum useage;
     GLenum drawMode;
+    MCGLContext* skycontext;
+    MCGLContext* context;
 );
 //life cycle
 method(MCGLRenderer, void, bye, voida);

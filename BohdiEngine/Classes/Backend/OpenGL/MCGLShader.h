@@ -8,7 +8,7 @@
 #ifndef MCGLShader_h
 #define MCGLShader_h
 
-#include "opengl_import.h"
+#include "monkc_export.h"
 
 #include "MCGLBase.h"
 #include "MCGLDefaultShader.h"

@@ -9,7 +9,11 @@
 #ifndef MCGLContext_h
 #define MCGLContext_h
 
-#include "opengl_import.h"
+#include "monkc_export.h"
+
+#include "MCTexture.h"
+#include "MCMaterial.h"
+#include "MC3DBase.h"
 
 #include "MCGLBase.h"
 #include "MCGLShader.h"

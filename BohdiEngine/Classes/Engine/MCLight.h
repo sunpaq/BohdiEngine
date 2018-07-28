@@ -9,7 +9,7 @@
 #ifndef MCLight_h
 #define MCLight_h
 
-#include "beengine_import.h"
+#include "monkc_export.h"
 #include "MC3DNode.h"
 
 class(MCLight, MC3DNode,

@@ -9,7 +9,7 @@
 #ifndef MCMesh_h
 #define MCMesh_h
 
-#include "beengine_import.h"
+#include "monkc_export.h"
 #include "MC3DBase.h"
 
 class(MCMesh, MCItem,

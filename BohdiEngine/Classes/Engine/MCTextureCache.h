@@ -8,7 +8,7 @@
 #ifndef MCTextureCache_h
 #define MCTextureCache_h
 
-#include "beengine_import.h"
+#include "monkc_export.h"
 #include "MCTexture.h"
 
 class(MCTextureCache, MCObject,

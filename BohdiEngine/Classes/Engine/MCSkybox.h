@@ -9,7 +9,7 @@
 #ifndef MCSkybox_h
 #define MCSkybox_h
 
-#include "beengine_import.h"
+#include "monkc_export.h"
 #include "MC3DNode.h"
 
 class(MCSkybox, MC3DNode,

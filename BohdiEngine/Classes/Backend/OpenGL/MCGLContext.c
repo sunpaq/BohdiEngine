@@ -34,6 +34,9 @@ fun(MCGLContext, GLuint, loadTexture, MCTexture* tex, const char* samplerName, G
             MCGLContext_bind2DTexture(tex->Id);
             MCGLContext_rawdataToTexbuffer(tex, GL_TEXTURE_2D);
             MCGLContext_setupTexParameter(tex, GL_TEXTURE_2D);
+        } else {
+            MCGLContext_activeTextureUnit(unit);
+            MCGLContext_bind2DTexture(tex->Id);
         }
         return tex->Id;
     }

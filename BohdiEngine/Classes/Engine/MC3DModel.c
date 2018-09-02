@@ -272,6 +272,16 @@ ifun(void, setTextureForNode, MC3DNode* node, BAObjData* buff, BAMesh* mesh)
             }
             node->specularTexture = mctex;
         }
+        if (mtl->normalMapName[0]) {
+            MCTextureCache* tcache = MCTextureCache_shared(0);
+            MCTexture* mctex = MCTextureCache_findTextureNamed(tcache, mtl->normalMapName);
+            if (mctex == null) {
+                mctex = MCTexture_initWithFileName(new(MCTexture), mtl->normalMapName);
+                MCTextureCache_cacheTextureNamed(tcache, mctex, mtl->normalMapName);
+                release(mctex);
+            }
+            node->normalTexture = mctex;
+        }
     }
 }
 
@@ -290,6 +300,7 @@ ifun(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
         model->Super.material = new(MCMaterial);
         model->Super.diffuseTexture  = null;
         model->Super.specularTexture = null;
+        model->Super.normalTexture = null;
         MCLinkedList_addItem(model->Super.meshes, (MCItem*)mesh);
         
         //set mtl

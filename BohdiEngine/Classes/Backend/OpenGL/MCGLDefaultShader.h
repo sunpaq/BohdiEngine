@@ -189,10 +189,10 @@ void main()
         alpha = texcolor.a;
         color = texcolor.rgb;
     }
-//    if (usetexture == 3) {
-//        vec4 texcolor = texture(normal_sampler, vec2(texturecoord.x, 1.0-texturecoord.y));
-//        normal = texcolor.rgb;
-//    }
+    if (usetexture == 3) {
+        vec4 texcolor = texture(normal_sampler, vec2(texturecoord.x, 1.0-texturecoord.y));
+        normal = texcolor.rgb;
+    }
     
     //Illuminate Mode
     vec3 Ka = material_ambient;

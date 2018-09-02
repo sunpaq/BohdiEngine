@@ -196,7 +196,7 @@ ifun(void, drawMesh, MCMesh* mesh, GLuint texid)
     MCVertexAttributeLoad(&attr4);
     //Texture
     if (texid > 0) {
-        MCGLContext_bind2DTexture(texid);
+        //MCGLContext_bind2DTexture(texid);
     }
     //draw
     if (obj->drawMode != -1) {
@@ -258,19 +258,19 @@ ifun(void, drawNode, MC3DNode* node)
         MCGLShader_setUniforms(ctx->shader, 0);
         
         //texture
+        MCGLShader_shaderSetInt(ctx->shader, "usetexture", 0);
         GLuint texid = 0;
         if (node->diffuseTexture) {
             texid = MCGLContext_loadTexture(ctx, node->diffuseTexture, "diffuse_sampler", 0);
+            MCGLShader_shaderSetInt(ctx->shader, "usetexture", 1);
         }
         if (node->specularTexture) {
             texid = MCGLContext_loadTexture(ctx, node->specularTexture, "specular_sampler", 1);
+            MCGLShader_shaderSetInt(ctx->shader, "usetexture", 2);
         }
-        
-        //draw self texture
-        if (node->diffuseTexture != null) {
-            MCGLShader_shaderSetBool(ctx->shader, "usetexture", true);
-        } else {
-            MCGLShader_shaderSetBool(ctx->shader, "usetexture", false);
+        if (node->normalTexture) {
+            texid = MCGLContext_loadTexture(ctx, node->normalTexture, "normal_sampler", 2);
+            MCGLShader_shaderSetInt(ctx->shader, "usetexture", 3);
         }
 
         //draw self meshes

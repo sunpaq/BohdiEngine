@@ -30,6 +30,8 @@ class(MC3DNode, MCItem,
       MCMaterial* material;
       MCTexture* diffuseTexture;
       MCTexture* specularTexture;
+      MCTexture* normalTexture;
+
       MCLinkedList* meshes;
       MCLinkedList* children;
 );

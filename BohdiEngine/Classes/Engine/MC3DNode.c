@@ -22,6 +22,7 @@ oninit(MC3DNode)
         var(material) = null;
         var(diffuseTexture) = null;
         var(specularTexture)= null;
+        var(normalTexture) = null;
         var(zorder) = -1;
         
         var(children) = new(MCLinkedList);
@@ -38,6 +39,7 @@ fun(MC3DNode, void, bye, voida)
     release(var(material));
     release(var(diffuseTexture));
     release(var(specularTexture));
+    release(var(normalTexture));
     release(var(children));
     release(var(meshes));
 }

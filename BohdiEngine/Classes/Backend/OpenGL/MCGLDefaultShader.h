@@ -95,7 +95,9 @@ uniform float material_shininess;
 //texture sampling must in fragment shader
 uniform sampler2D diffuse_sampler;
 uniform sampler2D specular_sampler;
-uniform bool usetexture;
+uniform sampler2D normal_sampler;
+//0=none 1=diffuse 2=specular 3=normal
+uniform int usetexture;
 uniform int illum;
 
 bool floatEqual(float A, float B)
@@ -179,13 +181,18 @@ void main()
 {
     //Color Output
     vec3 color = material_diffuse;
+    vec3 normal = calculatedNormal;
     float alpha = 1.0;
-    if (usetexture == true) {
+    if (usetexture >= 1) {
         vec4 texcolor = texture(diffuse_sampler, vec2(texturecoord.x, 1.0-texturecoord.y));
         //vec4 texcolor = texture(diffuse_sampler, texturecoord);
         alpha = texcolor.a;
         color = texcolor.rgb;
     }
+//    if (usetexture == 3) {
+//        vec4 texcolor = texture(normal_sampler, vec2(texturecoord.x, 1.0-texturecoord.y));
+//        normal = texcolor.rgb;
+//    }
     
     //Illuminate Mode
     vec3 Ka = material_ambient;
@@ -199,7 +206,7 @@ void main()
     float Es = material_shininess;
     
     vec3 L  = normalize(light_position - modelPosition);
-    vec3 N  = calculatedNormal;
+    vec3 N  = normal;
     vec3 V  = normalize(viewPosition - modelPosition);
     
     if (illum == 0) {

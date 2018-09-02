@@ -63,6 +63,16 @@ MCInline void processMtlLine(BAMtlLibrary* lib, const char* linebuff)
                     }
                     return;//next line
                 }
+                else if (MCStringEqualN(word, "map_Ns", 6)) {
+                    char name[256] = {0};
+                    BAMaterial* material = lib->materialsList;
+                    if (material && MCString_filenameFromPath(remain, &name)) {
+                        MCStringFill(material->normalMapName, name);
+                    } else {
+                        error_log("BAMtlParser - can not get filename form path: %s\n", remain);
+                    }
+                    return;//next line
+                }
                 else if (MCStringEqualN(word, "map_Ke", 6)) {
                     return;//next line
                 }

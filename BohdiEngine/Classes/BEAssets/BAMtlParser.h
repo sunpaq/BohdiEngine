@@ -123,6 +123,8 @@ typedef struct BAMaterialStruct {
     char diffuseMapName[256];
     //map_Ks
     char specularMapName[256];
+    //map_Ns
+    char normalMapName[256];
     //light color
     BALightColor lightColors[5];
     //illumination model 0->10
@@ -150,6 +152,7 @@ static inline BAMaterial* BAMaterialNew(const char* name) {
     MCStringFill(mtl->name, name);
     mtl->diffuseMapName[0] = NUL;
     mtl->specularMapName[0] = NUL;
+    mtl->normalMapName[0] = NUL;
     return mtl;
 }
 

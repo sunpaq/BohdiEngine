@@ -233,7 +233,7 @@ fun(MCGLShader, GLuint, prepareShader, GLuint Id, const char* vcode, const char*
     return Id;
 }
 
-fun(MCGLShader, void, shaderSetUInt, const char* name, MCUInt value)
+fun(MCGLShader, void, shaderSetInt, const char* name, MCInt value)
 {
     glUniform1i(glGetUniformLocation(obj->pid, name), value);
 }

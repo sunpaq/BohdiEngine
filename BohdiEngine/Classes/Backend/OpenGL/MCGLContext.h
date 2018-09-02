@@ -29,7 +29,7 @@ class(MCGLContext, MCObject,
 fun(MCGLContext, void, bye, voida);
 
 //texture
-fun(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
+fun(MCGLContext, GLuint, loadTexture, MCTexture* tex, const char* samplerName, GLint unit);
 fun(MCGLContext, void, loadMaterial, MCMaterial* mtl);
 
 //Global
@@ -50,10 +50,10 @@ util(MCGLContext, void, cullBackFace, voida);
 //Texture
 util(MCGLContext, MCUInt, getIdleTextureUnit, voida);
 util(MCGLContext, MCUInt, getMaxTextureUnits, voida);
-util(MCGLContext, void, generateTextureId, MCUInt* tid);
-util(MCGLContext, void, activeTextureUnit, MCUInt index);
-util(MCGLContext, void, bindCubeTexture, MCUInt tid);
-util(MCGLContext, void, bind2DTexture, MCUInt tid);
+util(MCGLContext, void, generateTextureId, GLuint* tid);
+util(MCGLContext, void, activeTextureUnit, GLuint index);
+util(MCGLContext, void, bindCubeTexture, GLint tid);
+util(MCGLContext, void, bind2DTexture, GLuint tid);
 util(MCGLContext, void, unbind2DTextures, voida);
 util(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype);
 util(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype);

@@ -120,10 +120,7 @@ fun(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, co
             MCGLUniformVec3,
             MCGLUniformVec3,
             MCGLUniformVec1,
-            MCGLUniformVec1,
-            
-            MCGLUniformScalar,
-            MCGLUniformScalar
+            MCGLUniformVec1
         },
         (const char* []){
             view_view,
@@ -143,11 +140,8 @@ fun(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, co
             material_diffuse,
             material_specular,
             material_dissolve,
-            material_shininess,
-            
-            diffuse_sampler,
-            specular_sampler
-        }, 17);
+            material_shininess
+        }, 15);
     return obj;
 }
 
@@ -172,12 +166,12 @@ fun(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida)
     return MCGLRenderer_initWithShaderCodeString(obj, MCGLDefault_vsource, MCGLDefault_fsource);
 }
 
-ifun(void, drawMesh, MCMesh* mesh)
+ifun(void, drawMesh, MCMesh* mesh, GLuint texid)
 {
     as(MCGLRenderer);
-    GLuint     VAO;  //VAO
-    GLuint     VBO;  //VBO
-    GLuint     EBO;  //EBO
+    GLuint VAO;
+    GLuint VBO;
+    GLuint EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     //VAO
@@ -200,6 +194,10 @@ ifun(void, drawMesh, MCMesh* mesh)
     MCVertexAttributeLoad(&attr2);
     MCVertexAttributeLoad(&attr3);
     MCVertexAttributeLoad(&attr4);
+    //Texture
+    if (texid > 0) {
+        MCGLContext_bind2DTexture(texid);
+    }
     //draw
     if (obj->drawMode != -1) {
         if (mesh->vertexIndexes != null) {
@@ -208,8 +206,9 @@ ifun(void, drawMesh, MCMesh* mesh)
             glDrawArrays(obj->drawMode, 0, mesh->vertexCount);
         }
     }
-    //Unbind
-    glBindVertexArray(0);
+    //commit
+    glFlush();
+    //unbind
     MCGLContext_unbind2DTextures(0);
     //delete
     glDeleteBuffers(1, &VBO);
@@ -242,9 +241,9 @@ ifun(void, drawNode, MC3DNode* node)
             MCGLShader_updateUniform(shader, model_model, f.data);
         }
         
-        MCMatrix3 nor = MCMatrix3InvertAndTranspose(MCMatrix4GetMatrix3(node->transform), NULL);
-        f.data.mat3 = nor;
-        MCGLShader_updateUniform(ctx->shader, model_normal, f.data);
+//        MCMatrix3 nor = MCMatrix3InvertAndTranspose(MCMatrix4GetMatrix3(node->transform), NULL);
+//        f.data.mat3 = nor;
+//        MCGLShader_updateUniform(ctx->shader, model_normal, f.data);
         
         //material
         if (node->material != null) {
@@ -255,28 +254,30 @@ ifun(void, drawNode, MC3DNode* node)
             MCGLContext_loadMaterial(ctx, node->material);
         }
         
+        //batch setup
+        MCGLShader_setUniforms(ctx->shader, 0);
+        
+        //texture
+        GLuint texid = 0;
+        if (node->diffuseTexture) {
+            texid = MCGLContext_loadTexture(ctx, node->diffuseTexture, "diffuse_sampler", 0);
+        }
+        if (node->specularTexture) {
+            texid = MCGLContext_loadTexture(ctx, node->specularTexture, "specular_sampler", 1);
+        }
+        
         //draw self texture
         if (node->diffuseTexture != null) {
             MCGLShader_shaderSetBool(ctx->shader, "usetexture", true);
         } else {
             MCGLShader_shaderSetBool(ctx->shader, "usetexture", false);
         }
-        
-        //batch setup
-        MCGLShader_setUniforms(ctx->shader, 0);
-        
+
         //draw self meshes
         MCLinkedListForEach(node->meshes,
                             MCMesh* mesh = (MCMesh*)item;
                             if (mesh != null) {
-                                //texture
-                                if (node->diffuseTexture) {
-                                    MCGLContext_loadTexture(ctx, node->diffuseTexture, "diffuse_sampler");
-                                }
-                                if (node->specularTexture) {
-                                    MCGLContext_loadTexture(ctx, node->specularTexture, "specular_sampler");
-                                }
-                                drawMesh(obj, mesh);
+                                drawMesh(obj, mesh, texid);
                             })
     }
     

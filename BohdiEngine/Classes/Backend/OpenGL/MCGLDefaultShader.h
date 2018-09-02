@@ -10,29 +10,6 @@
 
 #include "monkc_export.h"
 
-MCGlobalKey view_view       = "view_view";
-MCGlobalKey view_projection = "view_projection";
-MCGlobalKey view_position   = "view_position";
-
-MCGlobalKey model_model     = "model_model";
-MCGlobalKey model_normal    = "model_normal";
-
-MCGlobalKey light_ambient   = "light_ambient";
-MCGlobalKey light_diffuse   = "light_diffuse";
-MCGlobalKey light_specular  = "light_specular";
-MCGlobalKey light_color     = "light_color";
-MCGlobalKey light_position  = "light_position";
-
-MCGlobalKey material_ambient   = "material_ambient";
-MCGlobalKey material_diffuse   = "material_diffuse";
-MCGlobalKey material_specular  = "material_specular";
-MCGlobalKey material_dissolve  = "material_dissolve";
-MCGlobalKey material_shininess = "material_shininess";
-
-MCGlobalKey diffuse_sampler = "diffuse_sampler";
-MCGlobalKey specular_sampler = "specular_sampler";
-
-
 static const char* MCGLDefault_vsource = S(
 //version is specified in MCGLContext
 precision highp float;
@@ -68,9 +45,10 @@ void main()
     texturecoord = texcoord;
     
     //Normal fix the non-uniform scale issue
+    //calculate by GPU
     calculatedNormal = normalize(mat3(transpose(inverse(model_model))) * normal);
-    //calculatedNormal = normalize(model.normal * normal);
-    //calculatedNormal = normalize(normal);
+    //calculate by CPU
+    //calculatedNormal = normalize(model_normal * normal);
     
     //Eye normal
     //eyeNormal = normalize(model.normal * normal);
@@ -113,15 +91,11 @@ uniform vec3  material_specular;
 uniform float material_dissolve;
 uniform float material_shininess;
 
+//uniforms not in context
 //texture sampling must in fragment shader
-uniform sampler3D diffuse_sampler3d;
 uniform sampler2D diffuse_sampler;
 uniform sampler2D specular_sampler;
-
-//uniforms not in context
 uniform bool usetexture;
-uniform bool usetexture3d;
-
 uniform int illum;
 
 bool floatEqual(float A, float B)

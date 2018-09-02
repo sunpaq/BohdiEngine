@@ -24,22 +24,21 @@ fun(MCGLContext, void, bye, voida)
     obj->shader = null;
 }
 
-fun(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
+fun(MCGLContext, GLuint, loadTexture, MCTexture* tex, const char* samplerName, GLint unit)
 {
     if (tex) {
-        unsigned texunit = 0;
         if (tex->loadedToGL == false) {
             tex->loadedToGL = true;
             MCGLContext_generateTextureId(&tex->Id);
-            MCGLContext_activeTextureUnit(texunit);
+            MCGLContext_activeTextureUnit(unit);
             MCGLContext_bind2DTexture(tex->Id);
             MCGLContext_rawdataToTexbuffer(tex, GL_TEXTURE_2D);
             MCGLContext_setupTexParameter(tex, GL_TEXTURE_2D);
         }
-        MCGLShader_shaderSetUInt(obj->shader, samplerName, texunit);
-        MCGLContext_activeTextureUnit(texunit);
-        MCGLContext_bind2DTexture(tex->Id);
+        return tex->Id;
     }
+    MCGLShader_shaderSetInt(obj->shader, samplerName, unit);
+    return 0;
 }
 
 fun(MCGLContext, void, loadMaterial, MCMaterial* mtl)
@@ -72,7 +71,7 @@ fun(MCGLContext, void, loadMaterial, MCMaterial* mtl)
         mtl->dataChanged = false;
     }
     //set each time
-    MCGLShader_shaderSetUInt(obj->shader, "illum", mtl->illum);
+    MCGLShader_shaderSetInt(obj->shader, "illum", mtl->illum);
 }
 
 onload(MCGLContext)
@@ -188,22 +187,22 @@ util(MCGLContext, MCUInt, getMaxTextureUnits, voida)
     return (MCUInt)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
 }
 
-util(MCGLContext, void, generateTextureId, MCUInt* tid)
+util(MCGLContext, void, generateTextureId, GLuint* tid)
 {
     glGenTextures(1, tid);
 }
 
-util(MCGLContext, void, activeTextureUnit, MCUInt index)
+util(MCGLContext, void, activeTextureUnit, GLuint index)
 {
     glActiveTexture(GL_TEXTURE0 + index);
 }
 
-util(MCGLContext, void, bindCubeTexture, MCUInt tid)
+util(MCGLContext, void, bindCubeTexture, GLint tid)
 {
     glBindTexture(GL_TEXTURE_CUBE_MAP, tid);
 }
 
-util(MCGLContext, void, bind2DTexture, MCUInt tid)
+util(MCGLContext, void, bind2DTexture, GLuint tid)
 {
     glBindTexture(GL_TEXTURE_2D, tid);
 }

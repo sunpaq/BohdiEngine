@@ -12,7 +12,7 @@
 oninit(MCTexture)
 {
     if (init(MCObject)) {
-        var(Id) = -1;
+        var(Id) = 0;
         var(width) = 512;
         var(height)= 512;
         var(data) = null;

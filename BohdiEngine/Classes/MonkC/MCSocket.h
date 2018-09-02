@@ -21,8 +21,8 @@ class(MCSocketClientInfo, MCObject,
 	socklen_t address_len;
 );
 
-method(MCSocketClientInfo, void, dumpInfo, voida);
-method(MCSocketClientInfo, void, bye, voida);
+fun(MCSocketClientInfo, void, dumpInfo, voida);
+fun(MCSocketClientInfo, void, bye, voida);
 
 class(MCSocket, MCObject,
 	int sfd;
@@ -30,16 +30,16 @@ class(MCSocket, MCObject,
 	struct addrinfo peeraddrinfo;
 );
 
-method(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
-method(MCSocket, int, listeningStart, voida);
-method(MCSocket, MCSocketClientInfo*, acceptARequest, voida);
-method(MCSocket, void, recv, voida);
-method(MCSocket, void, recvfrom, voida);
-method(MCSocket, void, recvmsg, voida);
-method(MCSocket, void, send, voida);
-method(MCSocket, void, sendto, voida);
-method(MCSocket, void, sendmsg, voida);
-method(MCSocket, void, bye, voida);
+fun(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
+fun(MCSocket, int, listeningStart, voida);
+fun(MCSocket, MCSocketClientInfo*, acceptARequest, voida);
+fun(MCSocket, void, recv, voida);
+fun(MCSocket, void, recvfrom, voida);
+fun(MCSocket, void, recvmsg, voida);
+fun(MCSocket, void, send, voida);
+fun(MCSocket, void, sendto, voida);
+fun(MCSocket, void, sendmsg, voida);
+fun(MCSocket, void, bye, voida);
 
 #endif
 

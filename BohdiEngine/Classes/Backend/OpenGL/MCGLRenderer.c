@@ -41,7 +41,7 @@ oninit(MCGLRenderer)
     }
 }
 
-function(void, initSkybox, voida)
+ifun(void, initSkybox, voida)
 {
     as(MCGLRenderer);
     if (obj->skycontext == null) {
@@ -63,7 +63,7 @@ function(void, initSkybox, voida)
     }
 }
 
-function(void, initSkysphere, voida)
+ifun(void, initSkysphere, voida)
 {
     as(MCGLRenderer);
     if (obj->skycontext == null) {
@@ -86,14 +86,14 @@ function(void, initSkysphere, voida)
     }
 }
 
-method(MCGLRenderer, void, bye, voida)
+fun(MCGLRenderer, void, bye, voida)
 {
     release(obj->context);
     release(obj->skycontext);
     superbye(MCObject);
 }
 
-method(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode)
+fun(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode)
 {
     MCGLShader_initWithShaderCode(obj->context->shader, vcode, fcode,
         (const char* []){
@@ -151,7 +151,7 @@ method(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode,
     return obj;
 }
 
-method(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader)
+fun(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader)
 {
     char path[LINE_MAX];
     MCFileGetPath(vshader, path);
@@ -167,12 +167,12 @@ method(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader,
     return obj;
 }
 
-method(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida)
+fun(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida)
 {
     return MCGLRenderer_initWithShaderCodeString(obj, MCGLDefault_vsource, MCGLDefault_fsource);
 }
 
-function(void, drawMesh, MCMesh* mesh)
+ifun(void, drawMesh, MCMesh* mesh)
 {
     as(MCGLRenderer);
     GLuint     VAO;  //VAO
@@ -216,7 +216,7 @@ function(void, drawMesh, MCMesh* mesh)
     glDeleteVertexArrays(1, &VAO);
 }
 
-function(void, drawNode, MC3DNode* node)
+ifun(void, drawNode, MC3DNode* node)
 {
     as(MCGLRenderer);
     //callback
@@ -295,7 +295,7 @@ function(void, drawNode, MC3DNode* node)
     //ff(ctx, printUniforms, 0);
 }
 
-function(void, updateCamera, MCCamera* cam)
+ifun(void, updateCamera, MCCamera* cam)
 {
     as(MCGLRenderer);
     MCGLUniformData data;
@@ -306,7 +306,7 @@ function(void, updateCamera, MCCamera* cam)
     MCGLShader_updateUniform(shader, view_projection, data);
 }
 
-function(void, updateLight, MCLight* light)
+ifun(void, updateLight, MCLight* light)
 {
     as(MCGLRenderer);
     if (light->dataChanged == true) {
@@ -334,7 +334,7 @@ function(void, updateLight, MCLight* light)
     }
 }
 
-function(void, drawSkybox, MCSkybox* skybox)
+ifun(void, drawSkybox, MCSkybox* skybox)
 {
     as(MCGLRenderer);
     //init
@@ -402,7 +402,7 @@ function(void, drawSkybox, MCSkybox* skybox)
     glDeleteBuffers(3, buffers);
 }
 
-function(void, drawSkysphere, MCSkysphere* sphere)
+ifun(void, drawSkysphere, MCSkysphere* sphere)
 {
     as(MCGLRenderer);
     MCGLShader* shader = obj->context->shader;
@@ -464,14 +464,14 @@ function(void, drawSkysphere, MCSkysphere* sphere)
     glDeleteBuffers(4, buffers);
 }
 
-function(void, updateScene, MC3DScene* scene)
+ifun(void, updateScene, MC3DScene* scene)
 {
     if (scene->cameraAutoRotate) {
         MC3DScene_moveCameraOneStep(scene, MCFloatF(0.5), MCFloatF(0.0));
     }
 }
 
-function(void, drawScene, MC3DScene* scene)
+ifun(void, drawScene, MC3DScene* scene)
 {
     as(MCGLRenderer);
     MCGLContext_clearScreenWithColor(scene->bgcolor);
@@ -514,19 +514,19 @@ function(void, drawScene, MC3DScene* scene)
     drawNode(obj, scene->rootnode);
 }
 
-function(MCDrawMode, getDrawMode, voida)
+ifun(MCDrawMode, getDrawMode, voida)
 {
     as(MCGLRenderer);
     return (MCDrawMode)obj->drawMode;
 }
 
-function(void, setDrawMode, MCDrawMode mode)
+ifun(void, setDrawMode, MCDrawMode mode)
 {
     as(MCGLRenderer);
     obj->drawMode = mode;
 }
 
-function(void, scissorAllScene, int x, int y, int width, int height)
+ifun(void, scissorAllScene, int x, int y, int width, int height)
 {
     MCGLContext_setViewport(x, y, width, height);
     MCGLContext_setScissor(x, y, width, height);
@@ -537,10 +537,10 @@ onload(MCGLRenderer)
     if (load(MCObject)) {
         #include "../../Engine/MCRenderer.p"
         //life cycle
-        binding(MCGLRenderer, void, bye, voida);
-        binding(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
-        binding(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
-        binding(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
+        bid(MCGLRenderer, void, bye, voida);
+        bid(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
+        bid(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
+        bid(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
         return cla;
     }else{
         return null;

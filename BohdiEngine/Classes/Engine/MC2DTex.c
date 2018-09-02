@@ -17,7 +17,7 @@ oninit(MC2DTex)
     }
 }
 
-method(MC2DTex, MC2DTex*, initWithFileName, const char* name)
+fun(MC2DTex, MC2DTex*, initWithFileName, const char* name)
 {
     return obj;
 }
@@ -26,7 +26,7 @@ onload(MC2DTex)
 {
     if (load(MCTexture)) {
         
-        binding(MC2DTex, MC2DTex*, initWithFileName, const char* name);
+        bid(MC2DTex, MC2DTex*, initWithFileName, const char* name);
         
         return cla;
     }else{

@@ -47,12 +47,12 @@ oninit(MC3DScene)
     }
 }
 
-method(MC3DScene, void, printDebugInfo, voida)
+fun(MC3DScene, void, printDebugInfo, voida)
 {
     ff(obj->light, printDebugInfo, 0);
 }
 
-method(MC3DScene, void, bye, voida)
+fun(MC3DScene, void, bye, voida)
 {
     release(var(skybox));
     release(var(skysph));
@@ -64,7 +64,7 @@ method(MC3DScene, void, bye, voida)
     superbye(MCObject);
 }
 
-method(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height)
+fun(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height)
 {
     debug_log("MC3DScene initWithWidthHeightDefaultShader %dx%d %s\n", width, height, "MCGLRenderer");
     var(scenewidth)  = width;
@@ -73,7 +73,7 @@ method(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned heig
     return obj;
 }
 
-method(MC3DScene, void, resizeScene, unsigned width, unsigned height)
+fun(MC3DScene, void, resizeScene, unsigned width, unsigned height)
 {
     obj->scenewidth  = width;
     obj->sceneheight = height;
@@ -88,7 +88,7 @@ method(MC3DScene, void, resizeScene, unsigned width, unsigned height)
     }
 }
 
-method(MC3DScene, void, addSkybox, MCSkybox* box)
+fun(MC3DScene, void, addSkybox, MCSkybox* box)
 {
     if (obj->skybox) {
         release(obj->skybox);
@@ -98,7 +98,7 @@ method(MC3DScene, void, addSkybox, MCSkybox* box)
     retain(box);
 }
 
-method(MC3DScene, void, addSkysph, MCSkysphere* sph)
+fun(MC3DScene, void, addSkysph, MCSkysphere* sph)
 {
     if (obj->skysph) {
         release(obj->skysph);
@@ -108,7 +108,7 @@ method(MC3DScene, void, addSkysph, MCSkysphere* sph)
     retain(sph);
 }
 
-method(MC3DScene, void, removeSkybox, voida)
+fun(MC3DScene, void, removeSkybox, voida)
 {
     if (obj->skybox) {
         release(obj->skybox);
@@ -117,7 +117,7 @@ method(MC3DScene, void, removeSkybox, voida)
     }
 }
 
-method(MC3DScene, void, removeSkysph, voida)
+fun(MC3DScene, void, removeSkysph, voida)
 {
     if (obj->skysph) {
         release(obj->skysph);
@@ -126,18 +126,18 @@ method(MC3DScene, void, removeSkysph, voida)
     }
 }
 
-method(MC3DScene, void, lockCamera, MCBool lock)
+fun(MC3DScene, void, lockCamera, MCBool lock)
 {
     var(cameraLock) = lock;
     printf("lock=%d\n", lock);
 }
 
-method(MC3DScene, MCCamera*, getCamera, voida)
+fun(MC3DScene, MCCamera*, getCamera, voida)
 {
     return var(mainCamera);
 }
 
-method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht)
+fun(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht)
 {
     if (var(cameraLock) == false) {
 //        if (var(skyboxRef) != null) {
@@ -148,14 +148,14 @@ method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht)
     }
 }
 
-method(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht)
+fun(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht)
 {
     if (cpt(isDrawSky)) {
         //MCSkyboxCamera_move(var(skyboxRef)->camera, deltaFai, deltaTht);
     }
 }
 
-method(MC3DScene, void, setRotationMat3, float mat3[9])
+fun(MC3DScene, void, setRotationMat3, float mat3[9])
 {
     if (cpt(isDrawSky)) {
         if (var(skybox)) {
@@ -168,7 +168,7 @@ method(MC3DScene, void, setRotationMat3, float mat3[9])
     MCCamera_setRotationMat3(var(mainCamera), mat3);
 }
 
-method(MC3DScene, void, setRotationMat4, float mat4[16])
+fun(MC3DScene, void, setRotationMat4, float mat4[16])
 {
     if (cpt(isDrawSky)) {
         if (var(skybox)) {
@@ -184,20 +184,20 @@ method(MC3DScene, void, setRotationMat4, float mat4[16])
 onload(MC3DScene)
 {
     if (load(MCObject)) {
-        binding(MC3DScene, void, bye, voida);
-        binding(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height);
-        binding(MC3DScene, void, resizeScene, unsigned width, unsigned height);
-        binding(MC3DScene, void, addSkybox, MCSkybox* box);
-        binding(MC3DScene, void, addSkysph, MCSkysphere* sph);
-        binding(MC3DScene, void, removeSkybox, voida);
-        binding(MC3DScene, void, removeSkysph, voida);
-        binding(MC3DScene, void, lockCamera, MCBool lock);
-        binding(MC3DScene, MCCamera*, getCamera, voida);
-        binding(MC3DScene, void, moveCameraOneStep, double deltaFai, double deltaTht);
-        binding(MC3DScene, void, moveSkyboxCamera, MCDouble deltaFai, MCDouble deltaTht);
-        binding(MC3DScene, void, setRotationMat3, float mat3[9]);
-        binding(MC3DScene, void, setRotationMat4, float mat4[16]);
-        binding(MC3DScene, void, printDebugInfo, voida);
+        bid(MC3DScene, void, bye, voida);
+        bid(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height);
+        bid(MC3DScene, void, resizeScene, unsigned width, unsigned height);
+        bid(MC3DScene, void, addSkybox, MCSkybox* box);
+        bid(MC3DScene, void, addSkysph, MCSkysphere* sph);
+        bid(MC3DScene, void, removeSkybox, voida);
+        bid(MC3DScene, void, removeSkysph, voida);
+        bid(MC3DScene, void, lockCamera, MCBool lock);
+        bid(MC3DScene, MCCamera*, getCamera, voida);
+        bid(MC3DScene, void, moveCameraOneStep, double deltaFai, double deltaTht);
+        bid(MC3DScene, void, moveSkyboxCamera, MCDouble deltaFai, MCDouble deltaTht);
+        bid(MC3DScene, void, setRotationMat3, float mat3[9]);
+        bid(MC3DScene, void, setRotationMat4, float mat4[16]);
+        bid(MC3DScene, void, printDebugInfo, voida);
 
         return cla;
     }else{

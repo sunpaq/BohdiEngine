@@ -26,53 +26,53 @@ class(MCGLContext, MCObject,
       double cameraRatio;
 );
 
-method(MCGLContext, void, bye, voida);
+fun(MCGLContext, void, bye, voida);
 
 //texture
-method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
-method(MCGLContext, void, loadMaterial, MCMaterial* mtl);
+fun(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
+fun(MCGLContext, void, loadMaterial, MCMaterial* mtl);
 
 //Global
-utility(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature);
-utility(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff);
-utility(MCGLContext, void, flushCommandAsync, voida);
-utility(MCGLContext, void, flushCommandBlock, voida);
-utility(MCGLContext, void, clearScreen, voida);
-utility(MCGLContext, void, clearScreenWithColor, MCColorf color);
-utility(MCGLContext, void, clearDepthBuffer, voida);
-utility(MCGLContext, void, clearStencilBuffer, voida);
-utility(MCGLContext, void, setClearScreenColor, MCColorf color);
-utility(MCGLContext, void, setPointSize, double pointsize);
-utility(MCGLContext, void, setLineWidth, double linewidth);
-utility(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW);
-utility(MCGLContext, void, cullFace, MCGLFace face);
-utility(MCGLContext, void, cullBackFace, voida);
+util(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature);
+util(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff);
+util(MCGLContext, void, flushCommandAsync, voida);
+util(MCGLContext, void, flushCommandBlock, voida);
+util(MCGLContext, void, clearScreen, voida);
+util(MCGLContext, void, clearScreenWithColor, MCColorf color);
+util(MCGLContext, void, clearDepthBuffer, voida);
+util(MCGLContext, void, clearStencilBuffer, voida);
+util(MCGLContext, void, setClearScreenColor, MCColorf color);
+util(MCGLContext, void, setPointSize, double pointsize);
+util(MCGLContext, void, setLineWidth, double linewidth);
+util(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW);
+util(MCGLContext, void, cullFace, MCGLFace face);
+util(MCGLContext, void, cullBackFace, voida);
 //Texture
-utility(MCGLContext, MCUInt, getIdleTextureUnit, voida);
-utility(MCGLContext, MCUInt, getMaxTextureUnits, voida);
-utility(MCGLContext, void, generateTextureId, MCUInt* tid);
-utility(MCGLContext, void, activeTextureUnit, MCUInt index);
-utility(MCGLContext, void, bindCubeTexture, MCUInt tid);
-utility(MCGLContext, void, bind2DTexture, MCUInt tid);
-utility(MCGLContext, void, unbind2DTextures, voida);
-utility(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype);
-utility(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype);
+util(MCGLContext, MCUInt, getIdleTextureUnit, voida);
+util(MCGLContext, MCUInt, getMaxTextureUnits, voida);
+util(MCGLContext, void, generateTextureId, MCUInt* tid);
+util(MCGLContext, void, activeTextureUnit, MCUInt index);
+util(MCGLContext, void, bindCubeTexture, MCUInt tid);
+util(MCGLContext, void, bind2DTexture, MCUInt tid);
+util(MCGLContext, void, unbind2DTextures, voida);
+util(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype);
+util(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype);
 
 //Alpha Blend
-utility(MCGLContext, void, enableTransparency, MCBool enable);
+util(MCGLContext, void, enableTransparency, MCBool enable);
 //Z-Fighting
-utility(MCGLContext, void, enablePolygonOffset, MCBool enable);
+util(MCGLContext, void, enablePolygonOffset, MCBool enable);
 
 //Frame Rate (FPS)
-utility(MCGLContext, int, tickFPS, MCClock* clock);
+util(MCGLContext, int, tickFPS, MCClock* clock);
 
 //Shader
-utility(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version);
-utility(MCGLContext, int, linkProgram, GLuint prog);
-utility(MCGLContext, int, validateProgram, GLuint prog);
+util(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version);
+util(MCGLContext, int, linkProgram, GLuint prog);
+util(MCGLContext, int, validateProgram, GLuint prog);
 
 //Viewport
-utility(MCGLContext, void, setViewport, int x, int y, int width, int height);
-utility(MCGLContext, void, setScissor, int x, int y, int width, int height);
+util(MCGLContext, void, setViewport, int x, int y, int width, int height);
+util(MCGLContext, void, setScissor, int x, int y, int width, int height);
 
 #endif /* MCGLContext_h */

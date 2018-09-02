@@ -95,14 +95,14 @@ oninit(MC3DModel)
     }
 }
 
-method(MC3DModel, void, bye, voida)
+fun(MC3DModel, void, bye, voida)
 {
     //clean all the cached textures
     //MCTextureCache_cleanAndDestoryShared(0);
     MC3DNode_bye(sobj, 0);
 }
 
-function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, size_t index, MCColorf color)
+ifun(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, size_t index, MCColorf color)
 {
     MCVector3 v, n;
     MCVector2 t;
@@ -155,7 +155,7 @@ function(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement
     MCMesh_setVertex(mesh, (uint32_t)index, &data);
 }
 
-function(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
+ifun(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
 {
     MCMesh* mesh = MCMesh_initWithVertexCount(new(MCMesh), (int32_t)tricount*3);
     
@@ -177,7 +177,7 @@ function(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t trico
     return mesh;
 }
 
-function(void, setDefaultMaterialForNode, MC3DNode* node)
+ifun(void, setDefaultMaterialForNode, MC3DNode* node)
 {
     if (node) {
         node->material->ambientLightColor  = MCVector3Make(0.5, 0.5, 0.5);
@@ -193,7 +193,7 @@ function(void, setDefaultMaterialForNode, MC3DNode* node)
     }
 }
 
-function(void, setMaterialForNode, MC3DNode* node, BAMaterial* mtl)
+ifun(void, setMaterialForNode, MC3DNode* node, BAMaterial* mtl)
 {
     if (mtl && mtl->name[0] != NUL) {
         MCVector3 ambient  = BAMaterialLightColor(mtl, Ambient);
@@ -215,7 +215,7 @@ function(void, setMaterialForNode, MC3DNode* node, BAMaterial* mtl)
     }
 }
 
-function(void, setTextureForNode, MC3DNode* node, BAObjData* buff, BAMesh* mesh)
+ifun(void, setTextureForNode, MC3DNode* node, BAObjData* buff, BAMesh* mesh)
 {
     //object texture
     if (mesh->object[0]) {
@@ -276,7 +276,7 @@ function(void, setTextureForNode, MC3DNode* node, BAObjData* buff, BAMesh* mesh)
 }
 
 //size_t fcursor, BAMaterial* mtl, size_t facecount,
-function(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
+ifun(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
 {
     MC3DModel* model = (MC3DModel*)any;
     if (model && bamesh) {
@@ -311,7 +311,7 @@ function(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
     }
 }
 
-method(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf color)
+fun(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf color)
 {
     debug_log("MC3DModel - initWithFilePathColor: %s\n", path);
     
@@ -351,12 +351,12 @@ method(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf 
     return obj;
 }
 
-method(MC3DModel, MC3DModel*, initWithFilePath, const char* path)
+fun(MC3DModel, MC3DModel*, initWithFilePath, const char* path)
 {
     return MC3DModel_initWithFilePathColor(obj, path, obj->defaultColor);
 }
 
-method(MC3DModel, MC3DModel*, initWithFileNameColor, const char* name, MCColorf color)
+fun(MC3DModel, MC3DModel*, initWithFileNameColor, const char* name, MCColorf color)
 {
     if (obj) {
         MCStringFill(obj->name, name);
@@ -371,37 +371,37 @@ method(MC3DModel, MC3DModel*, initWithFileNameColor, const char* name, MCColorf 
     }
 }
 
-method(MC3DModel, MC3DModel*, initWithFileName, const char* name)
+fun(MC3DModel, MC3DModel*, initWithFileName, const char* name)
 {
     return MC3DModel_initWithFileNameColor(obj, name, obj->defaultColor);
 }
 
-method(MC3DModel, void, translateToOrigin, voida)
+fun(MC3DModel, void, translateToOrigin, voida)
 {
     MCVector3 center = cpt(center);
     MCVector3 rcenter = MCVector3Reverse(center);
     MC3DNode_translateVec3(sobj, &rcenter, false);
 }
 
-method(MC3DModel, void, rotateAroundSelfAxisX, double ccwRadian)
+fun(MC3DModel, void, rotateAroundSelfAxisX, double ccwRadian)
 {
     MCMatrix4 RX = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(ccwRadian));
     sobj->transform = MCMatrix4Multiply(sobj->transform, RX);
 }
 
-method(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian)
+fun(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian)
 {
     MCMatrix4 RY = MCMatrix4FromMatrix3(MCMatrix3MakeYAxisRotation(ccwRadian));
     sobj->transform = MCMatrix4Multiply(sobj->transform, RY);
 }
 
-method(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian)
+fun(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian)
 {
     MCMatrix4 RZ = MCMatrix4FromMatrix3(MCMatrix3MakeZAxisRotation(ccwRadian));
     sobj->transform = MCMatrix4Multiply(sobj->transform, RZ);
 }
 
-method(MC3DModel, void, resizeToFit, double maxsize)
+fun(MC3DModel, void, resizeToFit, double maxsize)
 {
     if (var(fitted) == false) {
         double maxl  = cpt(maxlength);
@@ -418,16 +418,16 @@ method(MC3DModel, void, resizeToFit, double maxsize)
 onload(MC3DModel)
 {
     if (load(MC3DNode)) {
-        binding(MC3DModel, void, bye, voida);
-        binding(MC3DModel, MC3DModel*, initWithFilePath, const char* path);
-        binding(MC3DModel, MC3DModel*, initWithFileName, const char* name);
-        binding(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf color);
-        binding(MC3DModel, MC3DModel*, initWithFileNameColor, const char* name, MCColorf color);
-        binding(MC3DModel, void, rotateAroundSelfAxisX, double ccwRadian);
-        binding(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian);
-        binding(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian);
-        binding(MC3DModel, void, resizeToFit, double maxsize);
-        binding(MC3DModel, void, translateToOrigin, voida);
+        bid(MC3DModel, void, bye, voida);
+        bid(MC3DModel, MC3DModel*, initWithFilePath, const char* path);
+        bid(MC3DModel, MC3DModel*, initWithFileName, const char* name);
+        bid(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf color);
+        bid(MC3DModel, MC3DModel*, initWithFileNameColor, const char* name, MCColorf color);
+        bid(MC3DModel, void, rotateAroundSelfAxisX, double ccwRadian);
+        bid(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian);
+        bid(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian);
+        bid(MC3DModel, void, resizeToFit, double maxsize);
+        bid(MC3DModel, void, translateToOrigin, voida);
         return cla;
     }else{
         return null;

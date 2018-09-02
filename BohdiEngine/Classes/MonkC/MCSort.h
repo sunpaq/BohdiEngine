@@ -15,10 +15,10 @@ class(MCSort, MCObject,
       MCGeneric* array;
       size_t length);
 
-method(MCSort, void, bye, voida);
-method(MCSort, MCSort*, initWithArray, MCGeneric* array, size_t length);
-method(MCSort, void, insertionSort, voida);
-method(MCSort, void, quickSort, voida);
-method(MCSort, void, printArray, voida);
+fun(MCSort, void, bye, voida);
+fun(MCSort, MCSort*, initWithArray, MCGeneric* array, size_t length);
+fun(MCSort, void, insertionSort, voida);
+fun(MCSort, void, quickSort, voida);
+fun(MCSort, void, printArray, voida);
 
 #endif /* MCSort_h */

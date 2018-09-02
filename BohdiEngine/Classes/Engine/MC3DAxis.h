@@ -18,6 +18,6 @@ class(MC3DAxis, MC3DNode,
 );
 
 //override MC3DNode
-method(MC3DAxis, void, draw, voida);
+fun(MC3DAxis, void, draw, voida);
 
 #endif /* MC3DAxis_h */

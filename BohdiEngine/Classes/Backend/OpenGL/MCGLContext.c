@@ -18,13 +18,13 @@ oninit(MCGLContext)
     }
 }
 
-method(MCGLContext, void, bye, voida)
+fun(MCGLContext, void, bye, voida)
 {
     release(obj->shader);
     obj->shader = null;
 }
 
-method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
+fun(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
 {
     if (tex) {
         unsigned texunit = 0;
@@ -42,7 +42,7 @@ method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
     }
 }
 
-method(MCGLContext, void, loadMaterial, MCMaterial* mtl)
+fun(MCGLContext, void, loadMaterial, MCMaterial* mtl)
 {
     //set up once part
     if (mtl->dataChanged == true) {
@@ -78,9 +78,9 @@ method(MCGLContext, void, loadMaterial, MCMaterial* mtl)
 onload(MCGLContext)
 {
     if (load(MCObject)) {
-        binding(MCGLContext, void, bye, voida);
-        binding(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
-        binding(MCGLContext, void, loadMaterial, MCMaterial* mtl);
+        bid(MCGLContext, void, bye, voida);
+        bid(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
+        bid(MCGLContext, void, loadMaterial, MCMaterial* mtl);
         return cla;
     }else{
         return null;
@@ -88,12 +88,12 @@ onload(MCGLContext)
 }
 
 //Global
-utility(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature)
+util(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature)
 {
     return (MCBool)glIsEnabled(feature);
 }
 
-utility(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff)
+util(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff)
 {
     MCBool isOn = (MCBool)glIsEnabled(feature);
     if (onOrOff) {
@@ -103,56 +103,56 @@ utility(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff)
     }
 }
 
-utility(MCGLContext, void, flushCommandAsync, voida)
+util(MCGLContext, void, flushCommandAsync, voida)
 {
     glFlush();
 }
 
-utility(MCGLContext, void, flushCommandBlock, voida)
+util(MCGLContext, void, flushCommandBlock, voida)
 {
     glFinish();
 }
 
-utility(MCGLContext, void, clearScreen, voida)
+util(MCGLContext, void, clearScreen, voida)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-utility(MCGLContext, void, clearScreenWithColor, MCColorf color)
+util(MCGLContext, void, clearScreenWithColor, MCColorf color)
 {
     glClearColor(color.R.f, color.G.f, color.B.f, color.A.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-utility(MCGLContext, void, clearDepthBuffer, voida)
+util(MCGLContext, void, clearDepthBuffer, voida)
 {
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-utility(MCGLContext, void, clearStencilBuffer, voida)
+util(MCGLContext, void, clearStencilBuffer, voida)
 {
     glClear(GL_STENCIL_BUFFER_BIT);
 }
 
-utility(MCGLContext, void, setClearScreenColor, MCColorf color)
+util(MCGLContext, void, setClearScreenColor, MCColorf color)
 {
     glClearColor(color.R.f, color.G.f, color.B.f, color.A.f);
 }
 
-utility(MCGLContext, void, setPointSize, double pointsize)
+util(MCGLContext, void, setPointSize, double pointsize)
 {
     //glPointSize is replaced by the gl_PointSize variable in the vertex shader.
     //glPointSize((GLfloat)pointsize);
 }
 
-utility(MCGLContext, void, setLineWidth, double linewidth)
+util(MCGLContext, void, setLineWidth, double linewidth)
 {
     glLineWidth((GLfloat)linewidth);
 }
 
-utility(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW)
+util(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW)
 {
     if (isCCW) {
         glFrontFace(GL_CCW);
@@ -161,19 +161,19 @@ utility(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW)
     }
 }
 
-utility(MCGLContext, void, cullFace, MCGLFace face)
+util(MCGLContext, void, cullFace, MCGLFace face)
 {
     glCullFace(face);
 }
 
-utility(MCGLContext, void, cullBackFace, voida)
+util(MCGLContext, void, cullBackFace, voida)
 {
     MCGLContext_cullFace(MCGLBack);
 }
 
 //Texture
 static MCUInt texUnitNum = 1;
-utility(MCGLContext, MCUInt, getIdleTextureUnit, voida)
+util(MCGLContext, MCUInt, getIdleTextureUnit, voida)
 {
     if (texUnitNum < MCGLContext_getMaxTextureUnits(0)) {
         texUnitNum++;
@@ -183,37 +183,37 @@ utility(MCGLContext, MCUInt, getIdleTextureUnit, voida)
     return texUnitNum;
 }
 
-utility(MCGLContext, MCUInt, getMaxTextureUnits, voida)
+util(MCGLContext, MCUInt, getMaxTextureUnits, voida)
 {
     return (MCUInt)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
 }
 
-utility(MCGLContext, void, generateTextureId, MCUInt* tid)
+util(MCGLContext, void, generateTextureId, MCUInt* tid)
 {
     glGenTextures(1, tid);
 }
 
-utility(MCGLContext, void, activeTextureUnit, MCUInt index)
+util(MCGLContext, void, activeTextureUnit, MCUInt index)
 {
     glActiveTexture(GL_TEXTURE0 + index);
 }
 
-utility(MCGLContext, void, bindCubeTexture, MCUInt tid)
+util(MCGLContext, void, bindCubeTexture, MCUInt tid)
 {
     glBindTexture(GL_TEXTURE_CUBE_MAP, tid);
 }
 
-utility(MCGLContext, void, bind2DTexture, MCUInt tid)
+util(MCGLContext, void, bind2DTexture, MCUInt tid)
 {
     glBindTexture(GL_TEXTURE_2D, tid);
 }
 
-utility(MCGLContext, void, unbind2DTextures, voida)
+util(MCGLContext, void, unbind2DTextures, voida)
 {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-utility(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
+util(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
 {
     if (tex->data && tex->data->raw) {
         if (tex->data->channels == 4) {
@@ -228,7 +228,7 @@ utility(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
 }
 
 //GL_TEXTURE_2D
-utility(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype)
+util(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype)
 {
     if (tex->displayMode == MCTextureRepeat) {
         glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -242,7 +242,7 @@ utility(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype)
     glTexParameteri(textype, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-utility(MCGLContext, void, enableTransparency, MCBool enable)
+util(MCGLContext, void, enableTransparency, MCBool enable)
 {
     if (enable) {
         glEnable(GL_BLEND);
@@ -253,7 +253,7 @@ utility(MCGLContext, void, enableTransparency, MCBool enable)
     }
 }
 
-utility(MCGLContext, void, enablePolygonOffset, MCBool enable)
+util(MCGLContext, void, enablePolygonOffset, MCBool enable)
 {
     if (enable) {
         glEnable(GL_POLYGON_OFFSET_FILL);
@@ -265,7 +265,7 @@ utility(MCGLContext, void, enablePolygonOffset, MCBool enable)
 }
 
 //Frame Rate (FPS)
-utility(MCGLContext, int, tickFPS, MCClock* clock)
+util(MCGLContext, int, tickFPS, MCClock* clock)
 {
     static unsigned fcount = 0;
     static clock_t elapse = 0;
@@ -288,7 +288,7 @@ utility(MCGLContext, int, tickFPS, MCClock* clock)
 }
 
 //Shader
-utility(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version)
+util(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version)
 {
     if (!source) {
         return false;
@@ -322,7 +322,7 @@ utility(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const G
     return true;
 }
 
-utility(MCGLContext, int, linkProgram, GLuint prog)
+util(MCGLContext, int, linkProgram, GLuint prog)
 {
     GLint status;
     glLinkProgram(prog);
@@ -344,7 +344,7 @@ utility(MCGLContext, int, linkProgram, GLuint prog)
     return 1;
 }
 
-utility(MCGLContext, int, validateProgram, GLuint prog)
+util(MCGLContext, int, validateProgram, GLuint prog)
 {
     GLint logLength, status;
     
@@ -365,13 +365,13 @@ utility(MCGLContext, int, validateProgram, GLuint prog)
     return 1;
 }
 
-utility(MCGLContext, void, setViewport, int x, int y, int width, int height)
+util(MCGLContext, void, setViewport, int x, int y, int width, int height)
 {
     glEnable(GL_DEPTH_TEST);//this is for Google cardboard
     glViewport(x, y, width, height);
 }
 
-utility(MCGLContext, void, setScissor, int x, int y, int width, int height)
+util(MCGLContext, void, setScissor, int x, int y, int width, int height)
 {
     glEnable(GL_SCISSOR_TEST);
     glScissor(x, y, width, height);

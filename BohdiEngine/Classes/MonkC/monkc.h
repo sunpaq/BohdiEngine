@@ -86,7 +86,7 @@ static inline unsigned monkc_version() {return __MCRuntimeVer__;}
 #define MCGlobalKey static const char*
 
 /**
- * Limitations of Monk-C method()/function() parameters
+ * Limitations of Monk-C fun()/ifun() parameters
  *
  * 1. Limitation of C variable arguments function:
  *
@@ -102,7 +102,7 @@ static inline unsigned monkc_version() {return __MCRuntimeVer__;}
  *
  * we only use 8 cpu registers to pass parameters
  * first 2 are fixed into message.address and message.object
- * user can define max 6 parameters in a method()
+ * user can define max 6 parameters in a fun()
  *
  * if you need to pass more than 6 parameters 
  * please design a structure/object wrap them and pass the pointer in
@@ -408,13 +408,13 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 #define superbye(cls)                         cls##_bye(&obj->Super, 0)
 
 //method binding
-#define mixing(type, met, ...)                _binding(cla, S(met), (MCFuncPtr)met)
-#define binding(cls, type, met, ...)  		  _binding(cla, S(met), (MCFuncPtr)A_B(cls, met))
-#define utility(cls, type, name, ...) 	      type cls##_##name(__VA_ARGS__)
-#define method(cls, type, name, ...)          type cls##_##name(cls* volatile obj, __VA_ARGS__)
-#define function(type, name, ...)             static type name(void* volatile any, __VA_ARGS__)
-//#define method(cls, type, name, ...) 	      type cls##_##name(MCFuncPtr volatile address, cls* volatile obj, __VA_ARGS__)
-//#define function(type, name, ...)             static type name(MCFuncPtr volatile address, void* volatile any, __VA_ARGS__)
+#define mix(type, met, ...)                   _bid(cla, S(met), (MCFuncPtr)met)
+#define bid(cls, type, met, ...)  		      _bid(cla, S(met), (MCFuncPtr)A_B(cls, met))
+#define util(cls, type, name, ...) 	          type cls##_##name(__VA_ARGS__)
+#define fun(cls, type, name, ...)             type cls##_##name(cls* volatile obj, __VA_ARGS__)
+#define ifun(type, name, ...)                 static type name(void* volatile any, __VA_ARGS__)
+//#define fun(cls, type, name, ...) 	      type cls##_##name(MCFuncPtr volatile address, cls* volatile obj, __VA_ARGS__)
+//#define ifun(type, name, ...)             static type name(MCFuncPtr volatile address, void* volatile any, __VA_ARGS__)
 
 //property
 #define computing(type, name)                 type (*name)(void*)
@@ -445,7 +445,7 @@ void trylock_global_classtable(void);
 void unlock_global_classtable(void);
 
 //binding method api
-MCHashTableIndex _binding(mc_class* const aclass, const char* methodname, MCFuncPtr value);
+MCHashTableIndex _bid(mc_class* const aclass, const char* methodname, MCFuncPtr value);
 
 //class load
 mc_class* _load(const char* name, MCSizeT objsize, MCLoaderPointer loader);
@@ -635,10 +635,10 @@ static inline void      MCObject_printDebugInfo(MCObject* const obj, mc_class* c
 }
 static inline void      MCObject_bye(MCObject* const obj, voida) {}
 static inline mc_class* MCObject_load(mc_class* const cla) {
-    _binding(cla, "responseChainConnect", (MCFuncPtr)MCObject_responseChainConnect);
-    _binding(cla, "responseChainDisconnect", (MCFuncPtr)MCObject_responseChainDisconnect);
-    _binding(cla, "printDebugInfo", (MCFuncPtr)MCObject_printDebugInfo);
-    _binding(cla, "bye", (MCFuncPtr)MCObject_bye);
+    _bid(cla, "responseChainConnect", (MCFuncPtr)MCObject_responseChainConnect);
+    _bid(cla, "responseChainDisconnect", (MCFuncPtr)MCObject_responseChainDisconnect);
+    _bid(cla, "printDebugInfo", (MCFuncPtr)MCObject_printDebugInfo);
+    _bid(cla, "bye", (MCFuncPtr)MCObject_bye);
     return cla;
 }
 

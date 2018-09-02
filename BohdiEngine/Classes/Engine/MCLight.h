@@ -22,6 +22,6 @@ class(MCLight, MC3DNode,
       MCVector3 lightPosition;
 );
 
-method(MCLight, void, printDebugInfo, voida);
+fun(MCLight, void, printDebugInfo, voida);
 
 #endif /* MCLight_h */

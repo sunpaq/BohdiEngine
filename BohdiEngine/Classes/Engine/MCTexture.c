@@ -24,7 +24,7 @@ oninit(MCTexture)
     }
 }
 
-function(unsigned char*, loadImageRawdata, const char* path)
+ifun(unsigned char*, loadImageRawdata, const char* path)
 {
     as(MCTexture);
     var(data) = BE2DTextureData_newWithPathname(path);
@@ -39,7 +39,7 @@ function(unsigned char*, loadImageRawdata, const char* path)
     }
 }
 
-function(void, freeRawdata, voida)
+ifun(void, freeRawdata, voida)
 {
     as(MCTexture);
     if (obj->data) {
@@ -48,13 +48,13 @@ function(void, freeRawdata, voida)
     }
 }
 
-method(MCTexture, void, bye, voida)
+fun(MCTexture, void, bye, voida)
 {
     superbye(MCObject);
     freeRawdata(obj, 0);
 }
 
-method(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode)
+fun(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode)
 {
     char pathbuff[PATH_MAX] = {0};
     if (MCFileGetPath(name, pathbuff)) {
@@ -65,12 +65,12 @@ method(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureD
     return obj;
 }
 
-method(MCTexture, MCTexture*, initWithFileName, const char* name)
+fun(MCTexture, MCTexture*, initWithFileName, const char* name)
 {
     return MCTexture_initWithFileNameMode(obj, name, MCTextureRepeat);
 }
 
-method(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex)
+fun(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex)
 {
     var(data) = tex;
     if (var(data)) {
@@ -84,17 +84,17 @@ method(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex)
 onload(MCTexture)
 {
     if (load(MCObject)) {
-        mixing(unsigned char*, loadImageRawdata, const char* name);
-        //mixing(void, rawdataToTexbuffer, voida);
-        //mixing(void, setupTexParameter, GLenum textype);
-        mixing(void, freeRawdata, voida);
+        mix(unsigned char*, loadImageRawdata, const char* name);
+        //mix(void, rawdataToTexbuffer, voida);
+        //mix(void, setupTexParameter, GLenum textype);
+        mix(void, freeRawdata, voida);
         
-        binding(MCTexture, void, bye, voida);
-        binding(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode);
-        binding(MCTexture, MCTexture*, initWithFileName, const char* name);
-        binding(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex);
-        //binding(MCTexture, void, loadToGLBuffer, voida);
-        //binding(MCTexture, void, active, GLuint pid, const char* uniformName);
+        bid(MCTexture, void, bye, voida);
+        bid(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode);
+        bid(MCTexture, MCTexture*, initWithFileName, const char* name);
+        bid(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex);
+        //bid(MCTexture, void, loadToGLBuffer, voida);
+        //bid(MCTexture, void, active, GLuint pid, const char* uniformName);
 
         return cla;
     }else{

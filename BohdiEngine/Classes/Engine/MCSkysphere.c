@@ -41,7 +41,7 @@ oninit(MCSkysphere)
     }
 }
 
-method(MCSkysphere, void, bye, voida)
+fun(MCSkysphere, void, bye, voida)
 {
     
     free(var(vertices));
@@ -59,14 +59,14 @@ method(MCSkysphere, void, bye, voida)
     MC3DNode_bye(sobj, 0);
 }
 
-method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
+fun(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex)
 {
     retain(tex);
     var(tex) = tex;
     return obj;
 }
 
-method(MCSkysphere, MCSkysphere*, initWithFileName, const char* name)
+fun(MCSkysphere, MCSkysphere*, initWithFileName, const char* name)
 {
     BE2DTextureData* data = BE2DTextureData_newWithFilename(name);
     if (data) {
@@ -77,12 +77,12 @@ method(MCSkysphere, MCSkysphere*, initWithFileName, const char* name)
     return null;
 }
 
-method(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida)
+fun(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida)
 {
     return MCSkysphere_initWithFileName(obj, "skysphtex.jpg");
 }
 
-method(MCSkysphere, void, getViewMatrix, MCMatrix4* mat4)
+fun(MCSkysphere, void, getViewMatrix, MCMatrix4* mat4)
 {
     MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, 0,
                                       0, 0,-1,
@@ -91,7 +91,7 @@ method(MCSkysphere, void, getViewMatrix, MCMatrix4* mat4)
     *mat4 = MCMatrix4Multiply(m, imat4);
 }
 
-method(MCSkysphere, void, getProjectionMatrix, MCMatrix4* mat4)
+fun(MCSkysphere, void, getProjectionMatrix, MCMatrix4* mat4)
 {
     *mat4 = MCMatrix4MakePerspective(obj->sphCameraAngle,
                                     obj->sphCameraRatio,
@@ -99,17 +99,17 @@ method(MCSkysphere, void, getProjectionMatrix, MCMatrix4* mat4)
                                     200.0);
 }
 
-method(MCSkysphere, void, setRotationMat3, float mat3[9])
+fun(MCSkysphere, void, setRotationMat3, float mat3[9])
 {
     MC3DNode_rotateMat3(sobj, mat3, false);
 }
 
-method(MCSkysphere, void, setRotationMat4, float mat4[16])
+fun(MCSkysphere, void, setRotationMat4, float mat4[16])
 {
     MC3DNode_rotateMat4(sobj, mat4, false);
 }
 
-method(MCSkysphere, void, transformSelfByEularAngle, double R, double fai, double tht)
+fun(MCSkysphere, void, transformSelfByEularAngle, double R, double fai, double tht)
 {
     //MCMatrix4 lookat = MCMatrix4MakeLookAt(0, 0, 0, 0, 0,-1, 0, 1, 0);
     //double R = var(R_value) * var(R_percent);
@@ -119,14 +119,14 @@ method(MCSkysphere, void, transformSelfByEularAngle, double R, double fai, doubl
 onload(MCSkysphere)
 {
     if (load(MC3DNode)) {
-        binding(MCSkysphere, void, bye, voida);
-        binding(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex);
-        binding(MCSkysphere, MCSkysphere*, initWithFileName, const char* name);
-        binding(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida);
-        binding(MCSkysphere, void, setRotationMat3, float mat3[9]);
-        binding(MCSkysphere, void, setRotationMat4, float mat4[16]);
-        binding(MCSkysphere, void, getViewMatrix, MCMatrix4* mat4);
-        binding(MCSkysphere, void, getProjectionMatrix, MCMatrix4* mat4);
+        bid(MCSkysphere, void, bye, voida);
+        bid(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex);
+        bid(MCSkysphere, MCSkysphere*, initWithFileName, const char* name);
+        bid(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida);
+        bid(MCSkysphere, void, setRotationMat3, float mat3[9]);
+        bid(MCSkysphere, void, setRotationMat4, float mat4[16]);
+        bid(MCSkysphere, void, getViewMatrix, MCMatrix4* mat4);
+        bid(MCSkysphere, void, getProjectionMatrix, MCMatrix4* mat4);
         return cla;
     }else{
         return null;

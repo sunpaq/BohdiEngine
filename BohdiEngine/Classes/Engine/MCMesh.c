@@ -29,14 +29,14 @@ oninit(MCMesh)
     }
 }
 
-method(MCMesh, void, bye, voida)
+fun(MCMesh, void, bye, voida)
 {
     if (obj->vertexDataNeedRelease && obj->vertexDataPtr) {
         free(obj->vertexDataPtr);
     }
 }
 
-method(MCMesh, void, allocVertexBuffer, int32_t vertexCount)
+fun(MCMesh, void, allocVertexBuffer, int32_t vertexCount)
 {
     obj->vertexCount = vertexCount ;
     obj->vertexDataSize = obj->vertexCount * sizeof(MCVertexData);
@@ -48,7 +48,7 @@ method(MCMesh, void, allocVertexBuffer, int32_t vertexCount)
     }
 }
 
-method(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount)
+fun(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount)
 {
     //alloc vertex buffer
     MCMesh_allocVertexBuffer(obj, vertexCount);
@@ -56,7 +56,7 @@ method(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount)
     return obj;
 }
 
-method(MCMesh, void, setVertex, uint32_t index, MCVertexData* data)
+fun(MCMesh, void, setVertex, uint32_t index, MCVertexData* data)
 {
     MCVertexData* array = (MCVertexData*)obj->vertexDataPtr;
     array[index].x = data->x;
@@ -81,7 +81,7 @@ method(MCMesh, void, setVertex, uint32_t index, MCVertexData* data)
     array[index].v = data->v;
 }
 
-method(MCMesh, void, normalizeNormals, voida)
+fun(MCMesh, void, normalizeNormals, voida)
 {
     if (!obj->calculatedNormal) {
         return;
@@ -98,10 +98,10 @@ method(MCMesh, void, normalizeNormals, voida)
 onload(MCMesh)
 {
     if (load(MCItem)) {
-        binding(MCMesh, void, bye, voida);
-        binding(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount);
-        binding(MCMesh, void, setVertex, uint32_t offset, MCVertexData* data);
-        binding(MCMesh, void, normalizeNormals, voida);
+        bid(MCMesh, void, bye, voida);
+        bid(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount);
+        bid(MCMesh, void, setVertex, uint32_t offset, MCVertexData* data);
+        bid(MCMesh, void, normalizeNormals, voida);
         return cla;
     }else{
         return null;

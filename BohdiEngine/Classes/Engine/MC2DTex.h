@@ -14,6 +14,6 @@
 
 class(MC2DTex, MCTexture);
 
-method(MC2DTex, MC2DTex*, initWithFileName, const char* name);
+fun(MC2DTex, MC2DTex*, initWithFileName, const char* name);
 
 #endif /* MC2DTex_h */

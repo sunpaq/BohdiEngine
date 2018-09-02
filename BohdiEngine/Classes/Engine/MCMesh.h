@@ -25,9 +25,9 @@ class(MCMesh, MCItem,
       MC3DFrame  Frame;
 );
 
-method(MCMesh, void, bye, voida);
-method(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount);
-method(MCMesh, void, setVertex, uint32_t index, MCVertexData* data);
-method(MCMesh, void, normalizeNormals, voida);
+fun(MCMesh, void, bye, voida);
+fun(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount);
+fun(MCMesh, void, setVertex, uint32_t index, MCVertexData* data);
+fun(MCMesh, void, normalizeNormals, voida);
 
 #endif /* MCMesh_h */

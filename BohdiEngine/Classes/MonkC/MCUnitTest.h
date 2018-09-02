@@ -20,9 +20,9 @@ void fail(char* message);
 	
 class(MCUnitTestResult, MCObject);
 
-method(MCUnitTestResult, void, bye, voida);
-method(MCUnitTestResult, void, addSuccessInfo, char* succinfo);
-method(MCUnitTestResult, void, addFailInfo, char* failinfo);
+fun(MCUnitTestResult, void, bye, voida);
+fun(MCUnitTestResult, void, addSuccessInfo, char* succinfo);
+fun(MCUnitTestResult, void, addFailInfo, char* failinfo);
 #endif
 
 /* Test Case */
@@ -35,12 +35,12 @@ class(MCUnitTestCase, MCObject,
 	struct MCUnitTestCaseStruct* next_case;
 );
 
-method(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef);
-method(MCUnitTestCase, void, bye, voida);
-method(MCUnitTestCase, void, setUp, voida);
-method(MCUnitTestCase, void, tearDown, voida);
-method(MCUnitTestCase, void, runTests, voida);
-method(MCUnitTestCase, void, runATestMethod, char* methodName);
+fun(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef);
+fun(MCUnitTestCase, void, bye, voida);
+fun(MCUnitTestCase, void, setUp, voida);
+fun(MCUnitTestCase, void, tearDown, voida);
+fun(MCUnitTestCase, void, runTests, voida);
+fun(MCUnitTestCase, void, runATestMethod, char* methodName);
 #endif
 
 /* Test Suite */
@@ -55,9 +55,9 @@ class(MCUnitTestSuite, MCObject,
 	struct MCUnitTestSuiteStruct* next_suite;
 );
 
-method(MCUnitTestSuite, void, bye, voida);
-method(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase);
-method(MCUnitTestSuite, void, runTestCases, voida);
+fun(MCUnitTestSuite, void, bye, voida);
+fun(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase);
+fun(MCUnitTestSuite, void, runTestCases, voida);
 #endif
 
 /* Test Runner */
@@ -71,8 +71,8 @@ class(MCUnitTestRunner, MCObject,
 	int test_suite_count;
 );
 
-method(MCUnitTestRunner, void, bye, voida);
-method(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite);
-method(MCUnitTestRunner, void, runTestSuites, voida);
+fun(MCUnitTestRunner, void, bye, voida);
+fun(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite);
+fun(MCUnitTestRunner, void, runTestSuites, voida);
 
 #endif

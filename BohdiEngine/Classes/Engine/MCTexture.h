@@ -26,11 +26,11 @@ class(MCTexture, MCObject,
       MCBool loadedToGL;
 );
 
-method(MCTexture, void, bye, voida);
-method(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode);
-method(MCTexture, MCTexture*, initWithFileName, const char* name);
-method(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex);
-//method(MCTexture, void, loadToGLBuffer, GLuint pid, const char* uniformName);
-//method(MCTexture, void, active, GLuint pid, const char* uniformName);
+fun(MCTexture, void, bye, voida);
+fun(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode);
+fun(MCTexture, MCTexture*, initWithFileName, const char* name);
+fun(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex);
+//fun(MCTexture, void, loadToGLBuffer, GLuint pid, const char* uniformName);
+//fun(MCTexture, void, active, GLuint pid, const char* uniformName);
 
 #endif /* MCTexture_h */

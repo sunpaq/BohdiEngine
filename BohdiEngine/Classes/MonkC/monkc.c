@@ -233,7 +233,7 @@ void unlock_global_classtable()
  for method binding
  */
 
-MCHashTableIndex _binding(mc_class* const aclass, const char* methodname, MCFuncPtr value)
+MCHashTableIndex _bid(mc_class* const aclass, const char* methodname, MCFuncPtr value)
 {
     if(aclass==null){
         error_log("_binding_h(mc_class* aclass) aclass is nill return 0\n");
@@ -938,12 +938,12 @@ MCObject* MCObject_init(MCObject* const obj)
  
  infos about ARM 32 platform (armv6 armv7):
  
- stack-align:     method(8byte) non-method(4byte)
+ stack-align:     fun(8byte) non-fun(4byte)
  frame-pointer:  fp is r11 in ARM mode / r7 in thumb mode
  keep-fp:        -mapcs-frame will keep the fp not to be optimized out
  
  iOS exception:
- stack-align:     method(4byte)
+ stack-align:     fun(4byte)
  
  infos about ARM 64 platform (arm64):
  

@@ -33,14 +33,14 @@ oninit(MCOrbit)
     }
 }
 
-method(MCOrbit, void, bye, voida)
+fun(MCOrbit, void, bye, voida)
 {
     //MCGLDelVertexArray(var(vertexArrayId));
     //MCGLDelVertexBuffer(var(vertexBufferId));
 }
 
 //override
-method(MCOrbit, void, draw, voida)
+fun(MCOrbit, void, draw, voida)
 {
     //MCGLDrawVertexArray(var(vertexBufferId), MCLines, 0, 360*3);
     
@@ -52,8 +52,8 @@ method(MCOrbit, void, draw, voida)
 onload(MCOrbit)
 {
     if (load(MC3DNode)) {
-        binding(MCOrbit, void, bye);
-        binding(MCOrbit, void, draw);
+        bid(MCOrbit, void, bye);
+        bid(MCOrbit, void, draw);
         return cla;
     }else{
         return null;

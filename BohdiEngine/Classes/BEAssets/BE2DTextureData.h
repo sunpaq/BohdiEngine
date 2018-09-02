@@ -32,10 +32,10 @@ class(BE2DTextureData, MCObject,
       int channels;
 );
 
-utility(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path, unsigned type);
-utility(BE2DTextureData, BE2DTextureData*, newWithPathname, const char* path);
-utility(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file);
+util(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path, unsigned type);
+util(BE2DTextureData, BE2DTextureData*, newWithPathname, const char* path);
+util(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file);
 
-method(BE2DTextureData, void, bye, voida);
+fun(BE2DTextureData, void, bye, voida);
 
 #endif /* BE2DTextureData_h */

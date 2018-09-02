@@ -22,15 +22,15 @@ class(MCSkybox, MC3DNode,
       BECubeTextureData* cubedata;
 );
 
-method(MCSkybox, void, bye, voida);
-method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
-method(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[]);
-method(MCSkybox, MCSkybox*, initWithDefaultFiles, voida);
+fun(MCSkybox, void, bye, voida);
+fun(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
+fun(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[]);
+fun(MCSkybox, MCSkybox*, initWithDefaultFiles, voida);
 //override
-method(MCSkybox, void, setRotationMat3, float mat3[9]);
-method(MCSkybox, void, setRotationMat4, float mat4[16]);
+fun(MCSkybox, void, setRotationMat3, float mat3[9]);
+fun(MCSkybox, void, setRotationMat4, float mat4[16]);
 //property
-method(MCSkybox, void, getViewMatrix, MCMatrix4* mat4);
-method(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4);
+fun(MCSkybox, void, getViewMatrix, MCMatrix4* mat4);
+fun(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4);
 
 #endif /* MCSkybox_h */

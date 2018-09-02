@@ -38,9 +38,9 @@ class(MCGLRenderer, MCObject,
     MCGLContext* context;
 );
 //life cycle
-method(MCGLRenderer, void, bye, voida);
-method(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
-method(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
-method(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
+fun(MCGLRenderer, void, bye, voida);
+fun(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
+fun(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
+fun(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
 
 #endif /* MCGLRenderer_h */

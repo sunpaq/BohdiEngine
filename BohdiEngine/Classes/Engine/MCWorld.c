@@ -18,12 +18,12 @@ oninit(MCWorld)
     }
 }
 
-method(MCWorld, void, bye, voida)
+fun(MCWorld, void, bye, voida)
 {
     //clean up
 }
 
-method(MCWorld, MCWorld*, initWith, voida)
+fun(MCWorld, MCWorld*, initWith, voida)
 {
     return obj;
 }
@@ -31,8 +31,8 @@ method(MCWorld, MCWorld*, initWith, voida)
 onload(MCWorld)
 {
     if (load(MCObject)) {
-        binding(MCWorld, void, bye, voida);
-        binding(MCWorld, MCWorld*, initWith, voida);
+        bid(MCWorld, void, bye, voida);
+        bid(MCWorld, MCWorld*, initWith, voida);
         return cla;
     }else{
         return null;

@@ -132,14 +132,14 @@ oninit(MCHeap)
     }
 }
 
-method(MCHeap, void, bye, voida)
+fun(MCHeap, void, bye, voida)
 {
     if (obj->values) {
         free(obj->values);
     }
 }
 
-method(MCHeap, MCHeap*, initWithCopy, MCHeap* ref)
+fun(MCHeap, MCHeap*, initWithCopy, MCHeap* ref)
 {
     MCHeap_initWithMaxcount(obj, ref->maxcount);
     memcpy(obj->values, ref->values, sizeof(MCGeneric) * ref->maxcount);
@@ -147,7 +147,7 @@ method(MCHeap, MCHeap*, initWithCopy, MCHeap* ref)
     return obj;
 }
 
-method(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount)
+fun(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount)
 {
     //index 0 is reserved
     obj->values = (MCGeneric*)malloc(sizeof(MCGeneric) * maxcount);
@@ -156,7 +156,7 @@ method(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount)
     return obj;
 }
 
-method(MCHeap, size_t, insertValue, MCGeneric newval)
+fun(MCHeap, size_t, insertValue, MCGeneric newval)
 {
     MCHeap* heap = obj;
     heap->values[++heap->count] = newval;
@@ -164,7 +164,7 @@ method(MCHeap, size_t, insertValue, MCGeneric newval)
     return 0;
 }
 
-method(MCHeap, MCArray*, copySortAscend, voida)
+fun(MCHeap, MCArray*, copySortAscend, voida)
 {
     MCHeap* hcopy = MCHeap_initWithCopy(new(MCHeap), obj);
     MCArray* array = MCArray_initWithMaxCount(new(MCArray), obj->maxcount);
@@ -175,7 +175,7 @@ method(MCHeap, MCArray*, copySortAscend, voida)
     return array;
 }
 
-method(MCHeap, void, printAll, voida)
+fun(MCHeap, void, printAll, voida)
 {
     for (int i=1; i<obj->count; i++) {
         printf("%.2f ", obj->values[i].mcfloat);
@@ -188,12 +188,12 @@ method(MCHeap, void, printAll, voida)
 onload(MCHeap)
 {
     if (load(MCObject)) {
-        binding(MCHeap, void, bye, voida);
-        binding(MCHeap, MCHeap*, initWithCopy, MCHeap* ref);
-        binding(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount);
-        binding(MCHeap, size_t, insertValue, int newval);
-        binding(MCHeap, MCArray*, copySortAscend, voida);
-        binding(MCHeap, void, printAll, voida);
+        bid(MCHeap, void, bye, voida);
+        bid(MCHeap, MCHeap*, initWithCopy, MCHeap* ref);
+        bid(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount);
+        bid(MCHeap, size_t, insertValue, int newval);
+        bid(MCHeap, MCArray*, copySortAscend, voida);
+        bid(MCHeap, void, printAll, voida);
         return cla;
     } else {
         return null;

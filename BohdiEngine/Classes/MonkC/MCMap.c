@@ -27,7 +27,7 @@ oninit(MCMap)
     }
 }
 
-method(MCMap, void, bye, voida)
+fun(MCMap, void, bye, voida)
 {
     MCHashTableSize count = cpt(itemsCount);
     for (MCHashTableIndex i=0; i<count; i++) {
@@ -42,7 +42,7 @@ method(MCMap, void, bye, voida)
     }
 }
 
-method(MCMap, void, setValueForKey, MCGeneric value, const char* key)
+fun(MCMap, void, setValueForKey, MCGeneric value, const char* key)
 {
     mc_hashitem* item = new_item(key, value, hash(key));
     if (item) {
@@ -50,7 +50,7 @@ method(MCMap, void, setValueForKey, MCGeneric value, const char* key)
     }
 }
 
-method(MCMap, void, getValueForKey, MCGeneric* result, const char* key)
+fun(MCMap, void, getValueForKey, MCGeneric* result, const char* key)
 {
     mc_hashitem* item = get_item_bykey(obj->table, key);
     if (item) {
@@ -60,7 +60,7 @@ method(MCMap, void, getValueForKey, MCGeneric* result, const char* key)
     (*result).mcvoidptr = null;
 }
 
-method(MCMap, void, getValueByIndex, MCGeneric* result, MCHashTableIndex index)
+fun(MCMap, void, getValueByIndex, MCGeneric* result, MCHashTableIndex index)
 {
     MCHashTableSize count = cpt(itemsCount);
     if (index < count) {
@@ -75,10 +75,10 @@ method(MCMap, void, getValueByIndex, MCGeneric* result, MCHashTableIndex index)
 onload(MCMap)
 {
     if (load(MCObject)) {
-        binding(MCMap, void, bye, voida);
-        binding(MCMap, void, setValueForKey, MCGeneric value, const char* key);
-        binding(MCMap, void, getValueForKey, MCGeneric* result, const char* key);
-        binding(MCMap, void, getValueByIndex, MCGeneric* result, MCHashTableIndex index);
+        bid(MCMap, void, bye, voida);
+        bid(MCMap, void, setValueForKey, MCGeneric value, const char* key);
+        bid(MCMap, void, getValueForKey, MCGeneric* result, const char* key);
+        bid(MCMap, void, getValueByIndex, MCGeneric* result, MCHashTableIndex index);
         return cla;
     } else {
         return null;

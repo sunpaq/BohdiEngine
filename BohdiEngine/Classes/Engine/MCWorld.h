@@ -13,8 +13,8 @@
 
 class(MCWorld, MCObject);
 
-method(MCWorld, void, bye, voida);
-method(MCWorld, MCWorld*, initWith, voida);
+fun(MCWorld, void, bye, voida);
+fun(MCWorld, MCWorld*, initWith, voida);
 
 
 #endif /* MCWorld_h */

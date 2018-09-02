@@ -45,11 +45,11 @@ class(MCGraph, MCObject,
       MCGraphVertex* vertexSet;
       MCGraphEdge*   edgeSet);
 
-method(MCGraph, void, bye, voida);
-method(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y);
-method(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x);
-method(MCGraph, MCGraph*, addEdge, MCGraphEdge e);
-method(MCGraph, MCGraph*, removeEdge, MCGraphEdge e);
+fun(MCGraph, void, bye, voida);
+fun(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y);
+fun(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x);
+fun(MCGraph, MCGraph*, addEdge, MCGraphEdge e);
+fun(MCGraph, MCGraph*, removeEdge, MCGraphEdge e);
 
 
 

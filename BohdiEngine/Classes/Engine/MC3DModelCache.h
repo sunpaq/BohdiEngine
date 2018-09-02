@@ -15,9 +15,9 @@
 class(MC3DModelCache, MCObject,
       MCMap* map);
 
-utility(MC3DModelCache, MC3DModelCache*, shared, voida);
+util(MC3DModelCache, MC3DModelCache*, shared, voida);
 
-method(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name);
-method(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name);
+fun(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name);
+fun(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name);
 
 #endif /* MC3DModelCache_h */

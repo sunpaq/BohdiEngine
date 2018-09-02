@@ -15,17 +15,17 @@ class(MCThread, MCObject,
     void* functionArgument;
 );
 
-method(MCThread, void, bye, voida);
-method(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg);
-method(MCThread, MCThread*, initWithFPointer, void* fp);
-method(MCThread, int, detach, voida);
-method(MCThread, int, start, voida);
-method(MCThread, int, equal, MCThread* thread);
+fun(MCThread, void, bye, voida);
+fun(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg);
+fun(MCThread, MCThread*, initWithFPointer, void* fp);
+fun(MCThread, int, detach, voida);
+fun(MCThread, int, start, voida);
+fun(MCThread, int, equal, MCThread* thread);
 
-utility(MCThread, int, cancelThread, pthread_t tid);
-utility(MCThread, int, joinThread, pthread_t tid);
-utility(MCThread, void, exitWithStatus, void* status);
-utility(MCThread, pthread_t, currentThread, void);
+util(MCThread, int, cancelThread, pthread_t tid);
+util(MCThread, int, joinThread, pthread_t tid);
+util(MCThread, void, exitWithStatus, void* status);
+util(MCThread, pthread_t, currentThread, void);
 
 /*
 The pthread API:

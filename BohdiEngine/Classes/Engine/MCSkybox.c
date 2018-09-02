@@ -49,18 +49,18 @@ oninit(MCSkybox)
     }
 }
 
-method(MCSkybox, void, bye, voida)
+fun(MCSkybox, void, bye, voida)
 {
     MC3DNode_bye(sobj, 0);
 }
 
-method(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
+fun(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
 {
     obj->cubedata = cubetex;
     return obj;
 }
 
-method(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[])
+fun(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[])
 {
     BECubeTextureData* data = BECubeTextureData_newWithFaces(namelist);
     MCSkybox* skybox = MCSkybox_initWithCubeTexture(obj, data);
@@ -68,24 +68,24 @@ method(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[])
     return skybox;
 }
 
-method(MCSkybox, MCSkybox*, initWithDefaultFiles, voida)
+fun(MCSkybox, MCSkybox*, initWithDefaultFiles, voida)
 {
     const char* names[6] = {"right.jpg","left.jpg","top.jpg","bottom.jpg","back.jpg","front.jpg"};
     return MCSkybox_initWithFileNames(obj, names);
 }
 
-method(MCSkybox, void, setRotationMat3, float mat3[9])
+fun(MCSkybox, void, setRotationMat3, float mat3[9])
 {
     MC3DNode_rotateMat3(sobj, mat3, false);
 }
 
-method(MCSkybox, void, setRotationMat4, float mat4[16])
+fun(MCSkybox, void, setRotationMat4, float mat4[16])
 {
     MC3DNode_rotateMat4(sobj, mat4, false);
 }
 
 //property
-method(MCSkybox, void, getViewMatrix, MCMatrix4* mat4)
+fun(MCSkybox, void, getViewMatrix, MCMatrix4* mat4)
 {
     MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, 0,
                                       0, 0,-1,
@@ -94,7 +94,7 @@ method(MCSkybox, void, getViewMatrix, MCMatrix4* mat4)
     *mat4 = MCMatrix4Multiply(m, imat4);
 }
 
-method(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4)
+fun(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4)
 {
     *mat4 = MCMatrix4MakePerspective(obj->boxCameraAngle,
                                     obj->boxCameraRatio,
@@ -105,14 +105,14 @@ method(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4)
 onload(MCSkybox)
 {
     if (load(MC3DNode)) {
-        binding(MCSkybox, void, bye, voida);
-        binding(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
-        binding(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[]);
-        binding(MCSkybox, MCSkybox*, initWithDefaultFiles, voida);
-        binding(MCSkybox, void, setRotationMat3, float mat3[9]);
-        binding(MCSkybox, void, setRotationMat4, float mat4[16]);
-        binding(MCSkybox, void, getViewMatrix, MCMatrix4* mat4);
-        binding(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4);
+        bid(MCSkybox, void, bye, voida);
+        bid(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
+        bid(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[]);
+        bid(MCSkybox, MCSkybox*, initWithDefaultFiles, voida);
+        bid(MCSkybox, void, setRotationMat3, float mat3[9]);
+        bid(MCSkybox, void, setRotationMat4, float mat4[16]);
+        bid(MCSkybox, void, getViewMatrix, MCMatrix4* mat4);
+        bid(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4);
         return cla;
     }else{
         return null;

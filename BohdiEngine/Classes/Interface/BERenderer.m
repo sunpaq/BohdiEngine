@@ -440,8 +440,8 @@
     }
 }
 
-//mixing(void, updateScene, MC3DScene* scene);
-//mixing(void, drawScene, MC3DScene* scene);
+//mix(void, updateScene, MC3DScene* scene);
+//mix(void, drawScene, MC3DScene* scene);
 -(void) drawFrame
 {
     if (director && renderer) {

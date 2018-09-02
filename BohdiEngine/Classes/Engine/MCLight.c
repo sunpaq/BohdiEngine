@@ -26,7 +26,7 @@ oninit(MCLight)
     }
 }
 
-method(MCLight, void, printDebugInfo, voida)
+fun(MCLight, void, printDebugInfo, voida)
 {
     debug_log("MCLight: lightColor=%.2f/%.2f/%.2f lightPosition=%.2f/%.2f/%.2f\n",
               obj->lightColor.x, obj->lightColor.y, obj->lightColor.z,
@@ -36,7 +36,7 @@ method(MCLight, void, printDebugInfo, voida)
 onload(MCLight)
 {
     if (load(MC3DNode)) {
-        binding(MCLight, void, printDebugInfo, voida);
+        bid(MCLight, void, printDebugInfo, voida);
         return cla;
     }else{
         return null;

@@ -192,6 +192,8 @@ typedef struct BAMtlLibraryStruct {
     struct BAMtlLibraryStruct* next;
     BAMaterial* materialsList;
     BATexture* texturesList;
+    size_t diffuse_map_count;
+    size_t normal_map_count;
     char name[256];
 } BAMtlLibrary;
 

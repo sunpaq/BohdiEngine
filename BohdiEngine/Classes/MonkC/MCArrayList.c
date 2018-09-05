@@ -7,7 +7,7 @@
 //
 
 #include <stdio.h>
-#include "MCArrayLinkedList.h"
+#include "MCArrayList.h"
 
 MCArrayLinkedList* MCArrayLinkedListInit(MCArrayLinkedList* list, MCGeneric values[], const size_t count)
 {

@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include "MCGeometry.h"
-#include "MCArrayLinkedList.h"
+#include "MCArrayList.h"
 
 MCPolygonPrimitives MCPolygonPrimitivesDetect(MCVector3 v1, MCVector3 v2, MCVector3 v3, MCVector3 v4)
 {

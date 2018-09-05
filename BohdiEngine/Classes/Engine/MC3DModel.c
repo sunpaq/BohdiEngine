@@ -114,6 +114,16 @@ ifun(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, 
         v = buff->vertexbuff[e.vi-1];
     }
     
+    if (buff->mtllib_list) {
+        BAMtlLibrary* iter = buff->mtllib_list;
+        while (iter) {
+            if (iter->diffuse_map_count > 0) {
+                buff->shouldCalculateNormal = false;
+            }
+            iter = iter->next;
+        }
+    }
+    
     if (buff->shouldCalculateNormal) {
         n = MCNormalOfTriangle(buff->vertexbuff[e.vi], buff->vertexbuff[e.vi+1], buff->vertexbuff[e.vi+2]);
         mesh->calculatedNormal = true;

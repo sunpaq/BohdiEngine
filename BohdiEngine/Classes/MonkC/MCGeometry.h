@@ -11,7 +11,7 @@
 
 #include <math.h>
 #include "MCMath.h"
-#include "MCArrayLinkedList.h"
+#include "MCArrayList.h"
 
 //Triangle
 

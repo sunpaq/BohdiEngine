@@ -190,6 +190,9 @@ MCInline BAObjData* BAObjAlloc(BAObjMeta* meta)
         buff->meshcount   = meta->mesh_count;
 
         buff->shouldCalculateNormal = false;
+        if (meta->normal_count <= 0) {
+            buff->shouldCalculateNormal = true;
+        }
         
         buff->mtllib_list = null;
         if (buff->vertexbuff && buff->facebuff) {

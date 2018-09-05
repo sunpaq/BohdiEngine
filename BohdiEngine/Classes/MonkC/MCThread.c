@@ -15,12 +15,12 @@ oninit(MCThread)
 	return obj;
 }
 
-method(MCThread, void, bye, voida)
+fun(MCThread, void, bye, voida)
 {
     pthread_attr_destroy(&obj->attribute);
 }
 
-method(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg)
+fun(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg)
 {
     if (fp==null)
     {
@@ -32,17 +32,17 @@ method(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg)
     return obj;
 }
 
-method(MCThread, MCThread*, initWithFPointer, void* fp)
+fun(MCThread, MCThread*, initWithFPointer, void* fp)
 {
     return MCThread_initWithFPointerArgument(obj, fp, null);
 }
 
-method(MCThread, int, detach, voida)
+fun(MCThread, int, detach, voida)
 {
     return pthread_detach(obj->tid);
 }
 
-method(MCThread, int, start, voida)
+fun(MCThread, int, start, voida)
 {
     int res;
     if (obj->isRunOnce==1)
@@ -59,12 +59,12 @@ method(MCThread, int, start, voida)
     return res;
 }
 
-method(MCThread, int, equal, MCThread* thread)
+fun(MCThread, int, equal, MCThread* thread)
 {
     return pthread_equal(obj->tid, thread->tid);
 }
 
-utility(MCThread, int, cancelThread, pthread_t tid)
+util(MCThread, int, cancelThread, pthread_t tid)
 {
 #ifdef __APPLE__
 	return pthread_cancel(tid);
@@ -75,18 +75,18 @@ utility(MCThread, int, cancelThread, pthread_t tid)
 #endif
 }
 
-utility(MCThread, int, joinThread, pthread_t tid)
+util(MCThread, int, joinThread, pthread_t tid)
 {
     //did not pass an returen value pointer
     return pthread_join(tid, NULL);
 }
 
-utility(MCThread, void, exitWithStatus, void* status)
+util(MCThread, void, exitWithStatus, void* status)
 {
     pthread_exit(status);
 }
 
-utility(MCThread, pthread_t, currentThread)
+util(MCThread, pthread_t, currentThread)
 {
     return pthread_self();
 }
@@ -94,12 +94,12 @@ utility(MCThread, pthread_t, currentThread)
 onload(MCThread)
 {
     if (load(MCObject)) {
-        binding(MCThread, void, bye, voida);
-        binding(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg);
-        binding(MCThread, MCThread*, initWithFPointer, void* fp);
-        binding(MCThread, int, detach, voida);
-        binding(MCThread, int, start, voida);
-        binding(MCThread, int, equal, MCThread* thread);
+        bid(MCThread, void, bye, voida);
+        bid(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg);
+        bid(MCThread, MCThread*, initWithFPointer, void* fp);
+        bid(MCThread, int, detach, voida);
+        bid(MCThread, int, start, voida);
+        bid(MCThread, int, equal, MCThread* thread);
         return cla;
     }else{
         return null;

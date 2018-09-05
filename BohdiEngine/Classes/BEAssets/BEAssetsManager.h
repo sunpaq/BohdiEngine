@@ -9,13 +9,16 @@
 #ifndef BEAssetsManager_h
 #define BEAssetsManager_h
 
-#ifdef __ANDROID__
+#include "monkc_export.h"
+#include "BALexer.h"
+
+#if defined(__ANDROID__)
 #include <android/native_window.h>
 #include <android/asset_manager.h>
 #endif
 
 //File
-#ifdef __ANDROID__
+#if defined(__ANDROID__)
 void MCFileSetAssetManager(AAssetManager* assetManager);
 AAssetManager* MCFileGetAssetManager();
 #endif

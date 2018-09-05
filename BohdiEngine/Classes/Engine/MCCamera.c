@@ -1,5 +1,4 @@
 #include "MCCamera.h"
-#include "MCGLRenderer.h"
 
 compute(double, Radius);
 compute(MCMatrix3, normal);
@@ -42,12 +41,12 @@ oninit(MCCamera)
     }
 }
 
-method(MCCamera, void, bye, voida)
+fun(MCCamera, void, bye, voida)
 {
     MC3DNode_bye(sobj, 0);
 }
 
-method(MCCamera, void, printDebugInfo, voida)
+fun(MCCamera, void, printDebugInfo, voida)
 {
     debug_log("MCCamera: lookat=%.2f/%.2f/%.2f R_value=%.2f R_percent=%.3f\n",
               obj->lookat.x, obj->lookat.y, obj->lookat.z, obj->R_value, obj->R_percent);
@@ -130,7 +129,7 @@ compute(MCMatrix3, rotationMat3)
     return MCMatrix4GetMatrix3(sobj->transform);
 }
 
-method(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height)
+fun(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height)
 {
     //setting camera
     obj->ratio = MCRatioMake(width, height);
@@ -138,22 +137,22 @@ method(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height
     return obj;
 }
 
-method(MCCamera, void, reset, voida)
+fun(MCCamera, void, reset, voida)
 {
     init(MCCamera);
 }
 
-method(MCCamera, void, transformWorld, MCMatrix4* mat4)
+fun(MCCamera, void, transformWorld, MCMatrix4* mat4)
 {
     sobj->viewtrans = *mat4;
 }
 
-method(MCCamera, void, transformSelf, MCMatrix4* mat4)
+fun(MCCamera, void, transformSelf, MCMatrix4* mat4)
 {
     sobj->transform = *mat4;
 }
 
-method(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht)
+fun(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht)
 {
     sobj->transform = MCMatrix4MakeLookAtByEulerAngle_EyeUp(obj->lookat, cpt(Radius),
                                                             obj->fai, obj->tht,
@@ -161,18 +160,26 @@ method(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, do
 }
 
 //override
-method(MCCamera, void, update, MCGLContext* ctx)
+fun(MCCamera, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model)
 {
-    MCGLUniformData data;
+    if (projection) {
+        *projection = cpt(projectionMatrix);
+    }
     
-    data.mat4 = cpt(viewMatrix);
-    MCGLShader_updateUniform(ctx->shader, view_view, data);
-    
-    data.mat4 = cpt(projectionMatrix);
-    MCGLShader_updateUniform(ctx->shader, view_projection, data);
+    if (view) {
+        *view = cpt(viewMatrix);
+    }
+
+//    MCGLUniformData data;
+//
+//    data.mat4 = cpt(viewMatrix);
+//    MCGLShader_updateUniform(ctx->shader, view_view, data);
+//
+//    data.mat4 = cpt(projectionMatrix);
+//    MCGLShader_updateUniform(ctx->shader, view_projection, data);
 }
 
-method(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)
+fun(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)
 {
     //angle with x+
     if (var(isReverseMovement)) {
@@ -184,7 +191,7 @@ method(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)
     }
 }
 
-method(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY)
+fun(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY)
 {
     //angle with x+
     if (var(isReverseMovement)) {
@@ -196,17 +203,17 @@ method(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY)
     }
 }
 
-method(MCCamera, void, pull, MCFloat deltaR)
+fun(MCCamera, void, pull, MCFloat deltaR)
 {
     obj->R_value += deltaR.f;
 }
 
-method(MCCamera, void, distanceScale, MCFloat scale)
+fun(MCCamera, void, distanceScale, MCFloat scale)
 {
     obj->R_percent = scale.f;
 }
 
-method(MCCamera, void, setRotationMat3, float mat3[9])
+fun(MCCamera, void, setRotationMat3, float mat3[9])
 {
     MCMatrix4 m4 = (MCMatrix4) {
         mat3[0], mat3[1], mat3[2], 0,
@@ -220,19 +227,19 @@ method(MCCamera, void, setRotationMat3, float mat3[9])
 onload(MCCamera)
 {
     if (load(MC3DNode)) {
-        binding(MCCamera, void, bye, voida);
-        binding(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height);
-        binding(MCCamera, void, transformWorld, MCMatrix4* mat4);
-        binding(MCCamera, void, transformSelf, MCMatrix4* mat4);
-        binding(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht);
-        binding(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
-        binding(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY);
-        binding(MCCamera, void, pull, MCFloat deltaR);
-        binding(MCCamera, void, reset, MCBool updateOrNot);
-        binding(MCCamera, void, update);
-        binding(MCCamera, void, distanceScale, MCFloat scale);
-        binding(MCCamera, void, setRotationMat3, float mat3[9]);
-        binding(MCCamera, void, printDebugInfo, voida);
+        bid(MCCamera, void, bye, voida);
+        bid(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height);
+        bid(MCCamera, void, transformWorld, MCMatrix4* mat4);
+        bid(MCCamera, void, transformSelf, MCMatrix4* mat4);
+        bid(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht);
+        bid(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
+        bid(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY);
+        bid(MCCamera, void, pull, MCFloat deltaR);
+        bid(MCCamera, void, reset, MCBool updateOrNot);
+        bid(MCCamera, void, distanceScale, MCFloat scale);
+        bid(MCCamera, void, setRotationMat3, float mat3[9]);
+        bid(MCCamera, void, printDebugInfo, voida);
+        bid(MCCamera, void, willDraw, voida);//override
         return cla;
     }else{
         return null;

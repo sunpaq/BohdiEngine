@@ -5,10 +5,8 @@
 //  Created by 孙御礼 on 4/27/30 H.
 //
 
-#include "MC3DBase.h"
-#include "MCGLContext.h"
 #include "MCGLShader.h"
-#include "BEAssetsManager.h"
+#include "MCGLContext.h"
 
 oninit(MCGLShader)
 {
@@ -21,7 +19,7 @@ oninit(MCGLShader)
     }
 }
 
-function(int, fillUniformLocation, MCGLUniform* uniform)
+ifun(int, fillUniformLocation, MCGLUniform* uniform)
 {
     as(MCGLShader);
     if (uniform->location == MC3DErrUniformNotFound) {
@@ -30,7 +28,7 @@ function(int, fillUniformLocation, MCGLUniform* uniform)
     return uniform->location;
 }
 
-method(MCGLShader, void, bye, voida)
+fun(MCGLShader, void, bye, voida)
 {
     glDeleteProgram(var(pid));
 }
@@ -38,7 +36,7 @@ method(MCGLShader, void, bye, voida)
 //shader
 //please cache the location index when you first call the setters
 //then directly pass the location index and pass name null
-method(MCGLShader, MCGLShader*, initWithShaderCode, const char* vcode, const char* fcode,
+fun(MCGLShader, MCGLShader*, initWithShaderCode, const char* vcode, const char* fcode,
        const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount)
 {
     MCGLShader_tryUseShaderProgram(obj, 0);
@@ -66,7 +64,7 @@ method(MCGLShader, MCGLShader*, initWithShaderCode, const char* vcode, const cha
     return obj;
 }
 
-method(MCGLShader, MCGLShader*, initWithShaderName, const char* vname, const char* fname,
+fun(MCGLShader, MCGLShader*, initWithShaderName, const char* vname, const char* fname,
        const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount)
 {
     char vpath[LINE_MAX] = {0};
@@ -86,12 +84,12 @@ method(MCGLShader, MCGLShader*, initWithShaderName, const char* vname, const cha
     return obj;
 }
 
-method(MCGLShader, void, activateShaderProgram, voida)
+fun(MCGLShader, void, activateShaderProgram, voida)
 {
     MCGLShader_tryUseShaderProgram(obj, 0);
 }
 
-method(MCGLShader, int,  getUniformLocation, const char* name)
+fun(MCGLShader, int,  getUniformLocation, const char* name)
 {
     for (MCUInt i=0; i<obj->uniformCount; i++) {
         if (strcmp(name, obj->uniforms[i].name)==0) {
@@ -107,7 +105,7 @@ method(MCGLShader, int,  getUniformLocation, const char* name)
 //MCGLUniformVec4,
 //MCGLUniformMat3,
 //MCGLUniformMat4
-function(int, setUniform, const char* name, int loc, MCGLUniform* uniform)
+ifun(int, setUniform, const char* name, int loc, MCGLUniform* uniform)
 {
     as(MCGLShader);
     if (var(pid) == 0) {
@@ -148,7 +146,7 @@ function(int, setUniform, const char* name, int loc, MCGLUniform* uniform)
     return loc;
 }
 
-method(MCGLShader, void, updateUniform, const char* name, MCGLUniformData udata)
+fun(MCGLShader, void, updateUniform, const char* name, MCGLUniformData udata)
 {
     MCGLUniform* u = null;
     int f = -1;
@@ -169,7 +167,7 @@ method(MCGLShader, void, updateUniform, const char* name, MCGLUniformData udata)
     }
 }
 
-method(MCGLShader, void, setUniforms, voida)
+fun(MCGLShader, void, setUniforms, voida)
 {
     for (int i=0; i<var(uniformCount); i++) {
         if (var(uniformsDirty)[i] == true) {
@@ -180,7 +178,7 @@ method(MCGLShader, void, setUniforms, voida)
     }
 }
 
-method(MCGLShader, GLuint, prepareShader, GLuint Id, const char* vcode, const char* fcode, const char* version)
+fun(MCGLShader, GLuint, prepareShader, GLuint Id, const char* vcode, const char* fcode, const char* version)
 {
     GLuint vertShader=0, fragShader=0;
     MCGLContext_compileShader(&vertShader, GL_VERTEX_SHADER, vcode, version);
@@ -235,18 +233,18 @@ method(MCGLShader, GLuint, prepareShader, GLuint Id, const char* vcode, const ch
     return Id;
 }
 
-method(MCGLShader, void, shaderSetUInt, const char* name, MCUInt value)
+fun(MCGLShader, void, shaderSetInt, const char* name, MCInt value)
 {
     glUniform1i(glGetUniformLocation(obj->pid, name), value);
 }
 
-method(MCGLShader, void, shaderSetBool, const char* name, MCBool value)
+fun(MCGLShader, void, shaderSetBool, const char* name, MCBool value)
 {
     glUniform1i(glGetUniformLocation(obj->pid, name), value);
 }
 
 //pass bundlename = null to get main bundle
-method(MCGLShader, int, prepareShaderName, GLuint Id, const char* bundlename, const char* vname, const char* fname, const char* version)
+fun(MCGLShader, int, prepareShaderName, GLuint Id, const char* bundlename, const char* vname, const char* fname, const char* version)
 {
     char vpath[PATH_MAX] = {0};
     if(MCFileGetPathFromBundle(bundlename, vname, vpath)) return -1;
@@ -266,7 +264,7 @@ method(MCGLShader, int, prepareShaderName, GLuint Id, const char* bundlename, co
     return 0;
 }
 
-method(MCGLShader, void, tryUseShaderProgram, voida)
+fun(MCGLShader, void, tryUseShaderProgram, voida)
 {
     GLuint Id = obj->pid;
     GLint cid = 0;
@@ -276,14 +274,14 @@ method(MCGLShader, void, tryUseShaderProgram, voida)
     }
 }
 
-method(MCGLShader, int, getUniformVector, const char* name, GLfloat* params)
+fun(MCGLShader, int, getUniformVector, const char* name, GLfloat* params)
 {
     int loc = (int)ff(obj, getUniformLocation, name);
     glGetUniformfv(var(pid), loc, params);
     return loc;
 }
 
-method(MCGLShader, void, printUniforms, voida)
+fun(MCGLShader, void, printUniforms, voida)
 {
     MCLogTypeSet(MC_DEBUG);
 
@@ -338,18 +336,18 @@ method(MCGLShader, void, printUniforms, voida)
 onload(MCGLShader)
 {
     if (load(MCObject)) {
-        binding(MCGLShader, void, bye, voida);
-        binding(MCGLShader, MCGLShader*, initWithShaderCode, const char* vcode, const char* fcode,
+        bid(MCGLShader, void, bye, voida);
+        bid(MCGLShader, MCGLShader*, initWithShaderCode, const char* vcode, const char* fcode,
                const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
-        binding(MCGLShader, MCGLShader*, initWithShaderName, const char* vname, const char* fname,
+        bid(MCGLShader, MCGLShader*, initWithShaderName, const char* vname, const char* fname,
                const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
-        binding(MCGLShader, void, activateShaderProgram, voida);
-        binding(MCGLShader, int,  getUniformLocation, const char* name);
-        binding(MCGLShader, void, updateUniform, const char* name, MCGLUniformData udata);
-        binding(MCGLShader, void, setUniforms, voida);
+        bid(MCGLShader, void, activateShaderProgram, voida);
+        bid(MCGLShader, int,  getUniformLocation, const char* name);
+        bid(MCGLShader, void, updateUniform, const char* name, MCGLUniformData udata);
+        bid(MCGLShader, void, setUniforms, voida);
         
-        binding(MCGLShader, int, getUniformVector, const char* name, GLfloat* params);
-        binding(MCGLShader, void, printUniforms, voida);
+        bid(MCGLShader, int, getUniformVector, const char* name, GLfloat* params);
+        bid(MCGLShader, void, printUniforms, voida);
         return cla;
     } else {
         return null;

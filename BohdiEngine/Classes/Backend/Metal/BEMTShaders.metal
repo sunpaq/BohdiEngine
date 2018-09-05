@@ -30,7 +30,7 @@ typedef struct
 // Vertex function
 vertex RasterizerData
 vertexShader(uint vertexID [[vertex_id]],
-             constant AAPLVertex *vertices [[buffer(AAPLVertexInputIndexVertices)]],
+             constant VertexData *vertices [[buffer(AAPLVertexInputIndexVertices)]],
              constant vector_uint2 *viewportSizePointer [[buffer(AAPLVertexInputIndexViewportSize)]])
 {
     RasterizerData out;
@@ -41,7 +41,7 @@ vertexShader(uint vertexID [[vertex_id]],
     // Index into our array of positions to get the current vertex
     //   Our positions are specified in pixel dimensions (i.e. a value of 100 is 100 pixels from
     //   the origin)
-    float2 pixelSpacePosition = vertices[vertexID].position.xy;
+    float2 pixelSpacePosition = float2(vertices[vertexID].x, vertices[vertexID].y);
 
     // Dereference viewportSizePointer and cast to float so we can do floating-point division
     vector_float2 viewportSize = vector_float2(*viewportSizePointer);
@@ -59,7 +59,7 @@ vertexShader(uint vertexID [[vertex_id]],
     // Pass our input color straight to our output color.  This value will be interpolated
     //   with the other color values of the vertices that make up the triangle to produce
     //   the color value for each fragment in our fragment shader
-    out.color = vertices[vertexID].color;
+    out.color = vector_float4(vertices[vertexID].r, vertices[vertexID].g, vertices[vertexID].b, 1.0);
 
     return out;
 }

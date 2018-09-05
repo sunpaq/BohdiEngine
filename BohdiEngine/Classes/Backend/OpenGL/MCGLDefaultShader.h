@@ -8,32 +8,9 @@
 #ifndef MCGLDefaultShader_h
 #define MCGLDefaultShader_h
 
-#include "monkc.h"
+#include "monkc_export.h"
 
-MCGlobalKey view_view       = "view_view";
-MCGlobalKey view_projection = "view_projection";
-MCGlobalKey view_position   = "view_position";
-
-MCGlobalKey model_model     = "model_model";
-MCGlobalKey model_normal    = "model_normal";
-
-MCGlobalKey light_ambient   = "light_ambient";
-MCGlobalKey light_diffuse   = "light_diffuse";
-MCGlobalKey light_specular  = "light_specular";
-MCGlobalKey light_color     = "light_color";
-MCGlobalKey light_position  = "light_position";
-
-MCGlobalKey material_ambient   = "material_ambient";
-MCGlobalKey material_diffuse   = "material_diffuse";
-MCGlobalKey material_specular  = "material_specular";
-MCGlobalKey material_dissolve  = "material_dissolve";
-MCGlobalKey material_shininess = "material_shininess";
-
-MCGlobalKey diffuse_sampler = "diffuse_sampler";
-MCGlobalKey specular_sampler = "specular_sampler";
-
-
-static const char* VCODE = S(
+static const char* MCGLDefault_vsource = S(
 //version is specified in MCGLContext
 precision highp float;
 precision mediump int;
@@ -68,9 +45,10 @@ void main()
     texturecoord = texcoord;
     
     //Normal fix the non-uniform scale issue
+    //calculate by GPU
     calculatedNormal = normalize(mat3(transpose(inverse(model_model))) * normal);
-    //calculatedNormal = normalize(model.normal * normal);
-    //calculatedNormal = normalize(normal);
+    //calculate by CPU
+    //calculatedNormal = normalize(model_normal * normal);
     
     //Eye normal
     //eyeNormal = normalize(model.normal * normal);
@@ -84,7 +62,7 @@ void main()
 }
 );//VCODE END
 
-static const char* FCODE = S(
+static const char* MCGLDefault_fsource = S(
 //version is specified in MCGLContext
 precision highp sampler3D;
 precision highp float;
@@ -113,15 +91,13 @@ uniform vec3  material_specular;
 uniform float material_dissolve;
 uniform float material_shininess;
 
+//uniforms not in context
 //texture sampling must in fragment shader
-uniform sampler3D diffuse_sampler3d;
 uniform sampler2D diffuse_sampler;
 uniform sampler2D specular_sampler;
-
-//uniforms not in context
-uniform bool usetexture;
-uniform bool usetexture3d;
-
+uniform sampler2D normal_sampler;
+//0=none 1=diffuse 2=specular 3=normal
+uniform int usetexture;
 uniform int illum;
 
 bool floatEqual(float A, float B)
@@ -205,12 +181,17 @@ void main()
 {
     //Color Output
     vec3 color = material_diffuse;
+    vec3 normal = calculatedNormal;
     float alpha = 1.0;
-    if (usetexture == true) {
+    if (usetexture >= 1) {
         vec4 texcolor = texture(diffuse_sampler, vec2(texturecoord.x, 1.0-texturecoord.y));
         //vec4 texcolor = texture(diffuse_sampler, texturecoord);
         alpha = texcolor.a;
         color = texcolor.rgb;
+    }
+    if (usetexture == 3) {
+        vec4 texcolor = texture(normal_sampler, vec2(texturecoord.x, 1.0-texturecoord.y));
+        normal = texcolor.rgb;
     }
     
     //Illuminate Mode
@@ -225,7 +206,7 @@ void main()
     float Es = material_shininess;
     
     vec3 L  = normalize(light_position - modelPosition);
-    vec3 N  = calculatedNormal;
+    vec3 N  = normal;
     vec3 V  = normalize(viewPosition - modelPosition);
     
     if (illum == 0) {

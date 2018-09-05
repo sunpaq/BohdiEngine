@@ -9,55 +9,25 @@
 #ifndef MCMesh_h
 #define MCMesh_h
 
-#include "monkc.h"
-#include "MCGLBase.h"
-#include "MCLinkedList.h"
-#include "MCMath.h"
-#include "BAObjParser.h"
-
-typedef union {
-    struct {
-        GLfloat x;
-        GLfloat y;
-        GLfloat z;
-        GLfloat nx;
-        GLfloat ny;
-        GLfloat nz;
-        GLfloat r;
-        GLfloat g;
-        GLfloat b;
-        GLfloat u;
-        GLfloat v;
-    };
-    GLfloat data[11];
-} MCMeshVertexData;
+#include "monkc_export.h"
+#include "MC3DBase.h"
 
 class(MCMesh, MCItem,
       MCBool     isDataLoaded;
       MCBool     calculatedNormal;
-      
-      MC3DFrame  Frame;
-      GLenum     useage;
-      
-      GLuint     VAO;  //VAO
-      GLuint     VBO;  //VBO
-      GLuint     EBO;  //EBO
-      
       MCBool     vertexDataNeedRelease;
-      GLfloat*   vertexDataPtr;   //gCubeVertexData
-      GLsizeiptr vertexDataSize;  //sizeof(gCubeVertexData)
-      GLuint*    vertexIndexes;
-      GLsizei    vertexCount;
+      
+      float*     vertexDataPtr;   //gCubeVertexData
+      size_t     vertexDataSize;  //sizeof(gCubeVertexData)
+      uint32_t*  vertexIndexes;
+      uint32_t   vertexCount;
 
-      MCVertexAttribute vertexAttribArray[MCVertexAttribIndexMax];
-      MCDrawMode mode;
+      MC3DFrame  Frame;
 );
 
-method(MCMesh, void, bye, voida);
-method(MCMesh, MCMesh*, initWithDefaultVertexAttributes, GLsizei vertexCount);
-method(MCMesh, void, setVertex, GLuint offset, MCMeshVertexData* data);
-method(MCMesh, void, normalizeNormals, voida);
-
-method(MCMesh, void, dump, voida);
+fun(MCMesh, void, bye, voida);
+fun(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount);
+fun(MCMesh, void, setVertex, uint32_t index, MCVertexData* data);
+fun(MCMesh, void, normalizeNormals, voida);
 
 #endif /* MCMesh_h */

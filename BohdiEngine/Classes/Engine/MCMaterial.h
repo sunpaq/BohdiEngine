@@ -9,9 +9,7 @@
 #ifndef MCMatrial_h
 #define MCMatrial_h
 
-#include "monkc.h"
-#include "MCGLBase.h"
-//#include "MCGLContext.h"
+#include "monkc_export.h"
 
 class(MCMaterial, MCObject,
       MCBool      dataChanged;
@@ -24,7 +22,5 @@ class(MCMaterial, MCObject,
       int         illum;
       char        tag[256];
 );
-
-//method(MCMaterial, void, prepareMatrial, MCGLContext* ctx);
 
 #endif /* MCMatrial_h */

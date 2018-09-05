@@ -9,7 +9,7 @@
 #ifndef MC3DAxis_h
 #define MC3DAxis_h
 
-#include "monkc.h"
+#include "monkc_export.h"
 #include "MC3DNode.h"
 #include "MC3DShapeBase.h"
 
@@ -18,7 +18,6 @@ class(MC3DAxis, MC3DNode,
 );
 
 //override MC3DNode
-method(MC3DAxis, void, update, MCGLContext* ctx);
-method(MC3DAxis, void, draw, MCGLContext* ctx);
+fun(MC3DAxis, void, draw, voida);
 
 #endif /* MC3DAxis_h */

@@ -5,7 +5,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BohdiEngine'
-  s.version          = '1.1.28'
+  s.version          = '1.1.29'
   s.summary          = 'A simple 3D engine written by Monk-C'
   s.description      = 'BohdiEngine is a simple 3D model rendering engine. it is cross platform'
 
@@ -17,8 +17,8 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.osx.deployment_target  = '10.13'
 
-  s.source_files         = 'BohdiEngine/**/**/*.{h,c,m,metal}'
-  s.public_header_files  = 'BohdiEngine/Classes/**/*.h'
+  s.source_files         = 'BohdiEngine/**/**/**/*.{h,c,m,mm,metal}'
+  s.public_header_files  = 'BohdiEngine/Classes/**/**/*.h'
   s.private_header_files = 'BohdiEngine/External/**/*.h'
 
   s.framework = 'MetalKit'

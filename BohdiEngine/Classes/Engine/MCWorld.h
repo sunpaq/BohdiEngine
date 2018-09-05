@@ -9,13 +9,12 @@
 #ifndef MCWorld_h
 #define MCWorld_h
 
-#include "monkc.h"
-#include "MCGLBase.h"
+#include "monkc_export.h"
 
 class(MCWorld, MCObject);
 
-method(MCWorld, void, bye, voida);
-method(MCWorld, MCWorld*, initWith, voida);
+fun(MCWorld, void, bye, voida);
+fun(MCWorld, MCWorld*, initWith, voida);
 
 
 #endif /* MCWorld_h */

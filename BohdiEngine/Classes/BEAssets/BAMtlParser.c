@@ -6,9 +6,10 @@
 //  Copyright © 2016年 oreisoft. All rights reserved.
 //
 
-#include "BEAssetsManager.h"
+#include <limits.h>
+
 #include "BAMtlParser.h"
-#include "MCIO.h"
+#include "BEAssetsManager.h"
 
 /*
  Ka|Kd|Ks|Tf [xyz|spectral] rx gy bz | [file.rfl factor]
@@ -46,7 +47,7 @@ MCInline void processMtlLine(BAMtlLibrary* lib, const char* linebuff)
                     BAMaterial* material = lib->materialsList;
                     if (material && MCString_filenameFromPath(remain, &name)) {
                         MCStringFill(material->diffuseMapName, name);
-                        
+                        lib->diffuse_map_count++;
                     } else {
                         error_log("BAMtlParser - can not get filename form path: %s\n", remain);
                     }
@@ -57,6 +58,17 @@ MCInline void processMtlLine(BAMtlLibrary* lib, const char* linebuff)
                     BAMaterial* material = lib->materialsList;
                     if (material && MCString_filenameFromPath(remain, &name)) {
                         MCStringFill(material->specularMapName, name);
+                    } else {
+                        error_log("BAMtlParser - can not get filename form path: %s\n", remain);
+                    }
+                    return;//next line
+                }
+                else if (MCStringEqualN(word, "map_Ns", 6)) {
+                    char name[256] = {0};
+                    BAMaterial* material = lib->materialsList;
+                    if (material && MCString_filenameFromPath(remain, &name)) {
+                        MCStringFill(material->normalMapName, name);
+                        lib->normal_map_count++;
                     } else {
                         error_log("BAMtlParser - can not get filename form path: %s\n", remain);
                     }
@@ -230,6 +242,8 @@ static BAMtlLibrary* BAMtlLibraryAlloc() {
         lib->next = null;
         lib->materialsList = null;
         lib->texturesList = null;
+        lib->diffuse_map_count = 0;
+        lib->normal_map_count = 0;
         lib->name[0] = NUL;
         return lib;
     }

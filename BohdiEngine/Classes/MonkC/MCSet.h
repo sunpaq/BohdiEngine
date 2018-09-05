@@ -17,9 +17,9 @@ class(MCSet, MCObject,
       size_t maxcount;
       size_t count;);
 
-method(MCSet, void, bye, voida);
-method(MCSet, MCSet*, initWithMaxCount, size_t maxcount);
-method(MCSet, MCSet*, insertValue, MCGeneric value);
+fun(MCSet, void, bye, voida);
+fun(MCSet, MCSet*, initWithMaxCount, size_t maxcount);
+fun(MCSet, MCSet*, insertValue, MCGeneric value);
 
 /*
  - Disjoint Sets
@@ -30,8 +30,8 @@ method(MCSet, MCSet*, insertValue, MCGeneric value);
 
 class(MCUnionFind, MCSet);
 
-method(MCUnionFind, void, find, voida);
-method(MCUnionFind, void, union, voida);
+fun(MCUnionFind, void, find, voida);
+fun(MCUnionFind, void, union, voida);
 
 
 #endif /* MCSet_h */

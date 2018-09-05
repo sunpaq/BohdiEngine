@@ -1,9 +1,9 @@
+#ifndef MCMath_H
+#define MCMath_H
+
 #include "MCContext.h"
 #include <math.h>
 #include <float.h>
-
-#ifndef MCMath_ 
-#define MCMath_
 
 #ifndef MAX
 #define MAX(A, B) ((A>B)?A:B)
@@ -470,31 +470,31 @@ MCInline MCVector3 MCVector3MultiplyMat3(MCVector3 vec3, MCMatrix3 mat3)
 }
 
 //Prime
-utility(MCMath, MCBool, isPrime, int a);
+util(MCMath, MCBool, isPrime, int a);
 //Power of two
-utility(MCMath, MCBool, isPowerOfTwo, unsigned a);
+util(MCMath, MCBool, isPowerOfTwo, unsigned a);
 
-utility(MCMath, void, bye, voida);
-utility(MCMath, int, addInteger2, int a, int b);
+util(MCMath, void, bye, voida);
+util(MCMath, int, addInteger2, int a, int b);
 
-utility(MCMath, void, sortInt, int* sorted, size_t count);
-utility(MCMath, void, sortLong, long* sorted, size_t count);
-utility(MCMath, void, sortSizet, size_t* sorted, size_t count);
+util(MCMath, void, sortInt, int* sorted, size_t count);
+util(MCMath, void, sortLong, long* sorted, size_t count);
+util(MCMath, void, sortSizet, size_t* sorted, size_t count);
 
-utility(MCMath, int, accumulateMaxi, int* result, int value);
-utility(MCMath, int, accumulateMini, int* result, int value);
+util(MCMath, int, accumulateMaxi, int* result, int value);
+util(MCMath, int, accumulateMini, int* result, int value);
 
-utility(MCMath, double, accumulateMaxd, double* result, double value);
-utility(MCMath, double, accumulateMind, double* result, double value);
+util(MCMath, double, accumulateMaxd, double* result, double value);
+util(MCMath, double, accumulateMind, double* result, double value);
 
 //Chebyshev distance
-utility(MCMath, unsigned, chebyshevDiatance, MCVector2i A, MCVector2i B);
+util(MCMath, unsigned, chebyshevDiatance, MCVector2i A, MCVector2i B);
 //Factorial
-utility(MCMath, unsigned, factorialOf, unsigned N);
+util(MCMath, unsigned, factorialOf, unsigned N);
 //Permutation
-utility(MCMath, unsigned, KpermutationsOfN, unsigned K, unsigned N);
+util(MCMath, unsigned, KpermutationsOfN, unsigned K, unsigned N);
 //Combination
-utility(MCMath, unsigned, KcombinationsOfN, unsigned K, unsigned N);
+util(MCMath, unsigned, KcombinationsOfN, unsigned K, unsigned N);
 
 
 

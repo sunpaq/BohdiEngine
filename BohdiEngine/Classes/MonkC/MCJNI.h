@@ -15,9 +15,9 @@
 #endif
 
 //JNI helper macro
-#define jni(nspace, type, name, ...)  JNIEXPORT type JNICALL nspace##_##name(JNIEnv* env, jobject obj, __VA_ARGS__)
+#define jni(nspace, clsname, type, name, ...)  JNIEXPORT type JNICALL Java_##nspace##_##clsname##_##name(JNIEnv* env, jobject obj, __VA_ARGS__)
 
-//#define java(type, name, ...) jni(<nspace>, type, name, __VA_ARGS__)
+//#define java(clsname, type, name, ...) jni(<nspace>, clsname, type, name, __VA_ARGS__)
 
 /*
 please add the above java() macro define into each JNI .c file

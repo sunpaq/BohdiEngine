@@ -35,8 +35,7 @@
 //#include <GL/gl.h>
 //#endif
 
-#include "monkc.h"
-#include "MCMath.h"
+#include "monkc_export.h"
 
 typedef enum {
     MCGLDepthTest = GL_DEPTH_TEST,
@@ -52,26 +51,16 @@ typedef enum {
 } MCGLFace;
 
 typedef enum {
-    MCDrawNone = -1,
-    MCPoints = GL_POINTS,
-    MCLines  = GL_LINES,
-    MCLineLoop = GL_LINE_LOOP,
-    MCLineStrip = GL_LINE_STRIP,
-    MCTriAngles = GL_TRIANGLES,
-    MCTriAngleFan = GL_TRIANGLE_FAN
-} MCDrawMode;
-
-typedef enum {
     MCVertexShader = GL_VERTEX_SHADER,
     MCFragmentShader = GL_FRAGMENT_SHADER
 } MCShaderType;
 
-typedef struct {
-    MCFloat R;
-    MCFloat G;
-    MCFloat B;
-    MCFloat A;
-} MCColorf;
+//typedef struct {
+//    MCFloat R;
+//    MCFloat G;
+//    MCFloat B;
+//    MCFloat A;
+//} MCColorf;
 
 //typedef enum {
 //    MCGLPosition = 0,
@@ -81,17 +70,17 @@ typedef struct {
 //    MCGLTexCoord1
 //} MCGLIndex;
 
-typedef union {
-    struct {
-        double xmax;
-        double xmin;
-        double ymax;
-        double ymin;
-        double zmax;
-        double zmin;
-    };
-    double m[6];
-} MC3DFrame;
+//typedef union {
+//    struct {
+//        double xmax;
+//        double xmin;
+//        double ymax;
+//        double ymin;
+//        double zmax;
+//        double zmin;
+//    };
+//    double m[6];
+//} MC3DFrame;
 
 typedef struct {
     GLuint index;

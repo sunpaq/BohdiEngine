@@ -1,5 +1,5 @@
-#ifndef MCFile_
-#define MCFile_
+#ifndef MCIO_H
+#define MCIO_H
 
 #include "MCContext.h"
 #include "MCBuffer.h"
@@ -48,22 +48,22 @@ typedef enum {
     MCFileCreateAtomic = O_CREAT | O_EXCL
 } MCFileOpenType;
 
-method(MCFile, MCFile*, initWithPathName, char* pathname, int oflag);
-method(MCFile, MCFile*, initWithPathNameDefaultFlag, char* pathname);
+fun(MCFile, MCFile*, initWithPathName, char* pathname, int oflag);
+fun(MCFile, MCFile*, initWithPathNameDefaultFlag, char* pathname);
 
-method(MCFile, ssize_t, readAllFromBegin, off_t offset);
-method(MCFile, ssize_t, readFromBegin, off_t offset, size_t nbytes);
-method(MCFile, size_t, readAtLastPosition, off_t offset, size_t nbytes);
-method(MCFile, size_t, readFromEnd, off_t offset, size_t nbytes);
-method(MCFile, size_t, writeToBegin, off_t offset, void* buf, size_t nbytes);
-method(MCFile, size_t, writeToLastTime, off_t offset, void* buf, size_t nbytes);
-method(MCFile, size_t, writeToEnd, off_t offset, void* buf, size_t nbytes);
+fun(MCFile, ssize_t, readAllFromBegin, off_t offset);
+fun(MCFile, ssize_t, readFromBegin, off_t offset, size_t nbytes);
+fun(MCFile, size_t, readAtLastPosition, off_t offset, size_t nbytes);
+fun(MCFile, size_t, readFromEnd, off_t offset, size_t nbytes);
+fun(MCFile, size_t, writeToBegin, off_t offset, void* buf, size_t nbytes);
+fun(MCFile, size_t, writeToLastTime, off_t offset, void* buf, size_t nbytes);
+fun(MCFile, size_t, writeToEnd, off_t offset, void* buf, size_t nbytes);
 
-method(MCFile, int, duplicateFd, voida);
-method(MCFile, int, duplicateFdTo, int fd);
-method(MCFile, void, printAttribute, voida);
-method(MCFile, void, bye, voida);
-method(MCFile, int, checkPermissionUseRealIDOfProcess, int mode);
+fun(MCFile, int, duplicateFd, voida);
+fun(MCFile, int, duplicateFdTo, int fd);
+fun(MCFile, void, printAttribute, voida);
+fun(MCFile, void, bye, voida);
+fun(MCFile, int, checkPermissionUseRealIDOfProcess, int mode);
 /*
 R_OK
 W_OK
@@ -102,7 +102,6 @@ while (*c!=NUL) {\
     }\
     __VA_ARGS__\
 }
-#endif
 
 /* MCStream */
 
@@ -136,95 +135,65 @@ static inline MCStreamType MakeMCStreamType(const unsigned btype, const char* fo
 }
 
 //default is a wide-char fully-buffered stream
-#ifndef MCStream_
-#define MCStream_
 
 class(MCStream, MCObject,
 	FILE* fileObject;
     char* buffer;
 );
 
-method(MCStream, MCStream*, initWithPath, MCStreamType type, const char* path);
-method(MCStream, MCStream*, initWithPathDefaultType, const char* path);
+fun(MCStream, MCStream*, initWithPath, MCStreamType type, const char* path);
+fun(MCStream, MCStream*, initWithPathDefaultType, const char* path);
 
-method(MCStream, void, bye, voida);
-method(MCStream, int, getFileDescriptor, voida);
+fun(MCStream, void, bye, voida);
+fun(MCStream, int, getFileDescriptor, voida);
 
-method(MCStream, int, getChar, voida);
-method(MCStream, int, putChar, int charCode);
-method(MCStream, int, pushbackChar, int charCodeToBePushBack);
+fun(MCStream, int, getChar, voida);
+fun(MCStream, int, putChar, int charCode);
+fun(MCStream, int, pushbackChar, int charCodeToBePushBack);
 
-method(MCStream, char*, getCString, MCCharBuffer* recvBuffer);
-method(MCStream, char*, putCString, MCCharBuffer* sendBuffer);
-method(MCStream, MCString*, getMCString, voida);
-method(MCStream, int, putMCString, MCString* str);
+fun(MCStream, char*, getCString, MCCharBuffer* recvBuffer);
+fun(MCStream, char*, putCString, MCCharBuffer* sendBuffer);
+fun(MCStream, MCString*, getMCString, voida);
+fun(MCStream, int, putMCString, MCString* str);
 
-method(MCStream, size_t, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs);
-method(MCStream, size_t, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs);
+fun(MCStream, size_t, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs);
+fun(MCStream, size_t, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs);
 
-method(MCStream, off_t, tellOffset, voida);
-method(MCStream, int, seekFromBegin, off_t offset);
-method(MCStream, int, seekFromCurrent, off_t offset);
-method(MCStream, int, seekFromEnd, off_t offset);
-method(MCStream, long, tellSize, voida);
-method(MCStream, void, dump, voida);
-
-#endif
+fun(MCStream, off_t, tellOffset, voida);
+fun(MCStream, int, seekFromBegin, off_t offset);
+fun(MCStream, int, seekFromCurrent, off_t offset);
+fun(MCStream, int, seekFromEnd, off_t offset);
+fun(MCStream, long, tellSize, voida);
+fun(MCStream, void, dump, voida);
 
 /* MCByteStream */
-
-#ifndef MCByteStream_
-#define MCByteStream_
 
 class(MCByteStream, MCStream,
 );
 
-method(MCByteStream, void, bye, voida);
-method(MCByteStream, MCByteStream*, newWithPath, MCStreamType type, char* path);
-
-#endif
+fun(MCByteStream, void, bye, voida);
+fun(MCByteStream, MCByteStream*, newWithPath, MCStreamType type, char* path);
 
 /* MCStdinStream */
-
-#ifndef MCStdinStream_
-#define MCStdinStream_
 
 class(MCStdinStream, MCStream,
 );
 
-method(MCStdinStream, void, bye, voida);
-#endif
+fun(MCStdinStream, void, bye, voida);
 
 /* MCStdoutStream */
 
-#ifndef MCStdoutStream_
-#define MCStdoutStream_
-
 class(MCStdoutStream, MCStream,
 );
 
-method(MCStdoutStream, void, bye, voida);
-#endif
+fun(MCStdoutStream, void, bye, voida);
 
 /* MCStderrStream */
-
-#ifndef MCStdoutStream_
-#define MCStdoutStream_
-
-class(MCStdoutStream, MCStream,
-);
-
-method(MCStdoutStream, void, bye);
-#endif
-
-#ifndef MCStderrStream_
-#define MCStderrStream_
 
 class(MCStderrStream, MCStream,
 );
 
-method(MCStderrStream, void, bye, voida);
-#endif
+fun(MCStderrStream, void, bye, voida);
 
 /* MCSelect */
 
@@ -233,9 +202,6 @@ typedef enum _MCSelect_fd_type{
 	MCSelect_Writefd,
 	MCSelect_Exceptionfd,
 }MCSelect_fd_type;
-
-#ifndef MCSelect_
-#define MCSelect_ 
 
 class(MCSelect, MCObject,
 	int maxfd;
@@ -247,11 +213,11 @@ class(MCSelect, MCObject,
 	fd_set exceptionfd_result_set;
 	struct timeval timeout);
 
-method(MCSelect, void, initWithSecondAndMicrosec, long second, long microsecond);
-method(MCSelect, int, waitForFdsetChange, voida);
-method(MCSelect, void, addFd, MCSelect_fd_type type, int fd);
-method(MCSelect, void, removeFd, MCSelect_fd_type type, int fd);
-method(MCSelect, int, isFdReady, MCSelect_fd_type type, int fd);
+fun(MCSelect, void, initWithSecondAndMicrosec, long second, long microsecond);
+fun(MCSelect, int, waitForFdsetChange, voida);
+fun(MCSelect, void, addFd, MCSelect_fd_type type, int fd);
+fun(MCSelect, void, removeFd, MCSelect_fd_type type, int fd);
+fun(MCSelect, int, isFdReady, MCSelect_fd_type type, int fd);
 
 #endif
 

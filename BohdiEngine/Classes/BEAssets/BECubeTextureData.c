@@ -6,8 +6,8 @@
 //  Copyright © 2017 oreisoft. All rights reserved.
 //
 
-#include "BEAssetsManager.h"
 #include "BECubeTextureData.h"
+#include "BEAssetsManager.h"
 
 oninit(BECubeTextureData)
 {
@@ -18,7 +18,7 @@ oninit(BECubeTextureData)
     }
 }
 
-utility(BECubeTextureData, BECubeTextureData*, newWithFacePaths, const char* facepaths[6])
+util(BECubeTextureData, BECubeTextureData*, newWithFacePaths, const char* facepaths[6])
 {
     BECubeTextureData* data = new(BECubeTextureData);
     for (int i=0; i<6; i++) {
@@ -33,7 +33,7 @@ utility(BECubeTextureData, BECubeTextureData*, newWithFacePaths, const char* fac
     return data;
 }
 
-utility(BECubeTextureData, BECubeTextureData*, newWithFaces, const char* faces[6])
+util(BECubeTextureData, BECubeTextureData*, newWithFaces, const char* faces[6])
 {
     BECubeTextureData* data = new(BECubeTextureData);
     char pathbuff[PATH_MAX] = {0};
@@ -47,7 +47,7 @@ utility(BECubeTextureData, BECubeTextureData*, newWithFaces, const char* faces[6
     return data;
 }
 
-method(BECubeTextureData, void, bye, voida)
+fun(BECubeTextureData, void, bye, voida)
 {
     for (int i=0; i<6; i++) {
         BE2DTextureData* face = obj->faces[i];
@@ -61,7 +61,7 @@ method(BECubeTextureData, void, bye, voida)
 onload(BECubeTextureData)
 {
     if (load(MCObject)) {
-        binding(BECubeTextureData, void, bye, voida);
+        bid(BECubeTextureData, void, bye, voida);
         return cla;
     }else{
         return null;

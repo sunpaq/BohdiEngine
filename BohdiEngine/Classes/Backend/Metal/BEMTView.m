@@ -6,7 +6,6 @@
 //
 
 #import "BEMTView.h"
-#import "BEMTContext.h"
 
 #include "TargetConditionals.h"
 #if TARGET_OS_IOS
@@ -16,16 +15,13 @@
 #endif
 
 @implementation BEMTView
-{
-    BEMTContext* _ctx;
-}
 
 -(void)setupContext
 {
     self.device = MTLCreateSystemDefaultDevice();
-    _ctx = [[BEMTContext alloc] initWithMetalKitView:self];
-    [_ctx mtkView:self drawableSizeWillChange:self.drawableSize];
-    self.delegate = _ctx;
+    self.renderer = [[BEMTRenderer alloc] initWithMetalKitView:self];
+    [self mtkView:self drawableSizeWillChange:self.drawableSize];
+    self.delegate = self;
 }
 
 -(instancetype)initWithCoder:(NSCoder *)coder
@@ -53,6 +49,21 @@
         return self;
     }
     return nil;
+}
+
+- (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
+{
+    // Save the size of the drawable as we'll pass these
+    //   values to our vertex shader when we draw
+    vector_uint2 vsize;
+    vsize.x = size.width;
+    vsize.y = size.height;
+    self.renderer.viewportSize = vsize;
+}
+
+- (void)drawInMTKView:(nonnull MTKView *)view
+{
+    [self.renderer drawFrame];
 }
 
 @end

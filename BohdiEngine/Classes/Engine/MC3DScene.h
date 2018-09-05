@@ -9,11 +9,9 @@
 #ifndef MC3DScene_h
 #define MC3DScene_h
 
-#include "monkc.h"
+#include "monkc_export.h"
 #include "MC3DNode.h"
-#include "MCGLRenderer.h"
 #include "MCCamera.h"
-#include "MCClock.h"
 #include "MCLight.h"
 #include "MCSkybox.h"
 #include "MCSkysphere.h"
@@ -37,7 +35,6 @@ class(MC3DScene, MCObject,
       MCSkybox*     skybox;
       MCSkysphere*  skysph;
       
-      MCGLRenderer* renderer;
       MC3DNode*     rootnode;
       MCCamera*     mainCamera;
       MCLight*      light;
@@ -50,27 +47,19 @@ class(MC3DScene, MCObject,
       MCBool cameraAutoRotate;
 );
 
-method(MC3DScene, void, bye, voida);
-method(MC3DScene, MC3DScene*, initWithWidthHeightVSourceFSource, unsigned width, unsigned height, const char* vsource, const char* fsource);
-method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFName, unsigned width, unsigned height, const char* vname, const char* fname);
-method(MC3DScene, MC3DScene*, initWithWidthHeightVNameFNameInBundle, unsigned width, unsigned height, const char* bundleId, const char* vname, const char* fname);
-method(MC3DScene, MC3DScene*, initWithWidthHeightDefaultShader, unsigned width, unsigned height);
-method(MC3DScene, void, resizeScene, unsigned width, unsigned height);
-method(MC3DScene, void, addSkybox, MCSkybox* box);
-method(MC3DScene, void, addSkysph, MCSkysphere* sph);
-method(MC3DScene, void, removeSkybox, voida);
-method(MC3DScene, void, removeSkysph, voida);
-method(MC3DScene, void, updateScene, voida);
-//return -1 or positive fps number
-//please update your view only when it is not -1
-method(MC3DScene, int, drawScene, voida);
-
-method(MC3DScene, void, lockCamera, MCBool lock);
-method(MC3DScene, MCCamera*, getCamera, voida);
-method(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht);
-method(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht);
-method(MC3DScene, void, setRotationMat3, float mat3[9]);
-method(MC3DScene, void, setRotationMat4, float mat4[16]);
-method(MC3DScene, void, printDebugInfo, voida);
+fun(MC3DScene, void, bye, voida);
+fun(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height);
+fun(MC3DScene, void, resizeScene, unsigned width, unsigned height);
+fun(MC3DScene, void, addSkybox, MCSkybox* box);
+fun(MC3DScene, void, addSkysph, MCSkysphere* sph);
+fun(MC3DScene, void, removeSkybox, voida);
+fun(MC3DScene, void, removeSkysph, voida);
+fun(MC3DScene, void, lockCamera, MCBool lock);
+fun(MC3DScene, MCCamera*, getCamera, voida);
+fun(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht);
+fun(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht);
+fun(MC3DScene, void, setRotationMat3, float mat3[9]);
+fun(MC3DScene, void, setRotationMat4, float mat4[16]);
+fun(MC3DScene, void, printDebugInfo, voida);
 
 #endif /* MC3DScene_h */

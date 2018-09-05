@@ -43,12 +43,12 @@ static BSTNode* printnode(BSTNode* node) {
     return node;
 }
 
-method(MCBST, void, bye, voida)
+fun(MCBST, void, bye, voida)
 {
     MCBST_traverseTree(obj, freenode);
 }
 
-function(BSTNode*, insert, BSTNode* root, MCGeneric newval)
+ifun(BSTNode*, insert, BSTNode* root, MCGeneric newval)
 {
     as(MCBST);
     if (!root) {
@@ -62,7 +62,7 @@ function(BSTNode*, insert, BSTNode* root, MCGeneric newval)
     return root;
 }
 
-function(void, traverse, BSTNode* root, BSTNode* (*funcptr)(BSTNode* node))
+ifun(void, traverse, BSTNode* root, BSTNode* (*funcptr)(BSTNode* node))
 {
     as(MCBST);
     if (!root) return;
@@ -73,17 +73,17 @@ function(void, traverse, BSTNode* root, BSTNode* (*funcptr)(BSTNode* node))
         traverse(obj, root->right, funcptr);
 }
 
-method(MCBST, void, insertValue, MCGeneric newval)
+fun(MCBST, void, insertValue, MCGeneric newval)
 {
     var(root) = insert(obj, var(root), newval);
 }
 
-method(MCBST, void, traverseTree, BSTNode* (*funcptr)(BSTNode* node))
+fun(MCBST, void, traverseTree, BSTNode* (*funcptr)(BSTNode* node))
 {
     traverse(obj, var(root), funcptr);
 }
 
-method(MCBST, void, printTree, voida)
+fun(MCBST, void, printTree, voida)
 {
     traverse(null, var(root), printnode);
     printf("total %ld nodes\n", obj->count);
@@ -92,10 +92,10 @@ method(MCBST, void, printTree, voida)
 onload(MCBST)
 {
     if (load(MCObject)) {
-        binding(MCBST, void, bye, voida);
-        binding(MCBST, void, insertValue, MCGeneric newval);
-        binding(MCBST, void, traverseTree, void (*funcptr)(BSTNode* node));
-        binding(MCBST, void, printTree, voida);
+        bid(MCBST, void, bye, voida);
+        bid(MCBST, void, insertValue, MCGeneric newval);
+        bid(MCBST, void, traverseTree, void (*funcptr)(BSTNode* node));
+        bid(MCBST, void, printTree, voida);
         return cla;
     }else{
         return null;
@@ -106,8 +106,8 @@ onload(MCBST)
  Trie Tree (Digital, Radix, Prefix - Tree)
  */
 
-function(TrieNode*, createNode, char byte);
-function(void, releaseNode, TrieNode* node);
+ifun(TrieNode*, createNode, char byte);
+ifun(void, releaseNode, TrieNode* node);
 
 oninit(MCTrie)
 {
@@ -120,13 +120,13 @@ oninit(MCTrie)
     }
 }
 
-method(MCTrie, void, bye, voida)
+fun(MCTrie, void, bye, voida)
 {
     releaseNode(obj, obj->root);
     superbye(MCObject);
 }
 
-function(TrieNode*, createNode, char byte)
+ifun(TrieNode*, createNode, char byte)
 {
     TrieNode* node = (TrieNode*)malloc(sizeof(TrieNode));
     node->isLeaf = false;
@@ -136,7 +136,7 @@ function(TrieNode*, createNode, char byte)
     return node;
 }
 
-function(void, releaseNode, TrieNode* node)
+ifun(void, releaseNode, TrieNode* node)
 {
     if (node) {
         for (int i=0; i<MCTrieWidth; i++)
@@ -147,7 +147,7 @@ function(void, releaseNode, TrieNode* node)
 }
 
 //return current node
-function(TrieNode*, insertNodeIntoParent, TrieNode* parent, TrieNode* node)
+ifun(TrieNode*, insertNodeIntoParent, TrieNode* parent, TrieNode* node)
 {
     if (parent && node) {
         TrieNode* current = parent->childs[node->byte];
@@ -162,7 +162,7 @@ function(TrieNode*, insertNodeIntoParent, TrieNode* parent, TrieNode* node)
 }
 
 //return Leaf node
-function(TrieNode*, insertWordIntoParent, TrieNode* parent, const char* word)
+ifun(TrieNode*, insertWordIntoParent, TrieNode* parent, const char* word)
 {
     as(MCTrie);
     if (parent && word) {
@@ -184,7 +184,7 @@ function(TrieNode*, insertWordIntoParent, TrieNode* parent, const char* word)
     return null;
 }
 
-function(TrieNode*, retrievalNodeByKey, const char* word)
+ifun(TrieNode*, retrievalNodeByKey, const char* word)
 {
     as(MCTrie);
     size_t len = strlen(word);
@@ -200,7 +200,7 @@ function(TrieNode*, retrievalNodeByKey, const char* word)
     return node;
 }
 
-//function(MCArray*, keysWithPrefixFromIndex, const char* prefix, TrieNode* index)
+//ifun(MCArray*, keysWithPrefixFromIndex, const char* prefix, TrieNode* index)
 //{
 //    as(MCTrie);
 //    MCArray* array = new(MCArray);
@@ -217,13 +217,13 @@ function(TrieNode*, retrievalNodeByKey, const char* word)
 //    return array;
 //}
 
-method(MCTrie, void, insertValueByKey, MCGeneric newval, const char* word)
+fun(MCTrie, void, insertValueByKey, MCGeneric newval, const char* word)
 {
     TrieNode* leaf = insertWordIntoParent(obj, obj->root, word);
     leaf->value = newval;
 }
 
-method(MCTrie, MCGeneric, valueOfKey, const char* word)
+fun(MCTrie, MCGeneric, valueOfKey, const char* word)
 {
     TrieNode* node = retrievalNodeByKey(obj, word);
     //last leaf node have value
@@ -233,13 +233,13 @@ method(MCTrie, MCGeneric, valueOfKey, const char* word)
     return MCGenericVp(null);
 }
 
-method(MCTrie, MCArray*, keysWithPrefix, const char* prefix)
+fun(MCTrie, MCArray*, keysWithPrefix, const char* prefix)
 {
     MCArray* array = new(MCArray);
     return array;
 }
 
-method(MCTrie, MCBool, hasKey, const char* word)
+fun(MCTrie, MCBool, hasKey, const char* word)
 {
     TrieNode* node = retrievalNodeByKey(obj, word);
     if (node && node->isLeaf) {
@@ -248,7 +248,7 @@ method(MCTrie, MCBool, hasKey, const char* word)
     return false;
 }
 
-method(MCTrie, void, printTree, voida)
+fun(MCTrie, void, printTree, voida)
 {
     
 }
@@ -256,12 +256,12 @@ method(MCTrie, void, printTree, voida)
 onload(MCTrie)
 {
     if (load(MCObject)) {
-        binding(MCTrie, void, bye, voida);
-        binding(MCTrie, void, insertValueByKey, MCGeneric newval, const char* word);
-        binding(MCTrie, MCGeneric, valueOfKey, const char* word);
-        binding(MCTrie, MCArray*, keysWithPrefix, const char* prefix);
-        binding(MCTrie, MCBool, hasKey, const char* word);
-        binding(MCTrie, void, printTree, voida);
+        bid(MCTrie, void, bye, voida);
+        bid(MCTrie, void, insertValueByKey, MCGeneric newval, const char* word);
+        bid(MCTrie, MCGeneric, valueOfKey, const char* word);
+        bid(MCTrie, MCArray*, keysWithPrefix, const char* prefix);
+        bid(MCTrie, MCBool, hasKey, const char* word);
+        bid(MCTrie, void, printTree, voida);
         return cla;
     } else {
         return null;

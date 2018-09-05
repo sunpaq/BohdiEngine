@@ -23,12 +23,7 @@ oninit(MC3DAxis)
 }
 
 //override MC3DNode
-method(MC3DAxis, void, update, MCGLContext* ctx)
-{
-
-}
-
-method(MC3DAxis, void, draw, MCGLContext* ctx)
+fun(MC3DAxis, void, draw, voida)
 {
     float data[36] = {
         3,0,0, 1,0,0,
@@ -59,8 +54,7 @@ method(MC3DAxis, void, draw, MCGLContext* ctx)
 onload(MC3DAxis)
 {
     if (load(MC3DNode)) {
-        binding(MC3DAxis, void, update, MCGLContext* ctx);
-        binding(MC3DAxis, void, draw, MCGLContext* ctx);
+        bid(MC3DAxis, void, draw, voida);
         return cla;
     } else {
         return null;

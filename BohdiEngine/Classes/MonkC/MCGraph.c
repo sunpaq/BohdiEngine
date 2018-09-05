@@ -37,7 +37,7 @@ oninit(MCGraph)
     }
 }
 
-method(MCGraph, void, bye, voida)
+fun(MCGraph, void, bye, voida)
 {
     if (var(vertexSet)) {
         free(var(vertexSet));
@@ -47,7 +47,7 @@ method(MCGraph, void, bye, voida)
     }
 }
 
-method(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y)
+fun(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y)
 {
     MCGraphVertex* iter = x.neighbors;
     while (iter) {
@@ -59,7 +59,7 @@ method(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y)
     return false;
 }
 
-method(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x)
+fun(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x)
 {
     MCArray* array = new(MCArray);
     MCGraphVertex* iter = x.neighbors;
@@ -70,12 +70,12 @@ method(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x)
     return array;
 }
 
-method(MCGraph, MCGraph*, addEdge, MCGraphEdge e)
+fun(MCGraph, MCGraph*, addEdge, MCGraphEdge e)
 {
     return obj;
 }
 
-method(MCGraph, MCGraph*, removeEdge, MCGraphEdge e)
+fun(MCGraph, MCGraph*, removeEdge, MCGraphEdge e)
 {
     return obj;
 }
@@ -83,11 +83,11 @@ method(MCGraph, MCGraph*, removeEdge, MCGraphEdge e)
 onload(MCGraph)
 {
     if (load(MCObject)) {
-        binding(MCGraph, void, bye, voida);
-        binding(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y);
-        binding(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x);
-        binding(MCGraph, MCGraph*, addEdge, MCGraphEdge e);
-        binding(MCGraph, MCGraph*, removeEdge, MCGraphEdge e);
+        bid(MCGraph, void, bye, voida);
+        bid(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y);
+        bid(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x);
+        bid(MCGraph, MCGraph*, addEdge, MCGraphEdge e);
+        bid(MCGraph, MCGraph*, removeEdge, MCGraphEdge e);
         return cla;
     } else {
         return null;

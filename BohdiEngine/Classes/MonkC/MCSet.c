@@ -24,21 +24,21 @@ oninit(MCSet)
     }
 }
 
-method(MCSet, void, bye, voida)
+fun(MCSet, void, bye, voida)
 {
     if (var(values)) {
         free(var(values));
     }
 }
 
-method(MCSet, MCSet*, initWithMaxCount, size_t maxcount)
+fun(MCSet, MCSet*, initWithMaxCount, size_t maxcount)
 {
     var(values) = (MCGeneric*)malloc(sizeof(MCGeneric)*maxcount);
     var(maxcount) = maxcount;
     return obj;
 }
 
-method(MCSet, MCSet*, insertValue, MCGeneric value)
+fun(MCSet, MCSet*, insertValue, MCGeneric value)
 {
     if (obj->count < obj->maxcount) {
         obj->values[obj->count++] = value;
@@ -49,9 +49,9 @@ method(MCSet, MCSet*, insertValue, MCGeneric value)
 onload(MCSet)
 {
     if (load(MCObject)) {
-        binding(MCSet, void, bye, voida);
-        binding(MCSet, MCSet*, initWithMaxCount, size_t maxcount);
-        binding(MCSet, MCSet*, insertValue, MCGeneric value);
+        bid(MCSet, void, bye, voida);
+        bid(MCSet, MCSet*, initWithMaxCount, size_t maxcount);
+        bid(MCSet, MCSet*, insertValue, MCGeneric value);
         return cla;
     } else {
         return null;

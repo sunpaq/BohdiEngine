@@ -9,7 +9,7 @@
 
 static MCTextureCache* _instance = null;
 
-utility(MCTextureCache, MCTextureCache*, shared, voida)
+util(MCTextureCache, MCTextureCache*, shared, voida)
 {
     if (_instance == null) {
         _instance = new(MCTextureCache);
@@ -17,7 +17,7 @@ utility(MCTextureCache, MCTextureCache*, shared, voida)
     return _instance;
 }
 
-utility(MCTextureCache, void, cleanAndDestoryShared, voida)
+util(MCTextureCache, void, cleanAndDestoryShared, voida)
 {
     if (_instance) {
         release(_instance);
@@ -34,14 +34,14 @@ oninit(MCTextureCache) {
     }
 }
 
-method(MCTextureCache, void, bye, voida)
+fun(MCTextureCache, void, bye, voida)
 {
     release(var(map));
     var(map) = null;
     MCObject_bye(sobj, 0);
 }
 
-method(MCTextureCache, MCTexture*, findTextureNamed, const char* name)
+fun(MCTextureCache, MCTexture*, findTextureNamed, const char* name)
 {
     MCGeneric result;
     MCMap_getValueForKey(var(map), &result, name);
@@ -53,7 +53,7 @@ method(MCTextureCache, MCTexture*, findTextureNamed, const char* name)
     }
 }
 
-method(MCTextureCache, void, cacheTextureNamed, MCTexture* tex, const char* name)
+fun(MCTextureCache, void, cacheTextureNamed, MCTexture* tex, const char* name)
 {
     if (tex) {
         retain(tex);
@@ -69,9 +69,9 @@ method(MCTextureCache, void, cacheTextureNamed, MCTexture* tex, const char* name
 
 onload(MCTextureCache) {
     if (load(MCObject)) {
-        binding(MCTextureCache, void, bye, voida);
-        binding(MCTextureCache, MCTexture*, findTextureNamed, const char* name);
-        binding(MCTextureCache, void, cacheTextureNamed, MCTexture* tex, const char* name);
+        bid(MCTextureCache, void, bye, voida);
+        bid(MCTextureCache, MCTexture*, findTextureNamed, const char* name);
+        bid(MCTextureCache, void, cacheTextureNamed, MCTexture* tex, const char* name);
         return cla;
     } else {
         return null;

@@ -1,38 +1,24 @@
 //
-//  BEMTContext.m
-//  BohdiEngine
+//  BEMTRenderer.m
+//  Pods
 //
-//  Created by 孙御礼 on 5/5/30 H.
+//  Created by 孙御礼 on 7/15/30 H.
 //
 
-#import "BEMTContext.h"
+#import "BEMTRenderer.h"
 #import "BEMTShaderTypes.h"
 
-static const AAPLVertex triangleVertices[] =
-{
-    // 2D positions,    RGBA colors
-    { { -300,   500 }, { 0, 0, 1, 1 } },
-    { {  250,  -250 }, { 1, 0, 0, 1 } },
-    { { -250,  -250 }, { 0, 1, 0, 1 } },
-    { {    0,   250 }, { 0, 0, 1, 1 } },
-};
+//#import "MCCube.h"
+#import "MCDirector.h"
 
-static const vcount = 4;
-
-@implementation BEMTContext
+@interface BEMTRenderer ()
 {
-    // The device (aka GPU) we're using to render
-    id<MTLDevice> _device;
-    
-    // Our render pipeline composed of our vertex and fragment shaders in the .metal shader file
-    id<MTLRenderPipelineState> _pipelineState;
-    
-    // The command Queue from which we'll obtain command buffers
-    id<MTLCommandQueue> _commandQueue;
-    
-    // The current size of our view so we can use this in our render pipeline
-    vector_uint2 _viewportSize;
+    MTKView* _view;
+    MCDirector* director;
 }
+@end
+
+@implementation BEMTRenderer
 
 /// Initialize with the MetalKit view from which we'll obtain our Metal device
 - (nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)mtkView
@@ -40,11 +26,23 @@ static const vcount = 4;
     self = [super init];
     if(self)
     {
+        float ScreenScale = 2.0;
+        CGFloat w = mtkView.drawableSize.width;
+        CGFloat h = mtkView.drawableSize.height;
+        
+        director = new(MCDirector);
+        MCDirector_setupMainScene(director,
+                                  w * ScreenScale,
+                                  h * ScreenScale);
+        
+        computed(director, cameraHandler)->rotateMode = MCCameraRotateAroundModelManual;
+        
         NSError *error = NULL;
         
+        _view = mtkView;
         _device = mtkView.device;
         
-        id<MTLLibrary> defaultLibrary = [_device newDefaultLibraryWithBundle:[NSBundle bundleForClass:[BEMTContext class]] error:&error];
+        id<MTLLibrary> defaultLibrary = [_device newDefaultLibraryWithBundle:[NSBundle bundleForClass:[BEMTRenderer class]] error:&error];
         if (error) {
             NSLog(@"load shader error %@", error.description);
         }
@@ -81,13 +79,86 @@ static const vcount = 4;
     return self;
 }
 
-- (void)drawInMTKView:(nonnull MTKView *)view {
+-(void) addModelNamed:(NSString*)modelName
+{
+    [self addModelNamed:modelName Scale:100.0];//max size
+}
+
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale
+{
+    [self addModelNamed:modelName Scale:scale RotateX:0];
+}
+
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian
+{
+    [self addModelNamed:modelName Scale:scale RotateX:ccwRadian Tag:-1];
+}
+
+-(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Tag:(int)tag
+{
+    MCDirector* dir = director;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
+        MC3DModel* m = MCDirector_addModelNamed(dir, name, MCFloatF(scale));
+        m->tag = tag;
+        //MC3DModel_rotateAroundSelfAxisX(m, ccwRadian);
+        //MCDirector_cameraFocusOn(dir, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
+    });
+}
+
+- (MTLRenderPassDescriptor*)getCurrentRenderPassDescriptor {
+    return _view.currentRenderPassDescriptor;
+}
+
+- (id <CAMetalDrawable>)getCurrentDrawable {
+    return _view.currentDrawable;
+}
+
+-(void) drawFrame
+{
+    [self drawScene:director->lastScene];
+}
+
+-(void) drawScene:(MC3DScene*)scene
+{
+    [self drawNode:scene->rootnode];
+}
+
+-(void) drawNode:(MC3DNode*)node
+{
+    //draw self meshes
+    MCLinkedListForEach(node->meshes,
+                        MCMesh* mesh = (MCMesh*)item;
+                        if (mesh != null) {
+                            [self drawMesh:mesh];
+                        })
+
+    //draw children
+    MCLinkedListForEach(node->children,
+                        MC3DNode* child = (MC3DNode*)item;
+                        if (child != null && child->visible != false) {
+                            [self drawNode:child];
+                        })
+}
+
+-(void) drawMesh:(MCMesh*)mesh
+{
+    if (mesh == NULL) return;
+    
+//    static const MCVertexData triangleVertices[] =
+//    {
+//        // 2D positions,    RGBA colors
+//        {  250,-250,0, 0,0,0, 1,0,0, 0,0 },
+//        { -250,-250,0, 0,0,0, 0,1,0, 0,0 },
+//        {    0, 250,0, 0,0,0, 0,0,1, 0,0 }
+//    };
+    
     // Create a new command buffer for each render pass to the current drawable
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
     commandBuffer.label = @"MyCommand";
     
     // Obtain a renderPassDescriptor generated from the view's drawable textures
-    MTLRenderPassDescriptor *renderPassDescriptor = view.currentRenderPassDescriptor;
+    MTLRenderPassDescriptor *renderPassDescriptor = [self getCurrentRenderPassDescriptor];
     
     if(renderPassDescriptor != nil)
     {
@@ -97,9 +168,8 @@ static const vcount = 4;
         renderEncoder.label = @"MyRenderEncoder";
         
         // Set the region of the drawable to which we'll draw.
-        [renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, -1.0, 1.0 }];
-        
-        [renderEncoder setRenderPipelineState:_pipelineState];
+        [renderEncoder setViewport:(MTLViewport){0.0, 0.0, self.viewportSize.x, self.viewportSize.y, -1.0, 1.0 }];
+        [renderEncoder setRenderPipelineState:self.pipelineState];
         
         // We call -[MTLRenderCommandEncoder setVertexBytes:length:atIndex:] to send data from our
         //   Application ObjC code here to our Metal 'vertexShader' function
@@ -113,8 +183,9 @@ static const vcount = 4;
         // The `AAPLVertexInputIndexVertices` enum value corresponds to the `vertexArray`
         // argument in the `vertexShader` function because its buffer attribute also uses
         // the `AAPLVertexInputIndexVertices` enum value for its index
-        [renderEncoder setVertexBytes:triangleVertices
-                               length:sizeof(triangleVertices)
+        
+        [renderEncoder setVertexBytes:mesh->vertexDataPtr
+                               length:sizeof(VertexData) * mesh->vertexCount
                               atIndex:AAPLVertexInputIndexVertices];
         
         // You send a pointer to `_viewportSize` and also indicate its size
@@ -122,52 +193,25 @@ static const vcount = 4;
         // `viewportSizePointer` argument in the `vertexShader` function because its
         //  buffer attribute also uses the `AAPLVertexInputIndexViewportSize` enum value
         //  for its index
-        [renderEncoder setVertexBytes:&_viewportSize
-                               length:sizeof(_viewportSize)
+        vector_uint2 size = [self viewportSize];
+        
+        [renderEncoder setVertexBytes:&size
+                               length:sizeof(size)
                               atIndex:AAPLVertexInputIndexViewportSize];
         
         // Draw the 3 vertices of our triangle
-        [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangleStrip
+        [renderEncoder drawPrimitives:MTLPrimitiveTypeLineStrip
                           vertexStart:0
-                          vertexCount:vcount];
+                          vertexCount:mesh->vertexCount];
         
         [renderEncoder endEncoding];
         
         // Schedule a present once the framebuffer is complete using the current drawable
-        [commandBuffer presentDrawable:view.currentDrawable];
+        [commandBuffer presentDrawable:[self getCurrentDrawable]];
     }
     
     // Finalize rendering here & push the command buffer to the GPU
     [commandBuffer commit];
 }
 
-- (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size {
-    // Save the size of the drawable as we'll pass these
-    //   values to our vertex shader when we draw
-    _viewportSize.x = size.width;
-    _viewportSize.y = size.height;
-}
-
 @end
-
-//C APIs
-void BEMTContextCreate()
-{
-    
-}
-
-void BEMTContextRelease()
-{
-    
-}
-
-void BEMTContext_loadMesh(void* meth)
-{
-    
-}
-
-void BEMTContext_drawMesh(void* meth)
-{
-    
-}
-

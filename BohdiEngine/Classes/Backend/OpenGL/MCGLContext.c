@@ -7,46 +7,44 @@
 //
 
 #include "MCGLContext.h"
-#include "MC3DBase.h"
-#include "MCGLContext.h"
-#include "BEAssetsManager.h"
-#include "MCGLRenderer.h"
 
 oninit(MCGLContext)
 {
     if (init(MCObject)) {
         var(shader) = new(MCGLShader);
-        var(drawMode) = MCDrawNone;
         return obj;
     }else{
         return null;
     }
 }
 
-method(MCGLContext, void, bye, voida)
+fun(MCGLContext, void, bye, voida)
 {
     release(obj->shader);
     obj->shader = null;
 }
 
-method(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName)
+fun(MCGLContext, GLuint, loadTexture, MCTexture* tex, const char* samplerName, GLint unit)
 {
     if (tex) {
         if (tex->loadedToGL == false) {
             tex->loadedToGL = true;
             MCGLContext_generateTextureId(&tex->Id);
-            MCGLContext_activeTextureUnit(tex->textureUnit);
+            MCGLContext_activeTextureUnit(unit);
             MCGLContext_bind2DTexture(tex->Id);
             MCGLContext_rawdataToTexbuffer(tex, GL_TEXTURE_2D);
             MCGLContext_setupTexParameter(tex, GL_TEXTURE_2D);
+        } else {
+            MCGLContext_activeTextureUnit(unit);
+            MCGLContext_bind2DTexture(tex->Id);
         }
-        MCGLShader_shaderSetUInt(obj->shader, samplerName, tex->textureUnit);
-        MCGLContext_activeTextureUnit(tex->textureUnit);
-        MCGLContext_bind2DTexture(tex->Id);
+        return tex->Id;
     }
+    MCGLShader_shaderSetInt(obj->shader, samplerName, unit);
+    return 0;
 }
 
-method(MCGLContext, void, loadMaterial, MCMaterial* mtl)
+fun(MCGLContext, void, loadMaterial, MCMaterial* mtl)
 {
     //set up once part
     if (mtl->dataChanged == true) {
@@ -76,68 +74,15 @@ method(MCGLContext, void, loadMaterial, MCMaterial* mtl)
         mtl->dataChanged = false;
     }
     //set each time
-    MCGLShader_shaderSetUInt(obj->shader, "illum", mtl->illum);
-}
-
-method(MCGLContext, void, loadMesh, MCMesh* meth)
-{
-    if (meth->isDataLoaded == false) {
-        glGenVertexArrays(1, &meth->VAO);
-        glGenBuffers(1, &meth->VBO);
-        //VAO
-        glBindVertexArray(meth->VAO);
-        //VBO
-        glBindBuffer(GL_ARRAY_BUFFER, meth->VBO);
-        glBufferData(GL_ARRAY_BUFFER, meth->vertexDataSize, meth->vertexDataPtr, meth->useage);
-        //EBO
-        if (meth->vertexIndexes != null) {
-            glGenBuffers(1, &meth->EBO);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meth->EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*meth->vertexCount, meth->vertexIndexes, meth->useage);
-        }
-        //VAttributes
-        int i;
-        for (i=0; i<MCVertexAttribIndexMax-1; i++) {
-            MCVertexAttribute attr = meth->vertexAttribArray[i];
-            if (attr.vectorsize != (GLint)null) {
-                MCVertexAttributeLoad(&meth->vertexAttribArray[i]);
-            }
-        }
-        //Unbind
-        glBindVertexArray(0);
-        meth->isDataLoaded = true;
-    }
-}
-
-method(MCGLContext, void, drawMesh, MCMesh* meth)
-{
-    glBindVertexArray(meth->VAO);
-    //override draw mode
-    GLenum mode = meth->mode;
-    if (obj->drawMode != MCDrawNone) {
-        mode = obj->drawMode;
-    }
-    //draw
-    if (mode != MCDrawNone) {
-        if (meth->vertexIndexes != null) {
-            glDrawElements(mode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
-        }else{
-            glDrawArrays(mode, 0, meth->vertexCount);
-        }
-    }
-    //Unbind
-    glBindVertexArray(0);
-    MCGLContext_unbind2DTextures(0);
+    MCGLShader_shaderSetInt(obj->shader, "illum", mtl->illum);
 }
 
 onload(MCGLContext)
 {
     if (load(MCObject)) {
-        binding(MCGLContext, void, bye, voida);
-        binding(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
-        binding(MCGLContext, void, loadMaterial, MCMaterial* mtl);
-        binding(MCGLContext, void, loadMesh, MCMesh* meth);
-        binding(MCGLContext, void, drawMesh, MCMesh* ctx);
+        bid(MCGLContext, void, bye, voida);
+        bid(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
+        bid(MCGLContext, void, loadMaterial, MCMaterial* mtl);
         return cla;
     }else{
         return null;
@@ -145,12 +90,12 @@ onload(MCGLContext)
 }
 
 //Global
-utility(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature)
+util(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature)
 {
     return (MCBool)glIsEnabled(feature);
 }
 
-utility(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff)
+util(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff)
 {
     MCBool isOn = (MCBool)glIsEnabled(feature);
     if (onOrOff) {
@@ -160,56 +105,56 @@ utility(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff)
     }
 }
 
-utility(MCGLContext, void, flushCommandAsync, voida)
+util(MCGLContext, void, flushCommandAsync, voida)
 {
     glFlush();
 }
 
-utility(MCGLContext, void, flushCommandBlock, voida)
+util(MCGLContext, void, flushCommandBlock, voida)
 {
     glFinish();
 }
 
-utility(MCGLContext, void, clearScreen, voida)
+util(MCGLContext, void, clearScreen, voida)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-utility(MCGLContext, void, clearScreenWithColor, MCColorf color)
+util(MCGLContext, void, clearScreenWithColor, MCColorf color)
 {
     glClearColor(color.R.f, color.G.f, color.B.f, color.A.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-utility(MCGLContext, void, clearDepthBuffer, voida)
+util(MCGLContext, void, clearDepthBuffer, voida)
 {
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-utility(MCGLContext, void, clearStencilBuffer, voida)
+util(MCGLContext, void, clearStencilBuffer, voida)
 {
     glClear(GL_STENCIL_BUFFER_BIT);
 }
 
-utility(MCGLContext, void, setClearScreenColor, MCColorf color)
+util(MCGLContext, void, setClearScreenColor, MCColorf color)
 {
     glClearColor(color.R.f, color.G.f, color.B.f, color.A.f);
 }
 
-utility(MCGLContext, void, setPointSize, double pointsize)
+util(MCGLContext, void, setPointSize, double pointsize)
 {
     //glPointSize is replaced by the gl_PointSize variable in the vertex shader.
     //glPointSize((GLfloat)pointsize);
 }
 
-utility(MCGLContext, void, setLineWidth, double linewidth)
+util(MCGLContext, void, setLineWidth, double linewidth)
 {
     glLineWidth((GLfloat)linewidth);
 }
 
-utility(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW)
+util(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW)
 {
     if (isCCW) {
         glFrontFace(GL_CCW);
@@ -218,19 +163,19 @@ utility(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW)
     }
 }
 
-utility(MCGLContext, void, cullFace, MCGLFace face)
+util(MCGLContext, void, cullFace, MCGLFace face)
 {
     glCullFace(face);
 }
 
-utility(MCGLContext, void, cullBackFace, voida)
+util(MCGLContext, void, cullBackFace, voida)
 {
     MCGLContext_cullFace(MCGLBack);
 }
 
 //Texture
 static MCUInt texUnitNum = 1;
-utility(MCGLContext, MCUInt, getIdleTextureUnit, voida)
+util(MCGLContext, MCUInt, getIdleTextureUnit, voida)
 {
     if (texUnitNum < MCGLContext_getMaxTextureUnits(0)) {
         texUnitNum++;
@@ -240,37 +185,37 @@ utility(MCGLContext, MCUInt, getIdleTextureUnit, voida)
     return texUnitNum;
 }
 
-utility(MCGLContext, MCUInt, getMaxTextureUnits, voida)
+util(MCGLContext, MCUInt, getMaxTextureUnits, voida)
 {
     return (MCUInt)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
 }
 
-utility(MCGLContext, void, generateTextureId, MCUInt* tid)
+util(MCGLContext, void, generateTextureId, GLuint* tid)
 {
     glGenTextures(1, tid);
 }
 
-utility(MCGLContext, void, activeTextureUnit, MCUInt index)
+util(MCGLContext, void, activeTextureUnit, GLuint index)
 {
     glActiveTexture(GL_TEXTURE0 + index);
 }
 
-utility(MCGLContext, void, bindCubeTexture, MCUInt tid)
+util(MCGLContext, void, bindCubeTexture, GLint tid)
 {
     glBindTexture(GL_TEXTURE_CUBE_MAP, tid);
 }
 
-utility(MCGLContext, void, bind2DTexture, MCUInt tid)
+util(MCGLContext, void, bind2DTexture, GLuint tid)
 {
     glBindTexture(GL_TEXTURE_2D, tid);
 }
 
-utility(MCGLContext, void, unbind2DTextures, voida)
+util(MCGLContext, void, unbind2DTextures, voida)
 {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-utility(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
+util(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
 {
     if (tex->data && tex->data->raw) {
         if (tex->data->channels == 4) {
@@ -285,7 +230,7 @@ utility(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
 }
 
 //GL_TEXTURE_2D
-utility(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype)
+util(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype)
 {
     if (tex->displayMode == MCTextureRepeat) {
         glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -299,7 +244,7 @@ utility(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype)
     glTexParameteri(textype, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-utility(MCGLContext, void, enableTransparency, MCBool enable)
+util(MCGLContext, void, enableTransparency, MCBool enable)
 {
     if (enable) {
         glEnable(GL_BLEND);
@@ -310,7 +255,7 @@ utility(MCGLContext, void, enableTransparency, MCBool enable)
     }
 }
 
-utility(MCGLContext, void, enablePolygonOffset, MCBool enable)
+util(MCGLContext, void, enablePolygonOffset, MCBool enable)
 {
     if (enable) {
         glEnable(GL_POLYGON_OFFSET_FILL);
@@ -322,7 +267,7 @@ utility(MCGLContext, void, enablePolygonOffset, MCBool enable)
 }
 
 //Frame Rate (FPS)
-utility(MCGLContext, int, tickFPS, MCClock* clock)
+util(MCGLContext, int, tickFPS, MCClock* clock)
 {
     static unsigned fcount = 0;
     static clock_t elapse = 0;
@@ -345,7 +290,7 @@ utility(MCGLContext, int, tickFPS, MCClock* clock)
 }
 
 //Shader
-utility(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version)
+util(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version)
 {
     if (!source) {
         return false;
@@ -379,7 +324,7 @@ utility(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const G
     return true;
 }
 
-utility(MCGLContext, int, linkProgram, GLuint prog)
+util(MCGLContext, int, linkProgram, GLuint prog)
 {
     GLint status;
     glLinkProgram(prog);
@@ -401,7 +346,7 @@ utility(MCGLContext, int, linkProgram, GLuint prog)
     return 1;
 }
 
-utility(MCGLContext, int, validateProgram, GLuint prog)
+util(MCGLContext, int, validateProgram, GLuint prog)
 {
     GLint logLength, status;
     
@@ -422,13 +367,13 @@ utility(MCGLContext, int, validateProgram, GLuint prog)
     return 1;
 }
 
-utility(MCGLContext, void, setViewport, int x, int y, int width, int height)
+util(MCGLContext, void, setViewport, int x, int y, int width, int height)
 {
     glEnable(GL_DEPTH_TEST);//this is for Google cardboard
     glViewport(x, y, width, height);
 }
 
-utility(MCGLContext, void, setScissor, int x, int y, int width, int height)
+util(MCGLContext, void, setScissor, int x, int y, int width, int height)
 {
     glEnable(GL_SCISSOR_TEST);
     glScissor(x, y, width, height);

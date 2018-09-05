@@ -6,6 +6,7 @@
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
+there also have an Mac OS version https://github.com/sunpaq/BEMac
 
 ## Requirements
 

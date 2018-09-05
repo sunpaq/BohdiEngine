@@ -1,7 +1,7 @@
 #ifndef _MCCamera
 #define _MCCamera
 
-#include "monkc.h"
+#include "monkc_export.h"
 #include "MC3DBase.h"
 #include "MC3DNode.h"
 
@@ -39,21 +39,22 @@ class(MCCamera, MC3DNode,
     MCCameraRotateMode rotateMode;
 );
 
-method(MCCamera, void, bye, voida);
-method(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height);
+fun(MCCamera, void, bye, voida);
+fun(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height);
 
-method(MCCamera, void, transformWorld, MCMatrix4* mat4);
-method(MCCamera, void, transformSelf, MCMatrix4* mat4);
-method(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht);
+fun(MCCamera, void, transformWorld, MCMatrix4* mat4);
+fun(MCCamera, void, transformSelf, MCMatrix4* mat4);
+fun(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht);
 
-method(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
-method(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY);
-method(MCCamera, void, pull, MCFloat deltaR);
-method(MCCamera, void, reset, voida);
-method(MCCamera, void, update, MCGLContext* ctx);//override
-method(MCCamera, void, distanceScale, MCFloat scale);
-method(MCCamera, void, setRotationMat3, float mat3[9]);
-method(MCCamera, void, printDebugInfo, voida);
+fun(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
+fun(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY);
+fun(MCCamera, void, pull, MCFloat deltaR);
+fun(MCCamera, void, reset, voida);
+fun(MCCamera, void, distanceScale, MCFloat scale);
+fun(MCCamera, void, setRotationMat3, float mat3[9]);
+fun(MCCamera, void, printDebugInfo, voida);
+
+fun(MCCamera, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);//override
 
 #define MCLensStandard50mm (0.050)
 #define MCLensWide24mm     (0.024)

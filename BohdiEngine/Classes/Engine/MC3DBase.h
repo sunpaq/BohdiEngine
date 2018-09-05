@@ -1,9 +1,8 @@
-#ifndef _MC3DBase
-#define _MC3DBase
+#ifndef MC3DBase_H
+#define MC3DBase_H
 
-#include <math.h>
 #include "MCMath.h"
-#include "MCGLBase.h"
+#include "MCShaderTypes.h"
 
 #define MCBUFFER_OFFSET(i)         ((char *)NULL + (i))
 #define MCARRAY_COUNT(array, type) (sizeof(array)/sizeof(type))
@@ -14,6 +13,44 @@ typedef enum {
     MC3DErrChildNotFound,
     MC3DErrUniformNotFound = -1,
 } MC3DErrCode;
+
+//#define GL_POINTS                                        0x0000
+//#define GL_LINES                                         0x0001
+//#define GL_LINE_LOOP                                     0x0002
+//#define GL_LINE_STRIP                                    0x0003
+//#define GL_TRIANGLES                                     0x0004
+//#define GL_TRIANGLE_STRIP                                0x0005
+//#define GL_TRIANGLE_FAN                                  0x0006
+
+typedef enum {
+    MCDrawNone = -1,
+    MCPoints = 0,
+    MCLines  = 1,
+    MCLineLoop = 2,
+    MCLineStrip = 3,
+    MCTriAngles = 4,
+    MCTriAngleStrip = 5,
+    MCTriAngleFan = 6
+} MCDrawMode;
+
+typedef union {
+    struct {
+        double xmax;
+        double xmin;
+        double ymax;
+        double ymin;
+        double zmax;
+        double zmin;
+    };
+    double m[6];
+} MC3DFrame;
+
+typedef struct {
+    MCFloat R;
+    MCFloat G;
+    MCFloat B;
+    MCFloat A;
+} MCColorf;
 
 //world is right hand y on top, local is left hand z on top
 MCInline MCVector3 MCWorldCoorFromLocal(MCVector3 localvertex, MCVector3 modelposition) {
@@ -199,7 +236,7 @@ MCInline MCMatrix4 MCMatrix4Invert(MCMatrix4 matrix, MCBool* isInvertible) {
     return MCMatrix4FromMatrix3(i3);
 }
 
-MCInline MCMatrix3 MCMatrix3InvertAndTranspose(MCMatrix3 matrix, void* isInvertible) {
+MCInline MCMatrix3 MCMatrix3InvertAndTranspose(MCMatrix3 matrix, MCBool* isInvertible) {
     return MCMatrix3Transpose(MCMatrix3Invert(matrix, isInvertible));
 }
 

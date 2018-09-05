@@ -22,14 +22,14 @@ class(MCProcess, MCObject,
 	gid_t egid;
 );
 
-method(MCProcess, void, printIDs, voida);
+fun(MCProcess, void, printIDs, voida);
 //returns(0 in child/child-pid in parent/-1 on error)
-method(MCProcess, int, fork, voida);
+fun(MCProcess, int, fork, voida);
 
 //may be not supported by OS
-method(MCProcess, int, registerAtExitCallback, void (*func)(void));
-method(MCProcess, void, exitWithStatus, int status);
-method(MCProcess, pid_t, waitAnyChildExit, int* statusAddr);
+fun(MCProcess, int, registerAtExitCallback, void (*func)(void));
+fun(MCProcess, void, exitWithStatus, int status);
+fun(MCProcess, pid_t, waitAnyChildExit, int* statusAddr);
 
 typedef enum {
 	wait_no_option=0,
@@ -43,29 +43,29 @@ typedef enum {
 }MCProcessOptions;
 //wait_continued | wait_no_hang
 
-method(MCProcess, pid_t, waitPIDChildExit, pid_t pid, int* statusAddr, int options);
+fun(MCProcess, pid_t, waitPIDChildExit, pid_t pid, int* statusAddr, int options);
 
-method(MCProcess, int, isChildExitNormal, int status);
-method(MCProcess, int, getChildExitLowOrder8Bit, int status);
+fun(MCProcess, int, isChildExitNormal, int status);
+fun(MCProcess, int, getChildExitLowOrder8Bit, int status);
 
-method(MCProcess, int, isChildExitBySignal, int status);
-method(MCProcess, int, getChildTerminateSignal, int status);
-method(MCProcess, int, isCoreDumpFileGenerated, int status);
+fun(MCProcess, int, isChildExitBySignal, int status);
+fun(MCProcess, int, getChildTerminateSignal, int status);
+fun(MCProcess, int, isCoreDumpFileGenerated, int status);
 
-method(MCProcess, int, isChildStopped, int status);
-method(MCProcess, int, getChildStopSignal, int status);
-//method(MCProcess, int, isChildContinued, int status);
+fun(MCProcess, int, isChildStopped, int status);
+fun(MCProcess, int, getChildStopSignal, int status);
+//fun(MCProcess, int, isChildContinued, int status);
 
 typedef struct MCProcessRUseage_struct {
     struct rusage* rusage_p;
     char* description;
 } MCProcessRUseage;
 //wait3
-//method(MCProcess,
+//fun(MCProcess,
 //	pid_t, waitAnyChildExitGetResourceUseage,
 //	int* statusAddr, int options, MCProcessRUseage* useage);
 //wait4
-method(MCProcess, 
+fun(MCProcess, 
 	pid_t, waitPIDChildExitGetResourceUseage, 
 	pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage);
 

@@ -1,7 +1,43 @@
 #include "MCString.h"
 #include "MCMath.h"
 
-utility(MCString, MCBool, contains, const char* str, const char* instr)
+#include <limits.h>
+#ifndef LINE_MAX
+#define LINE_MAX 2048
+#endif
+
+static const char  MCTab = '\t';
+static const char  MCWhiteSpace = ' ';
+static const char  MCNewLineN = '\n';
+static const char  MCNewLineR = '\r';
+#define MCCond_PathDiv(w)   (*w == '/' || *w =='\\')
+
+//return remain string
+util(MCString, const char*, trimWhiteSpace, const char** target_p)
+{
+    const char* iter = *target_p;
+    while (*iter == MCWhiteSpace || *iter == MCTab)
+    iter++;
+    *target_p = iter;//update remain
+    return iter;
+}
+
+//Old Mac9 end of line sequence: \r
+//Unix OSX end of line sequence: \n
+//Windows  end of line sequence: \r\n
+util(MCString, MCBool, isNewLine, const char* s)
+{
+    if (s) {
+        if (*s == MCNewLineN) {
+            return true;
+        } else if (*s == MCNewLineR) { //Windows NewLine
+            return true;
+        }
+    }
+    return false;
+}
+
+util(MCString, MCBool, contains, const char* str, const char* instr)
 {
     if (strstr(instr, str)) {
         return true;
@@ -9,7 +45,7 @@ utility(MCString, MCBool, contains, const char* str, const char* instr)
     return false;
 }
 
-utility(MCString, size_t, replace, const char* str, const char* withstr, const char* instr, char (*buff)[])
+util(MCString, size_t, replace, const char* str, const char* withstr, const char* instr, char (*buff)[])
 {
     size_t count = strlen(str);
     size_t wcount = strlen(withstr);
@@ -33,7 +69,7 @@ utility(MCString, size_t, replace, const char* str, const char* withstr, const c
     return b;
 }
 
-utility(MCString, size_t, reverse, const char* str, char *buff)
+util(MCString, size_t, reverse, const char* str, char *buff)
 {
     size_t count = strlen(str);
     char* c = (char*)&str[count-1];
@@ -45,7 +81,7 @@ utility(MCString, size_t, reverse, const char* str, char *buff)
     return count;
 }
 
-utility(MCString, const char*, percentEncode, const char* str, char *buff)
+util(MCString, const char*, percentEncode, const char* str, char *buff)
 {
     if (!str || !buff) {
         return null;
@@ -101,7 +137,7 @@ utility(MCString, const char*, percentEncode, const char* str, char *buff)
     return buff;
 }
 
-utility(MCString, const char*, percentDecode, const char* str, char *buff)
+util(MCString, const char*, percentDecode, const char* str, char *buff)
 {
     if (!str || !buff) {
         return null;
@@ -171,7 +207,7 @@ utility(MCString, const char*, percentDecode, const char* str, char *buff)
     return buff;
 }
 
-utility(MCString, const char*, baseFromPath, const char* path, char (*buff)[])
+util(MCString, const char*, baseFromPath, const char* path, char (*buff)[])
 {
     char reversebuff[PATH_MAX] = {0};
     size_t count = MCString_reverse(path, reversebuff);
@@ -192,9 +228,9 @@ utility(MCString, const char*, baseFromPath, const char* path, char (*buff)[])
     return &(*buff)[0];
 }
 
-utility(MCString, const char*, filenameFromPath, const char* path, char (*buff)[])
+util(MCString, const char*, filenameFromPath, const char* path, char (*buff)[])
 {
-    trimWhiteSpace(&path);
+    MCString_trimWhiteSpace(&path);
 
     char reversebuff[PATH_MAX] = {0};
     MCString_reverse(path, reversebuff);
@@ -216,9 +252,9 @@ utility(MCString, const char*, filenameFromPath, const char* path, char (*buff)[
     return &(*buff)[0];
 }
 
-utility(MCString, size_t, filenameTrimExtension, const char* name, char* buff)
+util(MCString, size_t, filenameTrimExtension, const char* name, char* buff)
 {
-    trimWhiteSpace(&name);
+    MCString_trimWhiteSpace(&name);
     char reversebuff[PATH_MAX] = {0};
     MCString_reverse(name, reversebuff);
     
@@ -257,9 +293,9 @@ utility(MCString, size_t, filenameTrimExtension, const char* name, char* buff)
     }
 }
 
-utility(MCString, size_t, extensionFromFilename, const char* name, char* basebuff, char* extbuff)
+util(MCString, size_t, extensionFromFilename, const char* name, char* basebuff, char* extbuff)
 {
-    trimWhiteSpace(&name);
+    MCString_trimWhiteSpace(&name);
     int i=0, j=0;
     while (name[i] != NUL && name[i] != NUL) {
         if (name[i] == '.') {
@@ -288,7 +324,7 @@ utility(MCString, size_t, extensionFromFilename, const char* name, char* basebuf
     }
 }
 
-utility(MCString, const char*, concate, const char** strings, size_t count, char (*buff)[])
+util(MCString, const char*, concate, const char** strings, size_t count, char (*buff)[])
 {
     strcpy(*buff, strings[0]);
     for (int i=1; i<count; i++) {
@@ -297,19 +333,19 @@ utility(MCString, const char*, concate, const char** strings, size_t count, char
     return *buff;
 }
 
-utility(MCString, const char*, concateWith, const char* sp, const char* path1, const char* path2, char (*buff)[])
+util(MCString, const char*, concateWith, const char* sp, const char* path1, const char* path2, char (*buff)[])
 {
     return MCString_concate((const char* []){
         path1, sp, path2
     }, 3, buff);
 }
 
-utility(MCString, const char*, concatePath, const char* path1, const char* path2, char (*buff)[])
+util(MCString, const char*, concatePath, const char* path1, const char* path2, char (*buff)[])
 {
     return MCString_concateWith("/", path1, path2, buff);
 }
 
-utility(MCString, const char*, compressToCharCount, const char* source, char* buff)
+util(MCString, const char*, compressToCharCount, const char* source, char* buff)
 {
     //assume buff is large enough
     if (source && buff) {
@@ -344,7 +380,7 @@ utility(MCString, const char*, compressToCharCount, const char* source, char* bu
     return buff;
 }
 
-utility(MCString, const char*, extractFromCharCount, const char* source, char* buff)
+util(MCString, const char*, extractFromCharCount, const char* source, char* buff)
 {
     if (source && buff) {
         int cur = 0; int count=0; char last = NUL;
@@ -397,7 +433,7 @@ static void permutationOf(char str[], int index)
     }
 }
 
-utility(MCString, void, printPermutationOf, char str[])
+util(MCString, void, printPermutationOf, char str[])
 {
     char buff[LINE_MAX];
     strcpy(buff, str);
@@ -418,13 +454,13 @@ oninit(MCString)
     }
 }
 
-method(MCString, void, bye, voida)
+fun(MCString, void, bye, voida)
 {
     //debug_log("MCString bye");
     free(obj->buff);
 }
 
-method(MCString, MCString*, initWithCString, const char* str)
+fun(MCString, MCString*, initWithCString, const char* str)
 {
     size_t len = strlen(str);
     if (len >= MCStringBlock) {
@@ -462,7 +498,7 @@ MCString* MCString_newForHttp(char* cstr, int isHttps)
 static char get_one_char()
 {
     char cf = NUL;
-    while(!isNewLine(&cf)) {
+    while(!MCString_isNewLine(&cf)) {
         cf = getchar();
     }//clear the buff
 	return cf;
@@ -472,14 +508,14 @@ static void get_chars_until_enter(char resultString[])
 {
 	char tc = NUL;
 	int i=0;
-	while(!isNewLine(&tc)){
+	while(!MCString_isNewLine(&tc)){
 		resultString[i]=tc;
 		i++;
 	}
 	resultString[i]=NUL;
 }
 
-method(MCString, void, add, char* str)
+fun(MCString, void, add, char* str)
 {
     if (MCStringBlock-obj->size < strlen(str)+1) {
         char* newbuff = malloc(sizeof(char) * (obj->size + MCStringBlock));
@@ -493,7 +529,7 @@ method(MCString, void, add, char* str)
     strncat(obj->buff, str, strlen(str));
 }
 
-method(MCString, void, print, MCBool withNewline)
+fun(MCString, void, print, MCBool withNewline)
 {
     if (withNewline)
         debug_log("%s\n", obj->buff);
@@ -501,13 +537,13 @@ method(MCString, void, print, MCBool withNewline)
         debug_log("%s", obj->buff);
 }
 
-method(MCString, const char*, toCString, char const buff[])
+fun(MCString, const char*, toCString, char const buff[])
 {
 	strcpy(cast(char*, buff), obj->buff);
 	return buff;
 }
 
-method(MCString, int, equalTo, MCString* stringToComp)
+fun(MCString, int, equalTo, MCString* stringToComp)
 {
 	int res;
 	res = strcmp(obj->buff, stringToComp->buff);
@@ -517,17 +553,17 @@ method(MCString, int, equalTo, MCString* stringToComp)
 		return 0;
 }
 
-method(MCString, char, getOneChar, voida)
+fun(MCString, char, getOneChar, voida)
 {
 	return get_one_char();
 }
 
-method(MCString, void, getCharsUntilEnter, char resultString[])
+fun(MCString, void, getCharsUntilEnter, char resultString[])
 {
 	get_chars_until_enter(resultString);
 }
 
-method(MCString, MCBool, startWith, const char* str)
+fun(MCString, MCBool, startWith, const char* str)
 {
     size_t len = strlen(str);
     if (len > obj->length) {
@@ -541,19 +577,19 @@ method(MCString, MCBool, startWith, const char* str)
     }
 }
 
-method(MCString, double, toDoubleValue, char** endptr)
+fun(MCString, double, toDoubleValue, char** endptr)
 {
     return strtod(obj->buff, endptr);
 }
 
-method(MCString, MCString*, copyCompressedString, voida)
+fun(MCString, MCString*, copyCompressedString, voida)
 {
     MCString* string = new(MCString);
     MCString_compressToCharCount(obj->buff, string->buff);
     return string;
 }
 
-method(MCString, MCString*, copyExtractedString, voida)
+fun(MCString, MCString*, copyExtractedString, voida)
 {
     MCString* string = new(MCString);
     MCString_extractFromCharCount(obj->buff, string->buff);
@@ -563,18 +599,18 @@ method(MCString, MCString*, copyExtractedString, voida)
 onload(MCString)
 {
     if (load(MCObject)) {
-        binding(MCString, MCString*, initWithCString, char* str);
-        binding(MCString, void, add, char* str);
-        binding(MCString, void, print, MCBool withNewline);
-        binding(MCString, char*, toCString, char const buff[]);
-        binding(MCString, int, equalTo, MCString* stringToComp);
-        binding(MCString, char, getOneChar);
-        binding(MCString, void, getCharsUntilEnter, char const resultString[]);
-        binding(MCString, void, bye);
-        binding(MCString, MCBool, startWith, const char* str);
-        binding(MCString, double, toDoubleValue, char** endptr);
-        binding(MCString, MCString*, copyCompressedString, voida);
-        binding(MCString, MCString*, copyExtractedString, voida);
+        bid(MCString, MCString*, initWithCString, char* str);
+        bid(MCString, void, add, char* str);
+        bid(MCString, void, print, MCBool withNewline);
+        bid(MCString, char*, toCString, char const buff[]);
+        bid(MCString, int, equalTo, MCString* stringToComp);
+        bid(MCString, char, getOneChar);
+        bid(MCString, void, getCharsUntilEnter, char const resultString[]);
+        bid(MCString, void, bye);
+        bid(MCString, MCBool, startWith, const char* str);
+        bid(MCString, double, toDoubleValue, char** endptr);
+        bid(MCString, MCString*, copyCompressedString, voida);
+        bid(MCString, MCString*, copyExtractedString, voida);
         return cla;
     }else{
         return null;

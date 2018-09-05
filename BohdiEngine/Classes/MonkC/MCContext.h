@@ -1,8 +1,7 @@
-#include "monkc.h"
-#include "string.h"
-
 #ifndef MCContext_
 #define MCContext_
+
+#include "monkc.h"
 
 class(MCContext, MCObject,
 	int argc;
@@ -10,18 +9,18 @@ class(MCContext, MCObject,
 	char selectionChar;
 );
 
-method(MCContext, MCContext*, newWithArgs, int argc, char** argv);
-method(MCContext, void, bye, voida);
-method(MCContext, void, dumpParas, voida);
-method(MCContext, char*, getPara, int index);
-method(MCContext, int, isIndexedParaEqualTo, int index, char* para);
-method(MCContext, int, isHavePara, char* para);
-method(MCContext, char, showMenuAndGetSelectionChar, int count, ...);
-method(MCContext, int, showConfirmAndGetBOOL, const char* confirm);
-method(MCContext, void, getUserInputString, char resultString[]);
-method(MCContext, char*, getEnvironmentVar, const char* key);
-method(MCContext, int, setEnvironmentVar, const char* key, const char* value, int isOverwrite);
-method(MCContext, int, clearEnvironmentVar, const char* key);
+fun(MCContext, MCContext*, newWithArgs, int argc, char** argv);
+fun(MCContext, void, bye, voida);
+fun(MCContext, void, dumpParas, voida);
+fun(MCContext, char*, getPara, int index);
+fun(MCContext, int, isIndexedParaEqualTo, int index, char* para);
+fun(MCContext, int, isHavePara, char* para);
+fun(MCContext, char, showMenuAndGetSelectionChar, int count, ...);
+fun(MCContext, int, showConfirmAndGetBOOL, const char* confirm);
+fun(MCContext, void, getUserInputString, char resultString[]);
+fun(MCContext, char*, getEnvironmentVar, const char* key);
+fun(MCContext, int, setEnvironmentVar, const char* key, const char* value, int isOverwrite);
+fun(MCContext, int, clearEnvironmentVar, const char* key);
 
 extern char **environ;
 

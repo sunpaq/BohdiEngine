@@ -8,6 +8,7 @@
 
 #include "MCCube.h"
 #include "MC3DBase.h"
+#include "MCMesh.h"
 
 static float gCubeVertexData[11*6*6] = {
     // Data layout for each line below is:
@@ -61,18 +62,18 @@ oninit(MCCube)
         
         MCMesh* mesh = new(MCMesh);
         mesh->vertexCount = 36;
-        mesh->vertexAttribArray[0] = (MCVertexAttribute){MCVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(0)};
-        mesh->vertexAttribArray[1] = (MCVertexAttribute){MCVertexAttribNormal,   3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(12)};
-        mesh->vertexAttribArray[2] = (MCVertexAttribute){MCVertexAttribColor,    3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(24)};
-        mesh->vertexAttribArray[3] = (MCVertexAttribute){MCVertexAttribTexCoord0,2, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(36)};
+//        mesh->vertexAttribArray[0] = (MCVertexAttribute){MCVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(0)};
+//        mesh->vertexAttribArray[1] = (MCVertexAttribute){MCVertexAttribNormal,   3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(12)};
+//        mesh->vertexAttribArray[2] = (MCVertexAttribute){MCVertexAttribColor,    3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(24)};
+//        mesh->vertexAttribArray[3] = (MCVertexAttribute){MCVertexAttribTexCoord0,2, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(36)};
         
         mesh->vertexDataNeedRelease = false;
         mesh->vertexDataPtr = gCubeVertexData;
         mesh->vertexDataSize = sizeof(gCubeVertexData);
                 
         MCLinkedList_addItem(svar(meshes), (MCItem*)mesh);
-        sobj->material = new(MCMaterial);
-        sobj->diffuseTexture = MCTexture_initWithFileName(new(MCTexture), "tex8.bmp");
+        //sobj->material = new(MCMaterial);
+        //sobj->diffuseTexture = MCTexture_initWithFileName(new(MCTexture), "tex8.bmp");
         
         return obj;
     }else{

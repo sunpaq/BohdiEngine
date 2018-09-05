@@ -6,9 +6,8 @@
 //  Copyright © 2017 oreisoft. All rights reserved.
 //
 
-#include "BEAssetsManager.h"
 #include "BE2DTextureData.h"
-#include "MCString.h"
+#include "BEAssetsManager.h"
 #include "SOIL.h"
 
 oninit(BE2DTextureData)
@@ -36,7 +35,7 @@ oninit(BE2DTextureData)
     }
 }
 
-utility(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path, unsigned type)
+util(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path, unsigned type)
 {
     BE2DTextureData* data = new(BE2DTextureData);
     
@@ -62,12 +61,12 @@ utility(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path
 
 }
 
-utility(BE2DTextureData, BE2DTextureData*, newWithPathname, const char* path)
+util(BE2DTextureData, BE2DTextureData*, newWithPathname, const char* path)
 {
     return BE2DTextureData_newWithPathnameType(path, 3);//default RGB
 }
 
-utility(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file)
+util(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file)
 {
     char path[PATH_MAX] = {0};
     if(MCFileGetPath(file, path)) {
@@ -79,7 +78,7 @@ utility(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file)
     return null;
 }
 
-method(BE2DTextureData, void, bye, voida)
+fun(BE2DTextureData, void, bye, voida)
 {
     if (obj->path) {
         free(obj->path);
@@ -95,7 +94,7 @@ method(BE2DTextureData, void, bye, voida)
 onload(BE2DTextureData)
 {
     if (load(MCObject)) {
-        binding(BE2DTextureData, void, bye, voida);
+        bid(BE2DTextureData, void, bye, voida);
         return cla;
     }else{
         return null;

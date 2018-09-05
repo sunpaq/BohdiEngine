@@ -20,7 +20,7 @@ oninit(MC3DModelCache)
     }
 }
 
-utility(MC3DModelCache, MC3DModelCache*, shared, voida)
+util(MC3DModelCache, MC3DModelCache*, shared, voida)
 {
     if (!instance) {
         instance = new(MC3DModelCache);
@@ -28,7 +28,7 @@ utility(MC3DModelCache, MC3DModelCache*, shared, voida)
     return instance;
 }
 
-method(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name)
+fun(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name)
 {
     //MC3DModel* model = MC3DModelCache_fetchModelNamed(obj, name);
     MCGeneric result;
@@ -43,7 +43,7 @@ method(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name)
     }
 }
 
-method(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name)
+fun(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name)
 {
     if (name) {
         MCGeneric result;
@@ -59,8 +59,8 @@ method(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name)
 onload(MC3DModelCache)
 {
     if (load(MCObject)) {
-        binding(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name);
-        binding(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name);
+        bid(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name);
+        bid(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name);
         return cla;
     } else {
         return null;

@@ -9,7 +9,8 @@
 #ifndef BE2DTextureData_h
 #define BE2DTextureData_h
 
-#include "monkc.h"
+#include "monkc_export.h"
+#include "BE2DTextureData.h"
 
 //handle image, no GL related code
 class(BE2DTextureData, MCObject,
@@ -31,10 +32,10 @@ class(BE2DTextureData, MCObject,
       int channels;
 );
 
-utility(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path, unsigned type);
-utility(BE2DTextureData, BE2DTextureData*, newWithPathname, const char* path);
-utility(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file);
+util(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path, unsigned type);
+util(BE2DTextureData, BE2DTextureData*, newWithPathname, const char* path);
+util(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file);
 
-method(BE2DTextureData, void, bye, voida);
+fun(BE2DTextureData, void, bye, voida);
 
 #endif /* BE2DTextureData_h */

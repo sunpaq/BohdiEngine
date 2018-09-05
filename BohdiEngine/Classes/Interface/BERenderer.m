@@ -7,13 +7,15 @@
 //
 
 #import "BERenderer.h"
-#import "MCDirector.h"
 
+#include "../Engine/MCDirector.h"
+#include "../Backend/OpenGL/MCGLRenderer.h"
 #include "TargetConditionals.h"
 
 @interface BERenderer()
 {
     MCDirector* director;
+    MCObject* renderer;
     float pinch_scale;
 }
 @end
@@ -27,7 +29,11 @@
 
 -(BOOL)doesDrawWireFrame
 {
-    return computed(director, contextHandler)->drawMode == MCLineStrip? YES : NO;
+    if (renderer) {
+        MCDrawMode mode = (MCDrawMode)ff(renderer, getDrawMode, 0);
+        return mode == MCLineStrip? YES : NO;
+    }
+    return NO;
 }
 
 #if TARGET_OS_IOS
@@ -122,7 +128,10 @@
 
 -(void)setDoesDrawWireFrame:(BOOL)doesDrawWireFrame
 {
-    computed(director, contextHandler)->drawMode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
+    if (renderer) {
+        MCDrawMode mode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
+        ff(renderer, setDrawMode, mode);
+    }
 }
 
 -(instancetype) initWithFrame:(CGRect)frame
@@ -130,6 +139,7 @@
     if (self = [super init]) {
         pinch_scale = 10.0;
         director = new(MCDirector);
+        renderer = (MCObject*)MCGLRenderer_initWithDefaultShader(new(MCGLRenderer), 0);
         MCDirector_setupMainScene(director,
                                   frame.size.width * ScreenScale,
                                   frame.size.height * ScreenScale);
@@ -187,9 +197,16 @@
 
 -(instancetype) scissorAllScene:(CGRect)frame
 {
+    int x = (int)frame.origin.x;
+    int y = (int)frame.origin.y;
+    int w = (int)frame.size.width;
+    int h = (int)frame.size.height;
+    
+    if (renderer) {
+        ff(renderer, scissorAllScene, x, y, w, h);
+    }
     if (director) {
-        MCDirector_scissorAllScene(director, (int)frame.origin.x, (int)frame.origin.y,
-                                   (int)frame.size.width, (int)frame.size.height);
+        MCDirector_resizeAllScene(director, w, h);
     }
     return self;
 }
@@ -423,24 +440,29 @@
     }
 }
 
+//mix(void, updateScene, MC3DScene* scene);
+//mix(void, drawScene, MC3DScene* scene);
 -(void) drawFrame
 {
-    if (director) {
+    if (director && renderer) {
         MCDirector_updateAll(director, 0);
-        MCDirector_drawAll(director, 0);
+        ff(renderer, updateScene, director->lastScene);
+        ff(renderer, drawScene, director->lastScene);
     }
 }
 
 -(void) drawFrame:(CGRect)viewport
 {
-    if (director) {
+    if (director && renderer) {
         int x = viewport.origin.x;
         int y = viewport.origin.y;
         int width = viewport.size.width;
         int height = viewport.size.height;
-        MCDirector_scissorAllScene(director, x, y, width, height);
+        
+        ff(renderer, scissorAllScene, x, y, width, height);
         MCDirector_updateAll(director, 0);
-        MCDirector_drawAll(director, 0);
+        ff(renderer, updateScene, director->lastScene);
+        ff(renderer, drawScene, director->lastScene);
     }
 }
 
@@ -458,15 +480,17 @@
         int y = viewport.origin.y;
         int width = viewport.size.width;
         int height = viewport.size.height;
-        MCDirector_scissorAllScene(director, x, y, width, height);
+        
+        ff(renderer, scissorAllScene, x, y, width, height);
         MCDirector_updateAll(director, 0);
-        MCDirector_drawAll(director, 0);
+        ff(renderer, updateScene, director->lastScene);
+        ff(renderer, drawScene, director->lastScene);
     }
 }
 
 -(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye vrFOV:(CGFloat)fov
 {
-    if (director) {
+    if (director && renderer) {
         MCCamera* cam = computed(director, cameraHandler);
         if (cam) {
             cam->field_of_view = (double)fov;
@@ -479,9 +503,11 @@
         int y = viewport.origin.y;
         int width = viewport.size.width;
         int height = viewport.size.height;
-        MCDirector_scissorAllScene(director, x, y, width, height);
+        
+        ff(renderer, scissorAllScene, x, y, width, height);
         MCDirector_updateAll(director, 0);
-        MCDirector_drawAll(director, 0);
+        ff(renderer, updateScene, director->lastScene);
+        ff(renderer, drawScene, director->lastScene);
     }
 }
 

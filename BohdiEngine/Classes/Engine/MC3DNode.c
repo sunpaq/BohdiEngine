@@ -7,13 +7,13 @@
 //
 
 #include "MC3DNode.h"
-#include "MCLinkedList.h"
-#include "MCGLRenderer.h"
 
 oninit(MC3DNode)
 {
     if (init(MCItem)) {
         var(visible) = true;
+        var(receiveEvent) = false;
+        var(overrideDraw) = false;
         var(center) = MCVector3Make(0, 0, 0);
         
         var(transform) = MCMatrix4Identity;
@@ -22,6 +22,7 @@ oninit(MC3DNode)
         var(material) = null;
         var(diffuseTexture) = null;
         var(specularTexture)= null;
+        var(normalTexture) = null;
         var(zorder) = -1;
         
         var(children) = new(MCLinkedList);
@@ -33,16 +34,17 @@ oninit(MC3DNode)
     }
 }
 
-method(MC3DNode, void, bye, voida)
+fun(MC3DNode, void, bye, voida)
 {
     release(var(material));
     release(var(diffuseTexture));
     release(var(specularTexture));
+    release(var(normalTexture));
     release(var(children));
     release(var(meshes));
 }
 
-method(MC3DNode, MC3DErrCode, addChild, MC3DNode* child)
+fun(MC3DNode, MC3DErrCode, addChild, MC3DNode* child)
 {
     child->visible = false;
     MCLinkedList_addItem(var(children), (MCItem*)child);
@@ -50,7 +52,7 @@ method(MC3DNode, MC3DErrCode, addChild, MC3DNode* child)
     return MC3DSuccess;
 }
 
-method(MC3DNode, MC3DErrCode, addChildAtIndex, MC3DNode* child, int index)
+fun(MC3DNode, MC3DErrCode, addChildAtIndex, MC3DNode* child, int index)
 {
     child->visible = false;
     if (index < 0) {
@@ -62,19 +64,19 @@ method(MC3DNode, MC3DErrCode, addChildAtIndex, MC3DNode* child, int index)
     return MC3DSuccess;
 }
 
-method(MC3DNode, MC3DErrCode, removeChild, MC3DNode* child)
+fun(MC3DNode, MC3DErrCode, removeChild, MC3DNode* child)
 {
     child->visible = false;
     MCLinkedList_delItem(var(children), (MCItem*)child);
     return MC3DSuccess;
 }
 
-method(MC3DNode, void, copyChildrenFrom, MC3DNode* node)
+fun(MC3DNode, void, copyChildrenFrom, MC3DNode* node)
 {
     MCLinkedList_connectList(var(children), node->children);
 }
 
-method(MC3DNode, void, cleanUnvisibleChild, voida)
+fun(MC3DNode, void, cleanUnvisibleChild, voida)
 {
     MCLinkedListForEach(var(children),
                         MC3DNode* node = (MC3DNode*)item;
@@ -83,12 +85,12 @@ method(MC3DNode, void, cleanUnvisibleChild, voida)
                         })
 }
 
-method(MC3DNode, int, childCount, voida)
+fun(MC3DNode, int, childCount, voida)
 {
     return computed(obj->children, count);
 }
 
-method(MC3DNode, void, setAllVisible, MCBool visible)
+fun(MC3DNode, void, setAllVisible, MCBool visible)
 {
     if (var(children)) {
         MCLinkedListForEach(var(children),
@@ -99,19 +101,19 @@ method(MC3DNode, void, setAllVisible, MCBool visible)
     }
 }
 
-method(MC3DNode, void, changeMatrial, MCMaterial* material)
+fun(MC3DNode, void, changeMatrial, MCMaterial* material)
 {
     release(obj->material);
     obj->material = material;
 }
 
-method(MC3DNode, void, changeTexture, MCTexture* texture)
+fun(MC3DNode, void, changeTexture, MCTexture* texture)
 {
     release(obj->diffuseTexture);
     obj->diffuseTexture = texture;
 }
 
-method(MC3DNode, void, resetTransform, MCMatrix4* transform)
+fun(MC3DNode, void, resetTransform, MCMatrix4* transform)
 {
     if (transform) {
         obj->transform = *transform;
@@ -120,7 +122,7 @@ method(MC3DNode, void, resetTransform, MCMatrix4* transform)
     }
 }
 
-method(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental)
+fun(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental)
 {
     if (incremental) {
         obj->transform = MCMatrix4Multiply(MCMatrix4MakeTranslation(position->x, position->y, position->z), obj->transform);
@@ -129,7 +131,7 @@ method(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental)
     }
 }
 
-method(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental)
+fun(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental)
 {
     if (incremental) {
         obj->transform = MCMatrix4Multiply(MCMatrix4MakeScale(factors->x, factors->y, factors->z), obj->transform);
@@ -138,7 +140,7 @@ method(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental)
     }
 }
 
-method(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental)
+fun(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental)
 {
     if (mat3) {
         MCMatrix3 m3 = {0};
@@ -153,7 +155,7 @@ method(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental)
     }
 }
 
-method(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental)
+fun(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental)
 {
     if (mat4) {
         MCMatrix4 m4 = {0};
@@ -168,113 +170,54 @@ method(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental)
     }
 }
 
-method(MC3DNode, void, update, MCGLContext* ctx)
-{
-    //update children
-    MCLinkedListForEach(var(children),
-                        MC3DNode* node = (MC3DNode*)item;
-                        if (node != null && node->visible != false) {
-                            ff(node, update, ctx);
-                            //ff(node, update, ctx);
-                        })
-}
-
-method(MC3DNode, void, draw, MCGLContext* ctx)
-{
-    //draw self
-    //if (obj->visible) {
-        MCGLShader_activateShaderProgram(ctx->shader, 0);
-        MCGLUniform f;
-        
-        //scale translate
-        MCMatrix4 viewModel = MCMatrix4Multiply(var(viewtrans), var(transform));
-
-        if (!MCMatrix4Equal(&MCMatrix4Identity, &viewModel)) {
-            f.data.mat4 = viewModel;
-            MCGLShader_updateUniform(ctx->shader, model_model, f.data);
-        }
-    
-        MCMatrix3 nor = MCMatrix3InvertAndTranspose(MCMatrix4GetMatrix3(var(transform)), NULL);
-        f.data.mat3 = nor;
-        MCGLShader_updateUniform(ctx->shader, model_normal, f.data);
-        
-        //material
-        if (obj->material != null) {
-            if (obj->material->hidden == 1) {
-                return;
-            }
-            obj->material->dataChanged = true;
-            MCGLContext_loadMaterial(ctx, obj->material);
-        }
-        
-        //draw self texture
-        if (obj->diffuseTexture != null) {
-            MCGLShader_shaderSetBool(ctx->shader, "usetexture", true);
-        } else {
-            MCGLShader_shaderSetBool(ctx->shader, "usetexture", false);
-        }
-        
-        //batch setup
-        MCGLShader_setUniforms(ctx->shader, 0);
-
-        //draw self meshes
-        MCLinkedListForEach(var(meshes),
-                            MCMesh* mesh = (MCMesh*)item;
-                            if (mesh != null) {
-                                //texture
-                                if (obj->diffuseTexture) {
-                                    MCGLContext_loadTexture(ctx, obj->diffuseTexture, "diffuse_sampler");
-                                }
-                                if (obj->specularTexture) {
-                                    MCGLContext_loadTexture(ctx, obj->specularTexture, "specular_sampler");
-                                }
-                                MCGLContext_loadMesh(ctx, mesh);
-                                MCGLContext_drawMesh(ctx, mesh);
-                            })
-    //}
-    
-    //draw children
-    MCLinkedListForEach(var(children),
-                        MC3DNode* node = (MC3DNode*)item;
-                        if (node != null && node->visible != false) {
-                            ff(node, draw, ctx);
-                        })
-    
-    //ff(ctx, printUniforms, 0);
-}
-
-method(MC3DNode, void, hide, voida)
+fun(MC3DNode, void, hide, voida)
 {
     var(visible) = false;
 }
 
-method(MC3DNode, void, show, voida)
+fun(MC3DNode, void, show, voida)
 {
     var(visible) = true;
+}
+
+fun(MC3DNode, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model)
+{
+    
+}
+
+fun(MC3DNode, void, didDraw, voida)
+{
+    
+}
+
+fun(MC3DNode, void, draw, voida)
+{
+    
 }
 
 onload(MC3DNode)
 {
     if (load(MCItem)) {
-        binding(MC3DNode, void, bye, voida);
-        binding(MC3DNode, void, addChild, MC3DNode* child);
-        binding(MC3DNode, MC3DErrCode, addChildAtIndex, MC3DNode* child, int index);
-        binding(MC3DNode, void, removeChild, MC3DNode* child);
-        binding(MC3DNode, void, copyChildrenFrom, MC3DNode* node);
-        binding(MC3DNode, void, cleanUnvisibleChild, voida);
-        binding(MC3DNode, int, childCount, voida);
-        binding(MC3DNode, void, setAllVisible, MCBool visible);
-        binding(MC3DNode, void, changeMatrial, MCMaterial* material);
-        binding(MC3DNode, void, changeTexture, MCTexture* texture);
-        binding(MC3DNode, void, resetTransform, MCMatrix4* transform);
-        binding(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental);
-        binding(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental);
-        binding(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental);
-        binding(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
-        binding(MC3DNode, void, update, voida);
-        binding(MC3DNode, void, draw, voida);
-        binding(MC3DNode, void, hide, voida);
-        binding(MC3DNode, void, show, voida);
+        bid(MC3DNode, void, bye, voida);
+        bid(MC3DNode, void, addChild, MC3DNode* child);
+        bid(MC3DNode, MC3DErrCode, addChildAtIndex, MC3DNode* child, int index);
+        bid(MC3DNode, void, removeChild, MC3DNode* child);
+        bid(MC3DNode, void, copyChildrenFrom, MC3DNode* node);
+        bid(MC3DNode, void, cleanUnvisibleChild, voida);
+        bid(MC3DNode, int, childCount, voida);
+        bid(MC3DNode, void, setAllVisible, MCBool visible);
+        bid(MC3DNode, void, changeMatrial, MCMaterial* material);
+        bid(MC3DNode, void, changeTexture, MCTexture* texture);
+        bid(MC3DNode, void, resetTransform, MCMatrix4* transform);
+        bid(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental);
+        bid(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental);
+        bid(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental);
+        bid(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
+        bid(MC3DNode, void, hide, voida);
+        bid(MC3DNode, void, show, voida);
+        bid(MC3DNode, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);
+        bid(MC3DNode, void, didDraw, voida);
+        bid(MC3DNode, void, draw, voida);
         return cla;
     }else{
         return null;

@@ -15,13 +15,13 @@ oninit(MCProcess)
     }
 }
 
-method(MCProcess, void, printIDs, voida)
+fun(MCProcess, void, printIDs, voida)
 {
 	printf("pid[%d]ppid[%d]uid[%d]euid[%d]gid[%d]egid[%d]\n", 
 		obj->pid, obj->ppid, obj->uid, obj->euid, obj->gid, obj->egid);
 }
 
-method(MCProcess, int, fork, voida)
+fun(MCProcess, int, fork, voida)
 {
 	//pid_t fork(void);
 	//copy-on-write (COW)
@@ -29,7 +29,7 @@ method(MCProcess, int, fork, voida)
 	return fork();
 }
 
-method(MCProcess, int, registerAtExitCallback, void (*func)(void))
+fun(MCProcess, int, registerAtExitCallback, void (*func)(void))
 {
 	if(atexit(func)==0)
 		return 0;//success
@@ -37,23 +37,23 @@ method(MCProcess, int, registerAtExitCallback, void (*func)(void))
 		return -1;//error
 }
 
-method(MCProcess, void, exitWithStatus, int status)
+fun(MCProcess, void, exitWithStatus, int status)
 {
 	//this is a system call
 	_exit(status);
 }
 
-method(MCProcess, pid_t, waitAnyChildExit, int* statusAddr)
+fun(MCProcess, pid_t, waitAnyChildExit, int* statusAddr)
 {
 	return wait(statusAddr);
 }
 
-method(MCProcess, pid_t, waitPIDChildExit, pid_t pid, int* statusAddr, int options)
+fun(MCProcess, pid_t, waitPIDChildExit, pid_t pid, int* statusAddr, int options)
 {
 	return waitpid(pid, statusAddr, options);
 }
 
-method(MCProcess, int, isChildExitNormal, int status)
+fun(MCProcess, int, isChildExitNormal, int status)
 {
 	if(WIFEXITED(status))
 		return 1;
@@ -61,12 +61,12 @@ method(MCProcess, int, isChildExitNormal, int status)
 		return 0;
 }
 
-method(MCProcess, int, getChildExitLowOrder8Bit, int status)
+fun(MCProcess, int, getChildExitLowOrder8Bit, int status)
 {
 	return WEXITSTATUS(status);
 }
 
-method(MCProcess, int, isChildExitBySignal, int status)
+fun(MCProcess, int, isChildExitBySignal, int status)
 {
 	if (WIFSIGNALED(status))
 		return 1;
@@ -74,17 +74,17 @@ method(MCProcess, int, isChildExitBySignal, int status)
 		return 0;
 }
 
-method(MCProcess, int, getChildTerminateSignal, int status)
+fun(MCProcess, int, getChildTerminateSignal, int status)
 {
 	return WTERMSIG(status);
 }
 
-method(MCProcess, int, isCoreDumpFileGenerated, int status)
+fun(MCProcess, int, isCoreDumpFileGenerated, int status)
 {
 	return WCOREDUMP(status);
 }
 
-method(MCProcess, int, isChildStopped, int status)
+fun(MCProcess, int, isChildStopped, int status)
 {
 	if (WIFSTOPPED(status))
 		return 1;
@@ -92,12 +92,12 @@ method(MCProcess, int, isChildStopped, int status)
 		return 0;
 }
 
-method(MCProcess, int, getChildStopSignal, int status)
+fun(MCProcess, int, getChildStopSignal, int status)
 {
 	return WSTOPSIG(status);
 }
 
-//method(MCProcess, int, isChildContinued, int status)
+//fun(MCProcess, int, isChildContinued, int status)
 //{
 //	if(WIFCONTINUED(status))
 //		return 1;
@@ -105,12 +105,12 @@ method(MCProcess, int, getChildStopSignal, int status)
 //		return 0;
 //}
 
-//method(MCProcess, pid_t, waitAnyChildExitGetResourceUseage, int* statusAddr, int options, MCProcessRUseage* useage)
+//fun(MCProcess, pid_t, waitAnyChildExitGetResourceUseage, int* statusAddr, int options, MCProcessRUseage* useage)
 //{
 //	return wait3(statusAddr, options, useage->rusage_p);
 //}
 
-method(MCProcess, pid_t, waitPIDChildExitGetResourceUseage, pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage)
+fun(MCProcess, pid_t, waitPIDChildExitGetResourceUseage, pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage)
 {
 	return wait4(pid, statusAddr, options, useage->rusage_p);
 }
@@ -118,24 +118,24 @@ method(MCProcess, pid_t, waitPIDChildExitGetResourceUseage, pid_t pid, int* stat
 onload(MCProcess)
 {
     if (load(MCObject)) {
-        binding(MCProcess, void, printIDs);
-        binding(MCProcess, int, fork);
+        bid(MCProcess, void, printIDs);
+        bid(MCProcess, int, fork);
         
-        binding(MCProcess, int, registerAtExitCallback, void (*func)(void));
-        binding(MCProcess, void, exitWithStatus, int status);
-        binding(MCProcess, pid_t, waitAnyChildExit, int* statusAddr);
+        bid(MCProcess, int, registerAtExitCallback, void (*func)(void));
+        bid(MCProcess, void, exitWithStatus, int status);
+        bid(MCProcess, pid_t, waitAnyChildExit, int* statusAddr);
         
-        binding(MCProcess, pid_t, waitPIDChildExit, pid_t pid, int* statusAddr, int options);
-        binding(MCProcess, int, isChildExitNormal, int status);
-        binding(MCProcess, int, getChildExitLowOrder8Bit, int status);
-        binding(MCProcess, int, isChildExitBySignal, int status);
-        binding(MCProcess, int, getChildTerminateSignal, int status);
-        binding(MCProcess, int, isCoreDumpFileGenerated, int status);
-        binding(MCProcess, int, isChildStopped, int status);
-        binding(MCProcess, int, getChildStopSignal, int status);
-        //binding(MCProcess, int, isChildContinued, int status);
-        //binding(MCProcess, pid_t, waitAnyChildExitGetResourceUseage, int* statusAddr, int options, MCProcessRUseage* useage);
-        binding(MCProcess, pid_t, waitPIDChildExitGetResourceUseage, pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage);
+        bid(MCProcess, pid_t, waitPIDChildExit, pid_t pid, int* statusAddr, int options);
+        bid(MCProcess, int, isChildExitNormal, int status);
+        bid(MCProcess, int, getChildExitLowOrder8Bit, int status);
+        bid(MCProcess, int, isChildExitBySignal, int status);
+        bid(MCProcess, int, getChildTerminateSignal, int status);
+        bid(MCProcess, int, isCoreDumpFileGenerated, int status);
+        bid(MCProcess, int, isChildStopped, int status);
+        bid(MCProcess, int, getChildStopSignal, int status);
+        //bid(MCProcess, int, isChildContinued, int status);
+        //bid(MCProcess, pid_t, waitAnyChildExitGetResourceUseage, int* statusAddr, int options, MCProcessRUseage* useage);
+        bid(MCProcess, pid_t, waitPIDChildExitGetResourceUseage, pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage);
         return cla;
     }else{
         return null;

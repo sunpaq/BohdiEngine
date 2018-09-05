@@ -9,11 +9,8 @@
 #ifndef MC3DMtlParser_h
 #define MC3DMtlParser_h
 
-#include "monkc.h"
-#include "MCMath.h"
-#include "MCGeometry.h"
-#include "MCString.h"
-#include "MCLexer.h"
+#include "monkc_export.h"
+#include "BALexer.h"
 
 /* illum_0 -> illum_10
 0   Color on and Ambient off 
@@ -126,6 +123,8 @@ typedef struct BAMaterialStruct {
     char diffuseMapName[256];
     //map_Ks
     char specularMapName[256];
+    //map_Ns
+    char normalMapName[256];
     //light color
     BALightColor lightColors[5];
     //illumination model 0->10
@@ -147,16 +146,17 @@ typedef struct BAMaterialStruct {
     int hidden;
 } BAMaterial;
 
-MCInline BAMaterial* BAMaterialNew(const char* name) {
+static inline BAMaterial* BAMaterialNew(const char* name) {
     BAMaterial* mtl = (BAMaterial*)malloc(sizeof(BAMaterial));
     mtl->next = null;
     MCStringFill(mtl->name, name);
     mtl->diffuseMapName[0] = NUL;
     mtl->specularMapName[0] = NUL;
+    mtl->normalMapName[0] = NUL;
     return mtl;
 }
 
-MCInline MCVector3 BAMaterialLightColor(BAMaterial* mat, BALightType type) {
+static inline MCVector3 BAMaterialLightColor(BAMaterial* mat, BALightType type) {
     double R = mat->lightColors[type].data.rgbxyz[0];
     double G = mat->lightColors[type].data.rgbxyz[1];
     double B = mat->lightColors[type].data.rgbxyz[2];
@@ -170,7 +170,7 @@ typedef struct BATextureStruct {
     char attachedObject[LINE_MAX];
 } BATexture;
 
-MCInline BATexture* BATextureNew(const char* filename, const char* groupname, const char* objectname) {
+static inline BATexture* BATextureNew(const char* filename, const char* groupname, const char* objectname) {
     BATexture* tex = (BATexture*)malloc(sizeof(BATexture));
     tex->next = null;
     tex->filename[0] = NUL;
@@ -192,10 +192,12 @@ typedef struct BAMtlLibraryStruct {
     struct BAMtlLibraryStruct* next;
     BAMaterial* materialsList;
     BATexture* texturesList;
+    size_t diffuse_map_count;
+    size_t normal_map_count;
     char name[256];
 } BAMtlLibrary;
 
-MCInline BAMaterial* BAFindMaterial(BAMtlLibrary* lib, const char* name) {
+static inline BAMaterial* BAFindMaterial(BAMtlLibrary* lib, const char* name) {
     if (lib && name) {
         BAMaterial* iter = lib->materialsList;
         while (iter) {
@@ -208,7 +210,7 @@ MCInline BAMaterial* BAFindMaterial(BAMtlLibrary* lib, const char* name) {
     return null;
 }
 
-MCInline void BAAddMaterial(BAMtlLibrary* lib, const char* name) {
+static inline void BAAddMaterial(BAMtlLibrary* lib, const char* name) {
     if (lib && name) {
         //insert at head
         BAMaterial* newmtl = BAMaterialNew(name);
@@ -217,7 +219,7 @@ MCInline void BAAddMaterial(BAMtlLibrary* lib, const char* name) {
     }
 }
 
-MCInline BATexture* BAFindTextureByFilename(BAMtlLibrary* lib, const char* filename) {
+static inline BATexture* BAFindTextureByFilename(BAMtlLibrary* lib, const char* filename) {
     if (lib && filename) {
         BATexture* iter = lib->texturesList;
         while (iter) {
@@ -230,7 +232,7 @@ MCInline BATexture* BAFindTextureByFilename(BAMtlLibrary* lib, const char* filen
     return null;
 }
 
-MCInline BATexture* BAFindTextureByAttachedGroup(BAMtlLibrary* lib, const char* group) {
+static inline BATexture* BAFindTextureByAttachedGroup(BAMtlLibrary* lib, const char* group) {
     if (lib && group) {
         BATexture* iter = lib->texturesList;
         while (iter) {
@@ -243,7 +245,7 @@ MCInline BATexture* BAFindTextureByAttachedGroup(BAMtlLibrary* lib, const char* 
     return null;
 }
 
-MCInline BATexture* BAFindTextureByAttachedObject(BAMtlLibrary* lib, const char* object) {
+static inline BATexture* BAFindTextureByAttachedObject(BAMtlLibrary* lib, const char* object) {
     if (lib && object) {
         BATexture* iter = lib->texturesList;
         while (iter) {
@@ -256,7 +258,7 @@ MCInline BATexture* BAFindTextureByAttachedObject(BAMtlLibrary* lib, const char*
     return null;
 }
 
-MCInline void BAAddTexture(BAMtlLibrary* lib, const char* filename,
+static inline void BAAddTexture(BAMtlLibrary* lib, const char* filename,
                            const char* groupname, const char* objectname) {
     if (lib && filename) {
         //insert at head
@@ -266,7 +268,7 @@ MCInline void BAAddTexture(BAMtlLibrary* lib, const char* filename,
     }
 }
 
-MCInline BAMtlLibrary* BAFindMtlLibrary(BAMtlLibrary* list, const char* name) {
+static inline BAMtlLibrary* BAFindMtlLibrary(BAMtlLibrary* list, const char* name) {
     if (list && name) {
         BAMtlLibrary* iter = list;
         while (iter) {
@@ -282,7 +284,7 @@ MCInline BAMtlLibrary* BAFindMtlLibrary(BAMtlLibrary* list, const char* name) {
 BAMtlLibrary* BAMtlLibraryNew(const char* filename);
 void BAMtlLibraryRelease(BAMtlLibrary* lib);
 
-MCInline void BAAddMtlLibrary(BAMtlLibrary** list, const char* name) {
+static inline void BAAddMtlLibrary(BAMtlLibrary** list, const char* name) {
     if (list && name) {
         //insert at head
         BAMtlLibrary* newlib = BAMtlLibraryNew(name);

@@ -9,7 +9,7 @@
 #ifndef MCLight_h
 #define MCLight_h
 
-#include "monkc.h"
+#include "monkc_export.h"
 #include "MC3DNode.h"
 
 class(MCLight, MC3DNode,
@@ -22,7 +22,6 @@ class(MCLight, MC3DNode,
       MCVector3 lightPosition;
 );
 
-method(MCLight, void, update, MCGLContext* ctx);
-method(MCLight, void, printDebugInfo, voida);
+fun(MCLight, void, printDebugInfo, voida);
 
 #endif /* MCLight_h */

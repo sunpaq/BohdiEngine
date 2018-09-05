@@ -1,17 +1,17 @@
 #include "MCMath.h"
 #include "MCBits.h"
 
-utility(MCMath, void, bye, voida)
+util(MCMath, void, bye, voida)
 {
 	debug_log("%s\n", "MCMath bye bye");
 }
 
-utility(MCMath, int, addInteger2, int a, int b)
+util(MCMath, int, addInteger2, int a, int b)
 {
 	return a + b;
 }
 
-utility(MCMath, void, sortInt, int* sorted, size_t count)
+util(MCMath, void, sortInt, int* sorted, size_t count)
 {
     for (int n=0; n<count-1; n++) {
         int temp;
@@ -24,7 +24,7 @@ utility(MCMath, void, sortInt, int* sorted, size_t count)
     }
 }
 
-utility(MCMath, void, sortLong, long* sorted, size_t count)
+util(MCMath, void, sortLong, long* sorted, size_t count)
 {
     for (int n=0; n<count-1; n++) {
         long temp;
@@ -37,7 +37,7 @@ utility(MCMath, void, sortLong, long* sorted, size_t count)
     }
 }
 
-utility(MCMath, void, sortSizet, size_t* sorted, size_t count)
+util(MCMath, void, sortSizet, size_t* sorted, size_t count)
 {
     size_t trycount = count-1;
     while (trycount--) {
@@ -53,7 +53,7 @@ utility(MCMath, void, sortSizet, size_t* sorted, size_t count)
     }
 }
 
-utility(MCMath, int, accumulateMaxi, int* result, int value)
+util(MCMath, int, accumulateMaxi, int* result, int value)
 {
     if (value > *result) {
         *result = value;
@@ -61,7 +61,7 @@ utility(MCMath, int, accumulateMaxi, int* result, int value)
     return *result;
 }
 
-utility(MCMath, int, accumulateMini, int* result, int value)
+util(MCMath, int, accumulateMini, int* result, int value)
 {
     if (value < *result) {
         *result = value;
@@ -69,7 +69,7 @@ utility(MCMath, int, accumulateMini, int* result, int value)
     return *result;
 }
 
-utility(MCMath, double, accumulateMaxd, double* result, double value)
+util(MCMath, double, accumulateMaxd, double* result, double value)
 {
     if (value > *result) {
         *result = value;
@@ -77,7 +77,7 @@ utility(MCMath, double, accumulateMaxd, double* result, double value)
     return *result;
 }
 
-utility(MCMath, double, accumulateMind, double* result, double value)
+util(MCMath, double, accumulateMind, double* result, double value)
 {
     if (value < *result) {
         *result = value;
@@ -85,7 +85,7 @@ utility(MCMath, double, accumulateMind, double* result, double value)
     return *result;
 }
 
-utility(MCMath, MCBool, isPrime, int a)
+util(MCMath, MCBool, isPrime, int a)
 {
     for(int i=2;i<=sqrt(a);i++)
         if(a%i==0)
@@ -93,17 +93,17 @@ utility(MCMath, MCBool, isPrime, int a)
     return true;
 }
 
-utility(MCMath, MCBool, isPowerOfTwo, unsigned a)
+util(MCMath, MCBool, isPowerOfTwo, unsigned a)
 {
     return (MCBitsSetBitNum(a) == 1);
 }
 
-utility(MCMath, unsigned, chebyshevDiatance, MCVector2i A, MCVector2i B)
+util(MCMath, unsigned, chebyshevDiatance, MCVector2i A, MCVector2i B)
 {
     return MAX(abs(B.x - A.x), abs(B.y - A.y));
 }
 
-utility(MCMath, unsigned, factorialOf, unsigned N)
+util(MCMath, unsigned, factorialOf, unsigned N)
 {
     unsigned res = 1;
     for (unsigned i=N; i>0; i--)
@@ -111,7 +111,7 @@ utility(MCMath, unsigned, factorialOf, unsigned N)
     return res;
 }
 
-utility(MCMath, unsigned, KpermutationsOfN, unsigned K, unsigned N)
+util(MCMath, unsigned, KpermutationsOfN, unsigned K, unsigned N)
 {
     //P(n,k) = n! / (n-k)!
     unsigned res = 1;
@@ -121,7 +121,7 @@ utility(MCMath, unsigned, KpermutationsOfN, unsigned K, unsigned N)
     return res;
 }
 
-utility(MCMath, unsigned, KcombinationsOfN, unsigned K, unsigned N)
+util(MCMath, unsigned, KcombinationsOfN, unsigned K, unsigned N)
 {
     //C(n,k) = P(n,k) / k! = n! / k! * (n-k)!
     return MCMath_KpermutationsOfN(K, N) / MCMath_factorialOf(K);

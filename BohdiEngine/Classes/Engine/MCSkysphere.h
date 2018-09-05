@@ -9,12 +9,12 @@
 #ifndef MCSkysphere_h
 #define MCSkysphere_h
 
+#include "monkc_export.h"
 #include "MC3DNode.h"
 #include "BE2DTextureData.h"
 
 class(MCSkysphere, MC3DNode,
       BE2DTextureData* tex;
-      MCGLContext* ctx;
       
       MCMatrix4 sphViewMatrix;
       MCMatrix4 sphProjectionMatrix;
@@ -30,24 +30,20 @@ class(MCSkysphere, MC3DNode,
       
       size_t   vertices_size;
       size_t   indices_size;
-      GLfloat* vertices;
-      GLuint*  indices;
-      GLuint   ic;
-      
-      MCUInt vaoid;
-      MCUInt vboid;
-      MCUInt eboid;
-      MCUInt texid);
+      float* vertices;
+      uint32_t*  indices;
+      uint32_t   ic);
 
-method(MCSkysphere, void, bye, voida);
-method(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex);
-method(MCSkysphere, MCSkysphere*, initWithFileName, const char* name);
-method(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida);
+fun(MCSkysphere, void, bye, voida);
+fun(MCSkysphere, MCSkysphere*, initWithBE2DTexture, BE2DTextureData* tex);
+fun(MCSkysphere, MCSkysphere*, initWithFileName, const char* name);
+fun(MCSkysphere, MCSkysphere*, initWithDefaultFile, voida);
 
-method(MCSkysphere, void, setRotationMat3, float mat3[9]);
-method(MCSkysphere, void, setRotationMat4, float mat4[16]);
-//override
-method(MCSkysphere, void, update, MCGLContext* ctx);
-method(MCSkysphere, void, draw, MCGLContext* ctx);
+fun(MCSkysphere, void, setRotationMat3, float mat3[9]);
+fun(MCSkysphere, void, setRotationMat4, float mat4[16]);
+
+//property
+fun(MCSkysphere, void, getViewMatrix, MCMatrix4* mat4);
+fun(MCSkysphere, void, getProjectionMatrix, MCMatrix4* mat4);
 
 #endif /* MCSkysphere_h */

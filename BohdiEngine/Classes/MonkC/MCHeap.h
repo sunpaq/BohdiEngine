@@ -26,11 +26,11 @@ class(MCHeap, MCObject,
       size_t maxheight;
 );
 
-method(MCHeap, void, bye, voida);
-method(MCHeap, MCHeap*, initWithCopy, MCHeap* ref);
-method(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount);
-method(MCHeap, size_t, insertValue, MCGeneric newval);
-method(MCHeap, MCArray*, copySortAscend, voida);
-method(MCHeap, void, printAll, voida);
+fun(MCHeap, void, bye, voida);
+fun(MCHeap, MCHeap*, initWithCopy, MCHeap* ref);
+fun(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount);
+fun(MCHeap, size_t, insertValue, MCGeneric newval);
+fun(MCHeap, MCArray*, copySortAscend, voida);
+fun(MCHeap, void, printAll, voida);
 
 #endif /* MCHeap_h */

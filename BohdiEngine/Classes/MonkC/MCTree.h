@@ -38,10 +38,10 @@ class(MCBST, MCObject,
       BSTNode* root;
       size_t count);
 
-method(MCBST, void, bye, voida);
-method(MCBST, void, insertValue, MCGeneric newval);
-method(MCBST, void, traverseTree, BSTNode* (*funcptr)(BSTNode* node));
-method(MCBST, void, printTree, voida);
+fun(MCBST, void, bye, voida);
+fun(MCBST, void, insertValue, MCGeneric newval);
+fun(MCBST, void, traverseTree, BSTNode* (*funcptr)(BSTNode* node));
+fun(MCBST, void, printTree, voida);
 
 /*
  Trie Tree (Digital, Radix, Prefix - Tree)
@@ -61,11 +61,11 @@ class(MCTrie, MCObject,
       TrieNode* root;
       size_t count);
 
-method(MCTrie, void, bye, voida);
-method(MCTrie, void, insertValueByKey, MCGeneric newval, const char* word);
-method(MCTrie, MCGeneric, valueOfKey, const char* word);
-method(MCTrie, MCArray*, keysWithPrefix, const char* prefix);
-method(MCTrie, MCBool, hasKey, const char* word);
-method(MCTrie, void, printTree, voida);
+fun(MCTrie, void, bye, voida);
+fun(MCTrie, void, insertValueByKey, MCGeneric newval, const char* word);
+fun(MCTrie, MCGeneric, valueOfKey, const char* word);
+fun(MCTrie, MCArray*, keysWithPrefix, const char* prefix);
+fun(MCTrie, MCBool, hasKey, const char* word);
+fun(MCTrie, void, printTree, voida);
 
 #endif /* MCTree_h */

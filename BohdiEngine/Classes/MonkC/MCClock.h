@@ -1,8 +1,10 @@
-#include <time.h>
+#ifndef MCCLOCK_H
+#define MCCLOCK_H
+
 #include "MCContext.h"
 
-#ifndef MCClock_
-#define MCClock_
+#include <time.h>
+#include <limits.h>
 
 class(MCClock, MCObject,
       struct tm rawtime;
@@ -10,35 +12,35 @@ class(MCClock, MCObject,
       char* currentGMTBuff;
 );
 
-method(MCClock, void, bye, voida);
-method(MCClock, MCClock*, setTimeToNow, voida);
-method(MCClock, void, setTime, int tm_sec, int tm_min, int tm_hour, 
+fun(MCClock, void, bye, voida);
+fun(MCClock, MCClock*, setTimeToNow, voida);
+fun(MCClock, void, setTime, int tm_sec, int tm_min, int tm_hour, 
 						 int tm_mday, int tm_mon, int tm_year,
 						 int tm_wday);
-method(MCClock, void, adjustTime, int tm_sec, int tm_min, int tm_hour, 
+fun(MCClock, void, adjustTime, int tm_sec, int tm_min, int tm_hour, 
                             int tm_mday, int tm_mon, int tm_year,
                             int tm_wday);
 
-method(MCClock, void, setRawtime, struct tm rawtime_in);
-method(MCClock, void, setRawtimeFields, int tm_sec, int tm_min, int tm_hour, 
+fun(MCClock, void, setRawtime, struct tm rawtime_in);
+fun(MCClock, void, setRawtimeFields, int tm_sec, int tm_min, int tm_hour, 
 							      int tm_mday, int tm_mon, int tm_year,
 							      int tm_wday, int tm_yday, int tm_isdst);
 
-method(MCClock, void, getTime, time_t* const result);
-method(MCClock, void, getRawtime, struct tm* const result);
-method(MCClock, char*, getTimeByString, voida);
-method(MCClock, void, getCPUClocksPerSecond, clock_t* const result);
-method(MCClock, void, getCPUClocksSinceStart, clock_t* const result);
+fun(MCClock, void, getTime, time_t* const result);
+fun(MCClock, void, getRawtime, struct tm* const result);
+fun(MCClock, char*, getTimeByString, voida);
+fun(MCClock, void, getCPUClocksPerSecond, clock_t* const result);
+fun(MCClock, void, getCPUClocksSinceStart, clock_t* const result);
 
-method(MCClock, time_t, getCPUSecondsSinceStart, voida);
-method(MCClock, time_t, getCPUSecondsSince, time_t since);
+fun(MCClock, time_t, getCPUSecondsSinceStart, voida);
+fun(MCClock, time_t, getCPUSecondsSince, time_t since);
 
-method(MCClock, char*, getCurrentTimeString, voida);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
-method(MCClock, char*, getCurrentGMTTimeString, voida);
+fun(MCClock, char*, getCurrentTimeString, voida);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
+fun(MCClock, char*, getCurrentGMTTimeString, voida);
 
-method(MCClock, void, printTime, voida);
-method(MCClock, void, printCurrentTime, voida);
-method(MCClock, void, printCurrentGMTTime, voida);
+fun(MCClock, void, printTime, voida);
+fun(MCClock, void, printCurrentTime, voida);
+fun(MCClock, void, printCurrentGMTTime, voida);
 
 char* MCClock_rawtime2String(time_t* timeval);
 char* MCClock_settableTime2String(struct tm *tm);

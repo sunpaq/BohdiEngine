@@ -44,7 +44,7 @@ oninit(MCArray)
     }
 }
 
-method(MCArray, MCArray*, initWithMaxCount, size_t max)
+fun(MCArray, MCArray*, initWithMaxCount, size_t max)
 {
 	obj->count = 0;
 	obj->maxcount = max;
@@ -53,7 +53,7 @@ method(MCArray, MCArray*, initWithMaxCount, size_t max)
 	return obj;
 }
 
-method(MCArray, void, bye, voida)
+fun(MCArray, void, bye, voida)
 {
     if (obj->buff != null) {
         free(obj->buff);
@@ -61,13 +61,13 @@ method(MCArray, void, bye, voida)
     superbye(MCObject);
 }
 
-method(MCArray, MCArray*, clear, voida)
+fun(MCArray, MCArray*, clear, voida)
 {
     free(obj->buff);
     return MCArray_initWithMaxCount(obj, 10);
 }
 
-method(MCArray, MCArray*, addItem, MCGeneric item)
+fun(MCArray, MCArray*, addItem, MCGeneric item)
 {
 	if(obj->indexLast >= obj->maxcount){
 		expand_array(obj);
@@ -76,7 +76,7 @@ method(MCArray, MCArray*, addItem, MCGeneric item)
 	return obj;
 }
 
-method(MCArray, MCArray*, addItemToIndex, MCGeneric item, size_t index)
+fun(MCArray, MCArray*, addItemToIndex, MCGeneric item, size_t index)
 {
 	if(index >= obj->maxcount){
 		expand_array(obj);
@@ -85,13 +85,13 @@ method(MCArray, MCArray*, addItemToIndex, MCGeneric item, size_t index)
 	return obj;
 }
 
-method(MCArray, MCArray*, removeLastItem, voida)
+fun(MCArray, MCArray*, removeLastItem, voida)
 {
 	delete_item(obj, obj->indexLast);
 	return obj;
 }
 
-method(MCArray, MCArray*, removeItem, MCGeneric* item)
+fun(MCArray, MCArray*, removeItem, MCGeneric* item)
 {
     for (int i=0; i<obj->maxcount; i++) {
         if (&obj->buff[i] == item) {
@@ -101,18 +101,18 @@ method(MCArray, MCArray*, removeItem, MCGeneric* item)
 	return obj;
 }
 
-method(MCArray, MCArray*, removeItemByIndex, size_t index)
+fun(MCArray, MCArray*, removeItemByIndex, size_t index)
 {
 	delete_item(obj, index);
 	return obj;
 }
 
-method(MCArray, MCGeneric*, getItemByIndex, size_t index)
+fun(MCArray, MCGeneric*, getItemByIndex, size_t index)
 {
 	return &obj->buff[index];
 }
 
-method(MCArray, void, printAll, const char* delimiter)
+fun(MCArray, void, printAll, const char* delimiter)
 {
     for (int i=0; i<obj->count; i++) {
         printf("%.2f%s", obj->buff[i].mcfloat, delimiter);
@@ -123,16 +123,16 @@ method(MCArray, void, printAll, const char* delimiter)
 onload(MCArray)
 {
     if (load(MCObject)) {
-        binding(MCArray, void, bye, voida);
-        binding(MCArray, MCArray*, initWithMaxCount, size_t max);
-        binding(MCArray, MCArray*, addItem, MCGeneric item);
-        binding(MCArray, MCArray*, addItemToIndex, MCGeneric item, size_t index);
-        binding(MCArray, MCArray*, removeLastItem, voida);
-        binding(MCArray, MCArray*, removeItem, MCGeneric* item);
-        binding(MCArray, MCArray*, removeItemByIndex, size_t index);
-        binding(MCArray, MCArray*, clear, voida);
-        binding(MCArray, MCGeneric*, getItemByIndex, size_t index);
-        binding(MCArray, void, printAll, const char* delimiter);
+        bid(MCArray, void, bye, voida);
+        bid(MCArray, MCArray*, initWithMaxCount, size_t max);
+        bid(MCArray, MCArray*, addItem, MCGeneric item);
+        bid(MCArray, MCArray*, addItemToIndex, MCGeneric item, size_t index);
+        bid(MCArray, MCArray*, removeLastItem, voida);
+        bid(MCArray, MCArray*, removeItem, MCGeneric* item);
+        bid(MCArray, MCArray*, removeItemByIndex, size_t index);
+        bid(MCArray, MCArray*, clear, voida);
+        bid(MCArray, MCGeneric*, getItemByIndex, size_t index);
+        bid(MCArray, void, printAll, const char* delimiter);
         return cla;
     }else{
         return null;

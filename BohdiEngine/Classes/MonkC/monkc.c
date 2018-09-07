@@ -1,5 +1,5 @@
 /*
- Copyright (c) <2013-2016>, <Sun Yuli>
+ Copyright (c) <2013-2018>, <Sun Yuli>
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without

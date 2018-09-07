@@ -1,5 +1,5 @@
 /*
- Copyright (c) <2013-2017>, <Sun Yuli>
+ Copyright (c) <2013-2018>, <Sun Yuli>
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -27,9 +27,8 @@
 
 //https://github.com/sunpaq/monkc
 #ifndef __MCRuntimeVer__
-#define __MCRuntimeVer__ 10
-//version=20 means 2.0
-static inline unsigned monkc_version() {return __MCRuntimeVer__;}
+#define __MCRuntimeVer__ "2.0"
+static inline const char* monkc_version() {return __MCRuntimeVer__;}
 
 #include <stdbool.h>
 #include <stdlib.h>

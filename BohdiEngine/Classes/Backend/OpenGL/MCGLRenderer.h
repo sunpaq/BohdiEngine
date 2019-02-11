@@ -29,6 +29,7 @@
 //#include "monkc_export.h"
 #include "MCObject.h"
 #include "MCGLContext.h"
+#include "MC3DScene.h"
 
 //including MCRenderer.h
 
@@ -42,8 +43,10 @@ structure(MCGLRenderer, MCObject)
     fundef(release, void));
     fundef(initWithShaderCodeString, struct MCGLRenderer*), const char* vcode, const char* fcode);
     fundef(initWithShaderFileName, struct MCGLRenderer*), const char* vshader, const char* fshader);
-
     fundef(initWithDefaultShader, struct MCGLRenderer*));
+
+    fundef(updateScene, void), struct MC3DScene* scene);
+    fundef(drawScene, void), struct MC3DScene* scene);
 };
 
 constructor(MCGLRenderer));

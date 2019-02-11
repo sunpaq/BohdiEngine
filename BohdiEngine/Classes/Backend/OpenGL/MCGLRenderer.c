@@ -517,6 +517,8 @@ constructor(MCGLRenderer)) {
         funbind(initWithShaderCodeString);
         funbind(initWithShaderFileName);
         funbind(initWithDefaultShader);
+        funbind(updateScene);
+        funbind(drawScene);
     }
     return any;
 }

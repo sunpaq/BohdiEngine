@@ -35,7 +35,7 @@ fun(initWithShaderCode, struct MCGLShader*), const char* vcode, const char* fcod
     }
     
 #if TARGET_OS_OSX
-    MCGLShader_prepareShader(it, it->pid, vcode, fcode, "#version 330 core\n");
+    it->prepareShader(it, it->pid, vcode, fcode, "#version 330 core\n");
 #else
     it->prepareShader(it, it->pid, vcode, fcode, "#version 300 es\n");
 #endif

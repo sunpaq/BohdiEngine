@@ -70,11 +70,10 @@ constructor(MCTexture)) {
         it->data = null;
         it->displayMode = MCTextureRepeat;
         it->loadedToGL = false;
-    
-        funadd(loadImageRawdata);
     };
     dynamic(MCTexture)
         funbind(release);
+        funbind(loadImageRawdata);
         funbind(initWithFileNameMode);
         funbind(initWithFileName);
         funbind(initWith2DTexture);

@@ -519,6 +519,20 @@ constructor(MCGLRenderer)) {
         funbind(initWithDefaultShader);
         funbind(updateScene);
         funbind(drawScene);
+
+        funbind(scissorAllScene);
+        funbind(setDrawMode);
+        funbind(getDrawMode);
+
+        funbind(drawSkysphere);
+        funbind(drawSkybox);
+        funbind(updateLight);
+        funbind(updateCamera);
+        funbind(drawNode);
+        funbind(drawMesh);
+
+        funbind(initSkybox);
+        funbind(initSkysphere);
     }
     return any;
 }

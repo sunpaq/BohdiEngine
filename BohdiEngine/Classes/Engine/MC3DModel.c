@@ -112,7 +112,7 @@ fun(meshLoadFaceElement, void), struct MCMesh* mesh, BAObjData* buff, BAFaceElem
     }
     
     if (e.ti <= 0) {
-        //error_log("MC3DFileParser: empty texcoord data, set to 0!");
+        error_log("MC3DFileParser: empty texcoord data, set to 0!");
         t = (MCVector2){0.0,0.0};
     }else{
         t = buff->texcoorbuff[e.ti-1];

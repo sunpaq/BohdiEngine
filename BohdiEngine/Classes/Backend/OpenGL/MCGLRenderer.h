@@ -30,6 +30,7 @@
 #include "MCObject.h"
 #include "MCGLContext.h"
 #include "MC3DScene.h"
+#include "MCMesh.h"
 
 //including MCRenderer.h
 
@@ -47,6 +48,20 @@ structure(MCGLRenderer, MCObject)
 
     fundef(updateScene, void), struct MC3DScene* scene);
     fundef(drawScene, void), struct MC3DScene* scene);
+
+    fundef(scissorAllScene, void), int x, int y, int width, int height);
+    fundef(setDrawMode, void), MCDrawMode mode);
+    fundef(getDrawMode, MCDrawMode));
+
+    fundef(drawSkysphere, void), struct MCSkysphere* sphere);
+    fundef(drawSkybox, void), struct MCSkybox* skybox);
+    fundef(updateLight, void), struct MCLight* light);
+    fundef(updateCamera, void), struct MCCamera* cam);
+    fundef(drawNode, void), struct MC3DNode* node);
+    fundef(drawMesh, void), struct MCMesh* mesh, GLuint texid);
+
+    fundef(initSkybox, void));
+    fundef(initSkysphere, void));
 };
 
 constructor(MCGLRenderer));

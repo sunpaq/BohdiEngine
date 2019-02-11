@@ -15,7 +15,7 @@
 @interface BERenderer()
 {
     MCDirector_t* director;
-    MCObject_t* renderer;
+    MCGLRenderer_t* renderer;
     float pinch_scale;
 }
 @end
@@ -447,8 +447,10 @@
 {
     if (director && renderer) {
         director->updateAll(director);
-        ff(renderer, updateScene), director->lastScene);
-        ff(renderer, drawScene), director->lastScene);
+        //ff(renderer, updateScene), director->lastScene);
+        //ff(renderer, drawScene), director->lastScene);
+        renderer->updateScene(renderer, director->lastScene);
+        renderer->drawScene(renderer, director->lastScene);
     }
 }
 
@@ -460,10 +462,14 @@
         int width = viewport.size.width;
         int height = viewport.size.height;
         
-        ff(renderer, scissorAllScene), x, y, width, height);
+        //ff(renderer, scissorAllScene), x, y, width, height);
+        renderer->scissorAllScene(renderer, x, y, width, height);
+
         director->updateAll(director);
-        ff(renderer, updateScene), director->lastScene);
-        ff(renderer, drawScene), director->lastScene);
+        //ff(renderer, updateScene), director->lastScene);
+        //ff(renderer, drawScene), director->lastScene);
+        renderer->updateScene(renderer, director->lastScene);
+        renderer->drawScene(renderer, director->lastScene);
     }
 }
 

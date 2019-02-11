@@ -1,7 +1,7 @@
 use_frameworks!
 
 target 'BohdiEngine_Example' do
-    pod 'BohdiEngine', :path => '../', :branch => 'develop'
+    pod 'BohdiEngine', :path => '../', :branch => 'feature/mc3'
 
   target 'BohdiEngine_Tests' do
     inherit! :search_paths

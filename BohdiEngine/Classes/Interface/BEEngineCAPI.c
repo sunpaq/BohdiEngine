@@ -4,12 +4,15 @@
 
 #include "BEEngineCAPI.h"
 
-#include "monkc_export.h"
+#include "MCObject.h"
 #include "beengine_export.h"
+#include "MCLog.h"
+#include "MCThread.h"
+#include "MCGLRenderer.h"
 
-static MCDirector* director = null;
-static MCObject* renderer = null;
-static BECubeTextureData* cubtex = null;
+static struct MCDirector* director = null;
+static struct MCObject* renderer = null;
+static struct BECubeTextureData* cubtex = null;
 
 void onAppStart()
 {
@@ -27,10 +30,10 @@ void onRootViewLoad(void* rootview)
 
 void onOpenExternalFile(const char* filepath)
 {
-    MC3DModel* model = ff(new(MC3DModel), initWithFilePathColor, filepath,
-                          (MCColorf){MCFloatF(1.0), MCFloatF(1.0), MCFloatF(1.0), MCFloatF(1.0)});
-    ff(director->lastScene->rootnode, setAllVisible, false);
-    ff(director, addModel, model);
+    struct MC3DModel* model = new(MC3DModel);
+    ff(model, initWithFilePathColor), filepath, (MCColorf){1.0, 1.0, 1.0, 1.0});
+    ff(director->lastScene->rootnode, setAllVisible), false);
+    ff(director, addModel), model);
 }
 
 //static void asyncReadSkybox()
@@ -41,13 +44,12 @@ void onOpenExternalFile(const char* filepath)
 void openFile(const char* filename)
 {
     //model
-    MC3DModel* model = ff(new(MC3DModel), initWithFileNameColor, filename,
-                          (MCColorf){MCFloatF(0.8), MCFloatF(0.8), MCFloatF(0.8), MCFloatF(1.0)});
+    struct MC3DModel* model = new(MC3DModel);
+    ff(model, initWithFileNameColor), filename, (MCColorf){0.8, 0.8, 0.8, 1.0});
     if (model) {
         debug_log("Create MC3DModel success:%s\n", model->name);
-
-        MCDirector_addModel(director, model, MCFloatF(10.0));
-        MCDirector_cameraFocusOn(director, MCVector4Make(0, -10 * 0.5, 0, 10 * 2.0));
+        director->addModel(director, model, 10.0);
+        director->cameraFocusOn(director, MCVector4Make(0, -10 * 0.5, 0, 10 * 2.0));
 
     } else {
         error_log("Can not create MC3DModel:%s\n", filename);
@@ -67,20 +69,20 @@ void openFileAndExitThread(void* arg)
 //        exit(-1);
 //    }
 
-    MCString* filename = cast(MCString*, arg);
+    struct MCString* filename = cast(arg, MCString);
 
     openFile(filename->buff);
-    ff(director->lastScene->rootnode, setAllVisible, true);
+    ff(director->lastScene->rootnode, setAllVisible), true);
 
-    release(filename);
+    Release(filename);
     MCThread_exitWithStatus((void*)200);
 }
 
 void openFileAsync(const char* filename)
 {
-    MCString* str = MCString_newWithCString(filename);
-    ff(director->modelThread, initWithFPointerArgument, openFileAndExitThread, (void*)str);
-    ff(director->modelThread, start, 0);
+    struct MCString* str = MCString_newWithCString(filename);
+    ff(director->modelThread, initWithFPointerArgument), openFileAndExitThread, (void*)str);
+    ff(director->modelThread, start), 0);
 
     //MCThread_joinThread(director->modelThread->tid);
 }
@@ -88,9 +90,9 @@ void openFileAsync(const char* filename)
 void onReceiveMemoryWarning()
 {
     error_log("Receive Memory Warning\n");
-    MC3DScene* mainScene = director->lastScene;
+    struct MC3DScene* mainScene = director->lastScene;
     if (mainScene != null && mainScene->rootnode != null) {
-        ff(mainScene->rootnode, cleanUnvisibleChild, 0);
+        ff(mainScene->rootnode, cleanUnvisibleChild), 0);
     }
 }
 
@@ -118,7 +120,9 @@ void onSetupGL(int windowWidth, int windowHeight)
 
     if (director == null) {
         debug_log("onSetupGL create director\n");
-        renderer = MCGLRenderer_initWithDefaultShader(new(MCGLRenderer), 0);
+        struct MCGLRenderer* r = new(MCGLRenderer);
+        r->initWithDefaultShader(r);
+        renderer = (obj)r;
         director = new(MCDirector);
         director->renderer = renderer;
         director->currentWidth = windowWidth;
@@ -126,7 +130,7 @@ void onSetupGL(int windowWidth, int windowHeight)
         debug_log("onSetupGL director created\n");
 
         //scene1
-        MC3DScene* mainScene = ff(new(MC3DScene), initWithWidthHeight, director->currentWidth, director->currentHeight);
+        struct MC3DScene* mainScene = MC3DScene(alloc(MC3DScene), director->currentWidth, director->currentHeight);
         debug_log("onSetupGL main scene created current screen size: %dx%d\n", windowWidth, windowHeight);
 
 //        mainScene->sky = getSkyboxOn();
@@ -140,13 +144,11 @@ void onSetupGL(int windowWidth, int windowHeight)
         mainScene->mainCamera->tht = 60;
         mainScene->mainCamera->fai = 45;
 
-        superof(mainScene)->nextResponder = (MCObject*)director;
-
-        ff(director, pushScene, mainScene);
+        //superof(mainScene)->nextResponder = (MCObject*)director;
+        ff(director, pushScene), mainScene);
 
         //kick off
-        MCDirector_updateAll(director, 0);
-        //MCDirector_drawAll(director, 0);
+        director->updateAll(director);
 
         debug_log("onSetupGL main scene pushed into director\n");
     }
@@ -154,7 +156,7 @@ void onSetupGL(int windowWidth, int windowHeight)
 
 void onTearDownGL()
 {
-    release(director);
+    Release(director);
     director = null;
 }
 
@@ -174,7 +176,7 @@ void onUpdate(double roll, double yaw, double pitch, double w)
 //            }
 //        }
 
-        MCDirector_updateAll(director, 0);
+        director->updateAll(director);
     }
 }
 
@@ -182,7 +184,7 @@ int onDraw()
 {
     int fps = -1;
     if (director && director->renderer && director->lastScene) {
-        ff(director->renderer, drawScene, director->lastScene);
+        ff(director->renderer, drawScene), director->lastScene);
         //fps = MCDirector_drawAll(director, 0);
     }
 
@@ -200,11 +202,11 @@ void onGestureSwip()
 
 void onGesturePan(double x, double y)
 {
-    MCCamera* camera = director->lastScene->mainCamera;
+    struct MCCamera* camera = director->lastScene->mainCamera;
 
     if (director != null && director->lastScene != null && camera != null) {
         double sign = camera->isReverseMovement == true? -1.0f : 1.0f;
-        MCCamera_move(camera, MCFloatF(x*sign), MCFloatF(y*sign));
+        camera->move(camera, x*sign, y*sign);
 
 //        if (camera->isLockRotation == true) {
 //            double factor = 0.01;
@@ -218,9 +220,9 @@ void onGesturePan(double x, double y)
 void cameraDistanceScale(double scale, double min, double max)
 {
     double limited_scale = MAX(min, MIN(scale, max));
-    MCCamera* camera = director->lastScene->mainCamera;
+    struct MCCamera* camera = director->lastScene->mainCamera;
     if (director != null && director->lastScene != null && camera != null) {
-        MCCamera_distanceScale(camera, MCFloatF(1.0/limited_scale));
+        camera->distanceScale(camera, 1.0/limited_scale);
     }
 }
 
@@ -234,7 +236,7 @@ void onGesturePinch(double scale)
 void onResizeScreen(int windowWidth, int windowHeight)
 {
     if (director != null) {
-        ff(director, resizeAllScene, windowWidth, windowHeight);
+        ff(director, resizeAllScene), windowWidth, windowHeight);
     }
 }
 
@@ -248,13 +250,13 @@ void onStartStopBtn(int startOrStop)
 void cameraTranslate(double x, double y, double z, _Bool incremental)
 {
     if (!director) return;
-    MCCamera* cam = computed(director, cameraHandler);
+    struct MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         MCVector3 eye = MCVector3Make(x, y, z);
         cam->R_value = MCVector3Length(eye);
         cam->eye = eye;
         MCVector3 v3 = {x, y, z};
-        MC3DNode_translateVec3(&cam->Super, &v3, incremental?true:false);
+        cast(cam, MC3DNode)->translateVec3(cam, &v3, incremental?true:false);
     }
 }
 
@@ -271,10 +273,10 @@ void setDoesDrawWireFrame(_Bool isWiremode)
 {
     if (!director || !director->renderer) return;
     if (isWiremode == true) {
-        ff(director->renderer, setDrawMode, MCLineStrip);
+        ff(director->renderer, setDrawMode), MCLineStrip);
         //computed(director, contextHandler)->drawMode = MCLineStrip;
     } else {
-        ff(director->renderer, setDrawMode, MCTriAngles);
+        ff(director->renderer, setDrawMode), MCTriAngles);
         //computed(director, contextHandler)->drawMode = MCTriAngles;
     }
 }

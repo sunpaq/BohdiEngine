@@ -68,11 +68,13 @@ fun(release, void)) {
 constructor(MCItem), obj content) {
     MCObject(any);
     as(MCItem)
-        it->object = content;
-        it->value = gen_p(null);
+        it->value.p = null;
         it->prevItem = null;
         it->nextItem = null;
-        content->retain(content);
+        if (content != 0x0) {
+            it->object = content;
+            content->retain(content);
+        }
     }
     dynamic(MCItem)
         funbind(linkNextItem);

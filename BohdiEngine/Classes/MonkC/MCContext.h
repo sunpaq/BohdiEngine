@@ -1,26 +1,29 @@
-#ifndef MCContext_
-#define MCContext_
+#ifndef MCContext_h
+#define MCContext_h
 
-#include "monkc.h"
+#include "MCObject.h"
 
-class(MCContext, MCObject,
-	int argc;
-	char** argv;
-	char selectionChar;
-);
+structure(MCContext, MCObject)
+    int argc;
+    char** argv;
+    char selectionChar;
 
-fun(MCContext, MCContext*, newWithArgs, int argc, char** argv);
-fun(MCContext, void, bye, voida);
-fun(MCContext, void, dumpParas, voida);
-fun(MCContext, char*, getPara, int index);
-fun(MCContext, int, isIndexedParaEqualTo, int index, char* para);
-fun(MCContext, int, isHavePara, char* para);
-fun(MCContext, char, showMenuAndGetSelectionChar, int count, ...);
-fun(MCContext, int, showConfirmAndGetBOOL, const char* confirm);
-fun(MCContext, void, getUserInputString, char resultString[]);
-fun(MCContext, char*, getEnvironmentVar, const char* key);
-fun(MCContext, int, setEnvironmentVar, const char* key, const char* value, int isOverwrite);
-fun(MCContext, int, clearEnvironmentVar, const char* key);
+    fundef(bye, void));
+    fundef(dumpParas, void));
+    fundef(getPara, char*), int index);
+    fundef(isIndexedParaEqualTo, int), int index, char* para);
+    fundef(isHavePara, int), char* para);
+    fundef(showMenuAndGetSelectionChar, char), int count, ...);
+    fundef(showConfirmAndGetBOOL, int), const char* confirm);
+    fundef(getUserInputString, void), char resultString[]);
+    fundef(getEnvironmentVar, char*), const char* key);
+    fundef(setEnvironmentVar, int), const char* key, const char* value, int isOverwrite);
+    fundef(clearEnvironmentVar, int), const char* key);
+};
+
+constructor(MCContext), int argc, char** argv);
+
+alias(MCContext);
 
 extern char **environ;
 

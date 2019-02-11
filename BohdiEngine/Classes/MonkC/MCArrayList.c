@@ -7,9 +7,12 @@
 //
 
 #include <stdio.h>
-#include "MCArrayList.h"
+#include <stdlib.h>
 
-MCArrayLinkedList* MCArrayLinkedListInit(MCArrayLinkedList* list, MCGeneric values[], const size_t count)
+#include "MCArrayList.h"
+#include "MCLog.h"
+
+MCArrayLinkedList* MCArrayLinkedListInit(MCArrayLinkedList* list, mc_generic values[], const size_t count)
 {
     if (count > MCArrayLinkedListMax) {
         error_log("MCArrayLinkedList item count can not over %d\n", MCArrayLinkedListMax);
@@ -37,7 +40,7 @@ MCArrayLinkedList* MCArrayLinkedListInit(MCArrayLinkedList* list, MCGeneric valu
     return list;
 }
 
-MCArrayLinkedList* MCArrayLinkedListInitCircle(MCArrayLinkedList* list, MCGeneric values[], const size_t count)
+MCArrayLinkedList* MCArrayLinkedListInitCircle(MCArrayLinkedList* list, mc_generic values[], const size_t count)
 {
     list->isCircle = true;
     MCArrayLinkedListInit(list, values, count);
@@ -72,25 +75,27 @@ MCALItem* MCALDeleteItem(MCArrayLinkedList* list, MCALItem* item)
         }
     }
 
-    item->value.mcvoidptr = null;
+    item->value.p = null;
     list->count--;
     return list->head;
 }
 
 MCArrayList* MCArrayListInit(MCArrayList* list)
 {
-    for (int i=0; i<MCArrayLinkedListMax; i++) {
-        list->data[i]  = MCGenericFp(null);
+    int i;
+    for (i=0; i<MCArrayLinkedListMax; i++) {
+        list->data[i]  = gen_p(null);
         list->nexti[i] = -1;
         list->previ[i] = -1;
     }
     return list;
 }
 
-MCArrayList* MCArrayListAdd(MCArrayList* list, MCGeneric data)
+MCArrayList* MCArrayListAdd(MCArrayList* list, mc_generic data)
 {
-    for (int i=0; i<MCArrayLinkedListMax; i++) {
-        if (list->data[i].mcvoidptr == null) {
+    int i;
+    for (i=0; i<MCArrayLinkedListMax; i++) {
+        if (list->data[i].p == null) {
             list->data[i] = data;
             if (i==0){
                 list->previ[i] = -1;
@@ -104,3 +109,4 @@ MCArrayList* MCArrayListAdd(MCArrayList* list, MCGeneric data)
     }
     return list;
 }
+

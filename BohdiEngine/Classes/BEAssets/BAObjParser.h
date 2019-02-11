@@ -12,6 +12,8 @@
 #include "BALexer.h"
 #include "BAMtlParser.h"
 #include "BEAssetsManager.h"
+#include "MCLog.h"
+#include "MCMath.h"
 
 typedef struct {
     long*  big;
@@ -20,7 +22,7 @@ typedef struct {
     size_t vcount;
 } BAFace;
 
-MCInline void BAFaceInit(BAFace* face, long* buff, size_t vcount)
+static void BAFaceInit(BAFace* face, long* buff, size_t vcount)
 {
     face->big = null;
     memset(&face->small[0], 0, sizeof(face->small));
@@ -66,7 +68,7 @@ typedef struct {
     size_t mtllib_count;
 } BAObjMeta;
 
-MCInline void BAObjMetaInit(BAObjMeta* meta) {
+static void BAObjMetaInit(BAObjMeta* meta) {
     meta->vertex_count    = 0;
     meta->texcoord_count  = 0;
     meta->normal_count    = 0;
@@ -100,7 +102,7 @@ typedef struct BAObjDataStruct {
     MCVector2* texcoorbuff;
     MCVector4* normalbuff;//use w record times
     size_t normal_count;
-    MCBool shouldCalculateNormal;
+    bool shouldCalculateNormal;
     //faces
     BAFace* facebuff;
     size_t  facecount;
@@ -113,7 +115,7 @@ typedef struct BAObjDataStruct {
     char name[256];
 } BAObjData;
 
-MCInline void BAObjDumpInfo(BAObjData* baobj)
+static void BAObjDumpInfo(BAObjData* baobj)
 {
     for (int i=0; i<baobj->meshcount; i++) {
         BAMesh* m = &baobj->meshbuff[i];
@@ -134,7 +136,7 @@ MCInline void BAObjDumpInfo(BAObjData* baobj)
     printf("total %ld meshes\n", baobj->meshcount);
 }
 
-MCInline BAObjData* BAObjAlloc(BAObjMeta* meta)
+static BAObjData* BAObjAlloc(BAObjMeta* meta)
 {
     BAObjData* buff = (BAObjData*)malloc(sizeof(BAObjData));
     if (buff) {

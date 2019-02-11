@@ -1,67 +1,13 @@
 #include "MCCamera.h"
+#include "MCLog.h"
 
-compute(double, Radius);
-compute(MCMatrix3, normal);
-compute(MCMatrix4, viewMatrix);
-compute(MCMatrix4, projectionMatrix);
-compute(MCVector3, currentPosition);
-compute(MCMatrix3, rotationMat3);
-
-oninit(MCCamera)
-{
-    if (init(MC3DNode)) {
-        var(ratio) = MCRatioHDTV16x9;
-        var(field_of_view) = MCLensIphoneVideoViewAngle;
-        var(depth_of_field) = 100;
-
-        //local spherical coordinate
-        var(R_value) = 100;
-        var(R_percent) = 1.0;
-        var(tht) = 90;
-        var(fai) = 0;
-
-        var(lookat) = MCVector3Make(0,0,0);
-        var(eye) = MCVector3Make(0.0,obj->R_value,0.0);
-        var(up)  = MCVector3Make(0.0,0.0,-1.0);
-        
-        var(Radius) = Radius;
-        var(normal) = normal;
-        var(viewMatrix) = viewMatrix;
-        var(projectionMatrix) = projectionMatrix;
-        var(currentPosition) = currentPosition;
-        //transform
-        var(rotationMat3) = rotationMat3;
-        
-        var(isReverseMovement) = false;
-        var(rotateMode)= MCCameraRotateAroundModelManual;
-        
-        return obj;
-    }else{
-        return null;
-    }
+fun(Radius, double)) as(MCCamera)
+    return (it->R_value * it->R_percent);
 }
 
-fun(MCCamera, void, bye, voida)
-{
-    MC3DNode_bye(sobj, 0);
-}
-
-fun(MCCamera, void, printDebugInfo, voida)
-{
-    debug_log("MCCamera: lookat=%.2f/%.2f/%.2f R_value=%.2f R_percent=%.3f\n",
-              obj->lookat.x, obj->lookat.y, obj->lookat.z, obj->R_value, obj->R_percent);
-}
-
-compute(double, Radius)
-{
-    as(MCCamera);
-    return (obj->R_value * obj->R_percent);
-}
-
-compute(MCMatrix3, normal)
-{
-    as(MCCamera);
-    MCMatrix3 nor = MCMatrix3InvertAndTranspose((MCMatrix3)MCMatrix4GetMatrix3(cpt(viewMatrix)), NULL);
+fun(normal, MCMatrix3)) as(MCCamera)
+    MCMatrix3 mat3 = MCMatrix4GetMatrix3(cpt(viewMatrix));
+    MCMatrix3 nor = MCMatrix3InvertAndTranspose(mat3, null);
     return nor;
 }
 
@@ -71,103 +17,90 @@ compute(MCMatrix3, normal)
  view space coordinate orientation equal to device attitude (iphone on the table, x-right z-up)
  world space coordinate orientation equal monitor attitude (LCD on the desk, x-right -z forward)
  */
-compute(MCMatrix4, viewMatrix)
-{
-    as(MCCamera);
-    double r = cpt(Radius);
-    if (obj->rotateMode == MCCameraRotateAroundModelManual) {
-        MCCamera_transformSelfByEularAngle(obj, obj->lookat, cpt(Radius), obj->fai, obj->tht);
+
+fun(viewMatrix, MCMatrix4)) as(MCCamera)
+    double r = it->Radius(it);
+    if (it->rotateMode == MCCameraRotateAroundModelManual) {
+        it->transformSelfByEularAngle(it, it->lookat, r, it->fai, it->tht);
     }
-    else if (obj->rotateMode == MCCameraRotateAroundModelByGyroscope) {
-        sobj->transform = MCMatrix4MakeLookAt(0, 0, r, 0, 0, 0, 0, 1, 0);
+    else if (it->rotateMode == MCCameraRotateAroundModelByGyroscope) {
+        cast(it, MC3DNode)->transform = MCMatrix4MakeLookAt(0, 0, r, 0, 0, 0, 0, 1, 0);
     }
-    else if (obj->rotateMode == MCCameraRotateAroundModelByGyroscopeReverse) {
-        sobj->transform = MCMatrix4MakeLookAt(0, 0, r, 0, 0, 0, 0, 1, 0);
-        sobj->viewtrans = MCMatrix4Invert(sobj->viewtrans, null);
+    else if (it->rotateMode == MCCameraRotateAroundModelByGyroscopeReverse) {
+        cast(it, MC3DNode)->transform = MCMatrix4MakeLookAt(0, 0, r, 0, 0, 0, 0, 1, 0);
+        cast(it, MC3DNode)->viewtrans = MCMatrix4Invert(cast(it, MC3DNode)->viewtrans, null);
     }
-    else if (obj->rotateMode == MCCameraFixedAtOrigin) {
-        sobj->transform = MCMatrix4Identity;
-        sobj->viewtrans = MCMatrix4Identity;
+    else if (it->rotateMode == MCCameraFixedAtOrigin) {
+        cast(it, MC3DNode)->transform = MCMatrix4Identity;
+        cast(it, MC3DNode)->viewtrans = MCMatrix4Identity;
     }
     //default
     else {
         //do nothing
     }
-    MCMatrix4 view = MCMatrix4Multiply(sobj->transform, sobj->viewtrans);
+    MCMatrix4 view = MCMatrix4Multiply(cast(it, MC3DNode)->transform, cast(it, MC3DNode)->viewtrans);
     return view;
 }
 
-compute(MCMatrix4, projectionMatrix)
-{
-    as(MCCamera);
-    double far  = cpt(Radius) + var(depth_of_field);
-    double near = cpt(Radius) - var(depth_of_field);
+fun(projectionMatrix, MCMatrix4)) as(MCCamera)
+    double R = it->Radius(it);
+    double DoF = it->depth_of_field;
+    double far = R + DoF;
+    double near = R - DoF;
     if (near <= 0) {
         near = MCLensIphone29mm;
     }
-    return MCMatrix4MakePerspective(MCDegreesToRadians(obj->field_of_view),
-                                    var(ratio),
-                                    near,
-                                    far);
+    return MCMatrix4MakePerspective(MCDegreesToRadians(it->field_of_view), it->ratio, near, far);
 }
 
-compute(MCVector3, currentPosition)
-{
-    as(MCCamera);
-    if (obj->rotateMode != MCCameraRotateAroundModelManual) {
-        double r = cpt(Radius);
-        obj->eye = MCGetEyeFromRotationMat4(sobj->viewtrans, r);
-        obj->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(sobj->transform));
-        obj->R_percent = 1.0;
+fun(currentPosition, MCVector3)) as(MCCamera)
+    if (it->rotateMode != MCCameraRotateAroundModelManual) {
+        double r = it->Radius(it);
+        MCMatrix4 viewtrans = cast(it, MC3DNode)->viewtrans;
+        MCMatrix4 transform = cast(it, MC3DNode)->transform;
+        it->eye = MCGetEyeFromRotationMat4(viewtrans, r);
+        it->R_value = MCVector3Length(MCGetTranslateFromCombinedMat4(transform));
+        it->R_percent = 1.0;
     }
-    return obj->eye;
+    return it->eye;
 }
 
-compute(MCMatrix3, rotationMat3)
-{
-    as(MCCamera);
-    return MCMatrix4GetMatrix3(sobj->transform);
+fun(rotationMat3, MCMatrix3)) as(MC3DNode)
+    return MCMatrix4GetMatrix3(it->transform);
 }
 
-fun(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height)
-{
-    //setting camera
-    obj->ratio = MCRatioMake(width, height);
-    obj->R_value = 5;
-    return obj;
+fun(printDebugInfo, void)) as(MCCamera)
+    debug_log("MCCamera: lookat=%.2f/%.2f/%.2f R_value=%.2f R_percent=%.3f\n",
+              it->lookat.x, it->lookat.y, it->lookat.z, it->R_value, it->R_percent);
 }
 
-fun(MCCamera, void, reset, voida)
-{
-    init(MCCamera);
+fun(reset, void)) {
+    //init(MCCamera);
 }
 
-fun(MCCamera, void, transformWorld, MCMatrix4* mat4)
-{
-    sobj->viewtrans = *mat4;
+fun(transformWorld, void), MCMatrix4* mat4) as(MC3DNode)
+    it->viewtrans = *mat4;
 }
 
-fun(MCCamera, void, transformSelf, MCMatrix4* mat4)
-{
-    sobj->transform = *mat4;
+fun(transformSelf, void), MCMatrix4* mat4) as(MC3DNode)
+    it->transform = *mat4;
 }
 
-fun(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht)
-{
-    sobj->transform = MCMatrix4MakeLookAtByEulerAngle_EyeUp(obj->lookat, cpt(Radius),
-                                                            obj->fai, obj->tht,
-                                                            &obj->eye, &obj->up);
+fun(transformSelfByEularAngle, void), MCVector3 lookat, double R, double fai, double tht) as(MCCamera)
+    //double R = it->Radius(it);
+    cast(it, MC3DNode)->transform = MCMatrix4MakeLookAtByEulerAngle_EyeUp(it->lookat, R,
+                                                            it->fai, it->tht,
+                                                            &it->eye, &it->up);
 }
 
 //override
-fun(MCCamera, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model)
-{
+fun(willDraw, void), MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model) as(MCCamera)
     if (projection) {
-        *projection = cpt(projectionMatrix);
+        *projection = it->projectionMatrix(it);
     }
     
     if (view) {
-        *view = cpt(viewMatrix);
+        *view = it->viewMatrix(it);
     }
 
 //    MCGLUniformData data;
@@ -179,70 +112,94 @@ fun(MCCamera, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4*
 //    MCGLShader_updateUniform(ctx->shader, view_projection, data);
 }
 
-fun(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht)
-{
+fun(move, void), float deltaFai, float deltaTht) as(MCCamera)
     //angle with x+
-    if (var(isReverseMovement)) {
-        obj->fai += deltaFai.f;   //Left
-        obj->tht += deltaTht.f;   //Up
+    if (it->isReverseMovement) {
+        it->fai += deltaFai;   //Left
+        it->tht += deltaTht;   //Up
     }else{
-        obj->fai -= deltaFai.f;   //Left
-        obj->tht -= deltaTht.f;   //Up
+        it->fai -= deltaFai;   //Left
+        it->tht -= deltaTht;   //Up
     }
 }
 
-fun(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY)
-{
+fun(fucus, void), float deltaX, float deltaY) as(MCCamera)
     //angle with x+
-    if (var(isReverseMovement)) {
-        obj->lookat.x += deltaX.f;
-        obj->lookat.y += deltaY.f;
+    if (it->isReverseMovement) {
+        it->lookat.x += deltaX;
+        it->lookat.y += deltaY;
     }else{
-        obj->lookat.x -= deltaX.f;
-        obj->lookat.y -= deltaY.f;
+        it->lookat.x -= deltaX;
+        it->lookat.y -= deltaY;
     }
 }
 
-fun(MCCamera, void, pull, MCFloat deltaR)
-{
-    obj->R_value += deltaR.f;
+fun(pull, void), float deltaR) as(MCCamera)
+    it->R_value += deltaR;
 }
 
-fun(MCCamera, void, distanceScale, MCFloat scale)
-{
-    obj->R_percent = scale.f;
+fun(distanceScale, void), float scale) as(MCCamera)
+    it->R_percent = scale;
 }
 
-fun(MCCamera, void, setRotationMat3, float mat3[9])
-{
+fun(setRotationMat3, void), float mat3[9]) as(MCCamera)
     MCMatrix4 m4 = (MCMatrix4) {
         mat3[0], mat3[1], mat3[2], 0,
         mat3[3], mat3[4], mat3[5], 0,
         mat3[6], mat3[7], mat3[8], 0,
         0, 0, 0, 1
     };
-    sobj->viewtrans = m4;
+    cast(it, MC3DNode)->viewtrans = m4;
 }
 
-onload(MCCamera)
-{
-    if (load(MC3DNode)) {
-        bid(MCCamera, void, bye, voida);
-        bid(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height);
-        bid(MCCamera, void, transformWorld, MCMatrix4* mat4);
-        bid(MCCamera, void, transformSelf, MCMatrix4* mat4);
-        bid(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht);
-        bid(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
-        bid(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY);
-        bid(MCCamera, void, pull, MCFloat deltaR);
-        bid(MCCamera, void, reset, MCBool updateOrNot);
-        bid(MCCamera, void, distanceScale, MCFloat scale);
-        bid(MCCamera, void, setRotationMat3, float mat3[9]);
-        bid(MCCamera, void, printDebugInfo, voida);
-        bid(MCCamera, void, willDraw, voida);//override
-        return cla;
-    }else{
-        return null;
+fun(release, void)) as(MC3DNode)
+    it->release(it);
+}
+
+constructor(MCCamera), unsigned width, unsigned height) {
+    MC3DNode(any);
+    as(MCCamera)
+        it->ratio = MCRatioHDTV16x9;
+        it->field_of_view = MCLensIphoneVideoViewAngle;
+        it->depth_of_field = 100;
+
+        //local spherical coordinate
+        it->R_value = 100;
+        it->R_percent = 1.0;
+        it->tht = 90;
+        it->fai = 0;
+    
+        it->lookat = MCVector3Make(0,0,0);
+        it->eye = MCVector3Make(0.0,it->R_value,0.0);
+        it->up  = MCVector3Make(0.0,0.0,-1.0);
+
+        //transform
+        it->isReverseMovement = false;
+        it->rotateMode = MCCameraRotateAroundModelManual;
+        //setting camera
+        it->ratio = MCRatioMake(width, height);
+        it->R_value = 5;
     }
+    dynamic(MCCamera)
+        funbind(Radius);
+        funbind(normal);
+        funbind(viewMatrix);
+        funbind(projectionMatrix);
+        funbind(currentPosition);
+        funbind(rotationMat3);
+        funbind(transformWorld);
+        funbind(transformSelf);
+        funbind(transformSelfByEularAngle);
+        funbind(move);
+        funbind(fucus);
+        funbind(pull);
+        funbind(reset);
+        funbind(distanceScale);
+        funbind(setRotationMat3);
+        funbind(printDebugInfo);
+        funbind(willDraw);
+        funbind(release);
+    }
+    return any;
 }
 

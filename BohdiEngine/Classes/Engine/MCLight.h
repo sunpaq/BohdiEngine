@@ -9,19 +9,23 @@
 #ifndef MCLight_h
 #define MCLight_h
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "MC3DNode.h"
 
-class(MCLight, MC3DNode,
-      struct MCLightStruct *next;
-      MCBool    dataChanged;
-      MCVector3 ambientLightStrength;
-      MCVector3 diffuseLightStrength;
-      MCVector3 specularLightStrength;
-      MCVector3 lightColor;
-      MCVector3 lightPosition;
-);
+structure(MCLight, MC3DNode)
+    struct MCLight* next;
+    bool dataChanged;
+    MCVector3 ambientLightStrength;
+    MCVector3 diffuseLightStrength;
+    MCVector3 specularLightStrength;
+    MCVector3 lightColor;
+    MCVector3 lightPosition;
 
-fun(MCLight, void, printDebugInfo, voida);
+    fundef(printDebugInfo, void));
+};
+
+constructor(MCLight));
+
+alias(MCLight);
 
 #endif /* MCLight_h */

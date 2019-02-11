@@ -1,4 +1,9 @@
+#ifndef WIN32
+
 #include "MCUnitTest.h"
+#include "MCLog.h"
+#include "MCHashTable.h"
+
 /* Assert Functions */
 
 void assertYES(int expression) throws(MCAssertYESException)
@@ -25,13 +30,13 @@ void assertNotMull(void* ptr) throws(MCAssertNotMullException)
 		throw(MCAssertNotnullException);
 }
 
-void assertSame(MCObject* obj1, MCObject* obj2) throws(MCAssertSameException)
+void assertSame(struct MCObject* obj1, struct MCObject* obj2) throws(MCAssertSameException)
 {
 	if (obj1!=obj2)
 		throw(MCAssertSameException);
 }
 
-void assertNotSame(MCObject* obj1, MCObject* obj2) throws(MCAssertNotSameException)
+void assertNotSame(struct MCObject* obj1, struct MCObject* obj2) throws(MCAssertNotSameException)
 {
 	if (obj1==obj2)
 		throw(MCAssertNotSameException);
@@ -51,67 +56,47 @@ void fail(char* message)
 
 /* Test Case */
 
-onload(MCUnitTestCase)
-{
-    if (load(MCObject)) {
-        bid(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef);
-        bid(MCUnitTestCase, void, bye);
-        bid(MCUnitTestCase, void, setUp);
-        bid(MCUnitTestCase, void, tearDown);
-        bid(MCUnitTestCase, void, runTests);
-        bid(MCUnitTestCase, void, runATestMethod, char* errmsg);
-        return cla;
-    }else{
-        return null;
-    }
-}
-
-oninit(MCUnitTestCase)
-{
-    if (init(MCObject)) {
-        obj->next_case = null;
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-fun(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef)
-{
+fun(initWithTestResult, struct MCUnitTestCase*), struct MCUnitTestResult* resultRef) as(MCUnitTestCase)
 	if(resultRef!=null){
-		retain(resultRef);
-		obj->unitTestResultRef = resultRef;
+        ((obj)resultRef)->retain(resultRef);
+		it->unitTestResultRef = resultRef;
 	}else{
-		obj->unitTestResultRef = null;
+		it->unitTestResultRef = null;
 	}
-	return obj;
+	return it;
 }
 
-fun(MCUnitTestCase, void, bye, voida)
-{
-	if(obj->unitTestResultRef!=null)
-		release(&(obj->unitTestResultRef));
+fun(MCUnitTestCase_release, void)) as(MCUnitTestCase)
+    as(MCObject)
+       it->release(it);
+    }
+	if(it->unitTestResultRef!=null) {
+        ((obj)it->unitTestResultRef)->release(it->unitTestResultRef);
+    }
 }
 
-fun(MCUnitTestCase, void, setUp, voida)
+fun(setUp, void))
 {
 	//set up fixture
 	runtime_log("----MCUnitTestCase setUp\n");
 }
 
-fun(MCUnitTestCase, void, tearDown, voida)
+fun(tearDown, void))
 {
 	//tear down fixture
 	runtime_log("----MCUnitTestCase tearDown\n");
 }
 
-static void runMethodByPointer(MCUnitTestCase* obj, mc_hashitem* amethod)
+static void runMethodByPointer(struct MCUnitTestCase* it, struct MCHashItem* amethod)
 {
-	ff(obj, setUp, null);
+	it->setUp(it);
 	runtime_log("%s\n", "runMethodByPointer start");
-
 	try{
-		_push_jump(response_to(cast(MCObject*, obj), amethod->key), null);
+		obj c = (obj)it;
+		MCFunction f = c->responseTo(c, amethod->key);
+		if (f) {
+			f(c);
+		}
 		//if exception generated, this line will never be reached
 	}
 	catch(MCAssertYESException){
@@ -136,194 +121,159 @@ static void runMethodByPointer(MCUnitTestCase* obj, mc_hashitem* amethod)
 		error_log("MCAssertEqualsException\n");
 	}
 	finally{
-		error_log("testcase: %s at method: [%s]\n", cast(MCObject*, obj)->isa->item->key, amethod->key);
+		error_log("testcase: %s at method: [%s]\n", ((obj)it)->claz->name, amethod->key);
 	}
-
-	ff(obj, tearDown, null);
+	it->tearDown(it);
 }
 
-fun(MCUnitTestCase, void, runTests, voida)
-{
+fun(runTests, void)) as(MCUnitTestCase)
 	runtime_log("%s\n", "MCUnitTestCase runTests");
 	unsigned i;
-	unsigned bye_key = hash("bye");
-	unsigned setUp_key = hash("setUp");
-	unsigned tearDown_key = hash("tearDown");
+	unsigned bye_key = MCHashTable_hash("bye");
+	unsigned setUp_key = MCHashTable_hash("setUp");
+	unsigned tearDown_key = MCHashTable_hash("tearDown");
 
-	if(obj==null || cast(MCObject*, obj)->isa==null)
+	if(it==null || ((obj)it)->claz==null)
 		return;
 
 	runtime_log("%s\n", "MCUnitTestCase runTests before for loop");
-    mc_hashitem* amethod;
-	for (i = 0; i < get_tablesize(cast(MCObject*, obj)->isa->table->level); i++)
+	struct MCHashItem* amethod;
+	for (i = 0; i < get_tablesize(MCHashTableLevel1); i++)
 	{
 		//runtime_log("MCUnitTestCase runTests in for loop index:[%d]\n", i);
-		amethod = cast(MCObject*, obj)->isa->table->items[i];
-		if(amethod->value.mcvoidptr!=null
+		amethod = ((obj)it)->claz->methodtable->items[i];
+		if(amethod->value.p!=null
 		&& i!=bye_key
 		&& i!=setUp_key
 		&& i!=tearDown_key){
 			runtime_log("%s\n", "MCUnitTestCase runTests hit a matched method");
-			if(obj==null){
-				error_log("MCUnitTestCase runTests this pointer is null\n");
-			}
-			runMethodByPointer(obj, amethod);
+			runMethodByPointer(it, amethod);
 		}
 	}
 }
 
-fun(MCUnitTestCase, void, runATestMethod, char* methodName)
-{
-    mc_hashtable* table = cast(MCObject*, obj)->isa->table;
-    MCHashTableIndex index = hash(methodName) % get_tablesize(table->level);
-    runMethodByPointer(obj, table->items[index]);
+fun(runATestMethod, void), char* methodName) as(MCUnitTestCase)
+    struct MCHashTable* table = ((obj)it)->claz->methodtable;
+	unsigned index = MCHashTable_hash(methodName) % get_tablesize(MCHashTableLevel1);
+	runMethodByPointer(it, table->items[index]);
+}
+
+constructor(MCUnitTestCase)) {
+	MCObject(any);
+	as(MCUnitTestCase)
+		it->next_case = null;
+		it->release = MCUnitTestCase_release;
+	}
+	dynamic(MCUnitTestCase)
+		funbind(initWithTestResult);
+		funbind(setUp);
+		funbind(tearDown);
+		funbind(runTests);
+		funbind(runATestMethod);
+	}
+	return any;
 }
 
 /* Test Suite */
 
-onload(MCUnitTestSuite)
-{
-    if (load(MCObject)) {
-        bid(MCUnitTestSuite, void, bye);
-        bid(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* tcase);
-        bid(MCUnitTestSuite, void, runTestCases);
-        return cla;
-    }else{
-        return null;
-    }
-}
-
-oninit(MCUnitTestSuite)
-{
-    if (init(MCObject)) {
-        obj->first_case = null;
-        obj->last_case_p = &(obj->first_case);
-        obj->test_case_count = 0;
-        obj->next_suite = null;
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-fun(MCUnitTestSuite, void, bye, voida)
-{
-	MCUnitTestCase *iter, *save;
-	for(iter=obj->first_case; (save=iter)!=null; release(save))
+fun(MCUnitTestSuite_release, void)) as(MCUnitTestSuite)
+	as(MCObject)
+		it->release(it);
+	}
+	struct MCUnitTestCase *iter, *save;
+	for(iter=it->first_case; (save=iter)!=null; )
 		iter = iter->next_case;
 }
 
-fun(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase)
-{
-	retain(tcase);
-    *(obj->last_case_p) = tcase;
-    obj->last_case_p = cast(MCUnitTestCase**, &tcase);
-	obj->test_case_count++;
+fun(addTestCase, void), struct MCUnitTestCase* volatile tcase) as(MCUnitTestSuite)
+	as(MCObject)
+		it->retain(tcase);
+	}
+    *(it->last_case_p) = tcase;
+    it->last_case_p = (struct MCUnitTestCase**)&tcase;
+	it->test_case_count++;
 }
 
-fun(MCUnitTestSuite, void, runTestCases, voida)
-{
+fun(runTestCases, void)) as(MCUnitTestSuite)
 	runtime_log("%s\n", "MCUnitTestSuite runTestCases");
-	MCUnitTestCase *iter = null;
-	for(iter=obj->first_case; iter!=null; iter = iter->next_case)
-        MCUnitTestCase_runTests(iter, 0);
+	struct MCUnitTestCase *iter = null;
+	for(iter=it->first_case; iter!=null; iter = iter->next_case)
+		it->runTestCases(it);
+}
+
+constructor(MCUnitTestSuite)) {
+	MCObject(any);
+	as(MCUnitTestSuite)
+	    it->first_case = null;
+        it->last_case_p = &(it->first_case);
+        it->test_case_count = 0;
+        it->next_suite = null;
+        it->release = MCUnitTestSuite_release;
+	}
+	dynamic(MCUnitTestSuite)
+		funbind(addTestCase);
+		funbind(runTestCases);
+	}
+	return any;
 }
 
 /* Test Result */
 
-// #ifndef _MCUnitTestResult
-// #define _MCUnitTestResult _MCObject;\
-
-oninit(MCUnitTestResult)
-{
-    if (init(MCObject)) {
-        //nothing to init
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-fun(MCUnitTestResult, void, bye, voida)
-{
-	//nothing to clean
-}
-
-fun(MCUnitTestResult, void, addSuccessInfo, char* succinfo)
+fun(addSuccessInfo, void), char* succinfo)
 {
 	//
 }
 
-fun(MCUnitTestResult, void, addFailInfo, char* failinfo)
+fun(addFailInfo, void), char* failinfo)
 {
 	//
 }
 
-onload(MCUnitTestResult)
-{
-    if (load(MCObject)) {
-        bid(MCUnitTestResult, void, bye);
-        bid(MCUnitTestResult, void, addSuccessInfo, char* succinfo);
-        bid(MCUnitTestResult, void, addFailInfo, char* failinfo);
-        return cla;
-    }else{
-        return null;
-    }
+constructor(MCUnitTestResult)) {
+	MCObject(any);
+	dynamic(MCUnitTestResult)
+		funbind(addSuccessInfo);
+		funbind(addFailInfo);
+	}
+	return any;
 }
 
 /* Test Runner */
 
-// #ifndef _MCUnitTestRunner
-// #define _MCUnitTestRunner _MCObject;\
-// 	MCUnitTestResult* unitTestResult;\
-// 	MCUnitTestSuite* first_suite;\
-// 	int test_suite_count;\
-
-// class(MCUnitTestRunner);
-
-oninit(MCUnitTestRunner)
-{
-    if (init(MCObject)) {
-        obj->first_suite = null;
-        obj->test_suite_count = 0;
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-fun(MCUnitTestRunner, void, bye, voida)
-{
-	MCUnitTestSuite *iter, *save;
-	for(iter=obj->first_suite; (save=iter)!=null; release(save))
+fun(MCUnitTestRunner_release, void)) as(MCUnitTestRunner)
+	struct MCUnitTestSuite *iter, *save;
+	for(iter=it->first_suite; (save=iter)!=null; save->release(save))
 		iter = iter->next_suite;
 }
 
-fun(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite)
-{
-	retain(testSuite);
-	MCUnitTestSuite **iter;
-	for(iter=&(obj->first_suite); (*iter)!=null; iter=&((*iter)->next_suite)){}
+fun(addTestSuite, void), struct MCUnitTestSuite* testSuite) as(MCUnitTestRunner)
+	((obj)testSuite)->retain(testSuite);
+	struct MCUnitTestSuite **iter;
+	for(iter=&(it->first_suite); (*iter)!=null; iter=&((*iter)->next_suite)){}
 	(*iter)=testSuite;
-	obj->test_suite_count++;
+	it->test_suite_count++;
 }
 
-fun(MCUnitTestRunner, void, runTestSuites, voida)
-{
+fun(runTestSuites, void)) as(MCUnitTestRunner)
 	runtime_log("%s\n", "MCUnitTestRunner runTestSuites");
-	MCUnitTestSuite *iter;
-	for(iter=obj->first_suite; iter!=null; iter = iter->next_suite)
-        MCUnitTestSuite_runTestCases(iter, 0);
+	struct MCUnitTestSuite *iter;
+	for(iter=it->first_suite; iter!=null; iter = iter->next_suite)
+		iter->runTestCases(iter);
 }
 
-onload(MCUnitTestRunner)
-{
-    if (load(MCObject)) {
-        bid(MCUnitTestRunner, void, bye);
-        bid(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite);
-        bid(MCUnitTestRunner, void, runTestSuites);
-        return cla;
-    }else{
-        return null;
-    }
+constructor(MCUnitTestRunner)) {
+	MCObject(any);
+	as(MCUnitTestRunner)
+		it->first_suite = null;
+		it->test_suite_count = 0;
+		it->release = MCUnitTestRunner_release;
+	}
+	dynamic(MCUnitTestRunner)
+		funbind(addTestSuite);
+		funbind(runTestSuites);
+	}
+	return any;
 }
+
+#endif
+

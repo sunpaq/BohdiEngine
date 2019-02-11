@@ -1,3 +1,5 @@
+#ifndef WIN32
+
 #include "MCContext.h"
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -13,61 +15,56 @@ pid 1 is a init
 #ifndef MCProcess_
 #define MCProcess_ 
 
-class(MCProcess, MCObject,
+typedef enum {
+	wait_no_option=0,
+	wait_continued=WCONTINUED,
+	wait_no_hang=WNOHANG,
+	//The waitpid function will not block if a child specified by pid is not immediately available. In
+	//this case, the return value is 0.
+	wait_untraced=WUNTRACED
+	//If the implementation supports job control, the status of any child specified by pid that has
+	//stopped, and whose status has not been reported since it has stopped, is returned.
+} MCProcessOptions;
+
+typedef struct MCProcessRUseage_struct {
+	struct rusage* rusage_p;
+	char* description;
+} MCProcessRUseage;
+
+structure(MCProcess, MCObject)
 	pid_t pid;
 	pid_t ppid;
 	uid_t uid;
 	uid_t euid;
 	gid_t gid;
 	gid_t egid;
-);
 
-fun(MCProcess, void, printIDs, voida);
-//returns(0 in child/child-pid in parent/-1 on error)
-fun(MCProcess, int, fork, voida);
+	fundef(printIDs, void));
+	//returns(0 in child/child-pid in parent/-1 on error)
+	fundef(forkProcess, int));
 
-//may be not supported by OS
-fun(MCProcess, int, registerAtExitCallback, void (*func)(void));
-fun(MCProcess, void, exitWithStatus, int status);
-fun(MCProcess, pid_t, waitAnyChildExit, int* statusAddr);
+	//may be not supported by OS
+	fundef(registerAtExitCallback, int), void (*func)(void));
+	fundef(exitWithStatus, void), int status);
+	fundef(waitAnyChildExit, pid_t), int* statusAddr);
 
-typedef enum {
-	wait_no_option=0,
-	wait_continued=WCONTINUED,
-	wait_no_hang=WNOHANG,
-//The waitpid function will not block if a child specified by pid is not immediately available. In
-//this case, the return value is 0.
-	wait_untraced=WUNTRACED
-//If the implementation supports job control, the status of any child specified by pid that has
-//stopped, and whose status has not been reported since it has stopped, is returned.
-}MCProcessOptions;
-//wait_continued | wait_no_hang
+	fundef(waitPIDChildExit, pid_t), pid_t pid, int* statusAddr, int options);
 
-fun(MCProcess, pid_t, waitPIDChildExit, pid_t pid, int* statusAddr, int options);
+	fundef(isChildExitNormal, int), int status);
+	fundef(getChildExitLowOrder8Bit, int), int status);
 
-fun(MCProcess, int, isChildExitNormal, int status);
-fun(MCProcess, int, getChildExitLowOrder8Bit, int status);
+	fundef(isChildExitBySignal, int), int status);
+	fundef(getChildTerminateSignal, int), int status);
+	fundef(isCoreDumpFileGenerated, int), int status);
 
-fun(MCProcess, int, isChildExitBySignal, int status);
-fun(MCProcess, int, getChildTerminateSignal, int status);
-fun(MCProcess, int, isCoreDumpFileGenerated, int status);
+	fundef(isChildStopped, int), int status);
+	fundef(getChildStopSignal, int), int status);
+	fundef(waitPIDChildExitGetResourceUseage, pid_t), pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage);
+};
 
-fun(MCProcess, int, isChildStopped, int status);
-fun(MCProcess, int, getChildStopSignal, int status);
-//fun(MCProcess, int, isChildContinued, int status);
+constructor(MCProcess));
 
-typedef struct MCProcessRUseage_struct {
-    struct rusage* rusage_p;
-    char* description;
-} MCProcessRUseage;
-//wait3
-//fun(MCProcess,
-//	pid_t, waitAnyChildExitGetResourceUseage,
-//	int* statusAddr, int options, MCProcessRUseage* useage);
-//wait4
-fun(MCProcess, 
-	pid_t, waitPIDChildExitGetResourceUseage, 
-	pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage);
+alias(MCProcess);
 
 #endif
 /*
@@ -118,3 +115,5 @@ can avoid child became zombie process(parent did not handle his death)
 [grandfather, x, child] child became orphan, will management by init(pid=1) process
 
 */
+
+#endif

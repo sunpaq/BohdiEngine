@@ -8,63 +8,66 @@
 #ifndef MCGLShader_h
 #define MCGLShader_h
 
-#include "monkc_export.h"
-
 #include "MCGLBase.h"
 #include "MCGLDefaultShader.h"
+#include "MCObject.h"
 
 #define MAX_UNIFORM_NUM   100
 
-MCGlobalKey view_view       = "view_view";
-MCGlobalKey view_projection = "view_projection";
-MCGlobalKey view_position   = "view_position";
+static const char* view_view = "view_view";
+static const char* view_projection = "view_projection";
+static const char* view_position   = "view_position";
 
-MCGlobalKey model_model     = "model_model";
-MCGlobalKey model_normal    = "model_normal";
+static const char* model_model     = "model_model";
+static const char* model_normal    = "model_normal";
 
-MCGlobalKey light_ambient   = "light_ambient";
-MCGlobalKey light_diffuse   = "light_diffuse";
-MCGlobalKey light_specular  = "light_specular";
-MCGlobalKey light_color     = "light_color";
-MCGlobalKey light_position  = "light_position";
+static const char* light_ambient   = "light_ambient";
+static const char* light_diffuse   = "light_diffuse";
+static const char* light_specular  = "light_specular";
+static const char* light_color     = "light_color";
+static const char* light_position  = "light_position";
 
-MCGlobalKey material_ambient   = "material_ambient";
-MCGlobalKey material_diffuse   = "material_diffuse";
-MCGlobalKey material_specular  = "material_specular";
-MCGlobalKey material_dissolve  = "material_dissolve";
-MCGlobalKey material_shininess = "material_shininess";
+static const char* material_ambient   = "material_ambient";
+static const char* material_diffuse   = "material_diffuse";
+static const char* material_specular  = "material_specular";
+static const char* material_dissolve  = "material_dissolve";
+static const char* material_shininess = "material_shininess";
 
-class(MCGLShader, MCObject,
+structure(MCGLShader, MCObject)
     GLuint pid;
 
     MCGLUniform uniforms[MAX_UNIFORM_NUM];
-    MCBool uniformsDirty[MAX_UNIFORM_NUM];
-    MCUInt uniformCount;
-);
+    bool uniformsDirty[MAX_UNIFORM_NUM];
+    unsigned uniformCount;
 
-fun(MCGLShader, void, bye, voida);
-//shader
-//please cache the location index when you first call the setters
-//then directly pass the location index and pass name null
-fun(MCGLShader, MCGLShader*, initWithShaderCode, const char* vcode, const char* fcode,
-       const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
-fun(MCGLShader, MCGLShader*, initWithShaderName, const char* vname, const char* fname,
-       const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
+    fundef(release, void));
+    //shader
+    //please cache the location index when you first call the setters
+    //then directly pass the location index and pass name null
+    fundef(initWithShaderCode, struct MCGLShader*), const char* vcode, const char* fcode,
+    const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
+    fundef(initWithShaderName, struct MCGLShader*), const char* vname, const char* fname,
+    const char* attribs[], size_t acount, MCGLUniformType types[], const char* uniforms[], size_t ucount);
 
-fun(MCGLShader, void, activateShaderProgram, voida);
-fun(MCGLShader, int,  getUniformLocation, const char* name);
-fun(MCGLShader, void, updateUniform, const char* name, MCGLUniformData udata);
-fun(MCGLShader, void, setUniforms, voida);
+    fundef(activateShaderProgram, void));
+    fundef(getUniformLocation, int), const char* name);
+    fundef(updateUniform, void), const char* name, MCGLUniformData udata);
+    fundef(setUniforms, void));
 
-fun(MCGLShader, GLuint, prepareShader, GLuint Id, const char* vcode, const char* fcode, const char* version);
-fun(MCGLShader, void, shaderSetInt, const char* name, MCInt value);
-fun(MCGLShader, void, shaderSetBool, const char* name, MCBool value);
-//pass bundlename = null to get main bundle
-fun(MCGLShader, int, prepareShaderName, GLuint Id, const char* bundlename, const char* vname, const char* fname, const char* version);
-fun(MCGLShader, void, tryUseShaderProgram, voida);
+    fundef(prepareShader, GLuint), GLuint Id, const char* vcode, const char* fcode, const char* version);
+    fundef(shaderSetInt, void), const char* name, int value);
+    fundef(shaderSetBool, void), const char* name, bool value);
+    //pass bundlename = null to get main bundle
+    fundef(prepareShaderName, int), GLuint Id, const char* bundlename, const char* vname, const char* fname, const char* version);
+    fundef(tryUseShaderProgram, void));
 
-//for debug
-fun(MCGLShader, int, getUniformVector, const char* name, GLfloat* params);
-fun(MCGLShader, void, printUniforms, voida);
+    //for debug
+    fundef(getUniformVector, int), const char* name, GLfloat* params);
+    fundef(printUniforms, void));
+};
+
+constructor(MCGLShader));
+
+alias(MCGLShader);
 
 #endif /* MCGLShader_h */

@@ -8,98 +8,70 @@
 
 #include "MCSort.h"
 
-//class(MCSort, MCObject,
-//      int* array;
-//      size_t size);
-
-oninit(MCSort)
-{
-    if (init(MCObject)) {
-        var(array) = null;
-        var(length) = 0;
-        return obj;
-    }else{
-        return null;
+fun(bye, void)) as(MCSort)
+    if (it->array && it->length > 0) {
+        free(it->array);
     }
 }
 
-fun(MCSort, void, bye, voida)
-{
-    if (obj->array && obj->length > 0) {
-        free(obj->array);
-    }
-}
-
-fun(MCSort, MCSort*, initWithArray, MCGeneric* array, size_t length)
-{
-    var(array) = (MCGeneric*)malloc(sizeof(MCGeneric) * length);
-    for (size_t i=0; i<length; i++) {
-        obj->array[i] = array[i];
-    }
-    var(length) = length;
-    //debug
-    //ff(obj, printArray, 0);
-    return obj;
-}
-
-ifun(void, swap, size_t a, size_t b)
-{
-    as(MCSort);
+fun(swap, void), size_t a, size_t b) as(MCSort)
     if (a < b) {
-        MCGeneric t = obj->array[a];
-        obj->array[a] = obj->array[b];
-        obj->array[b] = t;
+        mc_generic t = it->array[a];
+        it->array[a] = it->array[b];
+        it->array[b] = t;
     }
 }
 
-fun(MCSort, void, insertionSort, voida)
-{
+fun(insertionSort, void)) {
     
 }
 
-ifun(void, quicksort, const size_t l, const size_t r)
-{
-    as(MCSort);
-    if (l >= r || l > obj->length || r > obj->length) {
+fun(quicksort, void), const size_t l, const size_t r) as(MCSort)
+    if (l >= r || l > it->length || r > it->length) {
         //debug_log("quicksort exit l=%ld r=%ld\n", l, r);
         return;
     }
-    MCGeneric pivot = obj->array[l];
-    size_t cur=l;
-    for (size_t idx=l+1; idx<=r; idx++) {
-        if (MCGenericCompare(obj->array[idx], pivot) < 0)
-            swap(obj, ++cur, idx);
+    mc_generic pivot = it->array[l];
+    size_t cur=l, idx;
+    for (idx=l+1; idx<=r; idx++) {
+        if (MCGenericCompare(it->array[idx], pivot) < 0)
+            swap(it, ++cur, idx);
     }
     
-    swap(obj, l, cur);
-    quicksort(obj, l, cur-1);
-    quicksort(obj, cur+1, r);
+    swap(it, l, cur);
+    quicksort(it, l, cur-1);
+    quicksort(it, cur+1, r);
 }
 
-fun(MCSort, void, quickSort, voida)
-{
-    quicksort(obj, 0, var(length)-1);
+fun(quickSort, void)) as(MCSort)
+    quicksort(it, 0, it->length-1);
 }
 
-fun(MCSort, void, printArray, voida)
-{
-    for (size_t i=0; i<obj->length; i++) {
-        printf("element of array[%ld]=%.2f\n", i, obj->array[i].mcfloat);
+fun(printArray, void)) as(MCSort)
+    size_t i;
+    for (i=0; i<it->length; i++) {
+        printf("element of array[%ld]=%.2f\n", i, it->array[i].f);
     }
 }
 
-onload(MCSort)
-{
-    if (load(MCObject)) {
-        bid(MCSort, void, bye, voida);
-        bid(MCSort, MCSort*, initWithArray, MCGeneric* array, size_t length);
-        bid(MCSort, void, insertionSort, voida);
-        bid(MCSort, void, quickSort, voida);
-        bid(MCSort, void, printArray, voida);
-        return cla;
-    }else{
-        return null;
+constructor(MCSort), mc_generic* array, size_t length) {
+    MCObject(any);
+    as(MCSort)
+        it->array = (mc_generic*)malloc(sizeof(mc_generic) * length);
+        size_t i;
+        for (i=0; i<length; i++) {
+            it->array[i] = array[i];
+        }
+        it->length = length;
     }
+    dynamic(MCSort)
+        funbind(bye);
+        funbind(insertionSort);
+        funbind(quickSort);
+        funbind(printArray);
+    }
+    return any;
 }
+
 
 

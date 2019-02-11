@@ -29,92 +29,75 @@ static float indexs[] = {
     0,1,4,4,1,5
 };
 
-oninit(MCSkybox)
-{
-    if (init(MC3DNode)) {
-        var(boxCameraRatio)= 9.0/16.0;
-        var(boxCameraAngle)= M_PI * 0.55;
-        
-        for (int i=0; i<24; i++) {
-            var(skyboxVertices)[i] = skyboxVertices[i];
-        }
-        
-        for (int i=0; i<36; i++) {
-            var(indexs)[i] = indexs[i];
-        }
-        
-        return obj;
-    }else{
-        return null;
-    }
+fun(release, void)) as(MC3DNode)
+    it->release(it);
 }
 
-fun(MCSkybox, void, bye, voida)
-{
-    MC3DNode_bye(sobj, 0);
+fun(initWithCubeTexture, struct MCSkybox*), struct BECubeTextureData* cubetex) as(MCSkybox)
+    it->cubedata = cubetex;
+    return it;
 }
 
-fun(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex)
-{
-    obj->cubedata = cubetex;
-    return obj;
-}
-
-fun(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[])
-{
-    BECubeTextureData* data = BECubeTextureData_newWithFaces(namelist);
-    MCSkybox* skybox = MCSkybox_initWithCubeTexture(obj, data);
-    release(data);
+fun(initWithFileNames, struct MCSkybox*), const char* namelist[]) as(MCSkybox)
+    struct BECubeTextureData* data = BECubeTextureData_newWithFaces(namelist);
+    struct MCSkybox* skybox = it->initWithCubeTexture(it, data);
+    Release(data);
     return skybox;
 }
 
-fun(MCSkybox, MCSkybox*, initWithDefaultFiles, voida)
-{
+fun(initWithDefaultFiles, struct MCSkybox*)) as(MCSkybox)
     const char* names[6] = {"right.jpg","left.jpg","top.jpg","bottom.jpg","back.jpg","front.jpg"};
-    return MCSkybox_initWithFileNames(obj, names);
+    return it->initWithFileNames(it, names);
 }
 
-fun(MCSkybox, void, setRotationMat3, float mat3[9])
-{
-    MC3DNode_rotateMat3(sobj, mat3, false);
+fun(setRotationMat3, void), float mat3[9]) as(MC3DNode)
+    it->rotateMat3(it, mat3, false);
 }
 
-fun(MCSkybox, void, setRotationMat4, float mat4[16])
-{
-    MC3DNode_rotateMat4(sobj, mat4, false);
+fun(setRotationMat4, void), float mat4[16]) as(MC3DNode)
+    it->rotateMat4(it, mat4, false);
 }
 
 //property
-fun(MCSkybox, void, getViewMatrix, MCMatrix4* mat4)
-{
+fun(getViewMatrix, void), MCMatrix4* mat4) as(MC3DNode)
     MCMatrix4 m = MCMatrix4MakeLookAt(0, 0, 0,
                                       0, 0,-1,
                                       0, 1, 0);
-    MCMatrix4 imat4 = MCMatrix4Invert(obj->Super.transform, null);
+    MCMatrix4 imat4 = MCMatrix4Invert(it->transform, null);
     *mat4 = MCMatrix4Multiply(m, imat4);
 }
 
-fun(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4)
-{
-    *mat4 = MCMatrix4MakePerspective(obj->boxCameraAngle,
-                                    obj->boxCameraRatio,
+fun(getProjectionMatrix, void), MCMatrix4* mat4) as(MCSkybox)
+    *mat4 = MCMatrix4MakePerspective(it->boxCameraAngle,
+                                    it->boxCameraRatio,
                                     0.001,
                                     200.0);
 }
 
-onload(MCSkybox)
-{
-    if (load(MC3DNode)) {
-        bid(MCSkybox, void, bye, voida);
-        bid(MCSkybox, MCSkybox*, initWithCubeTexture, BECubeTextureData* cubetex);
-        bid(MCSkybox, MCSkybox*, initWithFileNames, const char* namelist[]);
-        bid(MCSkybox, MCSkybox*, initWithDefaultFiles, voida);
-        bid(MCSkybox, void, setRotationMat3, float mat3[9]);
-        bid(MCSkybox, void, setRotationMat4, float mat4[16]);
-        bid(MCSkybox, void, getViewMatrix, MCMatrix4* mat4);
-        bid(MCSkybox, void, getProjectionMatrix, MCMatrix4* mat4);
-        return cla;
-    }else{
-        return null;
+constructor(MCSkybox)) {
+    MC3DNode(any);
+    as(MCSkybox)
+        it->boxCameraRatio = 9.0/16.0;
+        it->boxCameraAngle = M_PI * 0.55;
+        int i, j;
+        for (i=0; i<24; i++) {
+            it->skyboxVertices[i] = skyboxVertices[i];
+        }
+        for (j=0; j<36; j++) {
+            it->indexs[i] = indexs[i];
+        }
     }
+    dynamic(MCSkybox)
+        funbind(release);
+        funbind(initWithCubeTexture);
+        funbind(initWithFileNames);
+        funbind(initWithDefaultFiles);
+        //override
+        funbind(setRotationMat3);
+        funbind(setRotationMat4);
+        //property
+        funbind(getViewMatrix);
+        funbind(getProjectionMatrix);
+    }
+    return any;
 }

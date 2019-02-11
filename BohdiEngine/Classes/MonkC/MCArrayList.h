@@ -1,84 +1,74 @@
-//
-//  MCArrayLinkedList.h
-//  Sapindus
-//
-//  Created by YuliSun on 8/3/16.
-//  Copyright © 2016 oreisoft. All rights reserved.
-//
-
 #ifndef MCArrayLinkedList_h
 #define MCArrayLinkedList_h
 
+#include "MCType.h"
 #include "monkc.h"
 
 //MC array linked list
 typedef struct MCALItemStruct {
     struct MCALItemStruct* next;
     struct MCALItemStruct* prev;
-    MCGeneric value;
-    MCGeneric userdata;
+    mc_generic value;
+    mc_generic userdata;
 } MCALItem;
 
-MCInline MCALItem MCALItemMake(MCGeneric val)
+static MCALItem MCALItemMake(mc_generic val)
 {
     return (MCALItem){null, null, val};
 }
 
-MCInline void MCALItemLink(MCALItem* A, MCALItem* B)
+static void MCALItemLink(MCALItem* A, MCALItem* B)
 {
     A->next = B;
     B->prev = A;
 }
 
-MCInline MCBool MCALItemIsHead(MCALItem* item)
+static bool MCALItemIsHead(MCALItem* item)
 {
     return (item->prev == null);
 }
 
-MCInline MCBool MCALItemIsTail(MCALItem* item)
+static bool MCALItemIsTail(MCALItem* item)
 {
     return (item->next == null);
 }
 
 #define MCArrayLinkedListMax 1024
 typedef struct {
-    MCBool isCircle;
+    bool isCircle;
     size_t count;
     MCALItem* head;
     MCALItem array[MCArrayLinkedListMax];
 } MCArrayLinkedList;
 
-MCInline void MCALSetHead(MCArrayLinkedList* list, MCALItem* item)
+static void MCALSetHead(MCArrayLinkedList* list, MCALItem* item)
 {
     item->prev = null;
     list->head = item;
 }
 
-MCInline void MCALSetTail(MCArrayLinkedList* list, MCALItem* item)
+static void MCALSetTail(MCArrayLinkedList* list, MCALItem* item)
 {
     item->next = null;
 }
 
-MCInline MCBool MCALIsEmpty(MCArrayLinkedList* list)
+static bool MCALIsEmpty(MCArrayLinkedList* list)
 {
     return (list->head == null);
 }
 
-MCArrayLinkedList* MCArrayLinkedListInit(MCArrayLinkedList* list, MCGeneric values[], const size_t count);
-MCArrayLinkedList* MCArrayLinkedListInitCircle(MCArrayLinkedList* list, MCGeneric values[], const size_t count);
-
+MCArrayLinkedList* MCArrayLinkedListInit(MCArrayLinkedList* list, mc_generic values[], size_t count);
+MCArrayLinkedList* MCArrayLinkedListInitCircle(MCArrayLinkedList* list, mc_generic values[], size_t count);
 MCALItem* MCALDeleteItem(MCArrayLinkedList* list, MCALItem* item);
 
-
 typedef struct {
-    MCGeneric data[MCArrayLinkedListMax];
+    mc_generic data[MCArrayLinkedListMax];
     int nexti[MCArrayLinkedListMax];
     int previ[MCArrayLinkedListMax];
     int count;
 } MCArrayList;
 
 MCArrayList* MCArrayListInit(MCArrayList* list);
-MCArrayList* MCArrayListAdd(MCArrayList* list, MCGeneric data);
-
+MCArrayList* MCArrayListAdd(MCArrayList* list, mc_generic data);
 
 #endif /* MCArrayLinkedList_h */

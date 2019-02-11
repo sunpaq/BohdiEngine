@@ -12,26 +12,26 @@
 #define MIN(A, B) ((A<B)?A:B)
 #endif
 
-MCInline double MClognX(double n, double X) {
+static double MClognX(double n, double X) {
     //change of base formula
     return (log10(X) / log10(n));
 }
 
-MCInline MCBool MCSamefloat(float A, float B) {
+static bool MCSamefloat(float A, float B) {
     if (fabsf(A-B) < FLT_EPSILON) {
         return true;
     }
     return false;
 }
 
-MCInline MCBool MCSamedouble(double A, double B) {
+static bool MCSamedouble(double A, double B) {
     if (fabs(A-B) < DBL_EPSILON) {
         return true;
     }
     return false;
 }
 
-MCInline MCBool MCSamelongdouble(long double A, long double B) {
+static bool MCSamelongdouble(long double A, long double B) {
     if (fabsl(A-B) < LDBL_EPSILON) {
         return true;
     }
@@ -73,24 +73,22 @@ typedef union {
     float v[4];
 } MCVector4, MCQuaternion;
 
-
-
-MCInline MCBool MCVector3PositiveNonZero(MCVector3 vec3)
+static bool MCVector3PositiveNonZero(MCVector3 vec3)
 {
     return (vec3.x > 0 || vec3.y > 0 || vec3.z > 0);
 }
 
-MCInline MCVector2 MCVector2From3(MCVector3 vec3)
+static MCVector2 MCVector2From3(MCVector3 vec3)
 {
     return (MCVector2){vec3.x, vec3.y};
 }
 
-MCInline MCVector3 MCVector3From4(MCVector4 vec4)
+static MCVector3 MCVector3From4(MCVector4 vec4)
 {
     return (MCVector3){vec4.x, vec4.y, vec4.z};
 }
 
-MCInline MCBool MCVector2Equal(MCVector2 v1, MCVector2 v2)
+static bool MCVector2Equal(MCVector2 v1, MCVector2 v2)
 {
     if (MCSamefloat(v1.x, v2.x) && MCSamefloat(v1.y, v2.y)) {
         return true;
@@ -98,7 +96,7 @@ MCInline MCBool MCVector2Equal(MCVector2 v1, MCVector2 v2)
     return false;
 }
 
-MCInline MCBool MCVector3Equal(MCVector3 v1, MCVector3 v2)
+static bool MCVector3Equal(MCVector3 v1, MCVector3 v2)
 {
     if (MCSamefloat(v1.x, v2.x) && MCSamefloat(v1.y, v2.y) && MCSamefloat(v1.z, v2.z)) {
         return true;
@@ -106,7 +104,7 @@ MCInline MCBool MCVector3Equal(MCVector3 v1, MCVector3 v2)
     return false;
 }
 
-MCInline MCBool MCVector4Equal(MCVector4 v1, MCVector4 v2)
+static bool MCVector4Equal(MCVector4 v1, MCVector4 v2)
 {
     if (MCSamefloat(v1.x, v2.x) && MCSamefloat(v1.y, v2.y) && MCSamefloat(v1.z, v2.z) && MCSamefloat(v1.w, v2.w)) {
         return true;
@@ -114,14 +112,12 @@ MCInline MCBool MCVector4Equal(MCVector4 v1, MCVector4 v2)
     return false;
 }
 
-
-
-MCInline MCQuaternion MCQuaternionFromVec3(MCVector3 v)
+static MCQuaternion MCQuaternionFromVec3(MCVector3 v)
 {
     return (MCQuaternion){v.x, v.y, v.z, 0.0f};
 }
 
-MCInline MCQuaternion MCQuaternionZero()
+static MCQuaternion MCQuaternionZero()
 {
     return (MCQuaternion){0,0,0,0};
 }
@@ -161,9 +157,9 @@ static const MCMatrix4 MCMatrix4Identity = {
     0,0,0,1
 };
 
-MCInline double MCDegreesToRadians(double degrees) { return degrees * (M_PI / 180); }
-MCInline double MCRadiansToDegrees(double radians) { return radians * (180 / M_PI); }
-MCInline double MCCircleFacingAngle(double degrees) {
+static double MCDegreesToRadians(double degrees) { return degrees * (M_PI / 180); }
+static double MCRadiansToDegrees(double radians) { return radians * (180 / M_PI); }
+static double MCCircleFacingAngle(double degrees) {
     if (degrees < 180.0)
         return degrees+180.0;
     if (degrees > 180.0)
@@ -172,16 +168,16 @@ MCInline double MCCircleFacingAngle(double degrees) {
     return 0.0;
 }
 
-MCInline double MCSinDegrees(double degress)       { return sin(MCDegreesToRadians(degress)); }
-MCInline double MCCosDegrees(double degress)       { return cos(MCDegreesToRadians(degress)); }
-MCInline double MCTanDegrees(double degress)       { return tan(MCDegreesToRadians(degress)); }
+static double MCSinDegrees(double degress)       { return sin(MCDegreesToRadians(degress)); }
+static double MCCosDegrees(double degress)       { return cos(MCDegreesToRadians(degress)); }
+static double MCTanDegrees(double degress)       { return tan(MCDegreesToRadians(degress)); }
 
-MCInline float MCVector3Length(MCVector3 vector)
+static float MCVector3Length(MCVector3 vector)
 {
     return sqrtf(fabs(vector.v[0] * vector.v[0] + vector.v[1] * vector.v[1] + vector.v[2] * vector.v[2]));
 }
 
-MCInline MCVector3 MCVector3Normalize(MCVector3 vector)
+static MCVector3 MCVector3Normalize(MCVector3 vector)
 {
     float l = MCVector3Length(vector);
     float x = vector.v[0] / l;
@@ -195,46 +191,46 @@ MCInline MCVector3 MCVector3Normalize(MCVector3 vector)
     return (MCVector3){x,y,z};
 }
 
-MCInline MCVector3 MCVector3Make(float x, float y, float z) {
+static MCVector3 MCVector3Make(float x, float y, float z) {
     return (MCVector3){x, y, z};
 }
 
-MCInline MCVector4 MCVector4Make(float x, float y, float z, float w) {
+static MCVector4 MCVector4Make(float x, float y, float z, float w) {
     return (MCVector4){x, y, z, w};
 }
 
-MCInline MCVector3 MCVector3MakeReverse(float x, float y, float z) {
+static MCVector3 MCVector3MakeReverse(float x, float y, float z) {
     return (MCVector3){-x, -y, -z};
 }
 
-MCInline MCVector3 MCVector3Reverse(MCVector3 vtx) {
+static MCVector3 MCVector3Reverse(MCVector3 vtx) {
     return (MCVector3){-vtx.x, -vtx.y, -vtx.z};
 }
 
-MCInline MCVector3 MCVector3Middle(MCVector3 v1, MCVector3 v2) {
+static MCVector3 MCVector3Middle(MCVector3 v1, MCVector3 v2) {
     return (MCVector3){(v1.x+v2.x)/2.0f, (v1.y+v2.y)/2.0f, (v1.z+v2.z)/2.0f};
 }
 
-MCInline MCVector3 MCVector3Add(MCVector3 v1, MCVector3 v2) {
+static MCVector3 MCVector3Add(MCVector3 v1, MCVector3 v2) {
     return (MCVector3){v1.x+v2.x, v1.y+v2.y, v1.z+v2.z};
 }
 
-MCInline MCVector3 MCVector3Sub(MCVector3 v1, MCVector3 v2) {
+static MCVector3 MCVector3Sub(MCVector3 v1, MCVector3 v2) {
     //the same as add -v2
     return (MCVector3){v1.x-v2.x, v1.y-v2.y, v1.z-v2.z};
 }
 
-MCInline double MCVector3Dot(MCVector3 v1, MCVector3 v2) {
+static double MCVector3Dot(MCVector3 v1, MCVector3 v2) {
     return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
 }
 
-MCInline MCVector3 MCVector3Cross(MCVector3 v1, MCVector3 v2) {
+static MCVector3 MCVector3Cross(MCVector3 v1, MCVector3 v2) {
     return (MCVector3){v1.y*v2.z - v2.y*v1.z,
         v2.x*v1.z - v1.x*v2.z,
         v1.x*v2.y - v2.x*v1.y};
 }
 
-MCInline MCQuaternion MCQuaternionGProduct(MCQuaternion p, MCQuaternion q)
+static MCQuaternion MCQuaternionGProduct(MCQuaternion p, MCQuaternion q)
 {
     float pscalar = p.w;
     float qscalar = q.w;
@@ -247,58 +243,59 @@ MCInline MCQuaternion MCQuaternionGProduct(MCQuaternion p, MCQuaternion q)
         pscalar * qvector.x + qscalar * pvector.x + pxq.x,
         pscalar * qvector.y + qscalar * pvector.y + pxq.y,
         pscalar * qvector.z + qscalar * pvector.z + pxq.z,
-        pscalar * qscalar - MCVector3Dot(pvector, qvector)
+        (float)(pscalar * qscalar - MCVector3Dot(pvector, qvector))
     };
 }
 
-MCInline MCQuaternion MCQuaternionArrayGProduct(MCQuaternion p, MCQuaternion* qarray, int count)
+static MCQuaternion MCQuaternionArrayGProduct(MCQuaternion p, MCQuaternion* qarray, int count)
 {
     if (count < 1) {
         return p;
     }
     MCQuaternion q = p;
-    for (int i=0; i<count; i++) {
+    int i;
+    for (i=0; i<count; i++) {
         q = MCQuaternionGProduct(q, qarray[i]);
     }
     return q;
 }
 
-MCInline MCQuaternion MCQuaternionConjugate(MCQuaternion q)
+static MCQuaternion MCQuaternionConjugate(MCQuaternion q)
 {
     return (MCQuaternion) { -q.x, -q.y, -q.z, q.w };
 }
 
-MCInline MCQuaternion MCQuaternionFromAxisAngle_Radian(MCVector3 axis, double radian)
+static MCQuaternion MCQuaternionFromAxisAngle_Radian(MCVector3 axis, double radian)
 {
     double r = radian / 2.0f;
     return (MCQuaternion) {
-        axis.x * sin(r),
-        axis.y * sin(r),
-        axis.z * sin(r),
-        cos(r)
+            (float)(axis.x * sin(r)),
+            (float)(axis.y * sin(r)),
+            (float)(axis.z * sin(r)),
+            (float)(cos(r))
     };
 }
 
-MCInline MCQuaternion MCQuaternionSwapYZ(MCQuaternion* q)
+static MCQuaternion MCQuaternionSwapYZ(MCQuaternion* q)
 {
     MCVector3 axis = (MCVector3){q->x, q->y, q->z};
     double radian = q->w;
     
     double r = radian / 2.0f;
     return (MCQuaternion) {
-        axis.x * sin(r),
-        axis.z * sin(r),
-        axis.y * sin(r),
-        cos(r)
+            (float)(axis.x * sin(r)),
+            (float)(axis.z * sin(r)),
+            (float)(axis.y * sin(r)),
+            (float)(cos(r))
     };
 }
 
-MCInline MCQuaternion MCQuaternionFromAxisAngle(MCVector3 axis, double tht)
+static MCQuaternion MCQuaternionFromAxisAngle(MCVector3 axis, double tht)
 {
     return MCQuaternionFromAxisAngle_Radian(axis, MCDegreesToRadians(tht));
 }
 
-MCInline MCQuaternion MCQuaternionByEuler_Radian(double row, double yaw, double pitch)
+static MCQuaternion MCQuaternionByEuler_Radian(double row, double yaw, double pitch)
 {
     //roll yaw pitch => +z +y +x
     MCQuaternion R = MCQuaternionFromAxisAngle_Radian(MCVector3Make(0.0, 0.0, 1.0), row);
@@ -310,7 +307,7 @@ MCInline MCQuaternion MCQuaternionByEuler_Radian(double row, double yaw, double 
     return MCQuaternionArrayGProduct(R, qarray, 2);
 }
 
-MCInline MCQuaternion MCQuaternionByAxisAngles(double x, double y, double z)
+static MCQuaternion MCQuaternionByAxisAngles(double x, double y, double z)
 {
     //roll yaw pitch => +z +y +x
     return MCQuaternionByEuler_Radian(MCDegreesToRadians(z),
@@ -318,44 +315,47 @@ MCInline MCQuaternion MCQuaternionByAxisAngles(double x, double y, double z)
                                       MCDegreesToRadians(x));
 }
 
-MCInline MCVector3 MCVector3RotateByQuaternion(MCVector3 v, MCQuaternion q)
+static MCVector3 MCVector3RotateByQuaternion(MCVector3 v, MCQuaternion q)
 {
     MCQuaternion r1 = MCQuaternionGProduct(q, (MCQuaternion){v.x, v.y, v.z, 0.0f});
     MCQuaternion r2 = MCQuaternionGProduct(r1, MCQuaternionConjugate(q));
     return (MCVector3){r2.x, r2.y, r2.z};
 }
 
-MCInline MCVector3 MCVector3RotateByAxisAngles(MCVector3 v, double z, double y, double x)
+static MCVector3 MCVector3RotateByAxisAngles(MCVector3 v, double z, double y, double x)
 {
     return MCVector3RotateByQuaternion(v, MCQuaternionByAxisAngles(z,y,x));
 }
 
-MCInline MCVector3 MCNormalOfTriangle(MCVector3 v1, MCVector3 v2, MCVector3 v3) {
+static MCVector3 MCNormalOfTriangle(MCVector3 v1, MCVector3 v2, MCVector3 v3) {
     return MCVector3Cross(MCVector3Sub(v2, v1), MCVector3Sub(v3, v1));
 }
 
-MCInline MCBool MCMatrix3Equal(const MCMatrix3* l, const MCMatrix3* r)
+static bool MCMatrix3Equal(const MCMatrix3* l, const MCMatrix3* r)
 {
-    for (int i=0; i<9; i++) {
+    int i;
+    for (i=0; i<9; i++) {
         if(!MCSamefloat(l->m[i], r->m[i]))
             return false;
     }
     return true;
 }
 
-MCInline MCBool MCMatrix4Equal(const MCMatrix4* l, const MCMatrix4* r)
+static bool MCMatrix4Equal(const MCMatrix4* l, const MCMatrix4* r)
 {
-    for (int i=0; i<16; i++) {
+    int i;
+    for (i=0; i<16; i++) {
         if(!MCSamefloat(l->m[i], r->m[i]))
             return false;
     }
     return true;
 }
 
-MCInline MCMatrix3* MCMatrix3Copy(float* src, MCMatrix3* dst)
+static MCMatrix3* MCMatrix3Copy(const float* src, MCMatrix3* dst)
 {
     if (src && dst) {
-        for (int i=0; i<9; i++) {
+        int i;
+        for (i=0; i<9; i++) {
             dst->m[i] = src[i];
         }
         return dst;
@@ -363,11 +363,14 @@ MCInline MCMatrix3* MCMatrix3Copy(float* src, MCMatrix3* dst)
     return null;
 }
 
-MCInline MCMatrix4* MCMatrix4CopyDiff(float* src, MCMatrix4* dst, float delta)
+static MCMatrix4* MCMatrix4CopyDiff(const float* src, MCMatrix4* dst, float delta)
 {
     if (src && dst) {
-        for (int i=0; i<16; i++) {
-            if (fabs(dst->m[i] - src[i]) > delta) {
+        int i;
+        for (i=0; i<16; i++) {
+            double diff = dst->m[i] - src[i];
+            float abs = (float)(fabs(diff));
+            if (abs > delta) {
                 dst->m[i] = src[i];
             }
         }
@@ -376,10 +379,11 @@ MCInline MCMatrix4* MCMatrix4CopyDiff(float* src, MCMatrix4* dst, float delta)
     return null;
 }
 
-MCInline MCMatrix4* MCMatrix4Copy(float* src, MCMatrix4* dst)
+static MCMatrix4* MCMatrix4Copy(const float* src, MCMatrix4* dst)
 {
     if (src && dst) {
-        for (int i=0; i<16; i++) {
+        int i;
+        for (i=0; i<16; i++) {
             dst->m[i] = src[i];
         }
         return dst;
@@ -387,10 +391,11 @@ MCInline MCMatrix4* MCMatrix4Copy(float* src, MCMatrix4* dst)
     return null;
 }
 
-MCInline MCMatrix4* MCMatrix4CopyDouble(double* src, MCMatrix4* dst)
+static MCMatrix4* MCMatrix4CopyDouble(const double* src, MCMatrix4* dst)
 {
     if (src && dst) {
-        for (int i=0; i<16; i++) {
+        int i;
+        for (i=0; i<16; i++) {
             dst->m[i] = (float)src[i];
         }
         return dst;
@@ -399,21 +404,21 @@ MCInline MCMatrix4* MCMatrix4CopyDouble(double* src, MCMatrix4* dst)
 }
 
 //column major data order!
-MCInline MCMatrix4 MCMatrix4Make(float* data)
+static MCMatrix4 MCMatrix4Make(float* data)
 {
     MCMatrix4 mat;
     MCMatrix4Copy(data, &mat);
     return mat;
 }
 
-MCInline MCMatrix4 MCMatrix4MakeDouble(double* data)
+static MCMatrix4 MCMatrix4MakeDouble(double* data)
 {
     MCMatrix4 mat;
     MCMatrix4CopyDouble(data, &mat);
     return mat;
 }
 
-MCInline MCMatrix3 MCMatrix3Multiply(MCMatrix3 l, MCMatrix3 r)
+static MCMatrix3 MCMatrix3Multiply(MCMatrix3 l, MCMatrix3 r)
 {
     MCMatrix3 m;
     
@@ -433,7 +438,7 @@ MCInline MCMatrix3 MCMatrix3Multiply(MCMatrix3 l, MCMatrix3 r)
 }
 
 //OpenGL use column-order save matrix
-MCInline MCMatrix4 MCMatrix4Multiply(MCMatrix4 l, MCMatrix4 r)
+static MCMatrix4 MCMatrix4Multiply(MCMatrix4 l, MCMatrix4 r)
 {
     MCMatrix4 m;
     
@@ -460,7 +465,7 @@ MCInline MCMatrix4 MCMatrix4Multiply(MCMatrix4 l, MCMatrix4 r)
     return m;
 }
 
-MCInline MCVector3 MCVector3MultiplyMat3(MCVector3 vec3, MCMatrix3 mat3)
+static MCVector3 MCVector3MultiplyMat3(MCVector3 vec3, MCMatrix3 mat3)
 {
     MCVector3 v;
     v.x = vec3.x * mat3.m00 + vec3.y * mat3.m10 + vec3.z * mat3.m20;
@@ -470,31 +475,31 @@ MCInline MCVector3 MCVector3MultiplyMat3(MCVector3 vec3, MCMatrix3 mat3)
 }
 
 //Prime
-util(MCMath, MCBool, isPrime, int a);
+bool MCMath_isPrime(int a);
 //Power of two
-util(MCMath, MCBool, isPowerOfTwo, unsigned a);
+bool MCMath_isPowerOfTwo(unsigned a);
 
-util(MCMath, void, bye, voida);
-util(MCMath, int, addInteger2, int a, int b);
+void MCMath_bye(void);
+int MCMath_addInteger2(int a, int b);
 
-util(MCMath, void, sortInt, int* sorted, size_t count);
-util(MCMath, void, sortLong, long* sorted, size_t count);
-util(MCMath, void, sortSizet, size_t* sorted, size_t count);
+void MCMath_sortInt(int* sorted, size_t count);
+void MCMath_sortLong(long* sorted, size_t count);
+void MCMath_sortSizet(size_t* sorted, size_t count);
 
-util(MCMath, int, accumulateMaxi, int* result, int value);
-util(MCMath, int, accumulateMini, int* result, int value);
+int MCMath_accumulateMaxi(int* result, int value);
+int MCMath_accumulateMini(int* result, int value);
 
-util(MCMath, double, accumulateMaxd, double* result, double value);
-util(MCMath, double, accumulateMind, double* result, double value);
+double MCMath_accumulateMaxd(double* result, double value);
+double MCMath_accumulateMind(double* result, double value);
 
 //Chebyshev distance
-util(MCMath, unsigned, chebyshevDiatance, MCVector2i A, MCVector2i B);
+unsigned MCMath_chebyshevDiatance(MCVector2i A, MCVector2i B);
 //Factorial
-util(MCMath, unsigned, factorialOf, unsigned N);
+unsigned MCMath_factorialOf(unsigned N);
 //Permutation
-util(MCMath, unsigned, KpermutationsOfN, unsigned K, unsigned N);
+unsigned MCMath_KpermutationsOfN(unsigned K, unsigned N);
 //Combination
-util(MCMath, unsigned, KcombinationsOfN, unsigned K, unsigned N);
+unsigned MCMath_KcombinationsOfN(unsigned K, unsigned N);
 
 
 

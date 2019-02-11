@@ -6,8 +6,8 @@
 //  Copyright © 2016年 oreisoft. All rights reserved.
 //
 
-#ifndef MCFileParser_h
-#define MCFileParser_h
+#ifndef BALexer_h
+#define BALexer_h
 
 #include <stdlib.h>
 #include <stdbool.h>

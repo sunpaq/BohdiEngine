@@ -1,9 +1,7 @@
+#ifndef WIN32
+
 #ifndef MCIO_H
 #define MCIO_H
-
-#include "MCContext.h"
-#include "MCBuffer.h"
-#include "MCString.h"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -20,14 +18,38 @@
 #include <errno.h>
 #include <limits.h>
 
+#include "MCContext.h"
+#include "MCBuffer.h"
+
 /* MCFile */
 
-class(MCFile, MCObject,
+structure(MCFile, MCObject)
 	int fd;
 	char* pathname;
 	void* buffer;
 	struct stat attribute;
-);
+
+	fundef(initWithPathName, struct MCFile*), char* pathname, int oflag);
+	fundef(initWithPathNameDefaultFlag, struct MCFile*), char* pathname);
+
+	fundef(readAllFromBegin, ssize_t), off_t offset);
+	fundef(readFromBegin, ssize_t), off_t offset, size_t nbytes);
+	fundef(readAtLastPosition, size_t), off_t offset, size_t nbytes);
+	fundef(readFromEnd, size_t), off_t offset, size_t nbytes);
+	fundef(writeToBegin, size_t), off_t offset, void* buf, size_t nbytes);
+	fundef(writeToLastTime, size_t), off_t offset, void* buf, size_t nbytes);
+	fundef(writeToEnd, size_t), off_t offset, void* buf, size_t nbytes);
+
+	fundef(duplicateFd, int));
+	fundef(duplicateFdTo, int), int fd);
+	fundef(printAttribute, void));
+	fundef(closeFile, void));
+	fundef(checkPermissionUseRealIDOfProcess, int), int mode);
+};
+
+constructor(MCFile));
+
+alias(MCFile);
 
 /*
 O_RDONLY
@@ -48,22 +70,7 @@ typedef enum {
     MCFileCreateAtomic = O_CREAT | O_EXCL
 } MCFileOpenType;
 
-fun(MCFile, MCFile*, initWithPathName, char* pathname, int oflag);
-fun(MCFile, MCFile*, initWithPathNameDefaultFlag, char* pathname);
 
-fun(MCFile, ssize_t, readAllFromBegin, off_t offset);
-fun(MCFile, ssize_t, readFromBegin, off_t offset, size_t nbytes);
-fun(MCFile, size_t, readAtLastPosition, off_t offset, size_t nbytes);
-fun(MCFile, size_t, readFromEnd, off_t offset, size_t nbytes);
-fun(MCFile, size_t, writeToBegin, off_t offset, void* buf, size_t nbytes);
-fun(MCFile, size_t, writeToLastTime, off_t offset, void* buf, size_t nbytes);
-fun(MCFile, size_t, writeToEnd, off_t offset, void* buf, size_t nbytes);
-
-fun(MCFile, int, duplicateFd, voida);
-fun(MCFile, int, duplicateFdTo, int fd);
-fun(MCFile, void, printAttribute, voida);
-fun(MCFile, void, bye, voida);
-fun(MCFile, int, checkPermissionUseRealIDOfProcess, int mode);
 /*
 R_OK
 W_OK
@@ -84,9 +91,9 @@ int MCProcess_changeCurrentWorkingDir(char* pathname);
 int MCProcess_changeCurrentWorkingDirByFd(int fd);
 char* MCProcess_getCurrentWorkingDir(MCCharBuffer* buff);
 
-MCFile* MCFile_newReadOnly(char* pathname);
-MCFile* MCFile_newWriteOnly(char* pathname, int isClear);
-MCFile* MCFile_newReadWrite(char* pathname, int isClear);
+struct MCFile* MCFile_newReadOnly(char* pathname);
+struct MCFile* MCFile_newWriteOnly(char* pathname, int isClear);
+struct MCFile* MCFile_newReadWrite(char* pathname, int isClear);
 
 //line will passed
 #define MCStreamEachLine(stream, ...)\
@@ -130,70 +137,88 @@ typedef struct {
     const char* fopenMode;
 } MCStreamType;
 
-static inline MCStreamType MakeMCStreamType(const unsigned btype, const char* fomode) {
+static MCStreamType MakeMCStreamType(const unsigned btype, const char* fomode) {
     return (MCStreamType){btype, fomode};
 }
 
 //default is a wide-char fully-buffered stream
 
-class(MCStream, MCObject,
+structure(MCStream, MCObject)
 	FILE* fileObject;
-    char* buffer;
-);
+	char* buffer;
 
-fun(MCStream, MCStream*, initWithPath, MCStreamType type, const char* path);
-fun(MCStream, MCStream*, initWithPathDefaultType, const char* path);
+	fundef(initWithPath, struct MCStream*), MCStreamType type, const char* path);
+	fundef(initWithPathDefaultType, struct MCStream*), const char* path);
 
-fun(MCStream, void, bye, voida);
-fun(MCStream, int, getFileDescriptor, voida);
+	fundef(bye, void));
+	fundef(getFileDescriptor, int));
 
-fun(MCStream, int, getChar, voida);
-fun(MCStream, int, putChar, int charCode);
-fun(MCStream, int, pushbackChar, int charCodeToBePushBack);
+	fundef(getChar, int));
+	fundef(putChar, int), int charCode);
+	fundef(pushbackChar, int), int charCodeToBePushBack);
 
-fun(MCStream, char*, getCString, MCCharBuffer* recvBuffer);
-fun(MCStream, char*, putCString, MCCharBuffer* sendBuffer);
-fun(MCStream, MCString*, getMCString, voida);
-fun(MCStream, int, putMCString, MCString* str);
+	fundef(getCString, char*), MCCharBuffer* recvBuffer);
+	fundef(putCString, char*), MCCharBuffer* sendBuffer);
+	fundef(getMCString, struct MCString*));
+	fundef(putMCString, int), struct MCString* str);
 
-fun(MCStream, size_t, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs);
-fun(MCStream, size_t, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs);
+	fundef(getBianryObject, size_t), void* recvBuffer,  size_t objectSize, size_t numberOfObjs);
+	fundef(putBianryObject, size_t), void* sendBuffer,  size_t objectSize, size_t numberOfObjs);
 
-fun(MCStream, off_t, tellOffset, voida);
-fun(MCStream, int, seekFromBegin, off_t offset);
-fun(MCStream, int, seekFromCurrent, off_t offset);
-fun(MCStream, int, seekFromEnd, off_t offset);
-fun(MCStream, long, tellSize, voida);
-fun(MCStream, void, dump, voida);
+	fundef(tellOffset, off_t));
+	fundef(seekFromBegin, int), off_t offset);
+	fundef(seekFromCurrent, int), off_t offset);
+	fundef(seekFromEnd, int), off_t offset);
+	fundef(tellSize, long));
+	fundef(dump, void));
+};
+
+constructor(MCStream));
+
+alias(MCStream);
+
+
 
 /* MCByteStream */
 
-class(MCByteStream, MCStream,
-);
+structure(MCByteStream, MCStream)
+	fundef(bye, void));
+	fundef(newWithPath, struct MCByteStream*), MCStreamType type, char* path);
+};
 
-fun(MCByteStream, void, bye, voida);
-fun(MCByteStream, MCByteStream*, newWithPath, MCStreamType type, char* path);
+constructor(MCByteStream));
+
+alias(MCByteStream);
 
 /* MCStdinStream */
 
-class(MCStdinStream, MCStream,
-);
+structure(MCStdinStream, MCStream)
+	fundef(bye, void));
+};
 
-fun(MCStdinStream, void, bye, voida);
+constructor(MCStdinStream));
+
+alias(MCStdinStream);
 
 /* MCStdoutStream */
 
-class(MCStdoutStream, MCStream,
-);
+structure(MCStdoutStream, MCStream)
+	fundef(bye, void));
+};
 
-fun(MCStdoutStream, void, bye, voida);
+constructor(MCStdoutStream));
+
+alias(MCStdoutStream);
 
 /* MCStderrStream */
 
-class(MCStderrStream, MCStream,
-);
+structure(MCStderrStream, MCStream)
+	fundef(bye, void));
+};
 
-fun(MCStderrStream, void, bye, voida);
+constructor(MCStderrStream));
+
+alias(MCStderrStream);
 
 /* MCSelect */
 
@@ -203,7 +228,7 @@ typedef enum _MCSelect_fd_type{
 	MCSelect_Exceptionfd,
 }MCSelect_fd_type;
 
-class(MCSelect, MCObject,
+structure(MCSelect, MCObject)
 	int maxfd;
 	fd_set readfd_set;
 	fd_set writefd_set;
@@ -211,13 +236,18 @@ class(MCSelect, MCObject,
 	fd_set readfd_result_set;
 	fd_set writefd_result_set;
 	fd_set exceptionfd_result_set;
-	struct timeval timeout);
+	struct timeval timeout;
 
-fun(MCSelect, void, initWithSecondAndMicrosec, long second, long microsecond);
-fun(MCSelect, int, waitForFdsetChange, voida);
-fun(MCSelect, void, addFd, MCSelect_fd_type type, int fd);
-fun(MCSelect, void, removeFd, MCSelect_fd_type type, int fd);
-fun(MCSelect, int, isFdReady, MCSelect_fd_type type, int fd);
+	fundef(initWithSecondAndMicrosec, void), long second, long microsecond);
+	fundef(waitForFdsetChange, int));
+	fundef(addFd, void), MCSelect_fd_type type, int fd);
+	fundef(removeFd, void), MCSelect_fd_type type, int fd);
+	fundef(isFdReady, int), MCSelect_fd_type type, int fd);
+};
+
+constructor(MCSelect));
+
+alias(MCSelect);
 
 #endif
 
@@ -651,3 +681,5 @@ newlibc
 //FD_ISSET()
 
 */
+
+#endif

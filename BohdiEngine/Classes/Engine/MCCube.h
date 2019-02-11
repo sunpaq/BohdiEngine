@@ -9,11 +9,15 @@
 #ifndef __monkcGame__MCCube__
 #define __monkcGame__MCCube__
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "MC3DNode.h"
 
-class(MCCube, MC3DNode,
-    MCUInt textureId;
-);
+structure(MCCube, MC3DNode)
+    unsigned textureId;
+};
+
+constructor(MCCube));
+
+alias(MCCube);
 
 #endif /* defined(__monkcGame__MCCube__) */

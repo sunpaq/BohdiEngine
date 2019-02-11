@@ -12,7 +12,7 @@
 
 @interface BEModelCache ()
 {
-    MC3DModelCache* cache;
+    MC3DModelCache_t* cache;
 }
 @end
 
@@ -24,7 +24,7 @@ static BEModelCache* _instance = NULL;
 {
     if (!_instance) {
         _instance = [[BEModelCache alloc] init];
-        _instance->cache = MC3DModelCache_shared(0);
+        _instance->cache = MC3DModelCache_shared();
     }
     return _instance;
 }
@@ -33,7 +33,7 @@ static BEModelCache* _instance = NULL;
 {
     const char* cname = [name cStringUsingEncoding:NSUTF8StringEncoding];
     if (cname) {
-        MC3DModelCache_loadModelNamed(cache, cname);
+        cache->loadModelNamed(cache, cname);
     }
 }
 

@@ -7,39 +7,31 @@
 //
 
 #include "MCLight.h"
+#include "MCLog.h"
 
-oninit(MCLight)
-{
-    if (init(MC3DNode)) {
-        obj->next = null;
-        obj->ambientLightStrength  = MCVector3Make(0.2, 0.2, 0.2);
-        obj->diffuseLightStrength  = MCVector3Make(1.0, 1.0, 1.0);
-        obj->specularLightStrength = MCVector3Make(0.1, 0.1, 0.1);
-
-        obj->lightColor    = MCVector3Make(1.0, 1.0, 1.0);
-        obj->lightPosition = MCVector3Make(0, 0, -1000);
-
-        obj->dataChanged = true;
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-fun(MCLight, void, printDebugInfo, voida)
-{
+fun(printDebugInfo, void)) as(MCLight)
     debug_log("MCLight: lightColor=%.2f/%.2f/%.2f lightPosition=%.2f/%.2f/%.2f\n",
-              obj->lightColor.x, obj->lightColor.y, obj->lightColor.z,
-              obj->lightPosition.x, obj->lightPosition.y, obj->lightPosition.z);
+              it->lightColor.x, it->lightColor.y, it->lightColor.z,
+              it->lightPosition.x, it->lightPosition.y, it->lightPosition.z);
 }
 
-onload(MCLight)
-{
-    if (load(MC3DNode)) {
-        bid(MCLight, void, printDebugInfo, voida);
-        return cla;
-    }else{
-        return null;
+constructor(MCLight)) {
+    MC3DNode(any);
+    as(MCLight)
+        it->next = null;
+        it->ambientLightStrength  = MCVector3Make(0.2, 0.2, 0.2);
+        it->diffuseLightStrength  = MCVector3Make(1.0, 1.0, 1.0);
+        it->specularLightStrength = MCVector3Make(0.1, 0.1, 0.1);
+    
+        it->lightColor    = MCVector3Make(1.0, 1.0, 1.0);
+        it->lightPosition = MCVector3Make(0, 0, -1000);
+    
+        it->dataChanged = true;
     }
+    dynamic(MCLight)
+        funbind(printDebugInfo);
+    }
+    return any;
 }
+
 

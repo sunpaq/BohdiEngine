@@ -27,17 +27,17 @@ typedef struct {
     MCVector4 c;
 } MCTriangle4;
 
-MCInline MCTriangle MCTriangleMake(MCVector3 a, MCVector3 b, MCVector3 c)
+static MCTriangle MCTriangleMake(MCVector3 a, MCVector3 b, MCVector3 c)
 {
     return (MCTriangle){a, b, c};
 }
 
-MCInline MCTriangle MCTriangleMakeByArray(MCVector3 tri[3])
+static MCTriangle MCTriangleMakeByArray(MCVector3 tri[3])
 {
     return (MCTriangle){tri[0], tri[1], tri[2]};
 }
 
-MCInline MCTriangle4 MCTriangle4Make(MCVector4 a, MCVector4 b, MCVector4 c)
+static MCTriangle4 MCTriangle4Make(MCVector4 a, MCVector4 b, MCVector4 c)
 {
     return (MCTriangle4){a, b, c};
 }
@@ -47,13 +47,13 @@ MCInline MCTriangle4 MCTriangle4Make(MCVector4 a, MCVector4 b, MCVector4 c)
  * p = (a+b+c)/2
  * s = sqrt(p*(p-a)*(p-b)*(p-c))
  */
-MCInline double MCTriangleAreaByEdgeLength(double a, double b, double c)
+static double MCTriangleAreaByEdgeLength(double a, double b, double c)
 {
     double p = (a+b+c)/2;
     return sqrt(p*(p-a)*(p-b)*(p-c));
 }
 
-MCInline double MCTriangleAreaByVertexes(MCVector3 A, MCVector3 B, MCVector3 C)
+static double MCTriangleAreaByVertexes(MCVector3 A, MCVector3 B, MCVector3 C)
 {
     double a = MCVector3Length(MCVector3Sub(B, A));
     double b = MCVector3Length(MCVector3Sub(C, B));
@@ -62,12 +62,12 @@ MCInline double MCTriangleAreaByVertexes(MCVector3 A, MCVector3 B, MCVector3 C)
     return MCTriangleAreaByEdgeLength(a, b, c);
 }
 
-MCInline double MCTriangleArea(MCTriangle tri)
+static double MCTriangleArea(MCTriangle tri)
 {
     return MCTriangleAreaByVertexes(tri.a, tri.b, tri.c);
 }
 
-MCInline MCBool MCTriangleHaveVertex(MCTriangle tri, MCVector3 P)
+static bool MCTriangleHaveVertex(MCTriangle tri, MCVector3 P)
 {
     if (MCVector3Equal(tri.a, P) || MCVector3Equal(tri.b, P) || MCVector3Equal(tri.c, P)) {
         return true;
@@ -75,7 +75,7 @@ MCInline MCBool MCTriangleHaveVertex(MCTriangle tri, MCVector3 P)
     return false;
 }
 
-MCInline MCBool MCVertexOnLine(MCVector3 A, MCVector3 B, MCVector3 P)
+static bool MCVertexOnLine(MCVector3 A, MCVector3 B, MCVector3 P)
 {
     MCVector3 AB = MCVector3Sub(B, A);
     
@@ -91,7 +91,7 @@ MCInline MCBool MCVertexOnLine(MCVector3 A, MCVector3 B, MCVector3 P)
     return false;
 }
 
-MCInline MCBool MCVertexesInSameSideOf(MCVector3 A, MCVector3 B, MCVector3 p1, MCVector3 p2)
+static bool MCVertexesInSameSideOf(MCVector3 A, MCVector3 B, MCVector3 p1, MCVector3 p2)
 {
     MCVector3 AB = MCVector3Sub(B, A);
     MCVector3 AP1 = MCVector3Sub(p1, A);
@@ -106,7 +106,7 @@ MCInline MCBool MCVertexesInSameSideOf(MCVector3 A, MCVector3 B, MCVector3 p1, M
     return false;
 }
 
-MCInline MCBool MCTriangleContainsVertex(MCTriangle tri, MCVector3 P)
+static bool MCTriangleContainsVertex(MCTriangle tri, MCVector3 P)
 {
     MCVector3 A = tri.a;
     MCVector3 B = tri.b;
@@ -124,7 +124,7 @@ MCInline MCBool MCTriangleContainsVertex(MCTriangle tri, MCVector3 P)
     return false;
 }
 
-MCInline MCBool MCTriangle4ContainsVertex4(MCTriangle4 tri4, MCVector4 P4)
+static bool MCTriangle4ContainsVertex4(MCTriangle4 tri4, MCVector4 P4)
 {
     MCVector3 A = MCVector3From4(tri4.a);
     MCVector3 B = MCVector3From4(tri4.b);
@@ -134,7 +134,7 @@ MCInline MCBool MCTriangle4ContainsVertex4(MCTriangle4 tri4, MCVector4 P4)
     return MCTriangleContainsVertex(MCTriangleMake(A, B, C), P);
 }
 
-MCInline MCVector3 MCTriangleCCWFaceUp(MCTriangle tri)
+static MCVector3 MCTriangleCCWFaceUp(MCTriangle tri)
 {
     MCVector3 A = tri.a;
     MCVector3 B = tri.b;
@@ -158,7 +158,7 @@ typedef enum {
 typedef struct {
     size_t count;
     size_t index;
-    MCBool isConvex;
+    bool isConvex;
     //MCPolygonPrimitives primitive;
     
     MCArrayLinkedList vertexIndexes;

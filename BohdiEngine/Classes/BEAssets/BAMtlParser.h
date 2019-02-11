@@ -9,7 +9,10 @@
 #ifndef MC3DMtlParser_h
 #define MC3DMtlParser_h
 
-#include "monkc_export.h"
+#include "MCType.h"
+#include "MCMath.h"
+#include "MCLog.h"
+#include "MCString.h"
 #include "BALexer.h"
 
 /* illum_0 -> illum_10

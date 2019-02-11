@@ -1,3 +1,5 @@
+#ifndef WIN32
+
 #include <assert.h>
 #include "MCContext.h"
 #include "MCException.h"
@@ -8,8 +10,8 @@ void assertYES(int expression) throws(MCAssertYESException);
 void assertNO(int expression) throws(MCAssertNOException);
 void assertNil(void* ptr) throws(MCAssertNilException);
 void assertNotNil(void* ptr) throws(MCAssertNotNilException);
-void assertSame(MCObject* obj1, MCObject* obj2) throws(MCAssertSameException);
-void assertNotSame(MCObject* obj1, MCObject* obj2) throws(MCAssertNotSameException);
+void assertSame(struct MCObject* obj1, struct MCObject* obj2) throws(MCAssertSameException);
+void assertNotSame(struct MCObject* obj1, struct MCObject* obj2) throws(MCAssertNotSameException);
 void assertEquals(int exp1, int exp2) throws(MCAssertEqualsException);
 void fail(char* message);
 
@@ -17,12 +19,14 @@ void fail(char* message);
 
 #ifndef MCUnitTestResult_
 #define MCUnitTestResult_
-	
-class(MCUnitTestResult, MCObject);
 
-fun(MCUnitTestResult, void, bye, voida);
-fun(MCUnitTestResult, void, addSuccessInfo, char* succinfo);
-fun(MCUnitTestResult, void, addFailInfo, char* failinfo);
+structure(MCUnitTestResult, MCObject)
+	fundef(addSuccessInfo, void), char* succinfo);
+	fundef(addFailInfo, void), char* failinfo);
+};
+
+constructor(MCUnitTestResult));
+
 #endif
 
 /* Test Case */
@@ -30,17 +34,20 @@ fun(MCUnitTestResult, void, addFailInfo, char* failinfo);
 #ifndef MCUnitTestCase_
 #define MCUnitTestCase_ 
 
-class(MCUnitTestCase, MCObject,
-	MCUnitTestResult* unitTestResultRef;
-	struct MCUnitTestCaseStruct* next_case;
-);
+structure(MCUnitTestCase, MCObject)
+	struct MCUnitTestResult* unitTestResultRef;
+	struct MCUnitTestCase* next_case;
 
-fun(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef);
-fun(MCUnitTestCase, void, bye, voida);
-fun(MCUnitTestCase, void, setUp, voida);
-fun(MCUnitTestCase, void, tearDown, voida);
-fun(MCUnitTestCase, void, runTests, voida);
-fun(MCUnitTestCase, void, runATestMethod, char* methodName);
+	fundef(initWithTestResult, struct MCUnitTestCase*), struct MCUnitTestResult* resultRef);
+	fundef(setUp, void));
+	fundef(tearDown, void));
+	fundef(runTests, void));
+	fundef(runATestMethod, void), char* methodName);
+	fundef(release, void));
+};
+
+constructor(MCUnitTestCase));
+
 #endif
 
 /* Test Suite */
@@ -48,16 +55,19 @@ fun(MCUnitTestCase, void, runATestMethod, char* methodName);
 #ifndef MCUnitTestSuite_
 #define MCUnitTestSuite_
 
-class(MCUnitTestSuite, MCObject,
-	MCUnitTestCase *first_case;
-    MCUnitTestCase **last_case_p;
+structure(MCUnitTestSuite, MCObject)
+	struct MCUnitTestCase *first_case;
+	struct MCUnitTestCase **last_case_p;
 	int test_case_count;
-	struct MCUnitTestSuiteStruct* next_suite;
-);
+	struct MCUnitTestSuite* next_suite;
 
-fun(MCUnitTestSuite, void, bye, voida);
-fun(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase);
-fun(MCUnitTestSuite, void, runTestCases, voida);
+	fundef(addTestCase, void), struct MCUnitTestCase* volatile tcase);
+	fundef(runTestCases, void));
+	fundef(release, void));
+};
+
+constructor(MCUnitTestSuite));
+
 #endif
 
 /* Test Runner */
@@ -65,14 +75,18 @@ fun(MCUnitTestSuite, void, runTestCases, voida);
 #ifndef MCUnitTestRunner_
 #define MCUnitTestRunner_
 
-class(MCUnitTestRunner, MCObject,
-	MCUnitTestResult* unitTestResult;
-	MCUnitTestSuite* first_suite;
+structure(MCUnitTestRunner, MCObject)
+	struct MCUnitTestResult* unitTestResult;
+	struct MCUnitTestSuite* first_suite;
 	int test_suite_count;
-);
 
-fun(MCUnitTestRunner, void, bye, voida);
-fun(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite);
-fun(MCUnitTestRunner, void, runTestSuites, voida);
+	fundef(addTestSuite, void), struct MCUnitTestSuite* testSuite);
+	fundef(runTestSuites, void));
+	fundef(release, void));
+};
+
+constructor(MCUnitTestRunner));
+
+#endif
 
 #endif

@@ -8,30 +8,15 @@
 
 #include "MCTexture.h"
 #include "BEAssetsManager.h"
+#include "BE2DTextureData.h"
+#include "MCLog.h"
 
-oninit(MCTexture)
-{
-    if (init(MCObject)) {
-        var(Id) = 0;
-        var(width) = 512;
-        var(height)= 512;
-        var(data) = null;
-        var(displayMode) = MCTextureRepeat;
-        var(loadedToGL) = false;
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-ifun(unsigned char*, loadImageRawdata, const char* path)
-{
-    as(MCTexture);
-    var(data) = BE2DTextureData_newWithPathname(path);
-    if (var(data)) {
-        obj->width  = obj->data->width;
-        obj->height = obj->data->height;
-        return obj->data->raw;
+fun(loadImageRawdata, unsigned char*), const char* path) as(MCTexture)
+    it->data = BE2DTextureData_newWithPathname(path);
+    if (it->data) {
+        it->width  = it->data->width;
+        it->height = it->data->height;
+        return it->data->raw;
     }
     else {
         error_log("MCTexture - can not load image: %s\n", path);
@@ -39,65 +24,61 @@ ifun(unsigned char*, loadImageRawdata, const char* path)
     }
 }
 
-ifun(void, freeRawdata, voida)
-{
-    as(MCTexture);
-    if (obj->data) {
-        release(obj->data);
-        obj->data = null;
+fun(freeRawdata, void)) as(MCTexture)
+    if (it->data) {
+        Release(it->data);
+        it->data = null;
     }
 }
 
-fun(MCTexture, void, bye, voida)
-{
-    superbye(MCObject);
-    freeRawdata(obj, 0);
+fun(release, void)) as(MCObject)
+    freeRawdata(it);
+    it->release(it);
 }
 
-fun(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode)
-{
+fun(initWithFileNameMode, struct MCTexture*), const char* name, MCTextureDisplayMode mode) as(MCTexture)
     char pathbuff[PATH_MAX] = {0};
     if (MCFileGetPath(name, pathbuff)) {
         return null;
     }
-    obj->displayMode = mode;
-    loadImageRawdata(obj, pathbuff);
-    return obj;
+    it->displayMode = mode;
+    loadImageRawdata(it, pathbuff);
+    return it;
 }
 
-fun(MCTexture, MCTexture*, initWithFileName, const char* name)
-{
-    return MCTexture_initWithFileNameMode(obj, name, MCTextureRepeat);
+fun(initWithFileName, struct MCTexture*), const char* name) as(MCTexture)
+    struct MCTexture* tex = MCTexture(alloc(MCTexture));
+    return tex->initWithFileNameMode(tex, name, MCTextureRepeat);
 }
 
-fun(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex)
-{
-    var(data) = tex;
-    if (var(data)) {
-        obj->width  = obj->data->width;
-        obj->height = obj->data->height;
-        return obj;
+fun(initWith2DTexture, struct MCTexture*), struct BE2DTextureData* tex) as(MCTexture)
+    it->data = tex;
+    if (it->data) {
+        it->width  = it->data->width;
+        it->height = it->data->height;
+        return it;
     }
     return null;
 }
 
-onload(MCTexture)
-{
-    if (load(MCObject)) {
-        mix(unsigned char*, loadImageRawdata, const char* name);
-        //mix(void, rawdataToTexbuffer, voida);
-        //mix(void, setupTexParameter, GLenum textype);
-        mix(void, freeRawdata, voida);
-        
-        bid(MCTexture, void, bye, voida);
-        bid(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode);
-        bid(MCTexture, MCTexture*, initWithFileName, const char* name);
-        bid(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex);
-        //bid(MCTexture, void, loadToGLBuffer, voida);
-        //bid(MCTexture, void, active, GLuint pid, const char* uniformName);
-
-        return cla;
-    }else{
-        return null;
-    }
+constructor(MCTexture)) {
+    MCObject(any);
+    as(MCTexture)
+        it->Id = 0;
+        it->width = 512;
+        it->height = 512;
+        it->data = null;
+        it->displayMode = MCTextureRepeat;
+        it->loadedToGL = false;
+    
+        funadd(loadImageRawdata);
+    };
+    dynamic(MCTexture)
+        funbind(release);
+        funbind(initWithFileNameMode);
+        funbind(initWithFileName);
+        funbind(initWith2DTexture);
+    };
+    return any;
 }
+

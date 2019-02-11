@@ -8,28 +8,15 @@
 
 #include "MC2DTex.h"
 
-oninit(MC2DTex)
+fun(initWithFileName, struct MC2DTex*), const char* name)
 {
-    if (init(MCTexture)) {
-        return obj;
-    }else{
-        return null;
-    }
+    return any;
 }
 
-fun(MC2DTex, MC2DTex*, initWithFileName, const char* name)
-{
-    return obj;
-}
-
-onload(MC2DTex)
-{
-    if (load(MCTexture)) {
-        
-        bid(MC2DTex, MC2DTex*, initWithFileName, const char* name);
-        
-        return cla;
-    }else{
-        return null;
+constructor(MC2DTex)) {
+    MCTexture(any);
+    dynamic(MC2DTex)
+        funbind(initWithFileName);
     }
+    return any;
 }

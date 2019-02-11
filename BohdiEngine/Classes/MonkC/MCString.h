@@ -2,72 +2,65 @@
 #define MCString_h
 
 #include <string.h>
+#include <stdbool.h>
+#include "MCObject.h"
 
-#include "monkc.h"
-
-class(MCString, MCObject,
-	size_t length;
-	size_t size;
+structure(MCString, MCObject)
+    size_t length;
+    size_t size;
     size_t cursor;
-	char* buff;
-)
+    char* buff;
 
-//length not include NUL
-//real size, include NUL include empty space in buffer
+    fundef(add, void), const char* str);
+    fundef(toCString, const char*), char const buff[]);
+    fundef(equalTo, int), struct MCString* stringToComp);
+    fundef(getCharsUntilEnter, void), char resultString[]);
+    fundef(getOneChar, char));
+    fundef(print, void), bool withNewline);
+    fundef(startWith, bool), const char* str);
+    fundef(toDoubleValue, double), char** endptr);
+    fundef(copyCompressedString, struct MCString*));
+    fundef(copyExtractedString, struct MCString*));
+    fundef(release, void));
+};
 
-fun(MCString, MCString*, initWithCString, const char* str);
-fun(MCString, void, add, char* str);
-fun(MCString, const char*, toCString, char const buff[]);
-fun(MCString, int, equalTo, MCString* stringToComp);
-fun(MCString, void, getCharsUntilEnter, char resultString[]);
-fun(MCString, char, getOneChar, voida);
-fun(MCString, void, print, MCBool withNewline);
-fun(MCString, void, bye, voida);
-fun(MCString, MCBool, startWith, const char* str);
-fun(MCString, double, toDoubleValue, char** endptr);
-fun(MCString, MCString*, copyCompressedString, voida);
-fun(MCString, MCString*, copyExtractedString, voida);
+constructor(MCString), const char* cstring);
 
-MCString* MCString_newWithCString(const char* cstr);
-MCString* MCString_newWithMCString(MCString* mcstr);
-MCString* MCString_newForHttp(char* cstr, int isHttps);
+alias(MCString);
 
-util(MCString, MCBool, contains, const char* str, const char* instr);
-util(MCString, size_t, replace, const char* str, const char* withstr, const char* instr, char (*buff)[]);
-util(MCString, size_t, reverse, const char* str, char *buff);
+MCString_t* MCString_newWithCString(const char* cstr);
+MCString_t* MCString_newWithMCString(MCString_t* mcstr);
+MCString_t* MCString_newForHttp(char* cstr, int isHttps);
+bool MCString_contains(const char* str, const char* instr);
+size_t MCString_replace(const char* str, const char* withstr, const char* instr, char (*buff)[]);
+size_t MCString_reverse(const char* str, char *buff);
+size_t MCString_extensionFromFilename(const char* name, char* basebuff, char* extbuff);
 
-util(MCString, const char*, percentEncode, const char* str, char *buff);
-util(MCString, const char*, percentDecode, const char* str, char *buff);
+const char* MCString_percentEncode(const char* str, char *buff);
+const char* MCString_percentDecode(const char* str, char *buff);
+const char* MCString_baseFromPath(const char* path, char (*buff)[]);
+const char* MCString_filenameFromPath(const char* path, char (*buff)[]);
+const char* MCString_concate(const char** strings, size_t count, char (*buff)[]);
+const char* MCString_concateWith(const char* sp, const char* path1, const char* path2, char (*buff)[]);
+const char* MCString_concatePath(const char* path1, const char* path2, char (*buff)[]);
+const char* MCString_compressToCharCount(const char* source, char* buff);
+const char* MCString_extractFromCharCount(const char* source, char* buff);
+void MCString_printPermutationOf(char str[]);
 
-util(MCString, const char*, baseFromPath, const char* path, char (*buff)[]);
-util(MCString, const char*, filenameFromPath, const char* path, char (*buff)[]);
 
-util(MCString, size_t, extensionFromFilename, const char* name, char* basebuff, char* extbuff);
-
-util(MCString, const char*, concate, const char** strings, size_t count, char (*buff)[]);
-util(MCString, const char*, concateWith, const char* sp, const char* path1, const char* path2, char (*buff)[]);
-util(MCString, const char*, concatePath, const char* path1, const char* path2, char (*buff)[]);
-
-util(MCString, const char*, compressToCharCount, const char* source, char* buff);
-util(MCString, const char*, extractFromCharCount, const char* source, char* buff);
-
-util(MCString, void, printPermutationOf, char str[]);
-util(MCString, const char*, trimWhiteSpace, const char** target_p);
-util(MCString, MCBool, isNewLine, const char* s);
-
-MCInline char* MCStringFill(char* dest, const char* src) {
+static char* MCStringFill(char* dest, const char* src) {
     char* res = strcpy(dest, src);
-    dest[strlen(src)] = NUL;
+    dest[strlen(src)] = '\0';
     return res;
 }
 
-MCInline char* MCStringFillLimited(char* dest, const char* src, size_t limit) {
+static char* MCStringFillLimited(char* dest, const char* src, size_t limit) {
     char* res = strncpy(dest, src, limit);
-    dest[strlen(src)] = NUL;
+    dest[strlen(src)] = '\0';
     return res;
 }
 
-MCInline MCBool MCStringEqualN(const char* A, const char* B, size_t n) {
+static bool MCStringEqualN(const char* A, const char* B, size_t n) {
     if (strncmp(A, B, n) == 0) {
         return true;
     }else{
@@ -75,13 +68,18 @@ MCInline MCBool MCStringEqualN(const char* A, const char* B, size_t n) {
     }
 }
 
-MCInline MCBool MCStringEqual(const char* A, const char* B) {
+static bool MCStringEqual(const char* A, const char* B) {
     if (strcmp(A, B) == 0) {
         return true;
     }else{
         return false;
     }
 }
+
+//#define NUL '\0'
+//#define PATH_MAX 2048
+
+#define S(string) #string
 
 #endif
 

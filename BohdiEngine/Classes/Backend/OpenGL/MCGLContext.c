@@ -7,25 +7,15 @@
 //
 
 #include "MCGLContext.h"
+#include "BE2DTextureData.h"
 
-oninit(MCGLContext)
-{
-    if (init(MCObject)) {
-        var(shader) = new(MCGLShader);
-        return obj;
-    }else{
-        return null;
-    }
+fun(release, void)) as(MCGLContext)
+    Release(it->shader);
+    it->shader = null;
+    cast(it, MCObject)->release(it);
 }
 
-fun(MCGLContext, void, bye, voida)
-{
-    release(obj->shader);
-    obj->shader = null;
-}
-
-fun(MCGLContext, GLuint, loadTexture, MCTexture* tex, const char* samplerName, GLint unit)
-{
+fun(loadTexture, GLuint), struct MCTexture* tex, const char* samplerName, GLint unit) as(MCGLContext)
     if (tex) {
         if (tex->loadedToGL == false) {
             tex->loadedToGL = true;
@@ -40,64 +30,51 @@ fun(MCGLContext, GLuint, loadTexture, MCTexture* tex, const char* samplerName, G
         }
         return tex->Id;
     }
-    MCGLShader_shaderSetInt(obj->shader, samplerName, unit);
+    it->shader->shaderSetInt(it->shader, samplerName, unit);
     return 0;
 }
 
-fun(MCGLContext, void, loadMaterial, MCMaterial* mtl)
-{
+fun(loadMaterial, void), struct MCMaterial* mtl) as(MCGLContext)
     //set up once part
     if (mtl->dataChanged == true) {
-        MCGLShader_activateShaderProgram(obj->shader, 0);
+        it->shader->activateShaderProgram(it->shader);
         
         MCGLUniform f;
         f.type = MCGLUniformVec3;
         f.data.vec3 = mtl->ambientLightColor;
-        MCGLShader_updateUniform(obj->shader, material_ambient, f.data);
+        it->shader->updateUniform(it->shader, material_ambient, f.data);
         
         f.data.vec3 = mtl->diffuseLightColor;
         f.type = MCGLUniformVec3;
-        MCGLShader_updateUniform(obj->shader, material_diffuse, f.data);
+        it->shader->updateUniform(it->shader, material_diffuse, f.data);
         
         f.type = MCGLUniformVec3;
         f.data.vec3 = mtl->specularLightColor;
-        MCGLShader_updateUniform(obj->shader, material_specular, f.data);
+        it->shader->updateUniform(it->shader, material_specular, f.data);
         
         f.data.vec1 = mtl->specularLightPower;
         f.type = MCGLUniformVec1;
-        MCGLShader_updateUniform(obj->shader, material_shininess, f.data);
+        it->shader->updateUniform(it->shader, material_shininess, f.data);
         
         f.data.vec1 = mtl->dissolve;
         f.type = MCGLUniformVec1;
-        MCGLShader_updateUniform(obj->shader, material_dissolve, f.data);
+        it->shader->updateUniform(it->shader, material_dissolve, f.data);
         
         mtl->dataChanged = false;
     }
     //set each time
-    MCGLShader_shaderSetInt(obj->shader, "illum", mtl->illum);
-}
-
-onload(MCGLContext)
-{
-    if (load(MCObject)) {
-        bid(MCGLContext, void, bye, voida);
-        bid(MCGLContext, void, loadTexture, MCTexture* tex, const char* samplerName);
-        bid(MCGLContext, void, loadMaterial, MCMaterial* mtl);
-        return cla;
-    }else{
-        return null;
-    }
+    it->shader->shaderSetInt(it->shader, "illum", mtl->illum);
 }
 
 //Global
-util(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature)
+bool MCGLContext_isFeatureOn(MCGLFeature feature)
 {
-    return (MCBool)glIsEnabled(feature);
+    return (bool)glIsEnabled(feature);
 }
 
-util(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff)
+void MCGLContext_featureSwith(MCGLFeature feature, bool onOrOff)
 {
-    MCBool isOn = (MCBool)glIsEnabled(feature);
+    bool isOn = (bool)glIsEnabled(feature);
     if (onOrOff) {
         if (!isOn) glEnable(feature);
     }else{
@@ -105,56 +82,56 @@ util(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff)
     }
 }
 
-util(MCGLContext, void, flushCommandAsync, voida)
+void MCGLContext_flushCommandAsync()
 {
     glFlush();
 }
 
-util(MCGLContext, void, flushCommandBlock, voida)
+void MCGLContext_flushCommandBlock()
 {
     glFinish();
 }
 
-util(MCGLContext, void, clearScreen, voida)
+void MCGLContext_clearScreen()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-util(MCGLContext, void, clearScreenWithColor, MCColorf color)
+void MCGLContext_clearScreenWithColor(MCColorf color)
 {
-    glClearColor(color.R.f, color.G.f, color.B.f, color.A.f);
+    glClearColor(color.R, color.G, color.B, color.A);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-util(MCGLContext, void, clearDepthBuffer, voida)
+void MCGLContext_clearDepthBuffer()
 {
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-util(MCGLContext, void, clearStencilBuffer, voida)
+void MCGLContext_clearStencilBuffer()
 {
     glClear(GL_STENCIL_BUFFER_BIT);
 }
 
-util(MCGLContext, void, setClearScreenColor, MCColorf color)
+void MCGLContext_setClearScreenColor(MCColorf color)
 {
-    glClearColor(color.R.f, color.G.f, color.B.f, color.A.f);
+    glClearColor(color.R, color.G, color.B, color.A);
 }
 
-util(MCGLContext, void, setPointSize, double pointsize)
+void MCGLContext_setPointSize(double pointsize)
 {
     //glPointSize is replaced by the gl_PointSize variable in the vertex shader.
     //glPointSize((GLfloat)pointsize);
 }
 
-util(MCGLContext, void, setLineWidth, double linewidth)
+void MCGLContext_setLineWidth(double linewidth)
 {
     glLineWidth((GLfloat)linewidth);
 }
 
-util(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW)
+void MCGLContext_setFrontCounterClockWise(bool isCCW)
 {
     if (isCCW) {
         glFrontFace(GL_CCW);
@@ -163,21 +140,21 @@ util(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW)
     }
 }
 
-util(MCGLContext, void, cullFace, MCGLFace face)
+void MCGLContext_cullFace(MCGLFace face)
 {
     glCullFace(face);
 }
 
-util(MCGLContext, void, cullBackFace, voida)
+void MCGLContext_cullBackFace()
 {
     MCGLContext_cullFace(MCGLBack);
 }
 
 //Texture
-static MCUInt texUnitNum = 1;
-util(MCGLContext, MCUInt, getIdleTextureUnit, voida)
+static unsigned texUnitNum = 1;
+unsigned MCGLContext_getIdleTextureUnit()
 {
-    if (texUnitNum < MCGLContext_getMaxTextureUnits(0)) {
+    if (texUnitNum < MCGLContext_getMaxTextureUnits()) {
         texUnitNum++;
     } else {
         texUnitNum = 1;
@@ -185,37 +162,37 @@ util(MCGLContext, MCUInt, getIdleTextureUnit, voida)
     return texUnitNum;
 }
 
-util(MCGLContext, MCUInt, getMaxTextureUnits, voida)
+unsigned MCGLContext_getMaxTextureUnits()
 {
-    return (MCUInt)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
+    return (unsigned)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
 }
 
-util(MCGLContext, void, generateTextureId, GLuint* tid)
+void MCGLContext_generateTextureId(GLuint* tid)
 {
     glGenTextures(1, tid);
 }
 
-util(MCGLContext, void, activeTextureUnit, GLuint index)
+void MCGLContext_activeTextureUnit(GLuint index)
 {
     glActiveTexture(GL_TEXTURE0 + index);
 }
 
-util(MCGLContext, void, bindCubeTexture, GLint tid)
+void MCGLContext_bindCubeTexture(GLint tid)
 {
     glBindTexture(GL_TEXTURE_CUBE_MAP, tid);
 }
 
-util(MCGLContext, void, bind2DTexture, GLuint tid)
+void MCGLContext_bind2DTexture(GLuint tid)
 {
     glBindTexture(GL_TEXTURE_2D, tid);
 }
 
-util(MCGLContext, void, unbind2DTextures, voida)
+void MCGLContext_unbind2DTextures()
 {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-util(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
+void MCGLContext_rawdataToTexbuffer(struct MCTexture* tex, GLenum textype)
 {
     if (tex->data && tex->data->raw) {
         if (tex->data->channels == 4) {
@@ -230,7 +207,7 @@ util(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype)
 }
 
 //GL_TEXTURE_2D
-util(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype)
+void MCGLContext_setupTexParameter(struct MCTexture* tex, GLenum textype)
 {
     if (tex->displayMode == MCTextureRepeat) {
         glTexParameteri(textype, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -244,7 +221,7 @@ util(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype)
     glTexParameteri(textype, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-util(MCGLContext, void, enableTransparency, MCBool enable)
+void MCGLContext_enableTransparency(bool enable)
 {
     if (enable) {
         glEnable(GL_BLEND);
@@ -255,7 +232,7 @@ util(MCGLContext, void, enableTransparency, MCBool enable)
     }
 }
 
-util(MCGLContext, void, enablePolygonOffset, MCBool enable)
+void MCGLContext_enablePolygonOffset(bool enable)
 {
     if (enable) {
         glEnable(GL_POLYGON_OFFSET_FILL);
@@ -267,13 +244,13 @@ util(MCGLContext, void, enablePolygonOffset, MCBool enable)
 }
 
 //Frame Rate (FPS)
-util(MCGLContext, int, tickFPS, MCClock* clock)
+int MCGLContext_tickFPS(struct MCClock* clock)
 {
     static unsigned fcount = 0;
     static clock_t elapse = 0;
     static clock_t time, lastime;
     
-    MCClock_getCPUClocksSinceStart(clock, &time);
+    clock->getCPUClocksSinceStart(clock, &time);
     if (elapse >= CLOCKS_PER_SEC ) {
         unsigned result = fcount;
         //reset
@@ -290,7 +267,7 @@ util(MCGLContext, int, tickFPS, MCClock* clock)
 }
 
 //Shader
-util(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version)
+bool MCGLContext_compileShader(GLuint* shader, GLenum type, const GLchar *source, const GLchar *version)
 {
     if (!source) {
         return false;
@@ -324,7 +301,7 @@ util(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLch
     return true;
 }
 
-util(MCGLContext, int, linkProgram, GLuint prog)
+int MCGLContext_linkProgram(GLuint prog)
 {
     GLint status;
     glLinkProgram(prog);
@@ -346,7 +323,7 @@ util(MCGLContext, int, linkProgram, GLuint prog)
     return 1;
 }
 
-util(MCGLContext, int, validateProgram, GLuint prog)
+int MCGLContext_validateProgram(GLuint prog)
 {
     GLint logLength, status;
     
@@ -367,14 +344,30 @@ util(MCGLContext, int, validateProgram, GLuint prog)
     return 1;
 }
 
-util(MCGLContext, void, setViewport, int x, int y, int width, int height)
+void MCGLContext_setViewport(int x, int y, int width, int height)
 {
     glEnable(GL_DEPTH_TEST);//this is for Google cardboard
     glViewport(x, y, width, height);
 }
 
-util(MCGLContext, void, setScissor, int x, int y, int width, int height)
+void MCGLContext_setScissor(int x, int y, int width, int height)
 {
     glEnable(GL_SCISSOR_TEST);
     glScissor(x, y, width, height);
 }
+
+constructor(MCGLContext)) {
+    MCObject(any);
+    as(MCGLContext)
+        it->shader = new(MCGLShader);
+    }
+    dynamic(MCGLContext)
+        funbind(release);
+        funbind(loadTexture);
+        funbind(loadMaterial);
+    }
+    return any;
+}
+
+
+

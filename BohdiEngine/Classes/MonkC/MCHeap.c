@@ -20,15 +20,15 @@ static size_t parentIndex(size_t i) {
     return i / 2;
 }
 
-static void swapNode(MCHeap* heap, size_t i, size_t j) {
+static void swapNode(struct MCHeap* heap, size_t i, size_t j) {
     if (i <= heap->count && j <= heap->count) {
-        MCGeneric temp = heap->values[i];
+        mc_generic temp = heap->values[i];
         heap->values[i] = heap->values[j];
         heap->values[j] = temp;
     }
 }
 
-static void shiftup(MCHeap* heap, size_t index)
+static void shiftup(struct MCHeap* heap, size_t index)
 {
     size_t i = index, p;
     while (1) {
@@ -42,7 +42,7 @@ static void shiftup(MCHeap* heap, size_t index)
     }
 }
 
-static void shiftdown(MCHeap* heap, size_t index)
+static void shiftdown(struct MCHeap* heap, size_t index)
 {
     size_t i = index, l, r;
     while (1) {
@@ -61,9 +61,9 @@ static void shiftdown(MCHeap* heap, size_t index)
     }
 }
 
-static MCGeneric deleteRoot(MCHeap* heap)
+static mc_generic deleteRoot(struct MCHeap* heap)
 {
-    MCGeneric root = heap->values[1];
+    mc_generic root = heap->values[1];
     heap->values[1] = heap->values[heap->count];
     heap->count--;
     shiftdown(heap, 1);
@@ -74,7 +74,7 @@ static MCGeneric deleteRoot(MCHeap* heap)
 //{
 //    int indent = (int)(heap->maxheight-(size_t)log2(index));
 //    if (index == 1) {
-//        printf("%*s%lf\n", (int)heap->maxheight, "", (float)heap->values[1].mcfloat);
+//        printf("%*s%lf\n", (int)heap->maxheight, "", (float)heap->values[1].float);
 //    }
 //
 //    size_t l = leftChildIndex(index);
@@ -84,8 +84,8 @@ static MCGeneric deleteRoot(MCHeap* heap)
 //        if (indent < 0) {
 //            indent = 0;
 //        }
-//        printf("%*s%lf", indent, "", (float)heap->values[l].mcfloat);
-//        printf("%*s%lf", indent+1, "", (float)heap->values[r].mcfloat);
+//        printf("%*s%lf", indent, "", (float)heap->values[l].float);
+//        printf("%*s%lf", indent+1, "", (float)heap->values[r].float);
 //
 //        size_t H = computed(heap, height) - 1;
 //        
@@ -101,101 +101,84 @@ static MCGeneric deleteRoot(MCHeap* heap)
 //    //printf("%*s%d %d\n", indent, "", heap->values[L], heap->values[R]);
 //}
 
-compute(size_t, height)
-{
-    as(MCHeap);
+
+
+fun(height, size_t)) as(MCHeap)
     //log2(x) = log10(x) / log10(2)
     //log2(x) = logE(x) / logE(2)
-    if (obj->count) {
-        return (size_t)log2(obj->count);
+    if (it->count) {
+        return (size_t)log2(it->count);
     }
     return 0;
 }
 
-compute(size_t, width)
-{
-    as(MCHeap);
-    size_t height = cpt(height);
+fun(width, size_t)) as(MCHeap)
+    size_t height = it->height(it);
     return (size_t)exp2(height-1);
 }
 
-oninit(MCHeap)
-{
-    if (init(MCObject)) {
-        var(count) = 0;
-        var(values) = null;
-        var(height) = height;
-        var(width) = width;
-        return obj;
-    }else{
-        return null;
+fun(bye, void)) as(MCHeap)
+    if (it->values) {
+        free(it->values);
     }
 }
 
-fun(MCHeap, void, bye, voida)
-{
-    if (obj->values) {
-        free(obj->values);
-    }
+fun(initWithCopy, struct MCHeap*), struct MCHeap* ref) as(MCHeap)
+    MCHeap(it, ref->maxcount);
+    memcpy(it->values, ref->values, sizeof(mc_generic) * ref->maxcount);
+    it->count = ref->count;
+    return it;
 }
 
-fun(MCHeap, MCHeap*, initWithCopy, MCHeap* ref)
-{
-    MCHeap_initWithMaxcount(obj, ref->maxcount);
-    memcpy(obj->values, ref->values, sizeof(MCGeneric) * ref->maxcount);
-    obj->count = ref->count;
-    return obj;
-}
-
-fun(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount)
-{
-    //index 0 is reserved
-    obj->values = (MCGeneric*)malloc(sizeof(MCGeneric) * maxcount);
-    obj->maxcount = maxcount;
-    obj->maxheight = (size_t)log2(maxcount);
-    return obj;
-}
-
-fun(MCHeap, size_t, insertValue, MCGeneric newval)
-{
-    MCHeap* heap = obj;
+fun(insertValue, size_t), mc_generic newval) as(MCHeap)
+    struct MCHeap* heap = it;
     heap->values[++heap->count] = newval;
     shiftup(heap, heap->count);
     return 0;
 }
 
-fun(MCHeap, MCArray*, copySortAscend, voida)
-{
-    MCHeap* hcopy = MCHeap_initWithCopy(new(MCHeap), obj);
-    MCArray* array = MCArray_initWithMaxCount(new(MCArray), obj->maxcount);
+fun(copySortAscend, struct MCArray*)) as(MCHeap)
+    struct MCHeap* hcopy = MCHeap(alloc(MCHeap), it->maxcount);
+    struct MCArray* array = MCArray(alloc(MCArray), it->maxcount);
     while (hcopy->count > 0) {
-        MCArray_addItem(array, deleteRoot(hcopy));
+        array->addItem(array, deleteRoot(hcopy));
     }
-    release(hcopy);
+    hcopy->release(hcopy);
     return array;
 }
 
-fun(MCHeap, void, printAll, voida)
-{
-    for (int i=1; i<obj->count; i++) {
-        printf("%.2f ", obj->values[i].mcfloat);
+fun(printAll, void)) as(MCHeap)
+    int i;
+    for (i=1; i<it->count; i++) {
+        printf("%.2f ", it->values[i].f);
     }
     printf("\n");
 
     //printNode(heap, 1);
 }
 
-onload(MCHeap)
-{
-    if (load(MCObject)) {
-        bid(MCHeap, void, bye, voida);
-        bid(MCHeap, MCHeap*, initWithCopy, MCHeap* ref);
-        bid(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount);
-        bid(MCHeap, size_t, insertValue, int newval);
-        bid(MCHeap, MCArray*, copySortAscend, voida);
-        bid(MCHeap, void, printAll, voida);
-        return cla;
-    } else {
-        return null;
+fun(release, void)) as(MCObject)
+    it->release(it);
+}
+
+constructor(MCHeap), size_t maxcount) {
+    MCObject(any);
+    as(MCHeap)
+        //index 0 is reserved
+        it->count = 0;
+        it->values = (mc_generic*)malloc(sizeof(mc_generic) * maxcount);
+        it->maxcount = maxcount;
+        it->maxheight = (size_t)log2(maxcount);
     }
+    dynamic(MCHeap)
+        funbind(height);
+        funbind(width);
+        funbind(bye);
+        funbind(initWithCopy);
+        funbind(insertValue);
+        funbind(copySortAscend);
+        funbind(printAll);
+        funbind(release);
+    }
+    return any;
 }

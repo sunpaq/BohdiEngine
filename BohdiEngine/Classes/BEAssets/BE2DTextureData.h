@@ -9,33 +9,37 @@
 #ifndef BE2DTextureData_h
 #define BE2DTextureData_h
 
-#include "monkc_export.h"
+#include "MCObject.h"
 #include "BE2DTextureData.h"
 
 //handle image, no GL related code
-class(BE2DTextureData, MCObject,
-      //const types
-      unsigned AUTO;
-      unsigned L;
-      unsigned LA;
-      unsigned RGB;
-      unsigned RGBA;
-      
-      //input
-      //unsigned type;
-      char* path;
-      
-      //output
-      unsigned char* raw;
-      int width;
-      int height;
-      int channels;
-);
+structure(BE2DTextureData, MCObject)
+    //const types
+    unsigned AUTO;
+    unsigned L;
+    unsigned LA;
+    unsigned RGB;
+    unsigned RGBA;
 
-util(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path, unsigned type);
-util(BE2DTextureData, BE2DTextureData*, newWithPathname, const char* path);
-util(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file);
+    //input
+    //unsigned type;
+    char* path;
 
-fun(BE2DTextureData, void, bye, voida);
+    //output
+    unsigned char* raw;
+    int width;
+    int height;
+    int channels;
+
+    fundef(release, void));
+};
+
+constructor(BE2DTextureData));
+
+alias(BE2DTextureData);
+
+struct BE2DTextureData* BE2DTextureData_newWithPathnameType(const char* path, unsigned type);
+struct BE2DTextureData* BE2DTextureData_newWithPathname(const char* path);
+struct BE2DTextureData* BE2DTextureData_newWithFilename(const char* file);
 
 #endif /* BE2DTextureData_h */

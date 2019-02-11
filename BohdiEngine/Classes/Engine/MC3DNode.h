@@ -9,59 +9,63 @@
 #ifndef MC3DNode_h
 #define MC3DNode_h
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "MC3DBase.h"
 #include "MCTexture.h"
 #include "MCMaterial.h"
 #include "MCTexture.h"
+#include "MCLinkedList.h"
 
-class(MC3DNode, MCItem,
-      MCUInt index;
-      MCInt zorder;
-      MCBool visible;
+structure(MC3DNode, MCItem)
+    unsigned index;
+    int zorder;
+    bool visible;
+    bool overrideDraw;
+    bool receiveEvent;
 
-      MCBool overrideDraw;
-      MCBool receiveEvent;
+    MCVector3 center;
+    MCMatrix4 transform;
+    MCMatrix4 viewtrans;
 
-      MCVector3 center;
-      MCMatrix4 transform;
-      MCMatrix4 viewtrans;
+    struct MCMaterial* material;
+    struct MCTexture* diffuseTexture;
+    struct MCTexture* specularTexture;
+    struct MCTexture* normalTexture;
 
-      MCMaterial* material;
-      MCTexture* diffuseTexture;
-      MCTexture* specularTexture;
-      MCTexture* normalTexture;
+    struct MCLinkedList* meshes;
+    struct MCLinkedList* children;
 
-      MCLinkedList* meshes;
-      MCLinkedList* children;
-);
 
-fun(MC3DNode, void, bye, voida);
-//0=success
-fun(MC3DNode, MC3DErrCode, addChild, MC3DNode* child);
-fun(MC3DNode, MC3DErrCode, addChildAtIndex, MC3DNode* child, int index);
-fun(MC3DNode, MC3DErrCode, removeChild, MC3DNode* child);
+    fundef(release, void));
+    //0=success
+    fundef(addChild, MC3DErrCode), struct MC3DNode* child);
+    fundef(addChildAtIndex, MC3DErrCode), struct MC3DNode* child, int index);
+    fundef(removeChild, MC3DErrCode), struct MC3DNode* child);
 
-fun(MC3DNode, void, copyChildrenFrom, MC3DNode* node);
-fun(MC3DNode, void, cleanUnvisibleChild, voida);
-fun(MC3DNode, int,  childCount, voida);
-fun(MC3DNode, void, setAllVisible, MCBool visible);
+    fundef(copyChildrenFrom, void), struct MC3DNode* node);
+    fundef(cleanUnvisibleChild, void));
+    fundef(childCount, int));
+    fundef(setAllVisible, void), bool visible);
 
-fun(MC3DNode, void, changeMatrial, MCMaterial* material);
-fun(MC3DNode, void, changeTexture, MCTexture* texture);
-//pass null use identity matrix
-fun(MC3DNode, void, resetTransform, MCMatrix4* transform);
-fun(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental);
-fun(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental);
-fun(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental);
-fun(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
+    fundef(changeMatrial, void), struct MCMaterial* material);
+    fundef(changeTexture, void), struct MCTexture* texture);
+    //pass null use identity matrix
+    fundef(resetTransform, void), MCMatrix4* transform);
+    fundef(translateVec3, void), MCVector3* position, bool incremental);
+    fundef(rotateMat3, void), float mat3[9], bool incremental);
+    fundef(rotateMat4, void), float mat4[16], bool incremental);
+    fundef(scaleVec3, void), MCVector3* factors, bool incremental);
 
-//draw
-fun(MC3DNode, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);
-fun(MC3DNode, void, didDraw, voida);
-fun(MC3DNode, void, draw, voida);
-fun(MC3DNode, void, show, voida);
-fun(MC3DNode, void, hide, voida);
-fun(MC3DNode, void, show, voida);
+    //draw
+    fundef(willDraw, void), MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);
+    fundef(didDraw, void));
+    fundef(draw, void));
+    fundef(show, void));
+    fundef(hide, void));
+};
+
+constructor(MC3DNode));
+
+alias(MC3DNode);
 
 #endif /* MC3DNode_h */

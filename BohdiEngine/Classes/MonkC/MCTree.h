@@ -9,8 +9,6 @@
 #ifndef MCTree_h
 #define MCTree_h
 
-#include "monkc.h"
-
 /*
  pre-order:  root  -> LsubT -> RsubT
  in-order:   LsubT -> root  -> RsubT
@@ -24,24 +22,25 @@
  tree is balanced
  */
 
-#include "monkc.h"
-#include "MCArray.h"
+#include "MCObject.h"
 
-typedef struct _BSTNode {
-    struct _BSTNode* left;
-    struct _BSTNode* right;
+struct BSTNode {
+    struct BSTNode* left;
+    struct BSTNode* right;
     int balanceFactor;
-    MCGeneric value;
-} BSTNode;
+    mc_generic value;
+};
 
-class(MCBST, MCObject,
-      BSTNode* root;
-      size_t count);
+structure(MCBST, MCObject)
+    struct BSTNode* root;
+    size_t count;
 
-fun(MCBST, void, bye, voida);
-fun(MCBST, void, insertValue, MCGeneric newval);
-fun(MCBST, void, traverseTree, BSTNode* (*funcptr)(BSTNode* node));
-fun(MCBST, void, printTree, voida);
+    fundef(insertValue, void), mc_generic newval);
+    fundef(traverseTree, void), struct BSTNode* (*funcptr)(struct BSTNode* node));
+    fundef(printTree, void));
+};
+
+constructor(MCBST));
 
 /*
  Trie Tree (Digital, Radix, Prefix - Tree)
@@ -50,22 +49,24 @@ fun(MCBST, void, printTree, voida);
 //char in C is 1byte = 2^8 (256)
 #define MCTrieWidth 256
 
-typedef struct _TrieNode {
-    struct _TrieNode* childs[MCTrieWidth];
-    MCGeneric value;
-    MCBool isLeaf;
+struct TrieNode {
+    struct TrieNode* childs[MCTrieWidth];
+    mc_generic value;
+    bool isLeaf;
     char byte;
-} TrieNode;
+};
 
-class(MCTrie, MCObject,
-      TrieNode* root;
-      size_t count);
+structure(MCTrie, MCObject)
+    struct TrieNode* root;
+    size_t count;
 
-fun(MCTrie, void, bye, voida);
-fun(MCTrie, void, insertValueByKey, MCGeneric newval, const char* word);
-fun(MCTrie, MCGeneric, valueOfKey, const char* word);
-fun(MCTrie, MCArray*, keysWithPrefix, const char* prefix);
-fun(MCTrie, MCBool, hasKey, const char* word);
-fun(MCTrie, void, printTree, voida);
+    fundef(bye, void));
+    fundef(insertValueByKey, void), mc_generic newval, const char* word);
+    fundef(valueOfKey, mc_generic), const char* word);
+    fundef(keysWithPrefix, struct MCArray*), const char* prefix);
+    fundef(hasKey, bool), const char* word);
+};
+
+constructor(MCTrie));
 
 #endif /* MCTree_h */

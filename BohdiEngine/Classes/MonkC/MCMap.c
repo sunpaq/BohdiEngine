@@ -1,86 +1,60 @@
-
-//
-//  MCMap.c
-//  Pods
-//
-//  Created by YuliSun on 01/06/2017.
-//
-//
-
 #include "MCMap.h"
 
-compute(MCHashTableSize, itemsCount)
-{
-    as(MCMap);
-    MCHashTableSize size = get_tablesize(obj->table->level);
-    return size;
+fun(itemsCount, size_t)) as(MCMap)
+    return it->table->count;
 }
 
-oninit(MCMap)
-{
-    if (init(MCObject)) {
-        obj->table = new_table(MCHashTableLevel1);
-        obj->itemsCount = itemsCount;
-        return obj;
-    } else {
-        return null;
-    }
+fun(setValueForKey, void), mc_generic value, const char* key) as(MCMap)
+    it->table->put(it->table, key, value);
 }
 
-fun(MCMap, void, bye, voida)
-{
-    MCHashTableSize count = cpt(itemsCount);
-    for (MCHashTableIndex i=0; i<count; i++) {
-        mc_hashitem* item = obj->table->items[i];
-        if (item) {
-            MCGeneric v = item->value;
-            //if there have a MCObject in item, we release it
-            if (v.mcobject) {
-                release(v.mcobject);
-            }
-        }
-    }
-}
-
-fun(MCMap, void, setValueForKey, MCGeneric value, const char* key)
-{
-    mc_hashitem* item = new_item(key, value, hash(key));
-    if (item) {
-        set_item(&obj->table, item, false, "MCMap");
-    }
-}
-
-fun(MCMap, void, getValueForKey, MCGeneric* result, const char* key)
-{
-    mc_hashitem* item = get_item_bykey(obj->table, key);
+fun(getValueForKey, void), mc_generic* result, const char* key) as(MCMap)
+    struct MCHashItem* item = it->table->getItem(it->table, key);
     if (item) {
         (*result) = item->value;
         return;
     }
-    (*result).mcvoidptr = null;
+    (*result).p = null;
 }
 
-fun(MCMap, void, getValueByIndex, MCGeneric* result, MCHashTableIndex index)
-{
-    MCHashTableSize count = cpt(itemsCount);
+fun(getValueByIndex, void), mc_generic* result, size_t index) as(MCMap)
+    size_t count = it->table->count;
     if (index < count) {
-        mc_hashitem* item = obj->table->items[index];
+        struct MCHashItem* item = it->table->items[index];
         if (item) {
-            MCGeneric v = item->value;
+            mc_generic v = item->value;
             *result = v;
         }
     }
 }
 
-onload(MCMap)
-{
-    if (load(MCObject)) {
-        bid(MCMap, void, bye, voida);
-        bid(MCMap, void, setValueForKey, MCGeneric value, const char* key);
-        bid(MCMap, void, getValueForKey, MCGeneric* result, const char* key);
-        bid(MCMap, void, getValueByIndex, MCGeneric* result, MCHashTableIndex index);
-        return cla;
-    } else {
-        return null;
+fun(release, void)) as(MCMap)
+    size_t count = it->table->count;
+    size_t i;
+    for (i=0; i<count; i++) {
+        struct MCHashItem* item = it->table->items[i];
+        if (item) {
+            mc_generic v = item->value;
+            //if there have a MCObject in item, we release it
+            if (item->doesAutoReleaseObject && v.mcobject != null) {
+                v.mcobject->release(v.mcobject);
+            }
+        }
     }
 }
+
+constructor(MCMap)) {
+    MCObject(any);
+    as(MCMap)
+        it->table = MCHashTable(alloc(MCHashTable));
+    }
+    dynamic(MCMap)
+        funbind(itemsCount);
+        funbind(setValueForKey);
+        funbind(getValueForKey);
+        funbind(getValueByIndex);
+        funbind(release);
+    }
+    return any;
+}
+

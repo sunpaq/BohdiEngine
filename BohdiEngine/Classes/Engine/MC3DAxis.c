@@ -8,23 +8,8 @@
 
 #include "MC3DAxis.h"
 
-oninit(MC3DAxis)
-{
-    if (init(MC3DNode)) {
-//        sobj->material = new(MCMaterial);
-//        sobj->material->illum = 11;
-        
-        glGenBuffers(1, &obj->buffId);
-
-        return obj;
-    } else {
-        return null;
-    }
-}
-
 //override MC3DNode
-fun(MC3DAxis, void, draw, voida)
-{
+fun(release, void)) as(MC3DAxis)
     float data[36] = {
         3,0,0, 1,0,0,
         0,0,0, 1,0,0,
@@ -36,7 +21,7 @@ fun(MC3DAxis, void, draw, voida)
     
     glLineWidth(5);
     
-    glBindBuffer(GL_ARRAY_BUFFER, obj->buffId);
+    glBindBuffer(GL_ARRAY_BUFFER, it->buffId);
     glBufferData(GL_ARRAY_BUFFER, 36*4, data, GL_STATIC_DRAW);//GL_STREAM_DRAW, GL_DYNAMIC_DRAW
     
     glEnableVertexAttribArray(MCVertexAttribPosition);
@@ -44,19 +29,27 @@ fun(MC3DAxis, void, draw, voida)
     glVertexAttribPointer(MCVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 6*4, MCBUFFER_OFFSET(0));
     glVertexAttribPointer(MCVertexAttribColor,    3, GL_FLOAT, GL_FALSE, 6*4, MCBUFFER_OFFSET(3*4));
     
-    glBindVertexArray(obj->buffId);
+    glBindVertexArray(it->buffId);
     glDrawArrays(MCLines, 0, 6);
     //glBindVertexArray(0);
     
     glLineWidth(1);
 }
 
-onload(MC3DAxis)
-{
-    if (load(MC3DNode)) {
-        bid(MC3DAxis, void, draw, voida);
-        return cla;
-    } else {
-        return null;
-    }
+fun(draw, void)) {
+    
 }
+
+constructor(MC3DAxis)) {
+    MC3DNode(any);
+    as(MC3DAxis)
+        glGenBuffers(1, &it->buffId);
+    };
+    dynamic(MC3DAxis)
+        funbind(release);
+        funbind(draw);
+    };
+    return any;
+}
+
+

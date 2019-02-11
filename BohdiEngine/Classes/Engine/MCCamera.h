@@ -1,7 +1,7 @@
 #ifndef _MCCamera
 #define _MCCamera
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "MC3DBase.h"
 #include "MC3DNode.h"
 
@@ -12,7 +12,7 @@ typedef enum {
     MCCameraRotateAroundModelByGyroscopeReverse
 } MCCameraRotateMode;
 
-class(MCCamera, MC3DNode,
+structure(MCCamera, MC3DNode)
     double ratio;
     double depth_of_field;
     double field_of_view;
@@ -27,34 +27,33 @@ class(MCCamera, MC3DNode,
     double R_percent;
     double tht;
     double fai;
-    
-    computing(double, Radius);
-    computing(MCMatrix3, normal);
-    computing(MCMatrix4, viewMatrix);
-    computing(MCMatrix4, projectionMatrix);
-    computing(MCVector3, currentPosition);
-    computing(MCMatrix3, rotationMat3);
 
-    MCBool isReverseMovement;
+    bool isReverseMovement;
     MCCameraRotateMode rotateMode;
-);
 
-fun(MCCamera, void, bye, voida);
-fun(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height);
+    fundef(Radius, double));
+    fundef(normal, MCMatrix3));
+    fundef(viewMatrix, MCMatrix4));
+    fundef(projectionMatrix, MCMatrix4));
+    fundef(currentPosition, MCVector3));
+    fundef(rotationMat3, MCMatrix3));
+    fundef(transformWorld, void), MCMatrix4* mat4);
+    fundef(transformSelf, void), MCMatrix4* mat4);
+    fundef(transformSelfByEularAngle, void), MCVector3 lookat, double R, double fai, double tht);
+    fundef(move, void), float deltaFai, float deltaTht);
+    fundef(fucus, void), float deltaX, float deltaY);
+    fundef(pull, void), float deltaR);
+    fundef(reset, void));
+    fundef(distanceScale, void), float scale);
+    fundef(setRotationMat3, void), float mat3[9]);
+    fundef(printDebugInfo, void));
+    fundef(willDraw, void), MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);
+    fundef(release, void));
+};
 
-fun(MCCamera, void, transformWorld, MCMatrix4* mat4);
-fun(MCCamera, void, transformSelf, MCMatrix4* mat4);
-fun(MCCamera, void, transformSelfByEularAngle, MCVector3 lookat, double R, double fai, double tht);
+constructor(MCCamera), unsigned width, unsigned height);
 
-fun(MCCamera, void, move, MCFloat deltaFai, MCFloat deltaTht);
-fun(MCCamera, void, fucus, MCFloat deltaX, MCFloat deltaY);
-fun(MCCamera, void, pull, MCFloat deltaR);
-fun(MCCamera, void, reset, voida);
-fun(MCCamera, void, distanceScale, MCFloat scale);
-fun(MCCamera, void, setRotationMat3, float mat3[9]);
-fun(MCCamera, void, printDebugInfo, voida);
-
-fun(MCCamera, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);//override
+alias(MCCamera);
 
 #define MCLensStandard50mm (0.050)
 #define MCLensWide24mm     (0.024)

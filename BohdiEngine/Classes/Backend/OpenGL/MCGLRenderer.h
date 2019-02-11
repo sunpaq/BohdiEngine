@@ -26,21 +26,28 @@
 #ifndef MCGLRenderer_h
 #define MCGLRenderer_h
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
+#include "MCObject.h"
 #include "MCGLContext.h"
 
 //including MCRenderer.h
 
-class(MCGLRenderer, MCObject,
+structure(MCGLRenderer, MCObject)
     GLenum useage;
     GLenum drawMode;
-    MCGLContext* skycontext;
-    MCGLContext* context;
-);
-//life cycle
-fun(MCGLRenderer, void, bye, voida);
-fun(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
-fun(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
-fun(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
+    struct MCGLContext* skycontext;
+    struct MCGLContext* context;
+
+    //life cycle
+    fundef(release, void));
+    fundef(initWithShaderCodeString, struct MCGLRenderer*), const char* vcode, const char* fcode);
+    fundef(initWithShaderFileName, struct MCGLRenderer*), const char* vshader, const char* fshader);
+
+    fundef(initWithDefaultShader, struct MCGLRenderer*));
+};
+
+constructor(MCGLRenderer));
+
+alias(MCGLRenderer);
 
 #endif /* MCGLRenderer_h */

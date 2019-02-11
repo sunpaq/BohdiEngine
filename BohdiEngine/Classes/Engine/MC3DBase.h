@@ -46,27 +46,27 @@ typedef union {
 } MC3DFrame;
 
 typedef struct {
-    MCFloat R;
-    MCFloat G;
-    MCFloat B;
-    MCFloat A;
+    float R;
+    float G;
+    float B;
+    float A;
 } MCColorf;
 
 //world is right hand y on top, local is left hand z on top
-MCInline MCVector3 MCWorldCoorFromLocal(MCVector3 localvertex, MCVector3 modelposition) {
+static MCVector3 MCWorldCoorFromLocal(MCVector3 localvertex, MCVector3 modelposition) {
     return (MCVector3){modelposition.x+localvertex.y,
                       modelposition.y+localvertex.z,
                       modelposition.z+localvertex.x};
 }
 
-MCInline MCVector3 MCLocalCoorFromWorld(MCVector3 worldvertex, MCVector3 modelposition) {
+static MCVector3 MCLocalCoorFromWorld(MCVector3 worldvertex, MCVector3 modelposition) {
     return (MCVector3){worldvertex.z-modelposition.z,
                       worldvertex.x-modelposition.x,
                       worldvertex.y-modelposition.y};
 }
 
 //R[0,unlimited) tht[0, M_PI), fai[0, 2M_PI)
-MCInline MCVector3 MCVertexFromSpherical(double R, double tht, double fai) {
+static MCVector3 MCVertexFromSpherical(double R, double tht, double fai) {
 #if (defined(__APPLE__) || defined(__ANDROID__))
     double sinT = MCSinDegrees(tht);
     double sinF = MCSinDegrees(fai);
@@ -83,7 +83,7 @@ MCInline MCVector3 MCVertexFromSpherical(double R, double tht, double fai) {
     return (MCVector3){x,y,z};
 }
 
-MCInline MCVector3 MCVertexFromSpherical_radians(double R, double tht, double fai) {
+static MCVector3 MCVertexFromSpherical_radians(double R, double tht, double fai) {
 #if (defined(__APPLE__) || defined(__ANDROID__))
     double sinT = sin(tht);
     double sinF = sin(fai);
@@ -100,7 +100,7 @@ MCInline MCVector3 MCVertexFromSpherical_radians(double R, double tht, double fa
     return (MCVector3){x,y,z};
 }
 
-MCInline MCMatrix4 MCMatrix4MakePerspective(float fovyRadians, float aspect, float nearZ, float farZ)
+static MCMatrix4 MCMatrix4MakePerspective(float fovyRadians, float aspect, float nearZ, float farZ)
 {
     float cotan = 1.0f / tanf(fovyRadians / 2.0f);
     
@@ -112,7 +112,7 @@ MCInline MCMatrix4 MCMatrix4MakePerspective(float fovyRadians, float aspect, flo
     return m;
 }
 
-MCInline MCMatrix4 MCMatrix4MakeTranslation(float tx, float ty, float tz)
+static MCMatrix4 MCMatrix4MakeTranslation(float tx, float ty, float tz)
 {
     MCMatrix4 m = MCMatrix4Identity;
     m.m[12] = tx;
@@ -121,7 +121,7 @@ MCInline MCMatrix4 MCMatrix4MakeTranslation(float tx, float ty, float tz)
     return m;
 }
 
-MCInline MCMatrix4 MCMatrix4MakeScale(float sx, float sy, float sz)
+static MCMatrix4 MCMatrix4MakeScale(float sx, float sy, float sz)
 {
     MCMatrix4 m = MCMatrix4Identity;
     m.m[0] = sx;
@@ -130,7 +130,7 @@ MCInline MCMatrix4 MCMatrix4MakeScale(float sx, float sy, float sz)
     return m;
 }
 
-MCInline MCMatrix3 MCMatrix3MakeXAxisRotation(double degree)
+static MCMatrix3 MCMatrix3MakeXAxisRotation(double degree)
 {
     double SIN = sin(degree);
     double COS = cos(degree);
@@ -141,7 +141,7 @@ MCInline MCMatrix3 MCMatrix3MakeXAxisRotation(double degree)
     };
 }
 
-MCInline MCMatrix3 MCMatrix3MakeYAxisRotation(double degree)
+static MCMatrix3 MCMatrix3MakeYAxisRotation(double degree)
 {
     double SIN = sin(degree);
     double COS = cos(degree);
@@ -152,7 +152,7 @@ MCInline MCMatrix3 MCMatrix3MakeYAxisRotation(double degree)
     };
 }
 
-MCInline MCMatrix3 MCMatrix3MakeZAxisRotation(double degree)
+static MCMatrix3 MCMatrix3MakeZAxisRotation(double degree)
 {
     double SIN = sin(degree);
     double COS = cos(degree);
@@ -163,7 +163,7 @@ MCInline MCMatrix3 MCMatrix3MakeZAxisRotation(double degree)
     };
 }
 
-MCInline MCMatrix3 MCMatrix4GetMatrix3(MCMatrix4 mat4)
+static MCMatrix3 MCMatrix4GetMatrix3(MCMatrix4 mat4)
 {
     MCMatrix3 m = {
         mat4.m[0], mat4.m[1], mat4.m[2],
@@ -172,7 +172,7 @@ MCInline MCMatrix3 MCMatrix4GetMatrix3(MCMatrix4 mat4)
     return m;
 }
 
-MCInline MCMatrix4 MCMatrix4FromMatrix3(MCMatrix3 mat3)
+static MCMatrix4 MCMatrix4FromMatrix3(MCMatrix3 mat3)
 {
     MCMatrix4 m = {
         mat3.m[0], mat3.m[1], mat3.m[2], 0,
@@ -183,12 +183,12 @@ MCInline MCMatrix4 MCMatrix4FromMatrix3(MCMatrix3 mat3)
     return m;
 }
 
-//MCInline MCMatrix3 MCMatrix3Rotate(MCMatrix3 matrix, float x, float y, float z)
+//static MCMatrix3 MCMatrix3Rotate(MCMatrix3 matrix, float x, float y, float z)
 //{
 //    
 //}
 
-MCInline MCMatrix3 MCMatrix3Scale(MCMatrix3 matrix, float sx, float sy, float sz)
+static MCMatrix3 MCMatrix3Scale(MCMatrix3 matrix, float sx, float sy, float sz)
 {
     MCMatrix3 m = {
         matrix.m[0] * sx, matrix.m[1] * sx, matrix.m[2] * sx,
@@ -197,7 +197,7 @@ MCInline MCMatrix3 MCMatrix3Scale(MCMatrix3 matrix, float sx, float sy, float sz
     return m;
 }
 
-MCInline MCMatrix3 MCMatrix3Transpose(MCMatrix3 matrix)
+static MCMatrix3 MCMatrix3Transpose(MCMatrix3 matrix)
 {
     MCMatrix3 m = {
         matrix.m[0], matrix.m[3], matrix.m[6],
@@ -206,7 +206,7 @@ MCInline MCMatrix3 MCMatrix3Transpose(MCMatrix3 matrix)
     return m;
 }
 
-MCInline MCMatrix4 MCMatrix4Transpose(MCMatrix4 matrix)
+static MCMatrix4 MCMatrix4Transpose(MCMatrix4 matrix)
 {
     MCMatrix4 m = {
         matrix.m[0], matrix.m[4], matrix.m[8], matrix.m[12],
@@ -216,7 +216,7 @@ MCInline MCMatrix4 MCMatrix4Transpose(MCMatrix4 matrix)
     return m;
 }
 
-MCInline MCMatrix3 MCMatrix3Invert(MCMatrix3 matrix, MCBool* isInvertible) {
+static MCMatrix3 MCMatrix3Invert(MCMatrix3 matrix, bool* isInvertible) {
     float determinant = (matrix.m00 * (matrix.m11 * matrix.m22 - matrix.m12 * matrix.m21)) + (matrix.m01 * (matrix.m12 * matrix.m20 - matrix.m22 * matrix.m10)) + (matrix.m02 * (matrix.m10 * matrix.m21 - matrix.m11 *matrix.m20));
     
     if (isInvertible) {
@@ -230,17 +230,17 @@ MCInline MCMatrix3 MCMatrix3Invert(MCMatrix3 matrix, MCBool* isInvertible) {
     return MCMatrix3Scale(MCMatrix3Transpose(matrix), determinant, determinant, determinant);
 }
 
-MCInline MCMatrix4 MCMatrix4Invert(MCMatrix4 matrix, MCBool* isInvertible) {
+static MCMatrix4 MCMatrix4Invert(MCMatrix4 matrix, bool* isInvertible) {
     MCMatrix3 m3 = MCMatrix4GetMatrix3(matrix);
     MCMatrix3 i3 = MCMatrix3Invert(m3, isInvertible);
     return MCMatrix4FromMatrix3(i3);
 }
 
-MCInline MCMatrix3 MCMatrix3InvertAndTranspose(MCMatrix3 matrix, MCBool* isInvertible) {
+static MCMatrix3 MCMatrix3InvertAndTranspose(MCMatrix3 matrix, bool* isInvertible) {
     return MCMatrix3Transpose(MCMatrix3Invert(matrix, isInvertible));
 }
 
-MCInline MCMatrix4 MCMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
+static MCMatrix4 MCMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
                                            float centerX, float centerY, float centerZ,
                                            float upX, float upY, float upZ)
 {
@@ -269,7 +269,7 @@ MCInline MCMatrix4 MCMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
     return m;
 }
 
-MCInline MCMatrix4 MCMatrix4MakeLookAtByEulerAngle_EyeUp(MCVector3 lookat, double R, double fai, double tht,
+static MCMatrix4 MCMatrix4MakeLookAtByEulerAngle_EyeUp(MCVector3 lookat, double R, double fai, double tht,
                                                          MCVector3* eyeResult, MCVector3* upResult)
 {
     //rotate around y-axis first then x-axis
@@ -302,7 +302,7 @@ MCInline MCMatrix4 MCMatrix4MakeLookAtByEulerAngle_EyeUp(MCVector3 lookat, doubl
 }
 
 //column major
-MCInline MCMatrix4 MCMakeRotationMatrix4ByUVN(MCVector3 u, MCVector3 v, MCVector3 n)
+static MCMatrix4 MCMakeRotationMatrix4ByUVN(MCVector3 u, MCVector3 v, MCVector3 n)
 {
     return (MCMatrix4) {
         u.x, v.x, n.x, 0,
@@ -312,22 +312,22 @@ MCInline MCMatrix4 MCMakeRotationMatrix4ByUVN(MCVector3 u, MCVector3 v, MCVector
     };
 }
 
-MCInline MCMatrix4 MCMatrix4MakeLookAtByEulerAngle(MCVector3 lookat, double R, double fai, double tht)
+static MCMatrix4 MCMatrix4MakeLookAtByEulerAngle(MCVector3 lookat, double R, double fai, double tht)
 {
     return MCMatrix4MakeLookAtByEulerAngle_EyeUp(lookat, R, fai, tht, null, null);
 }
 
-MCInline MCVector3 MCGetEyeFromRotationMat4(MCMatrix4 mat4, double R)
+static MCVector3 MCGetEyeFromRotationMat4(MCMatrix4 mat4, double R)
 {
     return (MCVector3) { mat4.m[2]*R, mat4.m[6]*R, mat4.m[10]*R };
 }
 
-MCInline MCVector3 MCGetTranslateFromCombinedMat4(MCMatrix4 mat4)
+static MCVector3 MCGetTranslateFromCombinedMat4(MCMatrix4 mat4)
 {
     return (MCVector3) { mat4.m[12], mat4.m[13], mat4.m[14] };
 }
 
-MCInline MCMatrix3 MCGetRotateFromCombinedMat4(MCMatrix4 mat4)
+static MCMatrix3 MCGetRotateFromCombinedMat4(MCMatrix4 mat4)
 {
     return (MCMatrix3) {
         mat4.m[0], mat4.m[1], mat4.m[2],
@@ -336,7 +336,7 @@ MCInline MCMatrix3 MCGetRotateFromCombinedMat4(MCMatrix4 mat4)
     };
 }
 
-MCInline MCMatrix4 MCMatrix4CombineRT(MCMatrix3 R, MCVector3 T)
+static MCMatrix4 MCMatrix4CombineRT(MCMatrix3 R, MCVector3 T)
 {
     return (MCMatrix4) {
         R.m[0], R.m[1], R.m[2], 0,

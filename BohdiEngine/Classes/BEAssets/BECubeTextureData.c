@@ -8,21 +8,14 @@
 
 #include "BECubeTextureData.h"
 #include "BEAssetsManager.h"
+#include "MCLog.h"
 
-oninit(BECubeTextureData)
+struct BECubeTextureData* BECubeTextureData_newWithFacePaths(const char* facepaths[6])
 {
-    if (init(MCObject)) {
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-util(BECubeTextureData, BECubeTextureData*, newWithFacePaths, const char* facepaths[6])
-{
-    BECubeTextureData* data = new(BECubeTextureData);
-    for (int i=0; i<6; i++) {
-        BE2DTextureData* aface = BE2DTextureData_newWithPathname(facepaths[i]);
+    struct BECubeTextureData* data = new(BECubeTextureData);
+    int i;
+    for (i=0; i<6; i++) {
+        struct BE2DTextureData* aface = BE2DTextureData_newWithPathname(facepaths[i]);
         if (aface != null) {
             data->faces[i] = aface;
         }else{
@@ -33,11 +26,12 @@ util(BECubeTextureData, BECubeTextureData*, newWithFacePaths, const char* facepa
     return data;
 }
 
-util(BECubeTextureData, BECubeTextureData*, newWithFaces, const char* faces[6])
+struct BECubeTextureData* BECubeTextureData_newWithFaces(const char* faces[6])
 {
-    BECubeTextureData* data = new(BECubeTextureData);
+    struct BECubeTextureData* data = new(BECubeTextureData);
     char pathbuff[PATH_MAX] = {0};
-    for (int i=0; i<6; i++) {
+    int i;
+    for (i=0; i<6; i++) {
         if(MCFileGetPath(faces[i], pathbuff)){
             return null;
         }
@@ -47,23 +41,22 @@ util(BECubeTextureData, BECubeTextureData*, newWithFaces, const char* faces[6])
     return data;
 }
 
-fun(BECubeTextureData, void, bye, voida)
-{
-    for (int i=0; i<6; i++) {
-        BE2DTextureData* face = obj->faces[i];
+fun(release, void)) as(BECubeTextureData)
+    int i;
+    for (i=0; i<6; i++) {
+        struct BE2DTextureData* face = it->faces[i];
         if (face != null) {
-            release(face);
+            Release(face);
         }
     }
-    superbye(MCObject);
+    cast(it, MCObject)->release(it);
 }
 
-onload(BECubeTextureData)
-{
-    if (load(MCObject)) {
-        bid(BECubeTextureData, void, bye, voida);
-        return cla;
-    }else{
-        return null;
+constructor(BECubeTextureData)) {
+    MCObject(any);
+    dynamic(BECubeTextureData)
+        funbind(release);
     }
+    return any;
 }
+

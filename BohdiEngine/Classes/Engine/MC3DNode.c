@@ -8,218 +8,196 @@
 
 #include "MC3DNode.h"
 
-oninit(MC3DNode)
-{
-    if (init(MCItem)) {
-        var(visible) = true;
-        var(receiveEvent) = false;
-        var(overrideDraw) = false;
-        var(center) = MCVector3Make(0, 0, 0);
-        
-        var(transform) = MCMatrix4Identity;
-        var(viewtrans) = MCMatrix4Identity;
-        
-        var(material) = null;
-        var(diffuseTexture) = null;
-        var(specularTexture)= null;
-        var(normalTexture) = null;
-        var(zorder) = -1;
-        
-        var(children) = new(MCLinkedList);
-        var(meshes) = new(MCLinkedList);
-        
-        return obj;
-    }else{
-        return null;
-    }
+fun(release, void)) as(MC3DNode)
+    Release(it->material);
+    Release(it->diffuseTexture);
+    Release(it->specularTexture);
+    Release(it->normalTexture);
+    Release(it->children);
+    Release(it->meshes);
 }
 
-fun(MC3DNode, void, bye, voida)
-{
-    release(var(material));
-    release(var(diffuseTexture));
-    release(var(specularTexture));
-    release(var(normalTexture));
-    release(var(children));
-    release(var(meshes));
-}
-
-fun(MC3DNode, MC3DErrCode, addChild, MC3DNode* child)
-{
+//0=success
+fun(addChild, MC3DErrCode), struct MC3DNode* child) as(MC3DNode)
     child->visible = false;
-    MCLinkedList_addItem(var(children), (MCItem*)child);
+    it->children->addItem(it->children, (struct MCItem*)child);
     child->visible = true;
     return MC3DSuccess;
 }
 
-fun(MC3DNode, MC3DErrCode, addChildAtIndex, MC3DNode* child, int index)
-{
+fun(addChildAtIndex, MC3DErrCode), struct MC3DNode* child, int index) as(MC3DNode)
     child->visible = false;
     if (index < 0) {
-        MCLinkedList_addItem(var(children), (MCItem*)child);
+        it->children->addItem(it->children, (struct MCItem*)child);
     } else {
-        MCLinkedList_addItemAtIndex(var(children), index, (MCItem*)child);
+        it->children->addItemAtIndex(it->children, index, (struct MCItem*)child);
     }
     child->visible = true;
     return MC3DSuccess;
 }
 
-fun(MC3DNode, MC3DErrCode, removeChild, MC3DNode* child)
-{
+fun(removeChild, MC3DErrCode), struct MC3DNode* child) as(MC3DNode)
     child->visible = false;
-    MCLinkedList_delItem(var(children), (MCItem*)child);
+    it->children->delItem(it->children, (struct MCItem*)child);
     return MC3DSuccess;
 }
 
-fun(MC3DNode, void, copyChildrenFrom, MC3DNode* node)
-{
-    MCLinkedList_connectList(var(children), node->children);
+fun(copyChildrenFrom, void), struct MC3DNode* node) as(MC3DNode)
+    it->children->connectList(it->children, node->children);
 }
 
-fun(MC3DNode, void, cleanUnvisibleChild, voida)
-{
-    MCLinkedListForEach(var(children),
-                        MC3DNode* node = (MC3DNode*)item;
+fun(cleanUnvisibleChild, void)) as(MC3DNode)
+    MCLinkedListForEach(it->children,
+                        struct MC3DNode* node = (struct MC3DNode*)item;
                         if (node != null && node->visible == false) {
-                            MCLinkedList_delItem(var(children), (MCItem*)node);
+                            it->children->delItem(it->children, (struct MCItem*)node);
                         })
 }
 
-fun(MC3DNode, int, childCount, voida)
-{
-    return computed(obj->children, count);
+fun(childCount, int)) as(MC3DNode)
+    return it->children->count(it->children);
 }
 
-fun(MC3DNode, void, setAllVisible, MCBool visible)
-{
-    if (var(children)) {
-        MCLinkedListForEach(var(children),
-                            MC3DNode* node = (MC3DNode*)item;
+fun(setAllVisible, void), bool visible) as(MC3DNode)
+    if (it->children) {
+        MCLinkedListForEach(it->children,
+                            struct MC3DNode* node = (struct MC3DNode*)item;
                             if (node != null) {
                                 node->visible = visible;
                             })
     }
 }
 
-fun(MC3DNode, void, changeMatrial, MCMaterial* material)
-{
-    release(obj->material);
-    obj->material = material;
+fun(changeMatrial, void), struct MCMaterial* material) as(MC3DNode)
+    Release(it->material);
+    it->material = material;
 }
 
-fun(MC3DNode, void, changeTexture, MCTexture* texture)
-{
-    release(obj->diffuseTexture);
-    obj->diffuseTexture = texture;
+fun(changeTexture, void), struct MCTexture* texture) as(MC3DNode)
+    Release(it->diffuseTexture);
+    it->diffuseTexture = texture;
 }
 
-fun(MC3DNode, void, resetTransform, MCMatrix4* transform)
-{
+//pass null use identity matrix
+fun(resetTransform, void), MCMatrix4* transform) as(MC3DNode)
     if (transform) {
-        obj->transform = *transform;
+        it->transform = *transform;
     } else {
-        obj->transform = MCMatrix4Identity;
+        it->transform = MCMatrix4Identity;
     }
 }
 
-fun(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental)
-{
+fun(translateVec3, void), MCVector3* position, bool incremental) as(MC3DNode)
     if (incremental) {
-        obj->transform = MCMatrix4Multiply(MCMatrix4MakeTranslation(position->x, position->y, position->z), obj->transform);
+        it->transform = MCMatrix4Multiply(MCMatrix4MakeTranslation(position->x, position->y, position->z), it->transform);
     } else {
-        obj->transform = MCMatrix4MakeTranslation(position->x, position->y, position->z);
+        it->transform = MCMatrix4MakeTranslation(position->x, position->y, position->z);
     }
 }
 
-fun(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental)
-{
+fun(scaleVec3, void), MCVector3* factors, bool incremental) as(MC3DNode)
     if (incremental) {
-        obj->transform = MCMatrix4Multiply(MCMatrix4MakeScale(factors->x, factors->y, factors->z), obj->transform);
+        it->transform = MCMatrix4Multiply(MCMatrix4MakeScale(factors->x, factors->y, factors->z), it->transform);
     } else {
-        obj->transform = MCMatrix4MakeScale(factors->x, factors->y, factors->z);
+        it->transform = MCMatrix4MakeScale(factors->x, factors->y, factors->z);
     }
 }
 
-fun(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental)
-{
+fun(rotateMat3, void), float mat3[9], bool incremental) as(MC3DNode)
     if (mat3) {
         MCMatrix3 m3 = {0};
         for (int i=0; i<9; i++) {
             m3.m[i] = mat3[i];
         }
         if (incremental) {
-            obj->transform = MCMatrix4Multiply(MCMatrix4FromMatrix3(m3), obj->transform);
+            it->transform = MCMatrix4Multiply(MCMatrix4FromMatrix3(m3), it->transform);
         } else {
-            obj->transform = MCMatrix4FromMatrix3(m3);
+            it->transform = MCMatrix4FromMatrix3(m3);
         }
     }
 }
 
-fun(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental)
-{
+fun(rotateMat4, void), float mat4[16], bool incremental) as(MC3DNode)
     if (mat4) {
         MCMatrix4 m4 = {0};
-        for (int i=0; i<16; i++) {
+        int i;
+        for (i=0; i<16; i++) {
             m4.m[i] = mat4[i];
         }
         if (incremental) {
-            obj->transform = MCMatrix4Multiply(m4, obj->transform);
+            it->transform = MCMatrix4Multiply(m4, it->transform);
         } else {
-            obj->transform = m4;
+            it->transform = m4;
         }
     }
 }
 
-fun(MC3DNode, void, hide, voida)
-{
-    var(visible) = false;
+fun(hide, void)) as(MC3DNode)
+    it->visible = false;
 }
 
-fun(MC3DNode, void, show, voida)
-{
-    var(visible) = true;
+fun(show, void)) as(MC3DNode)
+    it->visible = true;
 }
 
-fun(MC3DNode, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model)
+//draw
+fun(willDraw, void), MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model)
 {
     
 }
 
-fun(MC3DNode, void, didDraw, voida)
+fun(didDraw, void))
 {
     
 }
 
-fun(MC3DNode, void, draw, voida)
+fun(draw, void))
 {
     
 }
 
-onload(MC3DNode)
-{
-    if (load(MCItem)) {
-        bid(MC3DNode, void, bye, voida);
-        bid(MC3DNode, void, addChild, MC3DNode* child);
-        bid(MC3DNode, MC3DErrCode, addChildAtIndex, MC3DNode* child, int index);
-        bid(MC3DNode, void, removeChild, MC3DNode* child);
-        bid(MC3DNode, void, copyChildrenFrom, MC3DNode* node);
-        bid(MC3DNode, void, cleanUnvisibleChild, voida);
-        bid(MC3DNode, int, childCount, voida);
-        bid(MC3DNode, void, setAllVisible, MCBool visible);
-        bid(MC3DNode, void, changeMatrial, MCMaterial* material);
-        bid(MC3DNode, void, changeTexture, MCTexture* texture);
-        bid(MC3DNode, void, resetTransform, MCMatrix4* transform);
-        bid(MC3DNode, void, translateVec3, MCVector3* position, MCBool incremental);
-        bid(MC3DNode, void, rotateMat3, float mat3[9], MCBool incremental);
-        bid(MC3DNode, void, rotateMat4, float mat4[16], MCBool incremental);
-        bid(MC3DNode, void, scaleVec3, MCVector3* factors, MCBool incremental);
-        bid(MC3DNode, void, hide, voida);
-        bid(MC3DNode, void, show, voida);
-        bid(MC3DNode, void, willDraw, MCMatrix4* projection, MCMatrix4* view, MCMatrix4* model);
-        bid(MC3DNode, void, didDraw, voida);
-        bid(MC3DNode, void, draw, voida);
-        return cla;
-    }else{
-        return null;
-    }
+constructor(MC3DNode)) {
+    MCItem(any, null);
+    as(MC3DNode)
+        it->visible = true;
+        it->receiveEvent = false;
+        it->overrideDraw = false;
+        it->center = MCVector3Make(0, 0, 0);
+    
+        it->transform = MCMatrix4Identity;
+        it->viewtrans = MCMatrix4Identity;
+    
+        it->material = null;
+        it->diffuseTexture = null;
+        it->specularTexture = null;
+        it->normalTexture = null;
+        it->zorder = -1;
+    
+        it->children = MCLinkedList(alloc(MCLinkedList));
+        it->meshes = MCLinkedList(alloc(MCLinkedList));
+    };
+    dynamic(MC3DNode)
+        funbind(release);
+        funbind(addChild);
+        funbind(addChildAtIndex);
+        funbind(removeChild);
+        funbind(copyChildrenFrom);
+        funbind(cleanUnvisibleChild);
+        funbind(childCount);
+        funbind(setAllVisible);
+        funbind(changeMatrial);
+        funbind(changeTexture);
+        funbind(resetTransform);
+        funbind(translateVec3);
+        funbind(rotateMat3);
+        funbind(rotateMat4);
+        funbind(scaleVec3);
+        funbind(hide);
+        funbind(show);
+        funbind(willDraw);
+        funbind(didDraw);
+        funbind(draw);
+    };
+    return any;
 }
+

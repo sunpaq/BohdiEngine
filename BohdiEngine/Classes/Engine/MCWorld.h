@@ -9,12 +9,12 @@
 #ifndef MCWorld_h
 #define MCWorld_h
 
-#include "monkc_export.h"
+#include "MCObject.h"
 
-class(MCWorld, MCObject);
+structure(MCWorld, MCObject)
+    fundef(release, void));
+};
 
-fun(MCWorld, void, bye, voida);
-fun(MCWorld, MCWorld*, initWith, voida);
-
+constructor(MCWorld));
 
 #endif /* MCWorld_h */

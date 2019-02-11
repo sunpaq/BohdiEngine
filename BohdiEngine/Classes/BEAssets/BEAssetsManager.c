@@ -14,6 +14,8 @@ static CFStringRef BundlePath = NULL;
 #endif
 
 #include "BEAssetsManager.h"
+#include "MCString.h"
+#include "MCLog.h"
 
 #if defined(__ANDROID__)
 static AAssetManager* assetManager_ = null;

@@ -8,46 +8,16 @@
 
 #include "MCGraph.h"
 
-//typedef struct {
-//    MCGeneric value;
-//    MCArray* neighbors;
-//    MCArray* edges;
-//} MCGraphVertex;
-//
-//typedef struct {
-//    int weight;
-//    MCGraphVertex A;
-//    MCGraphVertex B;
-//} MCGraphEdge;
-//
-//class(MCGraph, MCObject,
-//      MCGraphVertex* vertexSet;
-//      MCGraphEdge*   edgeSet);
-
-oninit(MCGraph)
-{
-    if (init(MCObject)) {
-        var(vertexCount) = 0;
-        var(edgeCount) = 0;
-        var(vertexSet) = null;
-        var(edgeSet) = null;
-        return obj;
-    } else {
-        return null;
+fun(bye, void)) as(MCGraph)
+    if (it->vertexSet) {
+        free(it->vertexSet);
+    }
+    if (it->edgeSet) {
+        free(it->edgeSet);
     }
 }
 
-fun(MCGraph, void, bye, voida)
-{
-    if (var(vertexSet)) {
-        free(var(vertexSet));
-    }
-    if (var(edgeSet)) {
-        free(var(edgeSet));
-    }
-}
-
-fun(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y)
+fun(isAdjacent, bool), MCGraphVertex x, MCGraphVertex y)
 {
     MCGraphVertex* iter = x.neighbors;
     while (iter) {
@@ -59,37 +29,42 @@ fun(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y)
     return false;
 }
 
-fun(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x)
+fun(copyNeighborsOf, struct MCArray*), MCGraphVertex x)
 {
-    MCArray* array = new(MCArray);
+    struct MCArray* array = MCArray(alloc(MCArray), 10);
     MCGraphVertex* iter = x.neighbors;
     while (iter) {
-        MCArray_addItem(array, MCGenericI(iter->index));
+        array->addItem(array, gen_i(iter->index));
         iter = iter->next;
     }
     return array;
 }
 
-fun(MCGraph, MCGraph*, addEdge, MCGraphEdge e)
-{
-    return obj;
+//To-Do
+fun(addEdge, struct MCGraph*), MCGraphEdge e) as(MCGraph)
+    return it;
 }
 
-fun(MCGraph, MCGraph*, removeEdge, MCGraphEdge e)
-{
-    return obj;
+fun(removeEdge, struct MCGraph*), MCGraphEdge e) as(MCGraph)
+    return it;
 }
 
-onload(MCGraph)
-{
-    if (load(MCObject)) {
-        bid(MCGraph, void, bye, voida);
-        bid(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y);
-        bid(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x);
-        bid(MCGraph, MCGraph*, addEdge, MCGraphEdge e);
-        bid(MCGraph, MCGraph*, removeEdge, MCGraphEdge e);
-        return cla;
-    } else {
-        return null;
+constructor(MCGraph)) {
+    MCObject(any);
+    as(MCGraph)
+        it->vertexCount = 0;
+        it->edgeCount = 0;
+        it->vertexSet = null;
+        it->edgeSet = null;
     }
+    dynamic(MCGraph)
+        funbind(bye);
+        funbind(isAdjacent);
+        funbind(copyNeighborsOf);
+        funbind(addEdge);
+        funbind(removeEdge);
+    }
+    return any;
 }
+
+

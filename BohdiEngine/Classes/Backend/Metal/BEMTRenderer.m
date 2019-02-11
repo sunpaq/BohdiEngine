@@ -14,7 +14,7 @@
 @interface BEMTRenderer ()
 {
     MTKView* _view;
-    MCDirector* director;
+    MCDirector_t* director;
 }
 @end
 
@@ -31,10 +31,7 @@
         CGFloat h = mtkView.drawableSize.height;
         
         director = new(MCDirector);
-        MCDirector_setupMainScene(director,
-                                  w * ScreenScale,
-                                  h * ScreenScale);
-        
+        director->setupMainScene(director, w * ScreenScale, h * ScreenScale);
         computed(director, cameraHandler)->rotateMode = MCCameraRotateAroundModelManual;
         
         NSError *error = NULL;
@@ -42,16 +39,23 @@
         _view = mtkView;
         _device = mtkView.device;
         
-        id<MTLLibrary> defaultLibrary = [_device newDefaultLibraryWithBundle:[NSBundle bundleForClass:[BEMTRenderer class]] error:&error];
-        if (error) {
-            NSLog(@"load shader error %@", error.description);
+        id<MTLFunction> vertexFunction;
+        id<MTLFunction> fragmentFunction;
+        
+        if (@available(iOS 10.0, *)) {
+            id<MTLLibrary> defaultLibrary = [_device newDefaultLibraryWithBundle:[NSBundle bundleForClass:[BEMTRenderer class]] error:&error];
+            if (error) {
+                NSLog(@"load shader error %@", error.description);
+            }
+            
+            // Load the vertex function from the library
+            vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
+            
+            // Load the fragment function from the library
+            fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
+        } else {
+            // Fallback on earlier versions
         }
-        
-        // Load the vertex function from the library
-        id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
-        
-        // Load the fragment function from the library
-        id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
         
         // Configure a pipeline descriptor that is used to create a pipeline state
         MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
@@ -96,10 +100,10 @@
 
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Tag:(int)tag
 {
-    MCDirector* dir = director;
+    MCDirector_t* dir = director;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        MC3DModel* m = MCDirector_addModelNamed(dir, name, MCFloatF(scale));
+        MC3DModel_t* m = dir->addModelNamed(dir, name, scale);
         m->tag = tag;
         //MC3DModel_rotateAroundSelfAxisX(m, ccwRadian);
         //MCDirector_cameraFocusOn(dir, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
@@ -119,29 +123,29 @@
     [self drawScene:director->lastScene];
 }
 
--(void) drawScene:(MC3DScene*)scene
+-(void) drawScene:(MC3DScene_t*)scene
 {
     [self drawNode:scene->rootnode];
 }
 
--(void) drawNode:(MC3DNode*)node
+-(void) drawNode:(MC3DNode_t*)node
 {
     //draw self meshes
     MCLinkedListForEach(node->meshes,
-                        MCMesh* mesh = (MCMesh*)item;
+                        struct MCMesh* mesh = (struct MCMesh*)item;
                         if (mesh != null) {
                             [self drawMesh:mesh];
                         })
 
     //draw children
     MCLinkedListForEach(node->children,
-                        MC3DNode* child = (MC3DNode*)item;
+                        struct MC3DNode* child = (struct MC3DNode*)item;
                         if (child != null && child->visible != false) {
                             [self drawNode:child];
                         })
 }
 
--(void) drawMesh:(MCMesh*)mesh
+-(void) drawMesh:(struct MCMesh*)mesh
 {
     if (mesh == NULL) return;
     

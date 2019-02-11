@@ -39,19 +39,20 @@ typedef struct _MCGraphEdge {
     MCGraphVertex B;
 } MCGraphEdge;
 
-class(MCGraph, MCObject,
-      size_t vertexCount;
-      size_t edgeCount;
-      MCGraphVertex* vertexSet;
-      MCGraphEdge*   edgeSet);
+structure(MCGraph, MCObject)
+    size_t vertexCount;
+    size_t edgeCount;
+    MCGraphVertex* vertexSet;
+    MCGraphEdge*   edgeSet;
 
-fun(MCGraph, void, bye, voida);
-fun(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y);
-fun(MCGraph, MCArray*, copyNeighborsOf, MCGraphVertex x);
-fun(MCGraph, MCGraph*, addEdge, MCGraphEdge e);
-fun(MCGraph, MCGraph*, removeEdge, MCGraphEdge e);
+    fundef(bye, void));
+    fundef(isAdjacent, bool), MCGraphVertex x, MCGraphVertex y);
+    fundef(copyNeighborsOf, struct MCArray*), MCGraphVertex x);
+    fundef(addEdge, struct MCGraph*), MCGraphEdge e);
+    fundef(removeEdge, struct MCGraph*), MCGraphEdge e);
+};
 
-
-
+constructor(MCGraph));
 
 #endif /* MCGraph_h */
+

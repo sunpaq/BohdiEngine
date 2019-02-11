@@ -8,12 +8,12 @@
 
 #include "MCBits.h"
 
-MCBits MCBitsMask(MCUInt bitIndex)
+MCBits MCBitsMask(unsigned bitIndex)
 {
     return (0x01 << bitIndex);
 }
 
-MCBool MCBitsIsSetAt(MCBits bits, MCUInt bitIndex)
+bool MCBitsIsSetAt(MCBits bits, unsigned bitIndex)
 {
     if (bits & MCBitsMask(bitIndex)) {
         return true;
@@ -21,7 +21,7 @@ MCBool MCBitsIsSetAt(MCBits bits, MCUInt bitIndex)
     return false;
 }
 
-MCUInt MCBitsSetBitNum(MCBits bits) {
+unsigned MCBitsSetBitNum(MCBits bits) {
     MCBits mask = 0x01;
     unsigned bitsCount = sizeof(MCBits) * 8;
     
@@ -37,7 +37,8 @@ MCUInt MCBitsSetBitNum(MCBits bits) {
 
 MCBits MCBitsXORFindOddInPairs(const MCBits* pairs, size_t count) {
     MCBits xor = 0;
-    for (int i=0; i<count; i++) {
+    int i;
+    for (i=0; i<count; i++) {
         xor = xor^pairs[i];
     }
     return xor;

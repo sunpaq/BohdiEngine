@@ -1,70 +1,47 @@
 #include "MCThread.h"
+#include "MCLog.h"
 
-oninit(MCThread)
-{
-	//init the vars
-	pthread_once_t ponce = PTHREAD_ONCE_INIT;
-	obj->once_control = ponce;
-	obj->isRunOnce = 0;//default is NO
-	//if you need, you can set the attribute use the raw pthread APIs
-	//example: pthread_attr_getstacksize(m_thread->attribute);
-	pthread_attr_init(&obj->attribute);
-    
-    obj->functionPointer = null;
-    obj->functionArgument = null;
-	return obj;
+fun(release, void)) as(MCThread)
+    pthread_attr_destroy(&it->attribute);
 }
 
-fun(MCThread, void, bye, voida)
-{
-    pthread_attr_destroy(&obj->attribute);
-}
-
-fun(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg)
-{
-    if (fp==null)
-    {
+fun(initWithFPointerArgument, struct MCThread*), void* fp, void* farg) as(MCThread)
+    if (fp==null) {
         error_log("%s\n","fp can not be nil, do nothing");
         return null;
     }
-    obj->functionPointer = fp;
-    obj->functionArgument = farg;
-    return obj;
+    it->functionPointer = fp;
+    it->functionArgument = farg;
+    return it;
 }
 
-fun(MCThread, MCThread*, initWithFPointer, void* fp)
-{
-    return MCThread_initWithFPointerArgument(obj, fp, null);
+fun(initWithFPointer, struct MCThread*), void* fp) as(MCThread)
+    return initWithFPointerArgument(it, fp, null);
 }
 
-fun(MCThread, int, detach, voida)
-{
-    return pthread_detach(obj->tid);
+fun(detach, int)) as(MCThread)
+    return pthread_detach(it->tid);
 }
 
-fun(MCThread, int, start, voida)
-{
+fun(start, int)) as(MCThread)
     int res;
-    if (obj->isRunOnce==1)
-    {
-        res = pthread_once(&(obj->once_control), obj->functionPointer);
-        
+    if (it->isRunOnce==1) {
+        res = pthread_once(&(it->once_control), it->functionPointer);
     }else{
-        
-        res = pthread_create(&obj->tid,//tid, pthread_t type
-                             &obj->attribute,
-                             obj->functionPointer,
-                             obj->functionArgument);
+        res = pthread_create(&it->tid,//tid, pthread_t type
+                             &it->attribute,
+                             it->functionPointer,
+                             it->functionArgument);
     }
     return res;
 }
 
-fun(MCThread, int, equal, MCThread* thread)
-{
-    return pthread_equal(obj->tid, thread->tid);
+fun(equal, int), struct MCThread* thread) as(MCThread)
+    return pthread_equal(it->tid, thread->tid);
 }
 
-util(MCThread, int, cancelThread, pthread_t tid)
+
+int MCThread_cancelThread(pthread_t tid)
 {
 #ifdef __APPLE__
 	return pthread_cancel(tid);
@@ -75,34 +52,45 @@ util(MCThread, int, cancelThread, pthread_t tid)
 #endif
 }
 
-util(MCThread, int, joinThread, pthread_t tid)
+int MCThread_joinThread(pthread_t tid)
 {
     //did not pass an returen value pointer
     return pthread_join(tid, NULL);
 }
 
-util(MCThread, void, exitWithStatus, void* status)
+void MCThread_exitWithStatus(void* status)
 {
     pthread_exit(status);
 }
 
-util(MCThread, pthread_t, currentThread)
+pthread_t MCThread_currentThread(void)
 {
     return pthread_self();
 }
 
-onload(MCThread)
-{
-    if (load(MCObject)) {
-        bid(MCThread, void, bye, voida);
-        bid(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg);
-        bid(MCThread, MCThread*, initWithFPointer, void* fp);
-        bid(MCThread, int, detach, voida);
-        bid(MCThread, int, start, voida);
-        bid(MCThread, int, equal, MCThread* thread);
-        return cla;
-    }else{
-        return null;
-    }
+constructor(MCThread)) {
+    MCObject(any);
+    as(MCThread)
+        //init the vars
+        pthread_once_t ponce = PTHREAD_ONCE_INIT;
+        it->once_control = ponce;
+        it->isRunOnce = 0;//default is NO
+        //if you need, you can set the attribute use the raw pthread APIs
+        //example: pthread_attr_getstacksize(m_thread->attribute);
+        pthread_attr_init(&it->attribute);
+
+        it->functionPointer = null;
+        it->functionArgument = null;
+    };
+    dynamic(MCThread)
+        funbind(release);
+        funbind(initWithFPointerArgument);
+        funbind(initWithFPointer);
+        funbind(detach);
+        funbind(start);
+        funbind(equal);
+    };
+    return any;
 }
+
 

@@ -8,52 +8,49 @@
 
 #include "MCSet.h"
 
-//class(MCSet, MCObject,
-//      MCGeneric* values;
-//      size_t maxcount);
-
-oninit(MCSet)
-{
-    if (init(MCObject)) {
-        var(values) = null;
-        var(maxcount) = 0;
-        var(count) = 0;
-        return obj;
-    } else {
-        return null;
+fun(bye, void)) as(MCSet)
+    if (it->values) {
+        free(it->values);
     }
 }
 
-fun(MCSet, void, bye, voida)
-{
-    if (var(values)) {
-        free(var(values));
+fun(insertValue, struct MCSet*), mc_generic value) as(MCSet)
+    if (it->count < it->maxcount) {
+        it->values[it->count++] = value;
     }
+    return it;
 }
 
-fun(MCSet, MCSet*, initWithMaxCount, size_t maxcount)
-{
-    var(values) = (MCGeneric*)malloc(sizeof(MCGeneric)*maxcount);
-    var(maxcount) = maxcount;
-    return obj;
+constructor(MCSet), size_t maxcount) {
+    MCObject(any);
+    as(MCSet)
+        it->values = (mc_generic*)malloc(sizeof(mc_generic)*maxcount);
+        it->maxcount = maxcount;
+        it->count = 0;
+    }
+    dynamic(MCSet)
+        funbind(bye);
+        funbind(insertValue);
+    }
+    return any;
 }
 
-fun(MCSet, MCSet*, insertValue, MCGeneric value)
-{
-    if (obj->count < obj->maxcount) {
-        obj->values[obj->count++] = value;
-    }
-    return obj;
+
+
+fun(findAction, void)) {
+
 }
 
-onload(MCSet)
-{
-    if (load(MCObject)) {
-        bid(MCSet, void, bye, voida);
-        bid(MCSet, MCSet*, initWithMaxCount, size_t maxcount);
-        bid(MCSet, MCSet*, insertValue, MCGeneric value);
-        return cla;
-    } else {
-        return null;
-    }
+fun(unionAction, void)) {
+
 }
+
+constructor(MCUnionFind)) {
+    MCSet(any, 0);
+    dynamic(MCUnionFind)
+        funbind(findAction);
+        funbind(unionAction);
+    }
+    return any;
+}
+

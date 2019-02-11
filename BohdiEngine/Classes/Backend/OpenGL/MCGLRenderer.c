@@ -10,43 +10,22 @@
 #include "MCGLDefaultShader.h"
 #include "MCGLSkyboxShader.h"
 #include "MCGLSkysphereShader.h"
+#include "MCGLShader.h"
+#include "MCMesh.h"
+#include "BEAssetsManager.h"
+#include "MC3DNode.h"
+#include "MCCamera.h"
+#include "MCLight.h"
+#include "MCSkybox.h"
+#include "MCSkysphere.h"
+#include "MCGLContext.h"
+#include "MC3DScene.h"
+#include "MCObject.h"
 
-#include "beengine_export.h"
-
-oninit(MCGLRenderer)
-{
-    if(init(MCObject)){
-        var(drawMode) = GL_TRIANGLES;
-        var(useage) = GL_STATIC_DRAW;
-
-        MCGLContext_featureSwith(MCGLDepthTest, true);
-        MCGLContext_featureSwith(MCGLStencilTest, true);
-        MCGLContext_featureSwith(MCGLCullFace, true);
-
-        MCGLContext_cullFace(MCGLBack);
-        MCGLContext_setFrontCounterClockWise(true);//CCW
-
-        glDepthFunc(GL_LESS);
-        
-        // Enable blending
-        //glEnable(GL_BLEND);
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-        obj->context = new(MCGLContext);
-        obj->skycontext = null;
-
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-ifun(void, initSkybox, voida)
-{
-    as(MCGLRenderer);
-    if (obj->skycontext == null) {
-        obj->skycontext = new(MCGLContext);
-        MCGLShader_initWithShaderCode(obj->skycontext->shader, MCSkybox_vsource, MCSkybox_fsource,
+fun(initSkybox, void)) as(MCGLRenderer)
+    if (it->skycontext == null) {
+        it->skycontext = new(MCGLContext);
+        it->skycontext->shader->initWithShaderCode(it->skycontext->shader, MCSkybox_vsource, MCSkybox_fsource,
                                       (const char* []){
                                           "position"
                                       }, 1,
@@ -63,12 +42,10 @@ ifun(void, initSkybox, voida)
     }
 }
 
-ifun(void, initSkysphere, voida)
-{
-    as(MCGLRenderer);
-    if (obj->skycontext == null) {
-        obj->skycontext = new(MCGLContext);
-        MCGLShader_initWithShaderCode(obj->skycontext->shader, MCSkysphere_vsource, MCSkysphere_fsource,
+fun(initSkysphere, void)) as(MCGLRenderer);
+    if (it->skycontext == null) {
+        it->skycontext = new(MCGLContext);
+        it->skycontext->shader->initWithShaderCode(it->skycontext->shader, MCSkysphere_vsource, MCSkysphere_fsource,
                                       (const char* []){
                                           "position",
                                           "texcoord"
@@ -86,16 +63,15 @@ ifun(void, initSkysphere, voida)
     }
 }
 
-fun(MCGLRenderer, void, bye, voida)
-{
-    release(obj->context);
-    release(obj->skycontext);
-    superbye(MCObject);
+fun(release, void)) as(MCGLRenderer)
+    Release(it->context);
+    Release(it->skycontext);
+    cast(it, MCObject)->release(it);
+    //superbye(MCObject);
 }
 
-fun(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode)
-{
-    MCGLShader_initWithShaderCode(obj->context->shader, vcode, fcode,
+fun(initWithShaderCodeString, struct MCGLRenderer*), const char* vcode, const char* fcode) as(MCGLRenderer)
+    it->context->shader->initWithShaderCode(it->context->shader, vcode, fcode,
         (const char* []){
             "position",
             "normal",
@@ -142,11 +118,10 @@ fun(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, co
             material_dissolve,
             material_shininess
         }, 15);
-    return obj;
+    return it;
 }
 
-fun(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader)
-{
+fun(initWithShaderFileName, struct MCGLRenderer*), const char* vshader, const char* fshader) as(MCGLRenderer)
     char path[LINE_MAX];
     MCFileGetPath(vshader, path);
     const char* vcode = MCFileCopyContentWithPath(path);
@@ -154,21 +129,18 @@ fun(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, co
     MCFileGetPath(fshader, path);
     const char* fcode = MCFileCopyContentWithPath(path);
     
-    MCGLRenderer_initWithShaderCodeString(obj, vcode, fcode);
+    it->initWithShaderCodeString(it, vcode, fcode);
     
     free((void*)vcode);
     free((void*)fcode);
-    return obj;
+    return it;
 }
 
-fun(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida)
-{
-    return MCGLRenderer_initWithShaderCodeString(obj, MCGLDefault_vsource, MCGLDefault_fsource);
+fun(initWithDefaultShader, struct MCGLRenderer*)) as(MCGLRenderer)
+    return it->initWithShaderCodeString(it, MCGLDefault_vsource, MCGLDefault_fsource);
 }
 
-ifun(void, drawMesh, MCMesh* mesh, GLuint texid)
-{
-    as(MCGLRenderer);
+fun(drawMesh, void), struct MCMesh* mesh, GLuint texid) as(MCGLRenderer)
     GLuint VAO;
     GLuint VBO;
     GLuint EBO;
@@ -178,12 +150,12 @@ ifun(void, drawMesh, MCMesh* mesh, GLuint texid)
     glBindVertexArray(VAO);
     //VBO
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, mesh->vertexDataSize, mesh->vertexDataPtr, obj->useage);
+    glBufferData(GL_ARRAY_BUFFER, mesh->vertexDataSize, mesh->vertexDataPtr, it->useage);
     //EBO
     if (mesh->vertexIndexes != null) {
         glGenBuffers(1, &EBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*mesh->vertexCount, mesh->vertexIndexes, obj->useage);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*mesh->vertexCount, mesh->vertexIndexes, it->useage);
     }
     //VAttributes
     MCVertexAttribute attr1 = {MCVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 44, MCBUFFER_OFFSET(0)};
@@ -199,38 +171,36 @@ ifun(void, drawMesh, MCMesh* mesh, GLuint texid)
         //MCGLContext_bind2DTexture(texid);
     }
     //draw
-    if (obj->drawMode != -1) {
+    if (it->drawMode != -1) {
         if (mesh->vertexIndexes != null) {
-            glDrawElements(obj->drawMode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
+            glDrawElements(it->drawMode, 100, GL_UNSIGNED_INT, (GLvoid*)0);
         }else{
-            glDrawArrays(obj->drawMode, 0, mesh->vertexCount);
+            glDrawArrays(it->drawMode, 0, mesh->vertexCount);
         }
     }
     //commit
     glFlush();
     //unbind
-    MCGLContext_unbind2DTextures(0);
+    MCGLContext_unbind2DTextures();
     //delete
     glDeleteBuffers(1, &VBO);
     glDeleteVertexArrays(1, &VAO);
 }
 
-ifun(void, drawNode, MC3DNode* node)
-{
-    as(MCGLRenderer);
+fun(drawNode, void), struct MC3DNode* node) as(MCGLRenderer)
     //callback
     if (node->receiveEvent) {
-        ff(node, willDraw, 0);
+        ff(node, willDraw));
     }
     
     if (node->overrideDraw) {
-        ff(node, draw, 0);
+        ff(node, draw));
     } else {
         //draw self
-        MCGLContext* ctx = obj->context;
-        MCGLShader* shader = ctx->shader;
+        struct MCGLContext* ctx = it->context;
+        struct MCGLShader* shader = ctx->shader;
         
-        MCGLShader_activateShaderProgram(shader, 0);
+        shader->activateShaderProgram(shader);
         MCGLUniform f;
         
         //scale translate
@@ -238,7 +208,7 @@ ifun(void, drawNode, MC3DNode* node)
         
         if (!MCMatrix4Equal(&MCMatrix4Identity, &viewModel)) {
             f.data.mat4 = viewModel;
-            MCGLShader_updateUniform(shader, model_model, f.data);
+            shader->updateUniform(shader, model_model, f.data);
         }
         
 //        MCMatrix3 nor = MCMatrix3InvertAndTranspose(MCMatrix4GetMatrix3(node->transform), NULL);
@@ -251,101 +221,95 @@ ifun(void, drawNode, MC3DNode* node)
                 return;
             }
             node->material->dataChanged = true;
-            MCGLContext_loadMaterial(ctx, node->material);
+            ctx->loadMaterial(ctx, node->material);
         }
         
         //batch setup
-        MCGLShader_setUniforms(ctx->shader, 0);
+        ctx->shader->setUniforms(ctx->shader);
         
         //texture
-        MCGLShader_shaderSetInt(ctx->shader, "usetexture", 0);
+        ctx->shader->shaderSetInt(ctx->shader, "usetexture", 0);
         GLuint texid = 0;
         if (node->diffuseTexture) {
-            texid = MCGLContext_loadTexture(ctx, node->diffuseTexture, "diffuse_sampler", 0);
-            MCGLShader_shaderSetInt(ctx->shader, "usetexture", 1);
+            texid = ctx->loadTexture(ctx, node->diffuseTexture, "diffuse_sampler", 0);
+            ctx->shader->shaderSetInt(ctx->shader, "usetexture", 1);
         }
         if (node->specularTexture) {
-            texid = MCGLContext_loadTexture(ctx, node->specularTexture, "specular_sampler", 1);
-            MCGLShader_shaderSetInt(ctx->shader, "usetexture", 2);
+            texid = ctx->loadTexture(ctx, node->specularTexture, "specular_sampler", 1);
+            ctx->shader->shaderSetInt(ctx->shader, "usetexture", 2);
         }
         if (node->normalTexture) {
-            texid = MCGLContext_loadTexture(ctx, node->normalTexture, "normal_sampler", 2);
-            MCGLShader_shaderSetInt(ctx->shader, "usetexture", 3);
+            texid = ctx->loadTexture(ctx, node->normalTexture, "normal_sampler", 2);
+            ctx->shader->shaderSetInt(ctx->shader, "usetexture", 3);
         }
 
         //draw self meshes
         MCLinkedListForEach(node->meshes,
-                            MCMesh* mesh = (MCMesh*)item;
+                            MCMesh_t* mesh = (MCMesh_t*)item;
                             if (mesh != null) {
-                                drawMesh(obj, mesh, texid);
+                                drawMesh(it, mesh, texid);
                             })
     }
     
     //callback
     if (node->receiveEvent) {
-        ff(node, didDraw, obj);
+        ff(node, didDraw), it);
     }
     
     //draw children
     MCLinkedListForEach(node->children,
-                        MC3DNode* child = (MC3DNode*)item;
+                        MC3DNode_t* child = (MC3DNode_t*)item;
                         if (child != null && child->visible != false) {
-                            drawNode(obj, child);
+                            drawNode(it, child);
                         })
     
     //ff(ctx, printUniforms, 0);
 }
 
-ifun(void, updateCamera, MCCamera* cam)
-{
-    as(MCGLRenderer);
+fun(updateCamera, void), struct MCCamera* cam) as(MCGLRenderer)
     MCGLUniformData data;
-    MCGLShader* shader = obj->context->shader;
+    struct MCGLShader* shader = it->context->shader;
     data.mat4 = computed(cam, viewMatrix);
-    MCGLShader_updateUniform(shader, view_view, data);
+    shader->updateUniform(shader, view_view, data);
     data.mat4 = computed(cam, projectionMatrix);
-    MCGLShader_updateUniform(shader, view_projection, data);
+    shader->updateUniform(shader, view_projection, data);
 }
 
-ifun(void, updateLight, MCLight* light)
-{
-    as(MCGLRenderer);
+fun(updateLight, void), struct MCLight* light) as(MCGLRenderer)
     if (light->dataChanged == true) {
-        MCGLShader* shader = obj->context->shader;
+        struct MCGLShader* shader = it->context->shader;
 
-        MCGLShader_activateShaderProgram(shader, 0);
+        shader->activateShaderProgram(shader);
         MCGLUniformData data;
 
         data.vec3 = light->ambientLightStrength;
-        MCGLShader_updateUniform(shader, light_ambient, data);
+        shader->updateUniform(shader, light_ambient, data);
 
         data.vec3 = light->diffuseLightStrength;
-        MCGLShader_updateUniform(shader, light_diffuse, data);
+        shader->updateUniform(shader, light_diffuse, data);
 
         data.vec3 = light->specularLightStrength;
-        MCGLShader_updateUniform(shader, light_specular, data);
+        shader->updateUniform(shader, light_specular, data);
 
         data.vec3 = light->lightColor;
-        MCGLShader_updateUniform(shader, light_color, data);
+        shader->updateUniform(shader, light_color, data);
 
         data.vec3 = light->lightPosition;
-        MCGLShader_updateUniform(shader, light_position, data);
+        shader->updateUniform(shader, light_position, data);
 
         light->dataChanged = false;
     }
 }
 
-ifun(void, drawSkybox, MCSkybox* skybox)
-{
-    as(MCGLRenderer);
+fun(drawSkybox, void), struct MCSkybox* skybox) as(MCGLRenderer)
     //init
-    MCGLShader* shader = obj->context->shader;
-    MCUInt vaoid;
-    MCUInt vboid;
-    MCUInt eboid;
-    MCUInt texid;
+    struct MCGLShader* shader = it->context->shader;
+    unsigned vaoid;
+    unsigned vboid;
+    unsigned eboid;
+    unsigned texid;
     //Mesh & Texture
-    MCUInt buffers[3];
+    unsigned buffers[3];
     glGenVertexArrays(1, &vaoid);
     glGenBuffers(3, buffers);
     vboid = buffers[0];
@@ -366,8 +330,9 @@ ifun(void, drawSkybox, MCSkybox* skybox)
     //Texture
     MCGLContext_activeTextureUnit(0);
     MCGLContext_bindCubeTexture(texid);
-    for (int i=0; i<6; i++) {
-        BE2DTextureData* face = skybox->cubedata->faces[i];
+    int i;
+    for (i=0; i<6; i++) {
+        struct BE2DTextureData* face = skybox->cubedata->faces[i];
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                      GL_RGB, face->width, face->height, 0,
                      GL_RGB, GL_UNSIGNED_BYTE, face->raw);
@@ -379,16 +344,16 @@ ifun(void, drawSkybox, MCSkybox* skybox)
     //Unbind
     glBindVertexArray(0);
     //update
-    MCGLShader_activateShaderProgram(shader, 0);
+    shader->activateShaderProgram(shader);
     MCGLUniformData data;
-    MCSkybox_getViewMatrix(skybox, &data.mat4);
-    MCGLShader_updateUniform(shader, "boxProjectionMatrix", data);
+    skybox->getViewMatrix(skybox, &data.mat4);
+    shader->updateUniform(shader, "boxProjectionMatrix", data);
     //draw
     glDepthMask(GL_FALSE);
-    MCGLShader_activateShaderProgram(shader, 0);
-    MCSkybox_getProjectionMatrix(skybox, &data.mat4);
-    MCGLShader_updateUniform(shader, "boxViewMatrix", data);
-    MCGLShader_setUniforms(shader, 0);
+    shader->activateShaderProgram(shader);
+    skybox->getProjectionMatrix(skybox, &data.mat4);
+    shader->updateUniform(shader, "boxViewMatrix", data);
+    shader->setUniforms(shader);
     
     glBindVertexArray(vaoid);
     MCGLContext_activeTextureUnit(0);
@@ -403,17 +368,15 @@ ifun(void, drawSkybox, MCSkybox* skybox)
     glDeleteBuffers(3, buffers);
 }
 
-ifun(void, drawSkysphere, MCSkysphere* sphere)
-{
-    as(MCGLRenderer);
-    MCGLShader* shader = obj->context->shader;
-    MCUInt vaoid;
-    MCUInt vboid;
-    MCUInt eboid;
-    MCUInt texid;
-    MCUInt ic;
+fun(drawSkysphere, void), struct MCSkysphere* sphere) as(MCGLRenderer)
+    struct MCGLShader* shader = it->context->shader;
+    unsigned vaoid;
+    unsigned vboid;
+    unsigned eboid;
+    unsigned texid;
+    unsigned ic;
     //Mesh & Texture
-    MCUInt buffers[4];
+    unsigned buffers[4];
     glGenVertexArrays(1, &vaoid);
     glGenBuffers(3, buffers);
     vboid = buffers[0];
@@ -444,16 +407,16 @@ ifun(void, drawSkysphere, MCSkysphere* sphere)
     //Unbind
     glBindVertexArray(0);
     //Shader
-    MCGLShader_activateShaderProgram(shader, 0);
+    shader->activateShaderProgram(shader);
     MCGLUniformData data;
-    MCSkysphere_getProjectionMatrix(sphere, &data.mat4);
-    MCGLShader_updateUniform(shader, "sphProjectionMatrix", data);
-    
+    sphere->getProjectionMatrix(sphere, &data.mat4);
+    shader->updateUniform(shader, "sphProjectionMatrix", data);
+
     glDepthMask(GL_FALSE);
-    MCGLShader_activateShaderProgram(shader, 0);
-    MCSkysphere_getViewMatrix(sphere, &data.mat4);
-    MCGLShader_updateUniform(shader, "sphViewMatrix", data);
-    MCGLShader_setUniforms(shader, 0);
+    shader->activateShaderProgram(shader);
+    sphere->getViewMatrix(sphere, &data.mat4);
+    shader->updateUniform(shader, "sphViewMatrix", data);
+    shader->setUniforms(shader);
     
     glBindVertexArray(vaoid);
     MCGLContext_activeTextureUnit(0);
@@ -465,88 +428,99 @@ ifun(void, drawSkysphere, MCSkysphere* sphere)
     glDeleteBuffers(4, buffers);
 }
 
-ifun(void, updateScene, MC3DScene* scene)
+fun(updateScene, void), struct MC3DScene* scene)
 {
     if (scene->cameraAutoRotate) {
-        MC3DScene_moveCameraOneStep(scene, MCFloatF(0.5), MCFloatF(0.0));
+        scene->moveCameraOneStep(scene, 0.5, 0.0);
     }
 }
 
-ifun(void, drawScene, MC3DScene* scene)
-{
-    as(MCGLRenderer);
+fun(drawScene, void), struct MC3DScene* scene) as(MCGLRenderer)
     MCGLContext_clearScreenWithColor(scene->bgcolor);
     //MCGLContext_clearScreen(0);
     if (scene->isDrawSky) {
         //no model
         if (scene->combineMode == MC3DSceneSkyboxOnly) {
-            initSkybox(obj, scene->skybox);
-            drawSkybox(obj, scene->skybox);
+            initSkybox(it);
+            //drawSkybox(it);
             //return MCGLContext_tickFPS(var(clock));
         }
         else if (scene->combineMode == MC3DSceneSkysphOnly) {
-            initSkysphere(obj, scene->skysph);
-            drawSkysphere(obj, scene->skysph);
+            initSkysphere(it);
+            //drawSkysphere(it);
             //return MCGLContext_tickFPS(var(clock));
         }
         //with model
         else if (scene->combineMode == MC3DSceneModelWithSkybox) {
-            initSkybox(obj, scene->skybox);
-            drawSkybox(obj, scene->skybox);
+            initSkybox(it);
+            //drawSkybox(it);
         }
         else if (scene->combineMode == MC3DSceneModelWithSkysph) {
-            initSkysphere(obj, scene->skysph);
-            drawSkysphere(obj, scene->skysph);
+            initSkysphere(it);
+            //drawSkysphere(it);
         }
     }
     
     //Camera MVP Matrix
-    MCCamera* cam = scene->mainCamera;
+    struct MCCamera* cam = scene->mainCamera;
     if (cam) {
-        updateCamera(obj, cam);
+        updateCamera(it, cam);
     }
     
     //Light
-    MCLight* light = scene->light;
+    struct MCLight* light = scene->light;
     if (light) {
-        updateLight(obj, light);
+        updateLight(it, light);
     }
     
-    drawNode(obj, scene->rootnode);
+    drawNode(it, scene->rootnode);
 }
 
-ifun(MCDrawMode, getDrawMode, voida)
-{
-    as(MCGLRenderer);
-    return (MCDrawMode)obj->drawMode;
+fun(getDrawMode, MCDrawMode)) as(MCGLRenderer)
+    return (MCDrawMode)it->drawMode;
 }
 
-ifun(void, setDrawMode, MCDrawMode mode)
-{
-    as(MCGLRenderer);
-    obj->drawMode = mode;
+fun(setDrawMode, void), MCDrawMode mode) as(MCGLRenderer)
+    it->drawMode = mode;
 }
 
-ifun(void, scissorAllScene, int x, int y, int width, int height)
+fun(scissorAllScene, void), int x, int y, int width, int height)
 {
     MCGLContext_setViewport(x, y, width, height);
     MCGLContext_setScissor(x, y, width, height);
 }
 
-onload(MCGLRenderer)
-{
-    if (load(MCObject)) {
-        #include "../../Engine/MCRenderer.p"
-        //life cycle
-        bid(MCGLRenderer, void, bye, voida);
-        bid(MCGLRenderer, MCGLRenderer*, initWithShaderCodeString, const char* vcode, const char* fcode);
-        bid(MCGLRenderer, MCGLRenderer*, initWithShaderFileName, const char* vshader, const char* fshader);
-        bid(MCGLRenderer, MCGLRenderer*, initWithDefaultShader, voida);
-        return cla;
-    }else{
-        return null;
+constructor(MCGLRenderer)) {
+    MCObject(any);
+    as(MCGLRenderer)
+        it->drawMode = GL_TRIANGLES;
+        it->useage = GL_STATIC_DRAW;
+
+        MCGLContext_featureSwith(MCGLDepthTest, true);
+        MCGLContext_featureSwith(MCGLStencilTest, true);
+        MCGLContext_featureSwith(MCGLCullFace, true);
+
+        MCGLContext_cullFace(MCGLBack);
+        MCGLContext_setFrontCounterClockWise(true);//CCW
+
+        glDepthFunc(GL_LESS);
+
+        // Enable blending
+        //glEnable(GL_BLEND);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        it->context = new(MCGLContext);
+        it->skycontext = null;
     }
+    dynamic(MCGLRenderer)
+        funbind(release);
+        funbind(initWithShaderCodeString);
+        funbind(initWithShaderFileName);
+        funbind(initWithDefaultShader);
+    }
+    return any;
 }
+
 
 
 

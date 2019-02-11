@@ -9,16 +9,20 @@
 #ifndef MCSort_h
 #define MCSort_h
 
-#include "monkc.h"
+#include "MCObject.h"
 
-class(MCSort, MCObject,
-      MCGeneric* array;
-      size_t length);
+structure(MCSort, MCObject)
+    mc_generic* array;
+    size_t length;
 
-fun(MCSort, void, bye, voida);
-fun(MCSort, MCSort*, initWithArray, MCGeneric* array, size_t length);
-fun(MCSort, void, insertionSort, voida);
-fun(MCSort, void, quickSort, voida);
-fun(MCSort, void, printArray, voida);
+    fundef(bye, void));
+    fundef(insertionSort, void));
+    fundef(quickSort, void));
+    fundef(printArray, void));
+};
+
+constructor(MCSort), mc_generic* array, size_t length);
+
+alias(MCSort);
 
 #endif /* MCSort_h */

@@ -9,28 +9,31 @@
 #ifndef MCTexture_h
 #define MCTexture_h
 
-#include "monkc_export.h"
-#include "beassets_export.h"
+#include "MCObject.h"
+//#include "beassets_export.h"
 
 typedef enum {
     MCTextureRepeat,
     MCTextureClampToEdge
 } MCTextureDisplayMode;
 
-class(MCTexture, MCObject,
-      unsigned Id;
-      int width;
-      int height;
-      BE2DTextureData* data;
-      MCTextureDisplayMode displayMode;
-      MCBool loadedToGL;
-);
+structure(MCTexture, MCObject)
+    unsigned Id;
+    int width;
+    int height;
+    struct BE2DTextureData* data;
+    MCTextureDisplayMode displayMode;
+    bool loadedToGL;
 
-fun(MCTexture, void, bye, voida);
-fun(MCTexture, MCTexture*, initWithFileNameMode, const char* name, MCTextureDisplayMode mode);
-fun(MCTexture, MCTexture*, initWithFileName, const char* name);
-fun(MCTexture, MCTexture*, initWith2DTexture, BE2DTextureData* tex);
-//fun(MCTexture, void, loadToGLBuffer, GLuint pid, const char* uniformName);
-//fun(MCTexture, void, active, GLuint pid, const char* uniformName);
+    fundef(release, void));
+    fundef(loadImageRawdata, unsigned char*), const char* path);
+    fundef(initWithFileNameMode, struct MCTexture*), const char* name, MCTextureDisplayMode mode);
+    fundef(initWithFileName, struct MCTexture*), const char* name);
+    fundef(initWith2DTexture, struct MCTexture*), struct BE2DTextureData* tex);
+};
+
+constructor(MCTexture));
+
+alias(MCTexture);
 
 #endif /* MCTexture_h */

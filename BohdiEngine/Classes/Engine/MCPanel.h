@@ -9,9 +9,9 @@
 #ifndef MCPanel_h
 #define MCPanel_h
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "MC3DNode.h"
 
-//class(MCPanel, MC3DNode);
+//classdef(MCPanel, MC3DNode);
 
 #endif /* MCPanel_h */

@@ -1,46 +1,64 @@
 #ifndef MCCLOCK_H
 #define MCCLOCK_H
 
-#include "MCContext.h"
-
 #include <time.h>
 #include <limits.h>
+#include "MCObject.h"
 
-class(MCClock, MCObject,
-      struct tm rawtime;
-      char* currentTimeBuff;
-      char* currentGMTBuff;
-);
+struct MCTime {
+    int tm_sec;
+    int tm_min;
+    int tm_hour;
+    int tm_mday;
+    int tm_mon;
+    int tm_year;
+    int tm_wday;
+};
 
-fun(MCClock, void, bye, voida);
-fun(MCClock, MCClock*, setTimeToNow, voida);
-fun(MCClock, void, setTime, int tm_sec, int tm_min, int tm_hour, 
-						 int tm_mday, int tm_mon, int tm_year,
-						 int tm_wday);
-fun(MCClock, void, adjustTime, int tm_sec, int tm_min, int tm_hour, 
-                            int tm_mday, int tm_mon, int tm_year,
-                            int tm_wday);
+struct MCRawTime {
+    int tm_sec;
+    int tm_min;
+    int tm_hour;
+    int tm_mday;
+    int tm_mon;
+    int tm_year;
+    int tm_wday;
+    int tm_yday;
+    int tm_isdst;
+};
 
-fun(MCClock, void, setRawtime, struct tm rawtime_in);
-fun(MCClock, void, setRawtimeFields, int tm_sec, int tm_min, int tm_hour, 
-							      int tm_mday, int tm_mon, int tm_year,
-							      int tm_wday, int tm_yday, int tm_isdst);
+structure(MCClock, MCObject)
+	struct tm RawTime;
+	char* currentTimeBuff;
+	char* currentGMTBuff;
 
-fun(MCClock, void, getTime, time_t* const result);
-fun(MCClock, void, getRawtime, struct tm* const result);
-fun(MCClock, char*, getTimeByString, voida);
-fun(MCClock, void, getCPUClocksPerSecond, clock_t* const result);
-fun(MCClock, void, getCPUClocksSinceStart, clock_t* const result);
+	fundef(bye, void));
+	fundef(setTimeToNow, struct MCClock*));
+	fundef(setTime, void), struct MCTime time);
+    fundef(adjustTime, void), struct MCTime time);
+    fundef(setRawTime, void), struct tm rawTime);
+    fundef(getTime, void), time_t* const result);
+    fundef(getRawTime, void), struct tm* const result);
+    fundef(getTimeByString, const char*));
 
-fun(MCClock, time_t, getCPUSecondsSinceStart, voida);
-fun(MCClock, time_t, getCPUSecondsSince, time_t since);
+    fundef(getCPUClocksPerSecond, void), clock_t* const result);
+    fundef(getCPUClocksSinceStart, void), clock_t* const result);
+    fundef(getCPUSecondsSinceStart, void), time_t* const result);
+    fundef(getCPUSecondsSince, void), time_t since, time_t* const result);
 
-fun(MCClock, char*, getCurrentTimeString, voida);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
-fun(MCClock, char*, getCurrentGMTTimeString, voida);
+    //retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
+    fundef(getCurrentTimeString, const char*));
+    fundef(getCurrentGMTTimeString, const char*));
+    fundef(printTime, void));
+    fundef(printCurrentTime, void));
+    fundef(printCurrentGMTTime, void));
+};
 
-fun(MCClock, void, printTime, voida);
-fun(MCClock, void, printCurrentTime, voida);
-fun(MCClock, void, printCurrentGMTTime, voida);
+constructor(MCClock));
+
+alias(MCClock);
+
+
 
 char* MCClock_rawtime2String(time_t* timeval);
 char* MCClock_settableTime2String(struct tm *tm);

@@ -4,7 +4,7 @@ void parseObjMeta(BAObjMeta* meta, const char* buff)
 {
     BAObjMetaInit(meta);
     if (meta && buff) {
-        MCBool meshDetected = false;
+        bool meshDetected = false;
         
         char line[LINE_MAX]; char* c = (char*)buff;
         while (*c!=NUL) {

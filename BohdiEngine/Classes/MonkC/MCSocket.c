@@ -1,45 +1,21 @@
+#ifndef WIN32
+
 #include "MCSocket.h"
+#include "MCLog.h"
 
-oninit(MCSocketClientInfo)
-{
-    if (init(MCObject)) {
-        return obj;
-    }else{
-        return null;
-    }
+fun(dumpInfo, void)) as(MCSocketClientInfo)
+	printf("accept a client: %s\n", it->address.sa_data);
 }
 
-fun(MCSocketClientInfo, void, dumpInfo, voida)
-{
-	printf("accept a client: %s\n", obj->address.sa_data);
+constructor(MCSocketClientInfo)) {
+	as(MCSocketClientInfo)
+		it->returnSfd = 0;
+		it->address_len = 0;
+	}
+	return any;
 }
 
-fun(MCSocketClientInfo, void, bye, voida)
-{
-	//nothing to do
-}
-
-onload(MCSocketClientInfo)
-{
-    if (load(MCObject)) {
-        bid(MCSocketClientInfo, void, dumpInfo);
-        bid(MCSocketClientInfo, void, bye);
-        return cla;
-    }else{
-        return null;
-    }
-}
-
-oninit(MCSocket)
-{
-    if (init(MCObject)) {
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, char* ip, char* port)
+static void create_and_bind_socket(struct MCSocket* this, MCSocketType socket_type, char* ip, char* port)
 {
 	//int sfd = ;
 	//BOOL isServer;
@@ -106,80 +82,68 @@ static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, cha
 	//return sfd;
 }
 
-fun(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port)
-{
-    create_and_bind_socket(obj, socket_type, ip, port);
-    return obj;
-}
-
-fun(MCSocket, void, bye, voida)
-{
-	close(obj->sfd);
-}
-
 //EADDRINUSE
 //EBADF
 //ENOTSOCK
 //EOPNOTSUPP
-fun(MCSocket, int, listeningStart, voida)
-{
-	if(obj->isServer!=1)return -1;
-	return listen(obj->sfd, MCSocket_Queue_Length);
+fun(listeningStart, int)) as(MCSocket)
+	if(it->isServer!=1)return -1;
+	return listen(it->sfd, MCSocket_Queue_Length);
 }
 
-fun(MCSocket, MCSocketClientInfo*, acceptARequest, voida)
-{
-	if (obj->isServer!=1)return null;
-	MCSocketClientInfo* clientinfo = new(MCSocketClientInfo);
-	clientinfo->returnSfd = accept(obj->sfd, &clientinfo->address, &clientinfo->address_len);
+fun(acceptARequest, struct MCSocketClientInfo*)) as(MCSocket)
+	if (it->isServer!=1)return null;
+	struct MCSocketClientInfo* clientinfo = MCSocketClientInfo(alloc(MCSocketClientInfo));
+	clientinfo->returnSfd = accept(it->sfd, &clientinfo->address, &clientinfo->address_len);
 	return clientinfo;
 }
 
-fun(MCSocket, void, recv, voida)
-{
+fun(receive, void)) {
     //recv(int, void *, size_t, int)
 }
 
-fun(MCSocket, void, recvfrom, voida)
-{
+fun(receiveFrom, void)) {
     //recvfrom(int, void *, size_t, int, struct sockaddr *restrict, socklen_t *restrict)
 }
 
-fun(MCSocket, void, recvmsg, voida)
-{
+fun(receiveMsg, void)) {
     //recvmsg(int, struct msghdr *, int)
 }
 
-fun(MCSocket, void, send, voida)
-{
+fun(sendInfo, void)) {
     //send(int, const void *, size_t, int)
 }
 
-fun(MCSocket, void, sendto, voida)
-{
+fun(sendTo, void)) {
     //sendto(int, const void *, size_t, int, const struct sockaddr *, socklen_t)
 }
 
-fun(MCSocket, void, sendmsg, voida)
-{
+fun(sendMsg, void)) {
     //sendmsg(int, const struct msghdr *, int)
 }
 
-onload(MCSocket)
-{
-    if (load(MCObject)) {
-        bid(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
-        bid(MCSocket, int, listeningStart);
-        bid(MCSocket, MCSocketClientInfo*, acceptARequest);
-        bid(MCSocket, void, recv);
-        bid(MCSocket, void, recvfrom);
-        bid(MCSocket, void, recvmsg);
-        bid(MCSocket, void, send);
-        bid(MCSocket, void, sendto);
-        bid(MCSocket, void, sendmsg);
-        bid(MCSocket, void, bye);
-        return cla;
-    }else{
-        return null;
-    }
+fun(release, void)) as(MCSocket)
+    close(it->sfd);
 }
+
+constructor(MCSocket), MCSocketType socket_type, char* ip, char* port) {
+	MCObject(any);
+	as(MCSocket)
+		create_and_bind_socket(it, socket_type, ip, port);
+	}
+	dynamic(MCSocket)
+		funbind(listeningStart);
+		funbind(acceptARequest);
+		funbind(receive);
+		funbind(receiveFrom);
+		funbind(receiveMsg);
+		funbind(sendInfo);
+		funbind(sendTo);
+		funbind(sendMsg);
+		funbind(release);
+	}
+	return any;
+}
+
+
+#endif

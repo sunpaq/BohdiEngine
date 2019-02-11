@@ -8,17 +8,22 @@
 #ifndef MCTextureCache_h
 #define MCTextureCache_h
 
-#include "monkc_export.h"
+#include "MCObject.h"
 #include "MCTexture.h"
 
-class(MCTextureCache, MCObject,
-      MCMap* map);
+structure(MCTextureCache, MCObject)
+    struct MCMap* map;
 
-util(MCTextureCache, MCTextureCache*, shared, voida);
-util(MCTextureCache, void, cleanAndDestoryShared, voida);
+    fundef(release, void));
+    fundef(findTextureNamed, struct MCTexture*), const char* name);
+    fundef(cacheTextureNamed, void), struct MCTexture* tex, const char* name);
+};
 
-fun(MCTextureCache, void, bye, voida);
-fun(MCTextureCache, MCTexture*, findTextureNamed, const char* name);
-fun(MCTextureCache, void, cacheTextureNamed, MCTexture* tex, const char* name);
+constructor(MCTextureCache));
+
+alias(MCTextureCache);
+
+util(MCTextureCache, shared, struct MCTextureCache*)void);
+util(MCTextureCache, cleanAndDestoryShared, void)void);
 
 #endif /* MCTextureCache_h */

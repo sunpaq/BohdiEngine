@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include "MCGeometry.h"
 #include "MCArrayList.h"
+#include "MCLog.h"
 
 MCPolygonPrimitives MCPolygonPrimitivesDetect(MCVector3 v1, MCVector3 v2, MCVector3 v3, MCVector3 v4)
 {
@@ -40,8 +41,9 @@ MCPolygon* MCPolygonInit(MCPolygon* poly, MCVector3 vertexes[], size_t count)
     poly->index = 0;
     poly->isConvex = false;
     
-    MCGeneric generic[MCPolygonMaxV] = {0};
-    for (size_t i=0; i<count; i++) {
+    mc_generic generic[MCPolygonMaxV] = {0};
+    size_t i;
+    for (i=0; i<count; i++) {
         MCVector3 v = vertexes[i];
         poly->vertexData[i] = v;
         generic[i].mcsizet = i;
@@ -126,7 +128,8 @@ int MCPolygonResolveConvex(MCPolygon* poly, MCTriangle* result)
     size_t count = poly->count;
     
     MCVector3 start = poly->vertexData[0];
-    for (int i=1; i<count; i++) {
+    int i;
+    for (i=1; i<count; i++) {
         MCVector3 middle = poly->vertexData[i+1];
         MCVector3 end    = poly->vertexData[i+2];
         result[resulti++] = MCTriangleMake(start, middle, end);
@@ -174,7 +177,7 @@ size_t MCPolygonResolveConcave(MCPolygon* poly, MCTriangle* triangleResult, size
             return triangleCount;
         }
         
-        MCBool success = true;
+        bool success = true;
         //test faceup
         MCVector3 up = MCTriangleCCWFaceUp(triangle);
         if (MCVector3Dot(up, poly->faceup) < 0) {
@@ -182,7 +185,8 @@ size_t MCPolygonResolveConcave(MCPolygon* poly, MCTriangle* triangleResult, size
             success = false;
         }
         //test remain points in triangle
-        for (int i=0; i<list->count; i++) {
+        int i;
+        for (i=0; i<list->count; i++) {
             if (i==idx1 || i==idx2 || i==idx3) {
                 continue;
             }
@@ -222,7 +226,8 @@ size_t MCPolygonResolveConcave(MCPolygon* poly, MCTriangle* triangleResult, size
 void MCPolygonDumpVertexData(MCPolygon* poly)
 {
     printf("{\n");
-    for (int i=0; i<poly->count; i++) {
+    int i;
+    for (i=0; i<poly->count; i++) {
         printf("{%f,%f,%f},\n", poly->vertexData[i].x, poly->vertexData[i].y, poly->vertexData[i].z);
     }
     printf("}");

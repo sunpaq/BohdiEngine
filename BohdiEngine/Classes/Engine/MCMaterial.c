@@ -9,30 +9,18 @@
 #include "MCMaterial.h"
 #include "MC3DBase.h"
 
-oninit(MCMaterial)
-{
-    if (init(MCObject)) {
-        obj->ambientLightColor  = MCVector3Make(1.0, 1.0, 1.0);
-        obj->diffuseLightColor  = MCVector3Make(1.0, 1.0, 1.0);
-        obj->specularLightColor = MCVector3Make(1.0, 1.0, 1.0);
-        obj->specularLightPower = 32.0;
-        obj->dissolve = 1.0;
-        obj->hidden   = 0;
-        obj->illum    = 2;
-        obj->dataChanged = true;
-        
-        obj->tag[0] = NUL;
-        return obj;
-    }else{
-        return null;
+constructor(MCMaterial)) {
+    MCObject(any);
+    as(MCMaterial)
+        it->ambientLightColor  = MCVector3Make(1.0, 1.0, 1.0);
+        it->diffuseLightColor  = MCVector3Make(1.0, 1.0, 1.0);
+        it->specularLightColor = MCVector3Make(1.0, 1.0, 1.0);
+        it->specularLightPower = 32.0;
+        it->dissolve = 1.0;
+        it->hidden   = 0;
+        it->illum    = 2;
+        it->dataChanged = true;
+        it->tag[0] = NUL;
     }
-}
-
-onload(MCMaterial)
-{
-    if (load(MCObject)) {
-        return cla;
-    }else{
-        return null;
-    }
+    return any;
 }

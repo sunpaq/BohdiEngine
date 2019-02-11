@@ -9,15 +9,21 @@
 #ifndef MCMap_h
 #define MCMap_h
 
-#include "monkc.h"
+#include "MCObject.h"
+#include "MCHashTable.h"
 
-class(MCMap, MCObject,
-      mc_hashtable* table;
-      computing(MCHashTableSize, itemsCount));
+structure(MCMap, MCObject)
+      struct MCHashTable* table;
 
-fun(MCMap, void, bye, voida);
-fun(MCMap, void, setValueForKey, MCGeneric value, const char* key);
-fun(MCMap, void, getValueForKey, MCGeneric* result, const char* key);
-fun(MCMap, void, getValueByIndex, MCGeneric* result, MCHashTableIndex index);
+      fundef(itemsCount, size_t));
+      fundef(setValueForKey, void), mc_generic value, const char* key);
+      fundef(getValueForKey, void), mc_generic* result, const char* key);
+      fundef(getValueByIndex, void), mc_generic* result, size_t index);
+      fundef(release, void));
+};
+
+constructor(MCMap));
+
+alias(MCMap);
 
 #endif /* MCMap_h */

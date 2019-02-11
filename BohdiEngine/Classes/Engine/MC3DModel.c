@@ -13,14 +13,14 @@
 #include "MCLinkedList.h"
 #include "MCTextureCache.h"
 #include "MCMesh.h"
+#include "MCString.h"
+//#include "BAMaterial.h"
 
-compute(MC3DFrame, frame)
-{
-    as(MC3DModel);
+fun(frame, MC3DFrame)) as(MC3DNode)
     MC3DFrame allframe = (MC3DFrame){0,0,0,0,0,0};
     
-    MCLinkedListForEach(sobj->meshes,
-        MCMesh* m = (MCMesh*)item;
+    MCLinkedListForEach(it->meshes,
+        struct MCMesh* m = (struct MCMesh*)item;
         if (m != null) {
             MC3DFrame mf = m->Frame;
             //MAX
@@ -34,8 +34,8 @@ compute(MC3DFrame, frame)
         }
     )
     
-    MCLinkedListForEach(sobj->children,
-        MC3DModel* m = (MC3DModel*)item;
+    MCLinkedListForEach(it->children,
+        struct MC3DModel* m = (struct MC3DModel*)item;
         if (m != null) {
             MC3DFrame mf = computed(m, frame);
             //MAX
@@ -48,61 +48,34 @@ compute(MC3DFrame, frame)
             MCMath_accumulateMind(&allframe.zmin, mf.zmin);
         }
     )
-    
-    obj->lastSavedFrame = allframe;
+
+    cast(it, MC3DModel)->lastSavedFrame = allframe;
     return allframe;
 }
 
-compute(double, maxlength)
-{
-    as(MC3DModel);
+fun(maxlength, double)) as(MC3DModel)
     double max = 0;
-    MC3DFrame frame = cpt(frame);
+    MC3DFrame frame = it->frame(it);
     MCMath_accumulateMaxd(&max, frame.xmax - frame.xmin);
     MCMath_accumulateMaxd(&max, frame.ymax - frame.ymin);
     MCMath_accumulateMaxd(&max, frame.zmax - frame.zmin);
     return max;
 }
 
-compute(MCVector3, center)
-{
-    as(MC3DModel);
-    MC3DFrame f = cpt(frame);
+fun(center, MCVector3)) as(MC3DModel)
+    MC3DFrame f = it->frame(it);
     return MCVector3Make((f.xmax-f.xmin)/2.0,
                          (f.ymax-f.ymin)/2.0,
                          (f.zmax-f.zmin)/2.0);
 }
 
-oninit(MC3DModel)
-{
-    if (init(MC3DNode)) {
-        obj->tag = -1;
-        obj->name[0] = NUL;
-        
-        obj->defaultColor = (MCColorf){0.9, 0.9, 0.9, 1.0};
-        obj->defaultExtension = "obj";
-        obj->textureOnOff = false;
-        obj->fitted = false;
-        
-        obj->frame = frame;
-        obj->maxlength = maxlength;
-        obj->center = center;
-        
-        obj->lastSavedFrame = (MC3DFrame){0,0,0,0,0,0};
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-fun(MC3DModel, void, bye, voida)
-{
+fun(release, void)) as(MC3DNode)
     //clean all the cached textures
     //MCTextureCache_cleanAndDestoryShared(0);
-    MC3DNode_bye(sobj, 0);
+    it->release(it);
 }
 
-ifun(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, size_t index, MCColorf color)
+fun(meshLoadFaceElement, void), struct MCMesh* mesh, BAObjData* buff, BAFaceElement e, size_t index, MCColorf color)
 {
     MCVector3 v, n;
     MCVector2 t;
@@ -157,19 +130,20 @@ ifun(void, meshLoadFaceElement, MCMesh* mesh, BAObjData* buff, BAFaceElement e, 
     MCVertexData data = {
             v.x, v.y, v.z,
             n.x, n.y, n.z,
-            color.R.f, color.G.f, color.B.f,
+            color.R, color.G, color.B,
             t.x, t.y
             //0,0
     };
 
-    MCMesh_setVertex(mesh, (uint32_t)index, &data);
+    mesh->setVertex(mesh, (uint32_t)index, &data);
 }
 
-ifun(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
+fun(createMeshWithBATriangles, struct MCMesh*), BATriangle* triangles, size_t tricount, BAObjData* buff, MCColorf color)
 {
-    MCMesh* mesh = MCMesh_initWithVertexCount(new(MCMesh), (int32_t)tricount*3);
+    struct MCMesh* mesh = MCMesh(alloc(MCMesh), (int32_t)tricount*3);
     
-    for (size_t i=0; i<tricount; i++) {
+    size_t i;
+    for (i=0; i<tricount; i++) {
         size_t index = i * 3;
         meshLoadFaceElement(null, mesh, buff, triangles[i].e1, index+0, color);
         meshLoadFaceElement(null, mesh, buff, triangles[i].e2, index+1, color);
@@ -177,17 +151,17 @@ ifun(MCMesh*, createMeshWithBATriangles, BATriangle* triangles, size_t tricount,
     }
     
     //normalize normal
-    MCMesh_normalizeNormals(mesh, 0);
+    mesh->normalizeNormals(mesh);
     
     //frame
-    for (int i=0; i<6; i++) {
+    for (i=0; i<6; i++) {
         mesh->Frame.m[i] = buff->Frame.m[i];
     }
     
     return mesh;
 }
 
-ifun(void, setDefaultMaterialForNode, MC3DNode* node)
+fun(setDefaultMaterialForNode, void), struct MC3DNode* node)
 {
     if (node) {
         node->material->ambientLightColor  = MCVector3Make(0.5, 0.5, 0.5);
@@ -203,7 +177,7 @@ ifun(void, setDefaultMaterialForNode, MC3DNode* node)
     }
 }
 
-ifun(void, setMaterialForNode, MC3DNode* node, BAMaterial* mtl)
+fun(setMaterialForNode, void), struct MC3DNode* node, BAMaterial* mtl)
 {
     if (mtl && mtl->name[0] != NUL) {
         MCVector3 ambient  = BAMaterialLightColor(mtl, Ambient);
@@ -225,18 +199,19 @@ ifun(void, setMaterialForNode, MC3DNode* node, BAMaterial* mtl)
     }
 }
 
-ifun(void, setTextureForNode, MC3DNode* node, BAObjData* buff, BAMesh* mesh)
+fun(setTextureForNode, void), struct MC3DNode* node, BAObjData* buff, BAMesh* mesh)
 {
     //object texture
     if (mesh->object[0]) {
         BATexture* tex = BAFindTextureByAttachedObject(buff->mtllib_list, mesh->object);
         if (tex && tex->filename[0]) {
-            MCTextureCache* tcache = MCTextureCache_shared(0);
-            MCTexture* mctex = MCTextureCache_findTextureNamed(tcache, tex->filename);
+            struct MCTextureCache* tcache = MCTextureCache_shared();
+            struct MCTexture* mctex = tcache->findTextureNamed(tcache, tex->filename);
             if (mctex == null) {
-                mctex = MCTexture_initWithFileName(new(MCTexture), tex->filename);
-                MCTextureCache_cacheTextureNamed(tcache, mctex, tex->filename);
-                release(mctex);
+                mctex = new(MCTexture);
+                mctex->initWithFileName(mctex, tex->filename);
+                tcache->cacheTextureNamed(tcache, mctex, tex->filename);
+                Release(mctex);
             }
             node->diffuseTexture = mctex;
             return;
@@ -247,12 +222,13 @@ ifun(void, setTextureForNode, MC3DNode* node, BAObjData* buff, BAMesh* mesh)
     if (mesh->group[0]) {
         BATexture* tex = BAFindTextureByAttachedGroup(buff->mtllib_list, mesh->group);
         if (tex && tex->filename[0]) {
-            MCTextureCache* tcache = MCTextureCache_shared(0);
-            MCTexture* mctex = MCTextureCache_findTextureNamed(tcache, tex->filename);
+            struct MCTextureCache* tcache = MCTextureCache_shared();
+            struct MCTexture* mctex = tcache->findTextureNamed(tcache, tex->filename);
             if (mctex == null) {
-                mctex = MCTexture_initWithFileName(new(MCTexture), tex->filename);
-                MCTextureCache_cacheTextureNamed(tcache, mctex, tex->filename);
-                release(mctex);
+                mctex = new(MCTexture);
+                mctex->initWithFileName(mctex, tex->filename);
+                tcache->cacheTextureNamed(tcache, mctex, tex->filename);
+                Release(mctex);
             }
             node->diffuseTexture = mctex;
             return;
@@ -263,32 +239,35 @@ ifun(void, setTextureForNode, MC3DNode* node, BAObjData* buff, BAMesh* mesh)
     BAMaterial* mtl = mesh->usemtl;
     if (mtl) {
         if (mtl->diffuseMapName[0]) {
-            MCTextureCache* tcache = MCTextureCache_shared(0);
-            MCTexture* mctex = MCTextureCache_findTextureNamed(tcache, mtl->diffuseMapName);
+            struct MCTextureCache* tcache = MCTextureCache_shared();
+            struct MCTexture* mctex = tcache->findTextureNamed(tcache, mtl->diffuseMapName);
             if (mctex == null) {
-                mctex = MCTexture_initWithFileName(new(MCTexture), mtl->diffuseMapName);
-                MCTextureCache_cacheTextureNamed(tcache, mctex, mtl->diffuseMapName);
-                release(mctex);
+                mctex = new(MCTexture);
+                mctex->initWithFileName(mctex, mtl->diffuseMapName);
+                tcache->cacheTextureNamed(tcache, mctex, mtl->diffuseMapName);
+                Release(mctex);
             }
             node->diffuseTexture = mctex;
         }
         if (mtl->specularMapName[0]) {
-            MCTextureCache* tcache = MCTextureCache_shared(0);
-            MCTexture* mctex = MCTextureCache_findTextureNamed(tcache, mtl->specularMapName);
+            struct MCTextureCache* tcache = MCTextureCache_shared();
+            struct MCTexture* mctex = tcache->findTextureNamed(tcache, mtl->specularMapName);
             if (mctex == null) {
-                mctex = MCTexture_initWithFileName(new(MCTexture), mtl->specularMapName);
-                MCTextureCache_cacheTextureNamed(tcache, mctex, mtl->specularMapName);
-                release(mctex);
+                mctex = new(MCTexture);
+                mctex->initWithFileName(mctex, mtl->specularMapName);
+                tcache->cacheTextureNamed(tcache, mctex, mtl->specularMapName);
+                Release(mctex);
             }
             node->specularTexture = mctex;
         }
         if (mtl->normalMapName[0]) {
-            MCTextureCache* tcache = MCTextureCache_shared(0);
-            MCTexture* mctex = MCTextureCache_findTextureNamed(tcache, mtl->normalMapName);
+            struct MCTextureCache* tcache = MCTextureCache_shared();
+            struct MCTexture* mctex = tcache->findTextureNamed(tcache, mtl->normalMapName);
             if (mctex == null) {
-                mctex = MCTexture_initWithFileName(new(MCTexture), mtl->normalMapName);
-                MCTextureCache_cacheTextureNamed(tcache, mctex, mtl->normalMapName);
-                release(mctex);
+                mctex = new(MCTexture);
+                mctex->initWithFileName(mctex, mtl->normalMapName);
+                tcache->cacheTextureNamed(tcache, mctex, mtl->normalMapName);
+                Release(mctex);
             }
             node->normalTexture = mctex;
         }
@@ -296,22 +275,22 @@ ifun(void, setTextureForNode, MC3DNode* node, BAObjData* buff, BAMesh* mesh)
 }
 
 //size_t fcursor, BAMaterial* mtl, size_t facecount,
-ifun(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
+fun(initModel, struct MC3DModel*), BAObjData* buff, BAMesh* bamesh, MCColorf color)
 {
-    MC3DModel* model = (MC3DModel*)any;
+    struct MC3DModel* model = (struct MC3DModel*)any;
     if (model && bamesh) {
         BAFace* faces = &buff->facebuff[bamesh->startFaceCount];
         BAMaterial* mtl = bamesh->usemtl;
         
         BATriangle* triangles = createTrianglesBuffer(faces, bamesh->totalFaceCount);
         size_t tricount = trianglization(triangles, faces, bamesh->totalFaceCount, buff->vertexbuff);
-        MCMesh* mesh = createMeshWithBATriangles(null, triangles, tricount, buff, color);
+        struct MCMesh* mesh = createMeshWithBATriangles(null, triangles, tricount, buff, color);
         
         model->Super.material = new(MCMaterial);
         model->Super.diffuseTexture  = null;
         model->Super.specularTexture = null;
         model->Super.normalTexture = null;
-        MCLinkedList_addItem(model->Super.meshes, (MCItem*)mesh);
+        model->Super.meshes->addItem(model->Super.meshes, (struct MCItem*)mesh);
         
         //set mtl
         if (mtl) {
@@ -332,8 +311,7 @@ ifun(MC3DModel*, initModel, BAObjData* buff, BAMesh* bamesh, MCColorf color)
     }
 }
 
-fun(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf color)
-{
+fun(initWithFilePathColor, struct MC3DModel*), const char* path, MCColorf color) as(MC3DModel)
     debug_log("MC3DModel - initWithFilePathColor: %s\n", path);
     
     BAObjMeta Meta;
@@ -350,17 +328,17 @@ fun(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf col
     if (Meta.mesh_count <= 1) {
         BAMesh* m = &buff->meshbuff[0];
         if (m) {
-            MC3DModel* model = new(MC3DModel);
+            struct MC3DModel* model = new(MC3DModel);
             initModel(model, buff, m, color);
-            MCLinkedList_addItem(obj->Super.children, (MCItem*)model);
+            it->Super.children->addItem(it->Super.children, (struct MCItem*)model);
         }
     } else {
         for (size_t i=0; i<Meta.mesh_count; i++) {
             BAMesh* m = &buff->meshbuff[i];
             if (m) {
-                MC3DModel* model = new(MC3DModel);
+                struct MC3DModel* model = new(MC3DModel);
                 initModel(model, buff, m, color);
-                MCLinkedList_addItem(obj->Super.children, (MCItem*)model);
+                it->Super.children->addItem(it->Super.children, (struct MCItem*)model);
             }
         }
     }
@@ -369,89 +347,95 @@ fun(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf col
     cpt(frame);
     
     debug_log("MC3DModel - return obj: %s\n", path);
-    return obj;
+    return any;
 }
 
-fun(MC3DModel, MC3DModel*, initWithFilePath, const char* path)
-{
-    return MC3DModel_initWithFilePathColor(obj, path, obj->defaultColor);
+fun(initWithFilePath, struct MC3DModel*), const char* path) as(MC3DModel)
+    return it->initWithFilePathColor(it, path, it->defaultColor);
 }
 
-fun(MC3DModel, MC3DModel*, initWithFileNameColor, const char* name, MCColorf color)
-{
-    if (obj) {
-        MCStringFill(obj->name, name);
+fun(initWithFileNameColor, struct MC3DModel*), const char* name, MCColorf color) as(MC3DModel)
+    if (it) {
+        MCStringFill(it->name, name);
         char path[PATH_MAX] = {0};
         if (MCFileGetPath(name, path)) {
             return null;
         }
         debug_log("MC3DModel - find path: %s\n", path);
-        return MC3DModel_initWithFilePathColor(obj, path, color);
+        return it->initWithFilePathColor(it, path, color);
     }else{
         return null;
     }
 }
 
-fun(MC3DModel, MC3DModel*, initWithFileName, const char* name)
-{
-    return MC3DModel_initWithFileNameColor(obj, name, obj->defaultColor);
+fun(initWithFileName, struct MC3DModel*), const char* name) as(MC3DModel)
+    return it->initWithFileNameColor(it, name, it->defaultColor);
 }
 
-fun(MC3DModel, void, translateToOrigin, voida)
-{
-    MCVector3 center = cpt(center);
+fun(translateToOrigin, void)) as(MC3DModel)
+    MCVector3 center = it->center(it);
     MCVector3 rcenter = MCVector3Reverse(center);
-    MC3DNode_translateVec3(sobj, &rcenter, false);
+    cast(it, MC3DNode)->translateVec3(it, &rcenter, false);
 }
 
-fun(MC3DModel, void, rotateAroundSelfAxisX, double ccwRadian)
-{
+fun(rotateAroundSelfAxisX, void), double ccwRadian) as(MC3DNode)
     MCMatrix4 RX = MCMatrix4FromMatrix3(MCMatrix3MakeXAxisRotation(ccwRadian));
-    sobj->transform = MCMatrix4Multiply(sobj->transform, RX);
+    it->transform = MCMatrix4Multiply(it->transform, RX);
 }
 
-fun(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian)
-{
+fun(rotateAroundSelfAxisY, void), double ccwRadian) as(MC3DNode)
     MCMatrix4 RY = MCMatrix4FromMatrix3(MCMatrix3MakeYAxisRotation(ccwRadian));
-    sobj->transform = MCMatrix4Multiply(sobj->transform, RY);
+    it->transform = MCMatrix4Multiply(it->transform, RY);
 }
 
-fun(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian)
-{
+fun(rotateAroundSelfAxisZ, void), double ccwRadian) as(MC3DNode)
     MCMatrix4 RZ = MCMatrix4FromMatrix3(MCMatrix3MakeZAxisRotation(ccwRadian));
-    sobj->transform = MCMatrix4Multiply(sobj->transform, RZ);
+    it->transform = MCMatrix4Multiply(it->transform, RZ);
 }
 
-fun(MC3DModel, void, resizeToFit, double maxsize)
-{
-    if (var(fitted) == false) {
-        double maxl  = cpt(maxlength);
+fun(resizeToFit, void), double maxsize) as(MC3DModel)
+    if (it->fitted == false) {
+        double maxl = it->maxlength(it);
         if (maxl > DBL_EPSILON) {
             double scale = maxsize / maxl;
             MCVector3 scaleVec = MCVector3Make(scale, scale, scale);
-            MC3DNode_scaleVec3(sobj, &scaleVec, false);
-            var(fitted) = true;
+            cast(it, MC3DNode)->scaleVec3(it, &scaleVec, false);
+            it->fitted = true;
             debug_log("MC3DModel - model maxlength=%lf scale=%lf\n", maxl, scale);
         }
     }
 }
 
-onload(MC3DModel)
-{
-    if (load(MC3DNode)) {
-        bid(MC3DModel, void, bye, voida);
-        bid(MC3DModel, MC3DModel*, initWithFilePath, const char* path);
-        bid(MC3DModel, MC3DModel*, initWithFileName, const char* name);
-        bid(MC3DModel, MC3DModel*, initWithFilePathColor, const char* path, MCColorf color);
-        bid(MC3DModel, MC3DModel*, initWithFileNameColor, const char* name, MCColorf color);
-        bid(MC3DModel, void, rotateAroundSelfAxisX, double ccwRadian);
-        bid(MC3DModel, void, rotateAroundSelfAxisY, double ccwRadian);
-        bid(MC3DModel, void, rotateAroundSelfAxisZ, double ccwRadian);
-        bid(MC3DModel, void, resizeToFit, double maxsize);
-        bid(MC3DModel, void, translateToOrigin, voida);
-        return cla;
-    }else{
-        return null;
+constructor(MC3DModel)) {
+    MC3DNode(any);
+    as(MC3DModel)
+        it->tag = -1;
+        it->name[0] = NUL;
+    
+        it->defaultColor = (MCColorf){0.9, 0.9, 0.9, 1.0};
+        it->defaultExtension = "obj";
+        it->textureOnOff = false;
+        it->fitted = false;
+    
+        it->lastSavedFrame = (MC3DFrame){0,0,0,0,0,0};
+    
+        funadd(frame);
+        funadd(maxlength);
+        funadd(center);
     }
+    dynamic(MC3DModel)
+        funbind(release);
+        funbind(initWithFilePath);
+        funbind(initWithFileName);
+        funbind(initWithFilePathColor);
+        funbind(initWithFileNameColor);
+        funbind(rotateAroundSelfAxisX);
+        funbind(rotateAroundSelfAxisY);
+        funbind(rotateAroundSelfAxisZ);
+        funbind(resizeToFit);
+        funbind(translateToOrigin);
+    }
+    return any;
 }
+
 

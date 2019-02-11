@@ -8,36 +8,13 @@
 
 #include "BE2DTextureData.h"
 #include "BEAssetsManager.h"
+#include "MCString.h"
 #include "SOIL.h"
+#include "MCLog.h"
 
-oninit(BE2DTextureData)
+struct BE2DTextureData* BE2DTextureData_newWithPathnameType(const char* path, unsigned type)
 {
-    if (init(MCObject)) {
-        //const types
-        obj->AUTO = 0;
-        obj->L    = 1;
-        obj->LA   = 2;
-        obj->RGB  = 3;
-        obj->RGBA = 4;
-        
-        //input
-        //obj->type = obj->RGB;
-        obj->path = "";
-        
-        //output
-        obj->raw = null;
-        obj->width = 512;
-        obj->height = 512;
-        obj->channels = 3;
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-util(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path, unsigned type)
-{
-    BE2DTextureData* data = new(BE2DTextureData);
+    struct BE2DTextureData* data = new(BE2DTextureData);
     
     char decodepath[PATH_MAX] = {0};
     MCString_percentDecode(path, decodepath);
@@ -54,19 +31,18 @@ util(BE2DTextureData, BE2DTextureData*, newWithPathnameType, const char* path, u
 
     if (!data->raw) {
         error_log("BE2DTextureData - load texture failed: %s (%s)\n", SOIL_last_result(), path);
-        release(data);
+        Release(data);
         return null;
     }
     return data;
-
 }
 
-util(BE2DTextureData, BE2DTextureData*, newWithPathname, const char* path)
+struct BE2DTextureData* BE2DTextureData_newWithPathname(const char* path)
 {
     return BE2DTextureData_newWithPathnameType(path, 3);//default RGB
 }
 
-util(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file)
+struct BE2DTextureData* BE2DTextureData_newWithFilename(const char* file)
 {
     char path[PATH_MAX] = {0};
     if(MCFileGetPath(file, path)) {
@@ -78,25 +54,40 @@ util(BE2DTextureData, BE2DTextureData*, newWithFilename, const char* file)
     return null;
 }
 
-fun(BE2DTextureData, void, bye, voida)
-{
-    if (obj->path) {
-        free(obj->path);
-        obj->path = null;
+fun(release, void)) as(BE2DTextureData)
+    if (it->path) {
+        free(it->path);
+        it->path = null;
     }
-    if (obj->raw) {
-        SOIL_free_image_data(obj->raw);
-        obj->raw = null;
+    if (it->raw) {
+        SOIL_free_image_data(it->raw);
+        it->raw = null;
     }
-    superbye(MCObject);
+    cast(it, MCObject)->release(it);
 }
 
-onload(BE2DTextureData)
-{
-    if (load(MCObject)) {
-        bid(BE2DTextureData, void, bye, voida);
-        return cla;
-    }else{
-        return null;
+constructor(BE2DTextureData)) {
+    MCObject(any);
+    as(BE2DTextureData)
+        //const types
+        it->AUTO = 0;
+        it->L    = 1;
+        it->LA   = 2;
+        it->RGB  = 3;
+        it->RGBA = 4;
+    
+        //input
+        //it->type = it->RGB;
+        it->path = "";
+    
+        //output
+        it->raw = null;
+        it->width = 512;
+        it->height = 512;
+        it->channels = 3;
     }
+    dynamic(BE2DTextureData)
+        funbind(release);
+    }
+    return any;
 }

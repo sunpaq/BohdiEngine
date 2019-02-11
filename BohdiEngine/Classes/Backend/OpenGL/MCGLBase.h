@@ -35,7 +35,8 @@
 //#include <GL/gl.h>
 //#endif
 
-#include "monkc_export.h"
+#include "MCType.h"
+#include "MCMath.h"
 
 typedef enum {
     MCGLDepthTest = GL_DEPTH_TEST,
@@ -56,10 +57,10 @@ typedef enum {
 } MCShaderType;
 
 //typedef struct {
-//    MCFloat R;
-//    MCFloat G;
-//    MCFloat B;
-//    MCFloat A;
+//    float R;
+//    float G;
+//    float B;
+//    float A;
 //} MCColorf;
 
 //typedef enum {
@@ -91,7 +92,7 @@ typedef struct {
     const GLvoid* ptr_offset;
 } MCVertexAttribute;
 
-MCInline void MCVertexAttributeLoad(MCVertexAttribute* attr)
+static void MCVertexAttributeLoad(MCVertexAttribute* attr)
 {
     glEnableVertexAttribArray(attr->index);
     glVertexAttribPointer(attr->index, attr->vectorsize, attr->vectortype, attr->normalized, attr->stride, attr->ptr_offset);
@@ -184,7 +185,7 @@ typedef enum {
 } MCGLUniformType;
 
 typedef union {
-    MCInt  scalar;
+    int  scalar;
     double vec1;
     MCVector2 vec2;
     MCVector3 vec3;
@@ -200,12 +201,12 @@ typedef struct {
     char name[128];
 } MCGLUniform;
 
-MCInline void MCGLUniformSetName(MCGLUniform* f, const char* name) {
+static void MCGLUniformSetName(MCGLUniform* f, const char* name) {
     strcpy(f->name, name);
     f->name[strlen(name)] = NUL;
 }
 
-MCInline MCBool MCGLUniformDataEqual(MCGLUniformType type, MCGLUniformData* d1, MCGLUniformData* d2) {
+static bool MCGLUniformDataEqual(MCGLUniformType type, MCGLUniformData* d1, MCGLUniformData* d2) {
     switch (type) {
         case MCGLUniformScalar:
             if (d1->scalar == d2->scalar) {
@@ -248,7 +249,7 @@ MCInline MCBool MCGLUniformDataEqual(MCGLUniformType type, MCGLUniformData* d1, 
     return false;
 }
 
-MCInline MCBool MCGLUniformEqual(MCGLUniform* u1, MCGLUniform* u2) {
+static bool MCGLUniformEqual(MCGLUniform* u1, MCGLUniform* u2) {
     if (u1->type == u2->type) {
         return MCGLUniformDataEqual(u1->type, &u1->data, &u2->data);
     }

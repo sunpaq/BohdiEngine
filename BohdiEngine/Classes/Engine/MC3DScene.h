@@ -9,7 +9,7 @@
 #ifndef MC3DScene_h
 #define MC3DScene_h
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "MC3DNode.h"
 #include "MCCamera.h"
 #include "MCLight.h"
@@ -24,42 +24,45 @@ typedef enum {
     MC3DSceneSkysphOnly
 } MC3DSceneCombineMode;
 
-class(MC3DScene, MCObject,
-      struct MC3DSceneStruct* next;
-      struct MC3DSceneStruct* prev;
-      
-      MCColorf      bgcolor;
-      unsigned      scenewidth;
-      unsigned      sceneheight;
-      
-      MCSkybox*     skybox;
-      MCSkysphere*  skysph;
-      
-      MC3DNode*     rootnode;
-      MCCamera*     mainCamera;
-      MCLight*      light;
-      MCBool        cameraLock;
-      MCClock*      clock;
-      
-      computing(MCBool, isDrawSky);
-      MC3DSceneCombineMode combineMode;
+structure(MC3DScene, MCObject)
+    struct MC3DScene* next;
+    struct MC3DScene* prev;
 
-      MCBool cameraAutoRotate;
-);
+    MCColorf bgcolor;
+    unsigned scenewidth;
+    unsigned sceneheight;
 
-fun(MC3DScene, void, bye, voida);
-fun(MC3DScene, MC3DScene*, initWithWidthHeight, unsigned width, unsigned height);
-fun(MC3DScene, void, resizeScene, unsigned width, unsigned height);
-fun(MC3DScene, void, addSkybox, MCSkybox* box);
-fun(MC3DScene, void, addSkysph, MCSkysphere* sph);
-fun(MC3DScene, void, removeSkybox, voida);
-fun(MC3DScene, void, removeSkysph, voida);
-fun(MC3DScene, void, lockCamera, MCBool lock);
-fun(MC3DScene, MCCamera*, getCamera, voida);
-fun(MC3DScene, void, moveCameraOneStep, MCFloat deltaFai, MCFloat deltaTht);
-fun(MC3DScene, void, moveSkyboxCamera, MCFloat deltaFai, MCFloat deltaTht);
-fun(MC3DScene, void, setRotationMat3, float mat3[9]);
-fun(MC3DScene, void, setRotationMat4, float mat4[16]);
-fun(MC3DScene, void, printDebugInfo, voida);
+    struct MCSkybox* skybox;
+    struct MCSkysphere* skysph;
+
+    struct MC3DNode* rootnode;
+    struct MCCamera* mainCamera;
+    struct MCLight* light;
+    struct MCClock* clock;
+
+    bool cameraLock;
+    bool cameraAutoRotate;
+
+    MC3DSceneCombineMode combineMode;
+
+    fundef(isDrawSky, bool));
+    fundef(release, void));
+    fundef(resizeScene, void), unsigned width, unsigned height);
+    fundef(addSkybox, void), struct MCSkybox* box);
+    fundef(addSkysph, void), struct MCSkysphere* sph);
+    fundef(removeSkybox, void));
+    fundef(removeSkysph, void));
+    fundef(lockCamera, void), bool lock);
+    fundef(getCamera, struct MCCamera*));
+    fundef(moveCameraOneStep, void), float deltaFai, float deltaTht);
+    fundef(moveSkyboxCamera, void), float deltaFai, float deltaTht);
+    fundef(setRotationMat3, void), float mat3[9]);
+    fundef(setRotationMat4, void), float mat4[16]);
+    fundef(printDebugInfo, void));
+};
+
+constructor(MC3DScene), unsigned width, unsigned height);
+
+alias(MC3DScene);
 
 #endif /* MC3DScene_h */

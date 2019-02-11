@@ -7,63 +7,32 @@
 //
 
 #include "MCMesh.h"
+#include "MCLog.h"
 
-oninit(MCMesh)
-{
-    if (init(MCItem)) {
-        var(isDataLoaded) = false;
-        var(calculatedNormal) = false;
-        
-        var(Frame) = (MC3DFrame){0,0,0,0,0,0};
+fun(release, void)) as(MCMesh)
+    if (it->vertexDataNeedRelease && it->vertexDataPtr) {
+        free(it->vertexDataPtr);
+    }
+}
 
-        var(vertexDataNeedRelease) = true;
-        var(vertexDataPtr) = null;
-        var(vertexDataSize)= 0;
-        var(vertexIndexes) = null;
-        var(vertexCount)   = 0;
-        
-        debug_log("MCMesh - init finished\n");
-        return obj;
+fun(allocVertexBuffer, void), int32_t vertexCount) as(MCMesh)
+    it->vertexCount = vertexCount ;
+    it->vertexDataSize = it->vertexCount * sizeof(MCVertexData);
+    if (it->vertexDataSize != 0) {
+        it->vertexDataPtr = (float*)malloc(it->vertexDataSize);
+        memset(it->vertexDataPtr, 0, it->vertexDataSize);
     }else{
-        return null;
+        it->vertexDataPtr = null;
     }
 }
 
-fun(MCMesh, void, bye, voida)
-{
-    if (obj->vertexDataNeedRelease && obj->vertexDataPtr) {
-        free(obj->vertexDataPtr);
-    }
-}
-
-fun(MCMesh, void, allocVertexBuffer, int32_t vertexCount)
-{
-    obj->vertexCount = vertexCount ;
-    obj->vertexDataSize = obj->vertexCount * sizeof(MCVertexData);
-    if (obj->vertexDataSize != 0) {
-        obj->vertexDataPtr = (float*)malloc(obj->vertexDataSize);
-        memset(obj->vertexDataPtr, 0, obj->vertexDataSize);
-    }else{
-        obj->vertexDataPtr = null;
-    }
-}
-
-fun(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount)
-{
-    //alloc vertex buffer
-    MCMesh_allocVertexBuffer(obj, vertexCount);
-    //obj->vertexIndexes = (GLuint*)malloc(sizeof(GLuint)*obj->vforertexCount);
-    return obj;
-}
-
-fun(MCMesh, void, setVertex, uint32_t index, MCVertexData* data)
-{
-    MCVertexData* array = (MCVertexData*)obj->vertexDataPtr;
+fun(setVertex, void), uint32_t index, MCVertexData* data) as(MCMesh)
+    MCVertexData* array = (MCVertexData*)it->vertexDataPtr;
     array[index].x = data->x;
     array[index].y = data->y;
     array[index].z = data->z;
 
-    if (obj->calculatedNormal) {
+    if (it->calculatedNormal) {
         array[index].nx += data->nx;
         array[index].ny += data->ny;
         array[index].nz += data->nz;
@@ -81,13 +50,12 @@ fun(MCMesh, void, setVertex, uint32_t index, MCVertexData* data)
     array[index].v = data->v;
 }
 
-fun(MCMesh, void, normalizeNormals, voida)
-{
-    if (!obj->calculatedNormal) {
+fun(normalizeNormals, void)) as(MCMesh)
+    if (!it->calculatedNormal) {
         return;
     }
-    MCVertexData* array = (MCVertexData*)obj->vertexDataPtr;
-    for (int i=0; i<obj->vertexCount; i++) {
+    MCVertexData* array = (MCVertexData*)it->vertexDataPtr;
+    for (int i=0; i<it->vertexCount; i++) {
         MCVector3 n = MCVector3Normalize(MCVector3Make(array[i].nx, array[i].ny, array[i].nz));
         array[i].nx = n.x;
         array[i].ny = n.y;
@@ -95,17 +63,26 @@ fun(MCMesh, void, normalizeNormals, voida)
     }
 }
 
-onload(MCMesh)
-{
-    if (load(MCItem)) {
-        bid(MCMesh, void, bye, voida);
-        bid(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount);
-        bid(MCMesh, void, setVertex, uint32_t offset, MCVertexData* data);
-        bid(MCMesh, void, normalizeNormals, voida);
-        return cla;
-    }else{
-        return null;
+constructor(MCMesh), int32_t vertexCount) {
+    MCItem(any, null);
+    as(MCMesh)
+        it->isDataLoaded = false;
+        it->calculatedNormal = false;
+        it->Frame = (MC3DFrame){0,0,0,0,0,0};
+        it->vertexDataNeedRelease = true;
+        it->vertexDataPtr = null;
+        it->vertexDataSize = 0;
+        it->vertexIndexes = null;
+        it->vertexCount = vertexCount;
+    
+        allocVertexBuffer(it, vertexCount);
+        debug_log("MCMesh - init finished\n");
     }
+    dynamic(MCMesh)
+        funbind(release);
+        funbind(setVertex);
+        funbind(normalizeNormals);
+    }
+    return any;
 }
-
 

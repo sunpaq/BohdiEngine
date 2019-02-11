@@ -8,61 +8,53 @@
 
 #include "MC3DModelCache.h"
 
-static MC3DModelCache* instance = null;
+static MC3DModelCache_t* instance = null;
 
-oninit(MC3DModelCache)
-{
-    if (init(MCObject)) {
-        obj->map = new(MCMap);
-        return obj;
-    } else {
-        return null;
-    }
-}
-
-util(MC3DModelCache, MC3DModelCache*, shared, voida)
+struct MC3DModelCache* MC3DModelCache_shared()
 {
     if (!instance) {
-        instance = new(MC3DModelCache);
+        instance = MC3DModelCache(alloc(MC3DModelCache));
     }
     return instance;
 }
 
-fun(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name)
-{
+fun(loadModelNamed, struct MC3DModel*), const char* name) as(MC3DModelCache)
     //MC3DModel* model = MC3DModelCache_fetchModelNamed(obj, name);
-    MCGeneric result;
-    MCMap_getValueForKey(var(map), &result, name);
-    
+    mc_generic result;
+    it->map->getValueForKey(it->map, &result, name);
     if (result.mcobject) {
-        return (MC3DModel*)result.mcobject;
+        return (struct MC3DModel*)result.mcobject;
     } else {
-        MCObject* mobj = ff(new(MC3DModel), initWithFileName, name);
-        MCMap_setValueForKey(obj->map, MCGenericO(mobj), name);
-        return (MC3DModel*)mobj;
+        struct MC3DModel* model = MC3DModel(alloc(MC3DModel));
+        model->initWithFileName(model, name);
+        struct MCObject* mobj = (struct MCObject*)model;
+        it->map->setValueForKey(it->map, gen_o(mobj), name);
+        return model;
     }
 }
 
-fun(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name)
-{
+fun(fetchModelNamed, struct MC3DModel*), const char* name) as(MC3DModelCache)
     if (name) {
-        MCGeneric result;
-        MCMap_getValueForKey(obj->map, &result, name);
+        mc_generic result;
+        it->map->getValueForKey(it->map, &result, name);
         if (result.mcobject) {
-            MC3DModel* model = (MC3DModel*)result.mcobject;
+            struct MC3DModel* model = (struct MC3DModel*)result.mcobject;
             return model;
         }
     }
     return null;
 }
 
-onload(MC3DModelCache)
+constructor(MC3DModelCache))
 {
-    if (load(MCObject)) {
-        bid(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name);
-        bid(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name);
-        return cla;
-    } else {
-        return null;
+    MCObject(any);
+    as(MC3DModelCache)
+        it->map = MCMap(alloc(MCMap));
     }
+    dynamic(MC3DModelCache)
+        funbind(loadModelNamed);
+        funbind(fetchModelNamed);
+    }
+    return any;
 }
+

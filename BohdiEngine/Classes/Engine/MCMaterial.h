@@ -9,18 +9,24 @@
 #ifndef MCMatrial_h
 #define MCMatrial_h
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
+#include "MCObject.h"
+#include "MCMath.h"
 
-class(MCMaterial, MCObject,
-      MCBool      dataChanged;
-      MCVector3   ambientLightColor;
-      MCVector3   diffuseLightColor;
-      MCVector3   specularLightColor;
-      double      specularLightPower;
-      double      dissolve;
-      int         hidden;
-      int         illum;
-      char        tag[256];
-);
+structure(MCMaterial, MCObject)
+    bool        dataChanged;
+    MCVector3   ambientLightColor;
+    MCVector3   diffuseLightColor;
+    MCVector3   specularLightColor;
+    double      specularLightPower;
+    double      dissolve;
+    int         hidden;
+    int         illum;
+    char        tag[256];
+};
+
+constructor(MCMaterial));
+
+alias(MCMaterial);
 
 #endif /* MCMatrial_h */

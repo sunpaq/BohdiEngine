@@ -1,10 +1,12 @@
+#ifndef WIN32
+
 #ifndef MCSOCKET_H
 #define MCSOCKET_H
 
-#include "MCContext.h"
 #include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
+#include "MCObject.h"
 
 #define MCSocket_Queue_Length 50
 
@@ -15,31 +17,44 @@ typedef enum _MCSocketType{
 	MCSocket_Client_UDP,
 } MCSocketType;
 
-class(MCSocketClientInfo, MCObject,
+struct MCSocketClientInfo {
 	int returnSfd;
 	struct sockaddr address;
 	socklen_t address_len;
-);
 
-fun(MCSocketClientInfo, void, dumpInfo, voida);
-fun(MCSocketClientInfo, void, bye, voida);
+	fundef(dumpInfo, void));
+};
 
-class(MCSocket, MCObject,
+constructor(MCSocketClientInfo));
+
+alias(MCSocketClientInfo);
+
+
+/*
+MCSocket
+*/
+
+structure(MCSocket, MCObject)
 	int sfd;
 	int isServer;
 	struct addrinfo peeraddrinfo;
-);
 
-fun(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
-fun(MCSocket, int, listeningStart, voida);
-fun(MCSocket, MCSocketClientInfo*, acceptARequest, voida);
-fun(MCSocket, void, recv, voida);
-fun(MCSocket, void, recvfrom, voida);
-fun(MCSocket, void, recvmsg, voida);
-fun(MCSocket, void, send, voida);
-fun(MCSocket, void, sendto, voida);
-fun(MCSocket, void, sendmsg, voida);
-fun(MCSocket, void, bye, voida);
+	fundef(listeningStart, int));
+	fundef(acceptARequest, struct MCSocketClientInfo*));
+	fundef(receive, void));
+	fundef(receiveFrom, void));
+	fundef(receiveMsg, void));
+	fundef(sendInfo, void));
+	fundef(sendTo, void));
+	fundef(sendMsg, void));
+	fundef(release, void));
+};
+
+constructor(MCSocket), MCSocketType socket_type, char* ip, char* port);
+
+alias(MCSocket);
+
+
 
 #endif
 
@@ -175,3 +190,5 @@ fun(MCSocket, void, bye, voida);
  << UNIX Network Programming >>
  
  */
+
+#endif

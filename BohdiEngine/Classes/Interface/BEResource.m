@@ -45,15 +45,16 @@ static BEResource* _instance = nil;
 -(void) preloadTextures:(NSString*)extension
 {
     //Monk-C
-    MCTextureCache* tcache = MCTextureCache_shared(0);
+    struct MCTextureCache* tcache = MCTextureCache_shared();
     //Obj-C
     NSArray<NSURL*>* paths =[[NSBundle mainBundle] URLsForResourcesWithExtension:extension subdirectory:nil];
     for (NSURL* path in paths) {
         NSString* name = [path lastPathComponent];
         const char* cname = [name cStringUsingEncoding:NSUTF8StringEncoding];
-        MCTexture* tex = MCTexture_initWithFileName(new(MCTexture), cname);
-        MCTextureCache_cacheTextureNamed(tcache, tex, cname);
-        release(tex);
+        struct MCTexture* tex = new(MCTexture);
+        tex->initWithFileName(tex, cname);
+        tcache->cacheTextureNamed(tcache, tex, cname);
+        Release(tex);
     }
 }
 

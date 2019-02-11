@@ -27,8 +27,8 @@
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian;
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Tag:(int)tag;
 -(void) drawFrame;
--(void) drawScene:(MC3DScene*)scene;
--(void) drawNode:(MC3DNode*)node;
--(void) drawMesh:(MCMesh*)mesh;
+-(void) drawScene:(MC3DScene_t*)scene;
+-(void) drawNode:(MC3DNode_t*)node;
+-(void) drawMesh:(MCMesh_t*)mesh;
 
 @end

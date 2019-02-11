@@ -9,25 +9,29 @@
 #ifndef MCMesh_h
 #define MCMesh_h
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "MC3DBase.h"
+#include "MCLinkedList.h"
 
-class(MCMesh, MCItem,
-      MCBool     isDataLoaded;
-      MCBool     calculatedNormal;
-      MCBool     vertexDataNeedRelease;
-      
-      float*     vertexDataPtr;   //gCubeVertexData
-      size_t     vertexDataSize;  //sizeof(gCubeVertexData)
-      uint32_t*  vertexIndexes;
-      uint32_t   vertexCount;
+structure(MCMesh, MCItem)
+    bool isDataLoaded;
+    bool calculatedNormal;
+    bool vertexDataNeedRelease;
 
-      MC3DFrame  Frame;
-);
+    float* vertexDataPtr;
+    size_t vertexDataSize;
+    uint32_t* vertexIndexes;
+    uint32_t vertexCount;
 
-fun(MCMesh, void, bye, voida);
-fun(MCMesh, MCMesh*, initWithVertexCount, int32_t vertexCount);
-fun(MCMesh, void, setVertex, uint32_t index, MCVertexData* data);
-fun(MCMesh, void, normalizeNormals, voida);
+    MC3DFrame  Frame;
+
+    fundef(release, void));
+    fundef(setVertex, void), uint32_t index, MCVertexData* data);
+    fundef(normalizeNormals, void));
+};
+
+constructor(MCMesh), int32_t vertexCount);
+
+alias(MCMesh);
 
 #endif /* MCMesh_h */

@@ -15,7 +15,7 @@
  Ka|Kd|Ks|Tf [xyz|spectral] rx gy bz | [file.rfl factor]
  */
 //return face count
-MCInline void processMtlLine(BAMtlLibrary* lib, const char* linebuff)
+static void processMtlLine(BAMtlLibrary* lib, const char* linebuff)
 {
     //debug_log("processMtlLine:%s\n", linebuff);
     

@@ -14,8 +14,8 @@
 
 @interface BERenderer()
 {
-    MCDirector* director;
-    MCObject* renderer;
+    MCDirector_t* director;
+    MCObject_t* renderer;
     float pinch_scale;
 }
 @end
@@ -30,7 +30,7 @@
 -(BOOL)doesDrawWireFrame
 {
     if (renderer) {
-        MCDrawMode mode = (MCDrawMode)ff(renderer, getDrawMode, 0);
+        MCDrawMode mode = (MCDrawMode)ff(renderer, getDrawMode));
         return mode == MCLineStrip? YES : NO;
     }
     return NO;
@@ -130,7 +130,7 @@
 {
     if (renderer) {
         MCDrawMode mode = doesDrawWireFrame ? MCLineStrip : MCTriAngles;
-        ff(renderer, setDrawMode, mode);
+        ff(renderer, setDrawMode), mode);
     }
 }
 
@@ -139,11 +139,10 @@
     if (self = [super init]) {
         pinch_scale = 10.0;
         director = new(MCDirector);
-        renderer = (MCObject*)MCGLRenderer_initWithDefaultShader(new(MCGLRenderer), 0);
-        MCDirector_setupMainScene(director,
-                                  frame.size.width * ScreenScale,
-                                  frame.size.height * ScreenScale);
-        
+        MCGLRenderer_t* r = new(MCGLRenderer);
+        r->initWithDefaultShader(r);
+        renderer = (MCObject_t*)r;
+        director->setupMainScene(director, frame.size.width * ScreenScale, frame.size.height * ScreenScale);
         computed(director, cameraHandler)->rotateMode = MCCameraRotateAroundModelManual;
         [self setBackgroundColor:[Color darkGrayColor]];
         return self;
@@ -154,7 +153,7 @@
 -(void)dealloc
 {
     if (director) {
-        release(director);
+        Release(director);
         director = null;
     }
 }
@@ -181,7 +180,7 @@
         blue = [color blueComponent];
         alpha = [color alphaComponent];
 #endif
-        MCDirector_setBackgroudColor(director, red, green, blue, alpha);
+        director->setBackgroudColor(director, red, green, blue, alpha);
     }
     return self;
 }
@@ -190,7 +189,7 @@
 {
     if (director) {
         CGFloat scale = ScreenScale;
-        MCDirector_resizeAllScene(director, (int)frameSize.width * scale, (int)frameSize.height * scale);
+        director->resizeAllScene(director, (int)frameSize.width * scale, (int)frameSize.height * scale);
     }
     return self;
 }
@@ -203,17 +202,17 @@
     int h = (int)frame.size.height;
     
     if (renderer) {
-        ff(renderer, scissorAllScene, x, y, w, h);
+        ff(renderer, scissorAllScene), x, y, w, h);
     }
     if (director) {
-        MCDirector_resizeAllScene(director, w, h);
+        director->resizeAllScene(director, w, h);
     }
     return self;
 }
 
 -(void) removeCurrentModel
 {
-    ff(director, removeCurrentModel, 0);
+    ff(director, removeCurrentModel));
 }
 
 -(void) addModelNamed:(NSString*)modelName
@@ -233,13 +232,13 @@
 
 -(void) addModelNamed:(NSString*)modelName Scale:(double)scale RotateX:(double)ccwRadian Tag:(int)tag
 {
-    MCDirector* dir = director;
+    struct MCDirector* dir = director;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         const char* name = [modelName cStringUsingEncoding:NSUTF8StringEncoding];
-        MC3DModel* m = MCDirector_addModelNamed(dir, name, MCFloatF(scale));
+        struct MC3DModel* m = dir->addModelNamed(dir, name, scale);
         m->tag = tag;
-        MC3DModel_rotateAroundSelfAxisX(m, ccwRadian);
-        MCDirector_cameraFocusOn(dir, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
+        m->rotateAroundSelfAxisX(m, ccwRadian);
+        dir->cameraFocusOn(dir, MCVector4Make(0, -scale * 0.5, 0, scale * 2.0));
     });
 }
 
@@ -252,9 +251,9 @@
             const char* name = [str cStringUsingEncoding:NSUTF8StringEncoding];
             names[i++] = name;
         }
-        ff(director, addSkyboxNamed, names);
+        ff(director, addSkyboxNamed), names);
     } else {
-        ff(director, addSkyboxNamed, null);
+        ff(director, addSkyboxNamed), null);
     }
 }
 
@@ -262,20 +261,20 @@
 {
     if (texname) {
         const char* name = [texname cStringUsingEncoding:NSUTF8StringEncoding];
-        MCDirector_addSkysphereNamed(director, name);
+        director->addSkysphereNamed(director, name);
     } else {
-        MCDirector_addSkysphereNamed(director, null);
+        director->addSkysphereNamed(director, null);
     }
 }
 
 -(void) removeCurrentSkybox
 {
-    MCDirector_removeCurrentSkybox(director, 0);
+    director->removeCurrentSkybox(director);
 }
 
 -(void) removeCurrentSkysph
 {
-    MCDirector_removeCurrentSkysph(director, 0);
+    director->removeCurrentSkysph(director);
 }
 
 -(void) cameraReset:(float*)mat4
@@ -286,7 +285,7 @@
 -(void) cameraReset:(float*)mat4 isRowMajor:(BOOL)rowm
 {
     if (!director) return;
-    MCCamera* cam = computed(director, cameraHandler);
+    struct MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         if (mat4) {
             if (rowm) {
@@ -314,29 +313,31 @@
 -(void) cameraRotate:(GLKMatrix3)mat3 Incremental:(BOOL)inc
 {
     if (!director) return;
-    MCCamera* cam = computed(director, cameraHandler);
+    struct MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
-        MC3DNode_rotateMat3(&cam->Super, mat3.m, inc?true:false);
+        struct MC3DNode* node = &cam->Super;
+        node->rotateMat3(node, mat3.m, inc?true:false);
     }
 }
 
 -(void) cameraTranslate:(GLKVector3)vec3 Incremental:(BOOL)inc
 {
     if (!director) return;
-    MCCamera* cam = computed(director, cameraHandler);
+    struct MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
+        struct MC3DNode* node = &cam->Super;
         MCVector3 eye = MCVector3Make(vec3.x, vec3.y, vec3.z);
         cam->R_value = MCVector3Length(eye);
         cam->eye = eye;
         MCVector3 v3 = {vec3.x, vec3.y, vec3.z};
-        MC3DNode_translateVec3(&cam->Super, &v3, inc?true:false);
+        node->translateVec3(node, &v3, inc?true:false);
     }
 }
 
 -(void) cameraAspectRatioReset:(float)aspectRatio
 {
     if (!director) return;
-    MCCamera* cam = computed(director, cameraHandler);
+    struct MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         cam->ratio = (double)aspectRatio;
     }
@@ -345,7 +346,7 @@
 -(void) cameraFOVReset:(float)fov
 {
     if (!director) return;
-    MCCamera* cam = computed(director, cameraHandler);
+    struct MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         cam->field_of_view = fov;
     }
@@ -354,20 +355,20 @@
 -(void) cameraTransformWorld:(GLKMatrix4)mat4
 {
     if (!director) return;
-    MCCamera* cam = computed(director, cameraHandler);
+    struct MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         MCMatrix4 m4 = MCMatrix4Make(mat4.m);
-        MCCamera_transformWorld(cam, &m4);
+        cam->transformWorld(cam, &m4);
     }
 }
 
 -(void) cameraTransformSelf:(GLKMatrix4)mat4
 {
     if (!director) return;
-    MCCamera* cam = computed(director, cameraHandler);
+    struct MCCamera* cam = computed(director, cameraHandler);
     if (cam) {
         MCMatrix4 m4 = MCMatrix4Make(mat4.m);
-        MCCamera_transformSelf(cam, &m4);
+        cam->transformSelf(cam, &m4);
     }
 }
 
@@ -375,7 +376,7 @@
 {
     if (!director) return;
     if (pos) {
-        MCLight* light = computed(director, lightHandler);
+        struct MCLight* light = computed(director, lightHandler);
         if (light) {
             light->lightPosition = MCVector3Make(pos->x, pos->y, pos->z);
         }
@@ -402,18 +403,18 @@
     pinch_scale *= scale;
     pinch_scale = MAX(10.0, MIN(pinch_scale, 100.0));
     
-    MCCamera* camera = computed(director, cameraHandler);
-    MCCamera_distanceScale(camera, MCFloatF(20.0/pinch_scale));
+    struct MCCamera* camera = computed(director, cameraHandler);
+    camera->distanceScale(camera, 20.0/pinch_scale);
 }
 
 -(void) updateModelTag:(int)tag PoseMat4D:(double*)mat4
 {
     if (director) {
-        MC3DScene* scene = director->lastScene;
+        struct MC3DScene* scene = director->lastScene;
         if (scene) {
-            MCItem* iter = scene->rootnode->children->headItem;
+            struct MCItem* iter = scene->rootnode->children->headItem;
             while (iter) {
-                MC3DModel* model = cast(MC3DModel*, iter);
+                struct MC3DModel* model = (struct MC3DModel*)iter;
                 if (model->tag == tag) {
                     model->Super.viewtrans = MCMatrix4MakeDouble(mat4);
                 }
@@ -426,11 +427,11 @@
 -(void) updateModelTag:(int)tag PoseMat4F:(float*)mat4
 {
     if (director) {
-        MC3DScene* scene = director->lastScene;
+        struct MC3DScene* scene = director->lastScene;
         if (scene) {
-            MCItem* iter = scene->rootnode->children->headItem;
+            struct MCItem* iter = scene->rootnode->children->headItem;
             while (iter) {
-                MC3DModel* model = cast(MC3DModel*, iter);
+                struct MC3DModel* model = (struct MC3DModel*)iter;
                 if (model->tag == tag) {
                     model->Super.viewtrans = MCMatrix4Make(mat4);
                 }
@@ -445,9 +446,9 @@
 -(void) drawFrame
 {
     if (director && renderer) {
-        MCDirector_updateAll(director, 0);
-        ff(renderer, updateScene, director->lastScene);
-        ff(renderer, drawScene, director->lastScene);
+        director->updateAll(director);
+        ff(renderer, updateScene), director->lastScene);
+        ff(renderer, drawScene), director->lastScene);
     }
 }
 
@@ -459,21 +460,21 @@
         int width = viewport.size.width;
         int height = viewport.size.height;
         
-        ff(renderer, scissorAllScene, x, y, width, height);
-        MCDirector_updateAll(director, 0);
-        ff(renderer, updateScene, director->lastScene);
-        ff(renderer, drawScene, director->lastScene);
+        ff(renderer, scissorAllScene), x, y, width, height);
+        director->updateAll(director);
+        ff(renderer, updateScene), director->lastScene);
+        ff(renderer, drawScene), director->lastScene);
     }
 }
 
 -(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye
 {
     if (director) {
-        MCCamera* cam = computed(director, cameraHandler);
+        struct MCCamera* cam = computed(director, cameraHandler);
         if (cam) {
             GLKMatrix4 mat4 = GLKMatrix4Multiply(eye, head);
             MCMatrix4 m4 = MCMatrix4Make(mat4.m);
-            MCCamera_transformWorld(cam, &m4);
+            cam->transformWorld(cam, &m4);
         }
         
         int x = viewport.origin.x;
@@ -481,22 +482,22 @@
         int width = viewport.size.width;
         int height = viewport.size.height;
         
-        ff(renderer, scissorAllScene, x, y, width, height);
-        MCDirector_updateAll(director, 0);
-        ff(renderer, updateScene, director->lastScene);
-        ff(renderer, drawScene, director->lastScene);
+        ff(renderer, scissorAllScene), x, y, width, height);
+        director->updateAll(director);
+        ff(renderer, updateScene), director->lastScene);
+        ff(renderer, drawScene), director->lastScene);
     }
 }
 
 -(void) drawFrame:(CGRect)viewport vrHeadTransform:(GLKMatrix4)head vrEyeTransform:(GLKMatrix4)eye vrFOV:(CGFloat)fov
 {
     if (director && renderer) {
-        MCCamera* cam = computed(director, cameraHandler);
+        struct MCCamera* cam = computed(director, cameraHandler);
         if (cam) {
             cam->field_of_view = (double)fov;
             GLKMatrix4 mat4 = GLKMatrix4Multiply(eye, head);
             MCMatrix4 m4 = MCMatrix4Make(mat4.m);
-            MCCamera_transformWorld(cam, &m4);
+            cam->transformWorld(cam, &m4);
         }
         
         int x = viewport.origin.x;
@@ -504,10 +505,10 @@
         int width = viewport.size.width;
         int height = viewport.size.height;
         
-        ff(renderer, scissorAllScene, x, y, width, height);
-        MCDirector_updateAll(director, 0);
-        ff(renderer, updateScene, director->lastScene);
-        ff(renderer, drawScene, director->lastScene);
+        ff(renderer, scissorAllScene), x, y, width, height);
+        director->updateAll(director);
+        ff(renderer, updateScene), director->lastScene);
+        ff(renderer, drawScene), director->lastScene);
     }
 }
 

@@ -7,6 +7,7 @@
 //
 
 #include "BATrianglization.h"
+#include "MCGeometry.h"
 
 size_t getTrianglesBuffSize(BAFace* faces, size_t facecounts)
 {

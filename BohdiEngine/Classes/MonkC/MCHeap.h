@@ -17,20 +17,25 @@
 #include "MCArray.h"
 
 //min heap
-class(MCHeap, MCObject,
-      computing(size_t, height);
-      computing(size_t, width);
-      MCGeneric* values;
+structure(MCHeap, MCObject)
+      mc_generic* values;
       size_t count;
       size_t maxcount;
       size_t maxheight;
-);
 
-fun(MCHeap, void, bye, voida);
-fun(MCHeap, MCHeap*, initWithCopy, MCHeap* ref);
-fun(MCHeap, MCHeap*, initWithMaxcount, size_t maxcount);
-fun(MCHeap, size_t, insertValue, MCGeneric newval);
-fun(MCHeap, MCArray*, copySortAscend, voida);
-fun(MCHeap, void, printAll, voida);
+      fundef(height, size_t));
+      fundef(width, size_t));
+
+      fundef(bye, void));
+      fundef(initWithCopy, struct MCHeap*), struct MCHeap* ref);
+      fundef(insertValue, size_t), mc_generic newval);
+      fundef(copySortAscend, struct MCArray*));
+      fundef(printAll, void));
+      fundef(release, void));
+};
+
+constructor(MCHeap), size_t maxcount);
+
+alias(MCHeap);
 
 #endif /* MCHeap_h */

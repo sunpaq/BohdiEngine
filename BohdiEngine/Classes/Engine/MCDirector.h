@@ -9,75 +9,73 @@
 #ifndef MCDirector_h
 #define MCDirector_h
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "MC3DScene.h"
 #include "MC3DModel.h"
 #include "MCLight.h"
 #include "MCSkybox.h"
 #include "MCSkysphere.h"
 
-class(MCDirector, MCObject,
-      MCObject* renderer;
-      MC3DScene* lastScene;
+structure(MCDirector, MCObject)
+    struct MCObject* renderer;
+    struct MC3DScene* lastScene;
 
-      MCThread* skyboxThread;
-      MCThread* modelThread;
-      
-      int currentWidth;
-      int currentHeight;
-      
-      MCBool lightFollowCamera;
-      //MCBool gyroscopeOnOff;
-      MCBool pause;
-      
-      MCMatrix3 deviceRotationMat3;
-      
-      //common skybox for many scenes
-      MCSkybox* skybox;
-      MCSkysphere* skysph;
-      
-      computing(MCLight*, lightHandler);
-      computing(MCCamera*, cameraHandler);
-);
+    struct MCThread* skyboxThread;
+    struct MCThread* modelThread;
 
-fun(MCDirector, void, bye, voida);
-fun(MCDirector, void, updateAll, voida);
+    int currentWidth;
+    int currentHeight;
+
+    bool lightFollowCamera;
+    bool gyroscopeOnOff;
+    bool pause;
+
+    MCMatrix3 deviceRotationMat3;
+
+    //common skybox for many scenes
+    struct MCSkybox* skybox;
+    struct MCSkysphere* skysph;
+
+    fundef(lightHandler, struct MCLight*));
+    fundef(cameraHandler, struct MCCamera*));
+    fundef(updateAll, void));
+    fundef(setupMainScene, void), unsigned width, unsigned height);
+    fundef(setBackgroudColor, void), float R, float G, float B, float A);
+    fundef(pushScene, void), struct MC3DScene* scene);
+    fundef(popScene, void));
+    fundef(releaseScenes, void), struct MC3DScene* scene);
+    fundef(resizeAllScene, void), int width, int height);
+    fundef(addNode, void), struct MC3DNode* node);
+    fundef(addModel, void), struct MC3DModel* model, float maxsize);
+    fundef(addModelAtIndex, void), struct MC3DModel* model, float maxsize, int index);
+    fundef(addModelPathed, struct MC3DModel*), const char* path, float maxsize);
+    fundef(addModelNamed, struct MC3DModel*), const char* name, float maxsize);
+    fundef(addModelNamedAtIndex, struct MC3DModel*), const char* name, float maxsize, int index);
+    fundef(removeCurrentModel, void));
+    //use default if names/name is null
+    fundef(addSkyboxNamed, void), const char* names[6]);
+    fundef(addSkysphereNamed, void), const char* name);
+    fundef(removeCurrentSkybox, void));
+    fundef(removeCurrentSkysph, void));
+    fundef(cameraFocusOn, void), MCVector4 vertex);
+    fundef(cameraFocusOnModel, void), struct MC3DModel* model);
+    fundef(cameraZoomToFitModel, void), struct MC3DModel* model);
+    fundef(moveModelToOrigin, void), struct MC3DModel* model);
+    fundef(setDeviceRotationMat3, void), float mat3[9]);
+    fundef(setCameraRotateMode, void), MCCameraRotateMode mode);
+    fundef(printDebugInfo, void));
+    fundef(release, void));
+};
+
+constructor(MCDirector));
+
+alias(MCDirector);
 
 //return -1 or positive fps number
 //please update your view only when it is not -1
 //fun(MCDirector, int, drawAll, voida);
 
 //fun(MCDirector, void, setupRenderer, MCObject* renderer);
-fun(MCDirector, void, setupMainScene, unsigned width, unsigned height);
-fun(MCDirector, void, setBackgroudColor, float R, float G, float B, float A);
-
-fun(MCDirector, void, pushScene, MC3DScene* scene);
-fun(MCDirector, void, popScene, voida);
-fun(MCDirector, void, resizeAllScene, int width, int height);
-
-fun(MCDirector, void, addNode, MC3DNode* node);
-fun(MCDirector, void, addModel, MC3DModel* model, MCFloat maxsize);
-fun(MCDirector, void, addModelAtIndex, MC3DModel* model, MCFloat maxsize, int index);
-
-fun(MCDirector, MC3DModel*, addModelPathed, const char* path, MCFloat maxsize);
-fun(MCDirector, MC3DModel*, addModelNamed, const char* name, MCFloat maxsize);
-fun(MCDirector, MC3DModel*, addModelNamedAtIndex, const char* name, MCFloat maxsize, int index);
-
-fun(MCDirector, void, removeCurrentModel, voida);
-//use default if names/name is null
-fun(MCDirector, void, addSkyboxNamed, const char* names[6]);
-fun(MCDirector, void, addSkysphereNamed, const char* name);
-fun(MCDirector, void, removeCurrentSkybox, voida);
-fun(MCDirector, void, removeCurrentSkysph, voida);
-
-fun(MCDirector, void, cameraFocusOn, MCVector4 vertex);
-fun(MCDirector, void, cameraFocusOnModel, MC3DModel* model);
-fun(MCDirector, void, cameraZoomToFitModel, MC3DModel* model);
-fun(MCDirector, void, moveModelToOrigin, MC3DModel* model);
-
-fun(MCDirector, void, setDeviceRotationMat3, float mat3[9]);
-fun(MCDirector, void, setCameraRotateMode, MCCameraRotateMode mode);
-fun(MCDirector, void, printDebugInfo, voida);
 
 //iOS callbacks
 //void onRootViewLoad(void* rootview);

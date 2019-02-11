@@ -9,51 +9,60 @@
 #ifndef MCLinkedList_h
 #define MCLinkedList_h
 
-#include <stdio.h>
-#include "MCContext.h"
-
+//#include <stdio.h>
+#include "MCObject.h"
+#include "MCType.h"
 //Item
 
-class(MCItem, MCObject,
-      MCGeneric value;
-      MCObject* object;
-      struct MCItemStruct* prevItem;
-      struct MCItemStruct* nextItem);
+structure(MCItem, MCObject)
+    mc_generic value;
+    obj object;
+    struct MCItem* prevItem;
+    struct MCItem* nextItem;
 
-fun(MCItem, void, bye, voida);
-fun(MCItem, MCItem*, initWithContentObject, MCObject* content);
-fun(MCItem, void, linkNextItem, MCItem* next);
-fun(MCItem, void, linkPrevItem, MCItem* prev);
+    fundef(linkNextItem, void), struct MCItem* next);
+    fundef(linkPrevItem, void), struct MCItem* prev);
+    fundef(releaseContent, void));
+    fundef(release, void));
+};
 
-util(MCItem, MCItem*, itemWithObject, MCObject* content);
+constructor(MCItem), obj content);
+
+alias(MCItem);
+
+struct MCItem* MCItem_itemWithObject(obj content);
 
 //List
 
-class(MCLinkedList, MCObject,
-      MCItem* headItem;
-      MCItem* tailItem;
-      
-      MCBool countChanged;
-      unsigned countCache;
-      computing(unsigned, count);
-      computing(MCItem*, cycle));
+structure(MCLinkedList, MCObject)
+    MCItem_t* headItem;
+    MCItem_t* tailItem;
 
-fun(MCLinkedList, void, bye, voida);
-fun(MCLinkedList, void, addItem, MCItem* item);
-fun(MCLinkedList, void, delItem, MCItem* item);
-fun(MCLinkedList, void, addAndRetainObject, MCObject* object);
-fun(MCLinkedList, void, pushItem, MCItem* item);
-fun(MCLinkedList, MCItem*, popItem, voida);
-fun(MCLinkedList, MCItem*, itemAtIndex, int index);
-fun(MCLinkedList, void, addItemAtIndex, int index, MCItem* item);
-fun(MCLinkedList, void, replaceItemAtIndex, int index, MCItem* withitem);
-fun(MCLinkedList, void, insertAfterItem, MCItem* anchor, MCItem* item);
-fun(MCLinkedList, void, insertBeforeItem, MCItem* anchor, MCItem* item);
-fun(MCLinkedList, MCLinkedList*, connectList, MCLinkedList* otherlist);
-fun(MCLinkedList, void, forEach, mc_message callback, void* userdata);
+    bool countChanged;
+    unsigned countCache;
+
+    fundef(count, unsigned));
+    fundef(cycle, MCItem_t*));
+    fundef(addItem, void), MCItem_t* item);
+    fundef(delItem, void), MCItem_t* item);
+    fundef(addAndRetainObject, void), obj object);
+    fundef(pushItem, void), MCItem_t* item);
+    fundef(popItem, MCItem_t*));
+    fundef(itemAtIndex, MCItem_t*), int index);
+    fundef(addItemAtIndex, void), int index, MCItem_t* item);
+    fundef(replaceItemAtIndex, void), int index, MCItem_t* withitem);
+    fundef(insertAfterItem, void), MCItem_t* anchor, MCItem_t* item);
+    fundef(insertBeforeItem, void), MCItem_t* anchor, MCItem_t* item);
+    fundef(connectList, struct MCLinkedList*), struct MCLinkedList* otherlist);
+    fundef(release, void));
+};
+
+constructor(MCLinkedList));
+
+alias(MCLinkedList);
 
 #define MCLinkedListForEach(list, code) \
-{MCItem* item = list->headItem;         \
+{struct MCItem* item = list->headItem;         \
 while (item != null) {                  \
     code                                \
     item = item->nextItem;              \

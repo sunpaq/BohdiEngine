@@ -9,17 +9,21 @@
 #ifndef __monkcGame__MCOrbit__
 #define __monkcGame__MCOrbit__
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "MC3DNode.h"
 
-class(MCOrbit, MC3DNode,
+structure(MCOrbit, MC3DNode)
     double R;
-    MCUInt segments;
+    unsigned segments;
     MCVector3 center;
     MCVector3 up;
     //vertex array
-    MCUInt vertexArrayId;
-    MCUInt vertexBufferId;
-);
+    unsigned vertexArrayId;
+    unsigned vertexBufferId;
+};
+
+constructor(MCOrbit));
+
+alias(MCOrbit);
 
 #endif /* defined(__monkcGame__MCOrbit__) */

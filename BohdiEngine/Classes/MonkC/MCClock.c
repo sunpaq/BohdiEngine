@@ -1,145 +1,101 @@
 #include "MCClock.h"
 
-#include <limits.h>
 #ifndef LINE_MAX
 #define LINE_MAX 2048
 #endif
 
-oninit(MCClock)
-{
-    if (init(MCObject)) {
-        var(currentTimeBuff) = (char*)malloc(sizeof(char) * LINE_MAX);
-        var(currentGMTBuff) = (char*)malloc(sizeof(char) * LINE_MAX);
-        return obj;
-    }else{
-        return null;
-    }
+fun(bye, void)) as(MCClock)
+	if (it->currentTimeBuff) {
+		free(it->currentTimeBuff);
+	}
+	if (it->currentGMTBuff) {
+		free(it->currentGMTBuff);
+	}
 }
 
-fun(MCClock, void, bye, voida)
-{
-    free(var(currentTimeBuff));
-    free(var(currentGMTBuff));
-}
-
-fun(MCClock, MCClock*, setTimeToNow, voida)
-{
+fun(setTimeToNow, MCClock_t*)) as(MCClock)
 	time_t timer = time(NULL);
-	obj->rawtime = *localtime(&timer);
-    return obj;
+	it->RawTime = *localtime(&timer);
+    return it;
 }
 
-fun(MCClock, void, setTime, int tm_sec, int tm_min, int tm_hour,
-			   int tm_mday, int tm_mon, int tm_year,
-			   int tm_wday)
-{
-	if(tm_sec!=no_change) obj->rawtime.tm_sec = tm_sec;
-	if(tm_min!=no_change) obj->rawtime.tm_min = tm_min;
-	if(tm_hour!=no_change) obj->rawtime.tm_hour = tm_hour;
-	if(tm_mday!=no_change) obj->rawtime.tm_mday = tm_mday;
-	if(tm_mon!=no_change) obj->rawtime.tm_mon = tm_mon;
-	int year = tm_year-1900;
-	if(tm_year!=no_change) obj->rawtime.tm_year = year;
-	if(tm_wday!=no_change) obj->rawtime.tm_wday = tm_wday;
+fun(setTime, void), struct MCTime time) as(MCClock)
+	if(time.tm_sec!=no_change) it->RawTime.tm_sec = time.tm_sec;
+	if(time.tm_min!=no_change) it->RawTime.tm_min = time.tm_min;
+	if(time.tm_hour!=no_change) it->RawTime.tm_hour = time.tm_hour;
+	if(time.tm_mday!=no_change) it->RawTime.tm_mday = time.tm_mday;
+	if(time.tm_mon!=no_change) it->RawTime.tm_mon = time.tm_mon;
+	int year = time.tm_year-1900;
+	if(time.tm_year!=no_change) it->RawTime.tm_year = year;
+	if(time.tm_wday!=no_change) it->RawTime.tm_wday = time.tm_wday;
 }
 
-fun(MCClock, void, adjustTime, int tm_sec, int tm_min, int tm_hour,
-                  int tm_mday, int tm_mon, int tm_year,
-                  int tm_wday)
-{
-	if(tm_sec!=no_change) obj->rawtime.tm_sec += tm_sec;
-	if(tm_min!=no_change) obj->rawtime.tm_min += tm_min;
-	if(tm_hour!=no_change) obj->rawtime.tm_hour += tm_hour;
-	if(tm_mday!=no_change) obj->rawtime.tm_mday += tm_mday;
-	if(tm_mon!=no_change) obj->rawtime.tm_mon += tm_mon;
-	if(tm_year!=no_change) obj->rawtime.tm_year += tm_year;
-	if(tm_wday!=no_change) obj->rawtime.tm_wday += tm_wday;
+fun(adjustTime, void), struct MCTime time) as(MCClock)
+	if(time.tm_sec!=no_change) it->RawTime.tm_sec += time.tm_sec;
+	if(time.tm_min!=no_change) it->RawTime.tm_min += time.tm_min;
+	if(time.tm_hour!=no_change) it->RawTime.tm_hour += time.tm_hour;
+	if(time.tm_mday!=no_change) it->RawTime.tm_mday += time.tm_mday;
+	if(time.tm_mon!=no_change) it->RawTime.tm_mon += time.tm_mon;
+	if(time.tm_year!=no_change) it->RawTime.tm_year += time.tm_year;
+	if(time.tm_wday!=no_change) it->RawTime.tm_wday += time.tm_wday;
 }
 
-fun(MCClock, void, setRawtime, struct tm rawtime_in)
-{
-	obj->rawtime = rawtime_in;
+fun(setRawTime, void), struct tm rawTime) as(MCClock)
+	it->RawTime = rawTime;
 }
 
-fun(MCClock, void, setRawtimeFields, int tm_sec, int tm_min, int tm_hour, 
-						int tm_mday, int tm_mon, int tm_year,
-						int tm_wday, int tm_yday, int tm_isdst)
-{
-	if(tm_sec!=no_change)obj->rawtime.tm_sec = tm_sec;
-	if(tm_sec!=no_change)obj->rawtime.tm_min = tm_min;
-	if(tm_sec!=no_change)obj->rawtime.tm_hour = tm_hour;
-	//
-	if(tm_sec!=no_change)obj->rawtime.tm_mday = tm_mday;
-	if(tm_sec!=no_change)obj->rawtime.tm_mon = tm_mon;
-	if(tm_sec!=no_change)obj->rawtime.tm_year = tm_year-1900;
-	//
-	if(tm_sec!=no_change)obj->rawtime.tm_wday = tm_wday;
-	if(tm_sec!=no_change)obj->rawtime.tm_yday = tm_yday;
-	if(tm_sec!=no_change)obj->rawtime.tm_isdst = tm_isdst;
+fun(getTime, void), time_t* const result) as(MCClock)
+	*result = mktime(&(it->RawTime));
 }
 
-fun(MCClock, void, getTime, time_t* const result)
-{
-	*result = mktime(&(obj->rawtime));
+fun(getRawTime, void), struct tm* const result) as(MCClock)
+	*result = it->RawTime;
 }
 
-fun(MCClock, void, getRawtime, struct tm* const result)
-{
-	*result = obj->rawtime;
+fun(getTimeByString, const char*)) as(MCClock)
+	strcpy(it->currentTimeBuff, asctime(&(it->RawTime)));
+	return it->currentTimeBuff;
 }
 
-fun(MCClock, char*, getTimeByString, voida)
-{
-	strcpy((char*)obj->currentTimeBuff, asctime(&(obj->rawtime)));
-	return (char*)obj->currentTimeBuff;
-}
-
-fun(MCClock, void, getCPUClocksPerSecond, clock_t* const result)
-{
+fun(getCPUClocksPerSecond, void), clock_t* const result) {
 	*result = CLOCKS_PER_SEC;
 }
 
-fun(MCClock, void, getCPUClocksSinceStart, clock_t* const result)
-{
+fun(getCPUClocksSinceStart, void), clock_t* const result) {
 	*result = clock();
 }
 
-fun(MCClock, time_t, getCPUSecondsSinceStart, voida)
-{
-    return (clock() / CLOCKS_PER_SEC);
+fun(getCPUSecondsSinceStart, void), time_t* const result) {
+    *result = (clock() / CLOCKS_PER_SEC);
 }
 
-fun(MCClock, time_t, getCPUSecondsSince, time_t since)
-{
-    return (clock() / CLOCKS_PER_SEC) - since;
+fun(getCPUSecondsSince, void), time_t since, time_t* const result) {
+    *result = (clock() / CLOCKS_PER_SEC) - since;
 }
 
-fun(MCClock, char*, getCurrentTimeString, voida)
-{
+fun(getCurrentTimeString, const char*)) as(MCClock)
 	time_t timer = time(NULL);
-	strcpy((char*)obj->currentTimeBuff, asctime(localtime(&timer)));
-	return (char*)obj->currentTimeBuff;
+	strcpy(it->currentTimeBuff, asctime(localtime(&timer)));
+	return it->currentTimeBuff;
 }
 
-fun(MCClock, char*, getCurrentGMTTimeString, voida)
-{
+fun(getCurrentGMTTimeString, const char*)) as(MCClock)
 	time_t timer = time(NULL);
-	strcpy((char*)obj->currentGMTBuff, asctime(gmtime(&timer)));
-	return (char*)obj->currentGMTBuff;
+	strcpy(it->currentGMTBuff, asctime(gmtime(&timer)));
+	return it->currentGMTBuff;
 }
 
-fun(MCClock, void, printTime, voida)
-{
-	printf("\n%s", asctime(&obj->rawtime));
+fun(printTime, void)) as(MCClock)
+	printf("\n%s", asctime(&it->RawTime));
 }
 
-fun(MCClock, void, printCurrentTime, voida)
+fun(printCurrentTime, void))
 {
 	time_t timer = time(NULL);
 	printf("%s", asctime(localtime(&timer)));
 }
 
-fun(MCClock, void, printCurrentGMTTime, voida)
+fun(printCurrentGMTTime, void))
 {
 	time_t timer = time(NULL);
 	printf("%s", asctime(gmtime(&timer)));
@@ -165,40 +121,32 @@ struct tm* MCClock_rawtime2SettableTimeLocal(time_t* timeval)
 	return localtime(timeval);
 }
 
-onload(MCClock)
-{
-    if (load(MCObject)) {
-    	bid(MCClock, void, bye, voida);
-        bid(MCClock, void, setTimeToNow);
-        bid(MCClock,
-                void, setTime, int tm_sec, int tm_min, int tm_hour,
-                int tm_mday, int tm_mon, int tm_year,
-                int tm_wday);
-        bid(MCClock,
-                void, adjustTime, int tm_sec, int tm_min, int tm_hour,
-                int tm_mday, int tm_mon, int tm_year,
-                int tm_wday);
-        
-        bid(MCClock, void, setRawtime, struct tm rawtime_in);
-        bid(MCClock,
-                void, setRawtimeFields, int tm_sec, int tm_min, int tm_hour,
-                int tm_mday, int tm_mon, int tm_year,
-                int tm_wday, int tm_yday, int tm_isdst);
-        
-        bid(MCClock, void, getTime, time_t* const result);
-        bid(MCClock, void, getRawtime, struct tm* const result);
-        bid(MCClock, char*, getTimeByString);
-        bid(MCClock, void, getCPUClocksPerSecond, clock_t* const result);
-        bid(MCClock, void, getCPUClocksSinceStart, clock_t* const result);
-        bid(MCClock, time_t, getCPUSecondsSinceStart, voida);
-        bid(MCClock, time_t, getCPUSecondsSince, time_t since);
-        bid(MCClock, char*, getCurrentTimeString);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
-        bid(MCClock, char*, getCurrentGMTTimeString);
-        bid(MCClock, void, printTime);
-        bid(MCClock, void, printCurrentTime);
-        bid(MCClock, void, printCurrentGMTTime);
-        return cla;
-    }else{
-        return null;
-    }
+constructor(MCClock)) {
+	MCObject(any);
+	as(MCClock)
+		it->currentTimeBuff = (char*)malloc(sizeof(char) * LINE_MAX);
+		it->currentGMTBuff = (char*)malloc(sizeof(char) * LINE_MAX);
+	}
+	dynamic(MCClock)
+		funbind(bye);
+		funbind(setTimeToNow);
+		funbind(setTime);
+		funbind(adjustTime);
+		funbind(setRawTime);
+		funbind(getTime);
+		funbind(getRawTime);
+		funbind(getTimeByString);
+		funbind(getCPUClocksPerSecond);
+		funbind(getCPUClocksSinceStart);
+		funbind(getCPUSecondsSince);
+		funbind(getCPUSecondsSinceStart);
+		funbind(getCurrentTimeString);
+		funbind(getCurrentGMTTimeString);
+		funbind(printTime);
+		funbind(printCurrentTime);
+		funbind(printCurrentGMTTime);
+	}
+	return any;
 }
+
+

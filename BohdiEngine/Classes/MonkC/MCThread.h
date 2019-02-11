@@ -4,28 +4,32 @@
 #define MCThread_
 
 #include <pthread.h>
-#include "monkc.h"
+#include "MCObject.h"
 
-class(MCThread, MCObject,
+structure(MCThread, MCObject)
 	pthread_t tid;
 	pthread_attr_t attribute;
 	pthread_once_t once_control;
 	int isRunOnce;
-    void* functionPointer;
-    void* functionArgument;
-);
+	void* functionPointer;
+	void* functionArgument;
 
-fun(MCThread, void, bye, voida);
-fun(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg);
-fun(MCThread, MCThread*, initWithFPointer, void* fp);
-fun(MCThread, int, detach, voida);
-fun(MCThread, int, start, voida);
-fun(MCThread, int, equal, MCThread* thread);
+	fundef(release, void));
+	fundef(initWithFPointerArgument, struct MCThread*), void* fp, void* farg);
+	fundef(initWithFPointer, struct MCThread*), void* fp);
+	fundef(detach, int));
+	fundef(start, int));
+	fundef(equal, int), struct MCThread* thread);
+};
 
-util(MCThread, int, cancelThread, pthread_t tid);
-util(MCThread, int, joinThread, pthread_t tid);
-util(MCThread, void, exitWithStatus, void* status);
-util(MCThread, pthread_t, currentThread, void);
+constructor(MCThread));
+
+alias(MCThread);
+
+int MCThread_cancelThread(pthread_t tid);
+int MCThread_joinThread(pthread_t tid);
+void MCThread_exitWithStatus(void* status);
+pthread_t MCThread_currentThread(void);
 
 /*
 The pthread API:

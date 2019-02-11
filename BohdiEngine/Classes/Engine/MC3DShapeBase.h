@@ -1,14 +1,14 @@
 #ifndef __MC3DShapeBase__
 #define __MC3DShapeBase__
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 #include "opengl_export.h"
 
 #include "MC3DBase.h"
 #include "MCUIBase.h"
 
 //algorithm copy from http://slabode.exofire.net/circle_draw.shtml
-MCInline void MakeCircleData(float cx, float cy, float cz, float r, int num_segments, double vertexs[])
+static void MakeCircleData(float cx, float cy, float cz, float r, int num_segments, double vertexs[])
 {
     float theta = 2 * 3.1415926 / (float)(num_segments);
     float c = cosf(theta);//precalculate the sine and cosine
@@ -32,13 +32,13 @@ MCInline void MakeCircleData(float cx, float cy, float cz, float r, int num_segm
     }
 }
 
-MCInline MCUInt MCDrawLinePrepare(MCVector3 p1, MCVector3 p2, MCColor color)
+static unsigned MCDrawLinePrepare(MCVector3 p1, MCVector3 p2, MCColor color)
 {
     float data[18] = {
         p1.x, p1.y, p1.z, 0,0,0, color.R/255, color.G/255, color.B/255,
         p2.x, p2.y, p2.z, 0,0,0, color.R/255, color.G/255, color.B/255
     };
-    MCUInt bufferid;//GLuint
+    unsigned bufferid;//GLuint
     glGenBuffers(1, &bufferid);
     glBindBuffer(GL_ARRAY_BUFFER, bufferid);
     glBufferData(GL_ARRAY_BUFFER, 18*4, data, GL_STATIC_DRAW);//GL_STREAM_DRAW, GL_DYNAMIC_DRAW
@@ -50,15 +50,15 @@ MCInline MCUInt MCDrawLinePrepare(MCVector3 p1, MCVector3 p2, MCColor color)
     return bufferid;
 }
 
-MCInline void MCDrawLine(MCUInt bufferid)
+static void MCDrawLine(unsigned bufferid)
 {
-    const MCUInt count = 2;
+    const unsigned count = 2;
     glBindVertexArray(bufferid);
     glDrawArrays(MCLines, 0, count);
 }
 
 //nr: row nc: column of sphere texture
-MCInline GLuint MCGenerateSkysphere(int nr, int nc, GLfloat R, GLfloat* vertices, GLuint* indices)
+static GLuint MCGenerateSkysphere(int nr, int nc, GLfloat R, GLfloat* vertices, GLuint* indices)
 {
     const GLfloat dr = M_PI / (nr-1);
     const GLfloat dc = (2.0*M_PI) / (nc-1);

@@ -9,11 +9,15 @@
 #ifndef MC2DTex_h
 #define MC2DTex_h
 
-#include "monkc_export.h"
+#include "MCObject.h"
 #include "MCTexture.h"
 
-class(MC2DTex, MCTexture);
+structure(MC2DTex, MCTexture)
+    fundef(initWithFileName, struct MC2DTex*), const char* name);
+};
 
-fun(MC2DTex, MC2DTex*, initWithFileName, const char* name);
+constructor(MC2DTex));
+
+alias(MC2DTex);
 
 #endif /* MC2DTex_h */

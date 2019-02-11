@@ -1,3 +1,5 @@
+#ifndef WIN32
+
 #include "MCContext.h"
 #include <setjmp.h>
 #include <string.h>
@@ -26,8 +28,8 @@ unsigned __get_exception_code(char* key);
 //512+256+...1
 #define MAX_EXCEPTION_NUM 0x000001ff
 
-MCObject* get_exception_data(char* key);
-void      set_exception_data(char* key, MCObject* e);
+obj get_exception_data(char* key);
+void set_exception_data(char* key, obj e);
 
 #endif
 
@@ -44,3 +46,5 @@ _longjmp: did not restore signal
 longjmp will return the PC
 to the line above setjmp, and setjmp will return the value longjmp have passed
 */
+
+#endif

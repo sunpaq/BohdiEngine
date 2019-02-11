@@ -10,16 +10,20 @@
 #define MCSet_h
 
 #include <stdio.h>
-#include "monkc.h"
+#include "MCObject.h"
 
-class(MCSet, MCObject,
-      MCGeneric* values;
-      size_t maxcount;
-      size_t count;);
+structure(MCSet, MCObject)
+    mc_generic* values;
+    size_t maxcount;
+    size_t count;
 
-fun(MCSet, void, bye, voida);
-fun(MCSet, MCSet*, initWithMaxCount, size_t maxcount);
-fun(MCSet, MCSet*, insertValue, MCGeneric value);
+    fundef(bye, void));
+    fundef(insertValue, struct MCSet*), mc_generic value);
+};
+
+constructor(MCSet), size_t maxcount);
+
+alias(MCSet);
 
 /*
  - Disjoint Sets
@@ -28,10 +32,13 @@ fun(MCSet, MCSet*, insertValue, MCGeneric value);
    they all the same thing
  */
 
-class(MCUnionFind, MCSet);
+structure(MCUnionFind, MCSet)
+    fundef(findAction, void));
+    fundef(unionAction, void));
+};
 
-fun(MCUnionFind, void, find, voida);
-fun(MCUnionFind, void, union, voida);
+constructor(MCUnionFind));
 
+alias(MCUnionFind);
 
 #endif /* MCSet_h */

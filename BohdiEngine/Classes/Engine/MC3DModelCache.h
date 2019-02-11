@@ -9,15 +9,21 @@
 #ifndef MC3DModelCache_h
 #define MC3DModelCache_h
 
-#include "monkc_export.h"
+#include "MCObject.h"
 #include "MC3DModel.h"
+#include "MCMap.h"
 
-class(MC3DModelCache, MCObject,
-      MCMap* map);
+structure(MC3DModelCache, MCObject)
+    struct MCMap* map;
 
-util(MC3DModelCache, MC3DModelCache*, shared, voida);
+    fundef(loadModelNamed, struct MC3DModel*), const char* name);
+    fundef(fetchModelNamed, struct MC3DModel*), const char* name);
+};
 
-fun(MC3DModelCache, MC3DModel*, loadModelNamed, const char* name);
-fun(MC3DModelCache, MC3DModel*, fetchModelNamed, const char* name);
+constructor(MC3DModelCache));
+
+alias(MC3DModelCache);
+
+struct MC3DModelCache* MC3DModelCache_shared(void);
 
 #endif /* MC3DModelCache_h */

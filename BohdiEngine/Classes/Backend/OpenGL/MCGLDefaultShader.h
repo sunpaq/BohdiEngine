@@ -8,7 +8,7 @@
 #ifndef MCGLDefaultShader_h
 #define MCGLDefaultShader_h
 
-#include "monkc_export.h"
+#include "MCString.h"
 
 static const char* MCGLDefault_vsource = S(
 //version is specified in MCGLContext

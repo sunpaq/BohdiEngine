@@ -9,70 +9,74 @@
 #ifndef MCGLContext_h
 #define MCGLContext_h
 
-#include "monkc_export.h"
+//#include "monkc_export.h"
 
+#include "MCObject.h"
 #include "MCTexture.h"
 #include "MCMaterial.h"
 #include "MC3DBase.h"
-
+#include "MCClock.h"
 #include "MCGLBase.h"
 #include "MCGLShader.h"
 
 #define MAX_VATTR_NUM     100
 #define MAX_UNIFORM_NUM   100
 
-class(MCGLContext, MCObject,
-      MCGLShader* shader;
-      double cameraRatio;
-);
+structure(MCGLContext, MCObject)
+    struct MCGLShader* shader;
+    double cameraRatio;
 
-fun(MCGLContext, void, bye, voida);
+    fundef(release, void));
+    //texture
+    fundef(loadTexture, GLuint), struct MCTexture* tex, const char* samplerName, GLint unit);
+    fundef(loadMaterial, void), struct MCMaterial* mtl);
+};
 
-//texture
-fun(MCGLContext, GLuint, loadTexture, MCTexture* tex, const char* samplerName, GLint unit);
-fun(MCGLContext, void, loadMaterial, MCMaterial* mtl);
+constructor(MCGLContext));
+
+alias(MCGLContext);
 
 //Global
-util(MCGLContext, MCBool, isFeatureOn, MCGLFeature feature);
-util(MCGLContext, void, featureSwith, MCGLFeature feature, MCBool onOrOff);
-util(MCGLContext, void, flushCommandAsync, voida);
-util(MCGLContext, void, flushCommandBlock, voida);
-util(MCGLContext, void, clearScreen, voida);
-util(MCGLContext, void, clearScreenWithColor, MCColorf color);
-util(MCGLContext, void, clearDepthBuffer, voida);
-util(MCGLContext, void, clearStencilBuffer, voida);
-util(MCGLContext, void, setClearScreenColor, MCColorf color);
-util(MCGLContext, void, setPointSize, double pointsize);
-util(MCGLContext, void, setLineWidth, double linewidth);
-util(MCGLContext, void, setFrontCounterClockWise, MCBool isCCW);
-util(MCGLContext, void, cullFace, MCGLFace face);
-util(MCGLContext, void, cullBackFace, voida);
+bool MCGLContext_isFeatureOn(MCGLFeature feature);
+void MCGLContext_featureSwith(MCGLFeature feature, bool onOrOff);
+void MCGLContext_flushCommandAsync(void);
+void MCGLContext_flushCommandBlock(void);
+void MCGLContext_clearScreen(void);
+void MCGLContext_clearScreenWithColor(MCColorf color);
+void MCGLContext_clearDepthBuffer(void);
+void MCGLContext_clearStencilBuffer(void);
+void MCGLContext_setClearScreenColor(MCColorf color);
+void MCGLContext_setPointSize(double pointsize);
+void MCGLContext_setLineWidth(double linewidth);
+void MCGLContext_setFrontCounterClockWise(bool isCCW);
+void MCGLContext_cullFace(MCGLFace face);
+void MCGLContext_cullBackFace(void);
 //Texture
-util(MCGLContext, MCUInt, getIdleTextureUnit, voida);
-util(MCGLContext, MCUInt, getMaxTextureUnits, voida);
-util(MCGLContext, void, generateTextureId, GLuint* tid);
-util(MCGLContext, void, activeTextureUnit, GLuint index);
-util(MCGLContext, void, bindCubeTexture, GLint tid);
-util(MCGLContext, void, bind2DTexture, GLuint tid);
-util(MCGLContext, void, unbind2DTextures, voida);
-util(MCGLContext, void, rawdataToTexbuffer, MCTexture* tex, GLenum textype);
-util(MCGLContext, void, setupTexParameter, MCTexture* tex, GLenum textype);
+unsigned MCGLContext_getIdleTextureUnit(void);
+unsigned MCGLContext_getMaxTextureUnits(void);
+void MCGLContext_generateTextureId(GLuint* tid);
+void MCGLContext_activeTextureUnit(GLuint index);
+void MCGLContext_bindCubeTexture(GLint tid);
+void MCGLContext_bind2DTexture(GLuint tid);
+void MCGLContext_unbind2DTextures(void);
+void MCGLContext_rawdataToTexbuffer(struct MCTexture* tex, GLenum textype);
+void MCGLContext_setupTexParameter(struct MCTexture* tex, GLenum textype);
 
 //Alpha Blend
-util(MCGLContext, void, enableTransparency, MCBool enable);
+void MCGLContext_enableTransparency(bool enable);
 //Z-Fighting
-util(MCGLContext, void, enablePolygonOffset, MCBool enable);
+void MCGLContext_enablePolygonOffset(bool enable);
 
 //Frame Rate (FPS)
-util(MCGLContext, int, tickFPS, MCClock* clock);
+int MCGLContext_tickFPS(struct MCClock* clock);
 
 //Shader
-util(MCGLContext, MCBool, compileShader, GLuint* shader, GLenum type, const GLchar *source, const GLchar *version);
-util(MCGLContext, int, linkProgram, GLuint prog);
-util(MCGLContext, int, validateProgram, GLuint prog);
+bool MCGLContext_compileShader(GLuint* shader, GLenum type, const GLchar *source, const GLchar *version);
+int MCGLContext_linkProgram(GLuint prog);
+int MCGLContext_validateProgram(GLuint prog);
 
 //Viewport
-util(MCGLContext, void, setViewport, int x, int y, int width, int height);
-util(MCGLContext, void, setScissor, int x, int y, int width, int height);
+void MCGLContext_setViewport(int x, int y, int width, int height);
+void MCGLContext_setScissor(int x, int y, int width, int height);
 
 #endif /* MCGLContext_h */
